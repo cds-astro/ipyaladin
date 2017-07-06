@@ -1,0 +1,985 @@
+/* Copyright (c) Jupyter Development Team.
+ * Distributed under the terms of the Modified BSD License.
+ */
+
+/*
+ * We assume that the CSS variables in
+ * https://github.com/jupyterlab/jupyterlab/blob/master/src/default-theme/variables.css
+ * have been defined.
+ */
+
+
+:root {
+    --jp-widgets-color: var(--jp-content-font-color1);
+    --jp-widgets-label-color: var(--jp-widgets-color);
+    --jp-widgets-readout-color: var(--jp-widgets-color);
+    --jp-widgets-font-size: var(--jp-ui-font-size1);
+    --jp-widgets-margin: 2px;
+    --jp-widgets-inline-height: 28px;
+    --jp-widgets-inline-width: 300px;
+    --jp-widgets-inline-width-short: calc(var(--jp-widgets-inline-width) / 2 - var(--jp-widgets-margin));
+    --jp-widgets-inline-width-tiny: calc(var(--jp-widgets-inline-width-short) / 2 - var(--jp-widgets-margin));
+    --jp-widgets-inline-margin: 4px; /* margin between inline elements */
+    --jp-widgets-inline-label-min-width: 80px;
+    --jp-widgets-inline-label-max-width: calc(var(--jp-widgets-inline-width) - var(--jp-widgets-inline-margin) - var(--jp-widgets-inline-width-short));
+    --jp-widgets-border-width: var(--jp-border-width);
+    --jp-widgets-vertical-height: 200px;
+    --jp-widgets-horizontal-tab-height: 24px;
+    --jp-widgets-horizontal-tab-width: 144px;
+    --jp-widgets-horizontal-tab-top-border: 2px;
+    --jp-widgets-progress-thickness: 20px;
+    --jp-widgets-container-padding: 15px;
+    --jp-widgets-input-padding: 4px;
+    --jp-widgets-slider-track-thickness: 4px;
+    --jp-widgets-slider-border-width: var(--jp-widgets-border-width);
+    --jp-widgets-slider-handle-size: 16px;
+    --jp-widgets-slider-handle-border-color: var(--jp-border-color1);
+    --jp-widgets-slider-handle-background-color: var(--jp-layout-color1);
+    --jp-widgets-slider-active-handle-color: var(--jp-brand-color1);
+    --jp-widgets-menu-item-height: 24px;
+
+    --jp-widgets-input-color: var(--jp-ui-font-color1);
+    --jp-widgets-input-background-color: var(--jp-layout-color1);
+    --jp-widgets-input-border-color: var(--jp-border-color1);
+    --jp-widgets-input-focus-border-color: var(--jp-brand-color2);
+    --jp-widgets-input-border-width: var(--jp-widgets-border-width);
+
+    /* From Material Design Lite */
+    --md-shadow-key-umbra-opacity: 0.2;
+    --md-shadow-key-penumbra-opacity: 0.14;
+    --md-shadow-ambient-shadow-opacity: 0.12;
+}
+
+.jupyter-widgets {
+    margin: var(--jp-widgets-margin);
+    box-sizing: border-box;
+    color: var(--jp-widgets-color);
+    overflow: visible;
+}
+
+.jp-Output-result > .jupyter-widgets {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+/* vbox and hbox */
+
+.widget-inline-hbox {
+    /* Horizontal widgets */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+}
+
+.widget-inline-vbox {
+    /* Vertical Widgets */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.widget-box {
+    box-sizing: border-box;
+    display: flex;
+    margin: 0;
+}
+
+.widget-hbox {
+    flex-direction: row;
+}
+
+.widget-vbox {
+    flex-direction: column;
+}
+
+/* General Button Styling */
+
+.jupyter-button {
+    padding: 0;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    font-size: var(--jp-widgets-font-size);
+    cursor: pointer;
+
+    height: var(--jp-widgets-inline-height);
+    border: 0px solid;
+    line-height: var(--jp-widgets-inline-height);
+    box-shadow: none;
+
+    color: var(--jp-ui-font-color1);
+    background-color: var(--jp-layout-color2);
+    border-color: var(--jp-border-color2);
+    border: none;
+}
+
+.jupyter-button i.fa {
+    margin-right: var(--jp-widgets-inline-margin);
+    pointer-events: none;
+}
+
+.jupyter-button:empty:before {
+    content: "\200b"; /* zero-width space */
+}
+
+.jupyter-button i.fa.center {
+    margin-right: 0;
+}
+
+.jupyter-button:hover, .jupyter-button:focus {
+    /* MD Lite 2dp shadow */
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, var(--md-shadow-key-penumbra-opacity)),
+                0 3px 1px -2px rgba(0, 0, 0, var(--md-shadow-key-umbra-opacity)),
+                0 1px 5px 0 rgba(0, 0, 0, var(--md-shadow-ambient-shadow-opacity));
+}
+
+.jupyter-button:active, .jupyter-button.mod-active {
+    /* MD Lite 4dp shadow */
+    box-shadow: 0 4px 5px 0 rgba(0, 0, 0, var(--md-shadow-key-penumbra-opacity)),
+                0 1px 10px 0 rgba(0, 0, 0, var(--md-shadow-ambient-shadow-opacity)),
+                0 2px 4px -1px rgba(0, 0, 0, var(--md-shadow-key-umbra-opacity));
+    color: var(--jp-ui-font-color1);
+    background-color: var(--jp-layout-color3);
+}
+
+.jupyter-button:focus {
+    outline: 1px solid var(--jp-widgets-input-focus-border-color);
+}
+
+/* Button "Primary" Styling */
+
+.jupyter-button.mod-primary {
+    color: var(--jp-inverse-ui-font-color1);
+    background-color: var(--jp-brand-color1);
+}
+
+.jupyter-button.mod-primary.mod-active {
+    color: var(--jp-inverse-ui-font-color0);
+    background-color: var(--jp-brand-color0);
+}
+
+.jupyter-button.mod-primary:active {
+    color: var(--jp-inverse-ui-font-color0);
+    background-color: var(--jp-brand-color0);
+}
+
+/* Button "Success" Styling */
+
+.jupyter-button.mod-success {
+    color: var(--jp-inverse-ui-font-color1);
+    background-color: var(--jp-success-color1);
+}
+
+.jupyter-button.mod-success.mod-active {
+    color: var(--jp-inverse-ui-font-color0);
+    background-color: var(--jp-success-color0);
+ }
+
+.jupyter-button.mod-success:active {
+    color: var(--jp-inverse-ui-font-color0);
+    background-color: var(--jp-success-color0);
+ }
+
+ /* Button "Info" Styling */
+
+.jupyter-button.mod-info {
+    color: var(--jp-inverse-ui-font-color1);
+    background-color: var(--jp-info-color1);
+}
+
+.jupyter-button.mod-info.mod-active {
+    color: var(--jp-inverse-ui-font-color0);
+    background-color: var(--jp-info-color0);
+}
+
+.jupyter-button.mod-info:active {
+    color: var(--jp-inverse-ui-font-color0);
+    background-color: var(--jp-info-color0);
+}
+
+/* Button "Warning" Styling */
+
+.jupyter-button.mod-warning {
+    color: var(--jp-inverse-ui-font-color1);
+    background-color: var(--jp-warn-color1);
+}
+
+.jupyter-button.mod-warning.mod-active {
+    color: var(--jp-inverse-ui-font-color0);
+    background-color: var(--jp-warn-color0);
+}
+
+.jupyter-button.mod-warning:active {
+    color: var(--jp-inverse-ui-font-color0);
+    background-color: var(--jp-warn-color0);
+}
+
+/* Button "Danger" Styling */
+
+.jupyter-button.mod-danger {
+    color: var(--jp-inverse-ui-font-color1);
+    background-color: var(--jp-error-color1);
+}
+
+.jupyter-button.mod-danger.mod-active {
+    color: var(--jp-inverse-ui-font-color0);
+    background-color: var(--jp-error-color0);
+}
+
+.jupyter-button.mod-danger:active {
+    color: var(--jp-inverse-ui-font-color0);
+    background-color: var(--jp-error-color0);
+}
+
+/* Widget Button*/
+
+.widget-button, .widget-toggle-button {
+    width: var(--jp-widgets-inline-width-short);
+}
+
+/* Widget Label Styling */
+
+.widget-label {
+    /* Label */
+    color: var(--jp-widgets-label-color);
+    font-size: var(--jp-widgets-font-size);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: var(--jp-widgets-inline-height);
+    max-width: var(--jp-widgets-inline-width);
+}
+
+.jupyter-widgets.widget-label {
+    width: var(--jp-widgets-inline-width-tiny);
+}
+
+.widget-inline-hbox .widget-label {
+    /* Horizontal Widget Label */
+    color: var(--jp-widgets-label-color);
+    text-align: right;
+    margin-right: var(--jp-widgets-inline-margin);
+    max-width: var(--jp-widgets-inline-label-max-width);
+    min-width: var(--jp-widgets-inline-label-min-width);
+    flex-shrink: 0;
+}
+
+.widget-inline-vbox .widget-label {
+    /* Vertical Widget Label */
+    color: var(--jp-widgets-label-color);
+    text-align: center;
+}
+
+/* Widget Readout Styling */
+
+.widget-readout {
+    color: var(--jp-widgets-readout-color);
+    font-size: var(--jp-widgets-font-size);
+    height: var(--jp-widgets-inline-height);
+    line-height: var(--jp-widgets-inline-height);
+    margin-left: var(--jp-widgets-inline-margin);
+    overflow: hidden;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.widget-readout.overflow {
+    /* Overflowing Readout */
+
+    /* From Material Design Lite
+        shadow-key-umbra-opacity: 0.2;
+        shadow-key-penumbra-opacity: 0.14;
+        shadow-ambient-shadow-opacity: 0.12;
+     */
+    -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2),
+                        0 3px 1px -2px rgba(0, 0, 0, 0.14),
+                        0 1px 5px 0 rgba(0, 0, 0, 0.12);
+
+    -moz-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2),
+                     0 3px 1px -2px rgba(0, 0, 0, 0.14),
+                     0 1px 5px 0 rgba(0, 0, 0, 0.12);
+
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2),
+                0 3px 1px -2px rgba(0, 0, 0, 0.14),
+                0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.widget-inline-hbox .widget-readout {
+    /* Horizontal Readout */
+    text-align: center;
+    max-width: var(--jp-widgets-inline-width-short);
+    min-width: var(--jp-widgets-inline-width-tiny);
+    margin-left: var(--jp-widgets-inline-margin);
+}
+
+.widget-inline-vbox .widget-readout {
+    /* Vertical Readout */
+    margin-top: var(--jp-widgets-inline-margin);
+}
+
+/* Widget Checkbox Styling */
+
+.widget-checkbox {
+    width: var(--jp-widgets-inline-width-short);
+    height: var(--jp-widgets-inline-height);
+    line-height: var(--jp-widgets-inline-height);
+    justify-content: space-between;
+}
+
+.widget-checkbox input[type="checkbox"] {
+    margin: 0px var(--jp-widgets-inline-margin) 0px var(--jp-widgets-inline-margin);
+    line-height: var(--jp-widgets-inline-height);
+    font-size: large;
+    flex-grow: 1;
+    flex-shrink: 0;
+    align-self: center;
+}
+
+/* Widget Valid Styling */
+
+.widget-valid {
+    height: var(--jp-widgets-inline-height);
+    line-height: var(--jp-widgets-inline-height);
+    width: var(--jp-widgets-inline-width-short);
+    font-size: var(--jp-widgets-font-size);
+}
+
+.widget-valid i:before {
+    height: var(--jp-widgets-inline-height);
+    line-height: var(--jp-widgets-inline-height);
+    margin-right: var(--jp-widgets-inline-margin);
+    margin-left: var(--jp-widgets-inline-margin);
+
+    /* from the fa class in FontAwesome: https://github.com/FortAwesome/Font-Awesome/blob/49100c7c3a7b58d50baa71efef11af41a66b03d3/css/font-awesome.css#L14 */
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.widget-valid.mod-valid i:before {
+    content: "\f00c";
+    color: green;
+}
+
+.widget-valid.mod-invalid i:before {
+    content: "\f00d";
+    color: red;
+}
+
+.widget-valid.mod-valid .widget-valid-readout {
+    display: none;
+}
+
+/* Widget Text and TextArea Stying */
+
+.widget-textarea, .widget-text {
+    width: var(--jp-widgets-inline-width);
+}
+
+.widget-text input[type="text"] {
+    height: var(--jp-widgets-inline-height);
+    line-height: var(--jp-widgets-inline-height);
+}
+
+.widget-text input[type="text"], .widget-textarea textarea {
+    box-sizing: border-box;
+    border: var(--jp-widgets-input-border-width) solid var(--jp-widgets-input-border-color);
+    background-color: var(--jp-widgets-input-background-color);
+    color: var(--jp-widgets-input-color);
+    font-size: var(--jp-widgets-font-size);
+    padding: var(--jp-widgets-input-padding) calc( var(--jp-widgets-input-padding) *  2 );
+    flex-grow: 1;
+    min-width: 0; /* This makes it possible for the flexbox to shrink this input */
+    flex-shrink: 1;
+    outline: none !important;
+    line-height: 1.5;
+}
+
+.widget-textarea textarea {
+    height: inherit;
+    width: inherit;
+}
+
+.widget-text input:focus, .widget-textarea textarea:focus {
+    border-color: var(--jp-widgets-input-focus-border-color);
+}
+
+/* Widget Slider */
+
+.widget-slider .ui-slider {
+    /* Slider Track */
+    border: var(--jp-widgets-slider-border-width) solid var(--jp-layout-color3);
+    background: var(--jp-layout-color3);
+    box-sizing: border-box;
+    position: relative;
+    border-radius: 0px;
+}
+
+.widget-slider .ui-slider .ui-slider-handle {
+    /* Slider Handle */
+    outline: none !important; /* focused slider handles are colored - see below */
+    position: absolute;
+    background-color: var(--jp-widgets-slider-handle-background-color);
+    border: var(--jp-widgets-slider-border-width) solid var(--jp-widgets-slider-handle-border-color);
+    box-sizing: border-box;
+    z-index: 1;
+    background-image: none; /* Override jquery-ui */
+}
+
+/* Override jquery-ui */
+.widget-slider .ui-slider .ui-slider-handle:hover, .widget-slider .ui-slider .ui-slider-handle:focus {
+    background-color: var(--jp-widgets-slider-active-handle-color);
+    border: var(--jp-widgets-slider-border-width) solid var(--jp-widgets-slider-active-handle-color);
+}
+
+.widget-slider .ui-slider .ui-slider-handle:active {
+    background-color: var(--jp-widgets-slider-active-handle-color);
+    border-color: var(--jp-widgets-slider-active-handle-color);
+    z-index: 2;
+    transform: scale(1.2);
+}
+
+.widget-slider  .ui-slider .ui-slider-range {
+    /* Interval between the two specified value of a double slider */
+    position: absolute;
+    background: var(--jp-widgets-slider-active-handle-color);
+    z-index: 0;
+}
+
+/* Shapes of Slider Handles */
+
+.widget-hslider .ui-slider .ui-slider-handle {
+    width: var(--jp-widgets-slider-handle-size);
+    height: var(--jp-widgets-slider-handle-size);
+    margin-top: calc((var(--jp-widgets-slider-track-thickness) - var(--jp-widgets-slider-handle-size)) / 2 - var(--jp-widgets-slider-border-width));
+    margin-left: calc(var(--jp-widgets-slider-handle-size) / -2 + var(--jp-widgets-slider-border-width));
+    border-radius: 50%;
+    top: 0;
+}
+
+.widget-vslider .ui-slider .ui-slider-handle {
+    width: var(--jp-widgets-slider-handle-size);
+    height: var(--jp-widgets-slider-handle-size);
+    margin-bottom: calc(var(--jp-widgets-slider-handle-size) / -2 + var(--jp-widgets-slider-border-width));
+    margin-left: calc((var(--jp-widgets-slider-track-thickness) - var(--jp-widgets-slider-handle-size)) / 2 - var(--jp-widgets-slider-border-width));
+    border-radius: 50%;
+    left: 0;
+}
+
+.widget-hslider .ui-slider .ui-slider-range {
+    height: calc( var(--jp-widgets-slider-track-thickness) * 2 );
+    margin-top: calc((var(--jp-widgets-slider-track-thickness) - var(--jp-widgets-slider-track-thickness) * 2 ) / 2 - var(--jp-widgets-slider-border-width));
+}
+
+.widget-vslider .ui-slider .ui-slider-range {
+    width: calc( var(--jp-widgets-slider-track-thickness) * 2 );
+    margin-left: calc((var(--jp-widgets-slider-track-thickness) - var(--jp-widgets-slider-track-thickness) * 2 ) / 2 - var(--jp-widgets-slider-border-width));
+}
+
+/* Horizontal Slider */
+
+.widget-hslider {
+    width: var(--jp-widgets-inline-width);
+    height: var(--jp-widgets-inline-height);
+    line-height: var(--jp-widgets-inline-height);
+}
+
+.widgets-slider .slider-container {
+    overflow: visible;
+}
+
+.widget-hslider .slider-container {
+    height: var(--jp-widgets-inline-height);
+    margin-left: calc(var(--jp-widgets-slider-handle-size) / 2 - 2 * var(--jp-widgets-slider-border-width));
+    margin-right: calc(var(--jp-widgets-slider-handle-size) / 2 - 2 * var(--jp-widgets-slider-border-width));
+    align-self: stretch;
+    flex: 1 1 var(--jp-widgets-inline-width-short);
+}
+
+.widget-hslider .ui-slider {
+    /* Inner, invisible slide div */
+    height: var(--jp-widgets-slider-track-thickness);
+    margin-top: calc((var(--jp-widgets-inline-height) - var(--jp-widgets-slider-track-thickness)) / 2);
+    width: 100%;
+}
+
+/* Vertical Slider */
+
+.widget-vbox .widget-label {
+    height: var(--jp-widgets-inline-height);
+    line-height: var(--jp-widgets-inline-height);
+}
+
+.widget-vslider {
+    /* Vertical Slider */
+    height: var(--jp-widgets-vertical-height);
+    width: var(--jp-widgets-inline-width-tiny);
+}
+
+.widget-vslider .slider-container {
+    flex: 1 1 var(--jp-widgets-inline-width-short);
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: calc(var(--jp-widgets-slider-handle-size) / 2 - 2 * var(--jp-widgets-slider-border-width));
+    margin-top: calc(var(--jp-widgets-slider-handle-size) / 2 - 2 * var(--jp-widgets-slider-border-width));
+}
+
+.widget-vslider .ui-slider {
+    /* Inner, invisible slide div */
+    width: var(--jp-widgets-slider-track-thickness);
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Widget Progress Styling */
+
+.progress-bar {
+    -webkit-transition: none;
+    -moz-transition: none;
+    -ms-transition: none;
+    -o-transition: none;
+    transition: none;
+}
+
+.progress-bar {
+    height: var(--jp-widgets-inline-height);
+}
+
+.progress-bar {
+    background-color: var(--jp-brand-color1);
+}
+
+.progress-bar-success {
+    background-color: var(--jp-success-color1);
+}
+
+.progress-bar-info {
+    background-color: var(--jp-info-color1);
+}
+
+.progress-bar-warning {
+    background-color: var(--jp-warn-color1);
+}
+
+.progress-bar-danger {
+    background-color: var(--jp-error-color1);
+}
+
+.progress {
+    background-color: var(--jp-layout-color2);
+    border: none;
+    box-shadow: none;
+}
+
+/* Horisontal Progress */
+
+.widget-hprogress {
+    /* Progress Bar */
+    height: var(--jp-widgets-inline-height);
+    line-height: var(--jp-widgets-inline-height);
+    width: var(--jp-widgets-inline-width);
+}
+
+.widget-hprogress .progress {
+    flex-grow: 1;
+    height: var(--jp-widgets-progress-thickness);
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+/* Vertical Progress */
+
+.widget-vprogress {
+    height: var(--jp-widgets-vertical-height);
+    width: var(--jp-widgets-inline-width-tiny);
+}
+
+.widget-vprogress .progress {
+    flex-grow: 1;
+    width: var(--jp-widgets-progress-thickness);
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 0;
+}
+
+/* Select Widget Styling */
+
+.widget-select {
+    width: var(--jp-widgets-inline-width);
+    height: var(--jp-widgets-inline-height);
+    line-height: var(--jp-widgets-inline-height);
+}
+
+.widget-select select {
+    border: var(--jp-widgets-input-border-width) solid var(--jp-widgets-input-border-color);
+    border-radius: 0;
+    height: var(--jp-widgets-inline-height);
+    flex: 1 1 var(--jp-widgets-inline-width-short);
+    min-width: 0; /* This makes it possible for the flexbox to shrink this input */
+    box-sizing: border-box;
+    outline: none !important;
+    box-shadow: none;
+    background-color: var(--jp-widgets-input-background-color);
+    color: var(--jp-widgets-input-color);
+    font-size: var(--jp-widgets-font-size);
+    vertical-align: top;
+    padding-left: calc( var(--jp-widgets-input-padding) * 2);
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+    background-repeat: no-repeat;
+	background-size: 20px;
+	background-position: right center;
+    background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE5LjIuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHZpZXdCb3g9IjAgMCAxOCAxOCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMTggMTg7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KCS5zdDB7ZmlsbDpub25lO30KPC9zdHlsZT4KPHBhdGggZD0iTTUuMiw1LjlMOSw5LjdsMy44LTMuOGwxLjIsMS4ybC00LjksNWwtNC45LTVMNS4yLDUuOXoiLz4KPHBhdGggY2xhc3M9InN0MCIgZD0iTTAtMC42aDE4djE4SDBWLTAuNnoiLz4KPC9zdmc+Cg");
+}
+
+.widget-select select:focus {
+    border-color: var(--jp-widgets-input-focus-border-color);
+}
+
+/* To disable the dotted border in Firefox around select controls.
+   See http://stackoverflow.com/a/18853002 */
+.widget-select select:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 #000;
+}
+
+.widget-select select option:checked {
+    color: var(--jp-ui-font-color0);
+    background: var(--jp-layout-color0) repeat url("data:image/gif;base64,R0lGO...");
+}
+
+/* Select Multiple */
+
+.widget-select-multiple {
+    width: var(--jp-widgets-inline-width);
+    line-height: var(--jp-widgets-inline-height);
+}
+
+.widget-select-multiple select {
+    border: var(--jp-widgets-input-border-width) solid var(--jp-widgets-input-border-color);
+    background-color: var(--jp-widgets-input-background-color);
+    color: var(--jp-widgets-input-color);
+    font-size: var(--jp-widgets-font-size);
+    flex: 1 1 var(--jp-widgets-inline-width-short);
+    outline: none !important;
+    overflow: auto;
+}
+
+.widget-select-multiple select:focus {
+    border-color: var(--jp-widgets-input-focus-border-color);
+}
+
+.widget-select-multiple select option:checked {
+    color: var(--jp-ui-font-color0);
+    background: var(--jp-layout-color0) repeat url("data:image/gif;base64,R0lGO...");
+}
+
+.wiget-select-multiple select option {
+    padding-left: var(--jp-widgets-input-padding);
+    line-height: var(--jp-widgets-inline-height);
+    /* line-height doesn't work on some browsers for select options */
+    padding-top: calc(var(--jp-widgets-inline-height)-var(--jp-widgets-font-size)/2);
+    padding-bottom: calc(var(--jp-widgets-inline-height)-var(--jp-widgets-font-size)/2);
+}
+
+
+
+/* Toggle Buttons Styling */
+
+.widget-toggle-buttons {
+    line-height: var(--jp-widgets-inline-height);
+}
+
+.widget-toggle-buttons .widget-toggle-button {
+    margin-left: var(--jp-widgets-margin);
+    margin-right: var(--jp-widgets-margin);
+}
+
+/* Radio Buttons Styling */
+
+.widget-radio {
+    width: var(--jp-widgets-inline-width);
+    line-height: var(--jp-widgets-inline-height);
+}
+
+.widget-radio-box {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    box-sizing: border-box;
+    flex-grow: 1;
+}
+
+.widget-radio-box label {
+    height: var(--jp-widgets-inline-height);
+    line-height: var(--jp-widgets-inline-height);
+    font-size: var(--jp-widgets-font-size);
+}
+
+.widget-radio-box input {
+    height: var(--jp-widgets-inline-height);
+    line-height: var(--jp-widgets-inline-height);
+    margin: 0 var(--jp-widgets-input-padding) 0 var(--jp-widgets-input-padding);
+    float: left;
+}
+
+/* Color Picker Styling */
+
+.widget-colorpicker {
+    width: var(--jp-widgets-inline-width);
+    height: var(--jp-widgets-inline-height);
+    line-height: var(--jp-widgets-inline-height);
+}
+
+.widget-colorpicker > .widget-colorpicker-input {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: var(--jp-widgets-inline-width-tiny);
+}
+
+.widget-colorpicker input[type="color"] {
+    width: var(--jp-widgets-inline-height);
+    height: var(--jp-widgets-inline-height);
+    padding: 0 2px; /* make the color square actually square on Chrome on OS X */
+    background: var(--jp-widgets-input-background-color);
+    color: var(--jp-widgets-input-color);
+    border: var(--jp-widgets-input-border-width) solid var(--jp-widgets-input-border-color);
+    border-left: none;
+    flex-grow: 0;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    align-self: stretch;
+    outline: none !important;
+}
+
+.widget-colorpicker.concise input[type="color"] {
+    border-left: var(--jp-widgets-input-border-width) solid var(--jp-widgets-input-border-color);
+}
+
+.widget-colorpicker input[type="color"]:focus, .widget-colorpicker input[type="text"]:focus {
+    border-color: var(--jp-widgets-input-focus-border-color);
+}
+
+.widget-colorpicker input[type="text"] {
+    flex-grow: 1;
+    outline: none !important;
+    height: var(--jp-widgets-inline-height);
+    line-height: var(--jp-widgets-inline-height);
+    background: var(--jp-widgets-input-background-color);
+    color: var(--jp-widgets-input-color);
+    border: var(--jp-widgets-input-border-width) solid var(--jp-widgets-input-border-color);
+    font-size: var(--jp-widgets-font-size);
+    padding: var(--jp-widgets-input-padding) calc( var(--jp-widgets-input-padding) *  2 );
+    min-width: 0; /* This makes it possible for the flexbox to shrink this input */
+    flex-shrink: 1;
+    box-sizing: border-box;
+}
+
+/* Date Picker Styling */
+
+.widget-datepicker {
+    width: var(--jp-widgets-inline-width);
+    height: var(--jp-widgets-inline-height);
+    line-height: var(--jp-widgets-inline-height);
+}
+
+.widget-datepicker input[type="date"] {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 0; /* This makes it possible for the flexbox to shrink this input */
+    outline: none !important;
+    height: var(--jp-widgets-inline-height);
+    border: var(--jp-widgets-input-border-width) solid var(--jp-widgets-input-border-color);
+    background-color: var(--jp-widgets-input-background-color);
+    color: var(--jp-widgets-input-color);
+    font-size: var(--jp-widgets-font-size);
+    padding: var(--jp-widgets-input-padding) calc( var(--jp-widgets-input-padding) *  2 );
+    box-sizing: border-box;
+}
+
+.widget-datepicker input[type="date"]:focus {
+    border-color: var(--jp-widgets-input-focus-border-color);
+}
+
+/* Play Widget */
+
+.widget-play {
+    min-width: var(--jp-widgets-inline-width-short);
+    display: flex;
+    justify-content: space-between;
+}
+
+.widget-play .jupyter-button {
+    min-width: calc(var(--jp-widgets-inline-width-short) / 3 - 2 * var(--jp-widgets-margin));
+    text-align: center;
+}
+
+/* Tab Widget */
+
+.jupyter-widgets .p-TabBar {
+    overflow-x: visible;
+    overflow-y: visible;
+}
+
+.jupyter-widgets.widget-tab .p-TabBar.p-mod-horizontal > .p-TabBar-content {
+    align-items: flex-end;
+    margin-bottom: 0;
+}
+
+.jupyter-widgets.widget-tab .widget-tab-contents {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    background: var(--jp-layout-color1);
+    color: var(--jp-ui-font-color1);
+    border: var(--jp-border-width) solid var(--jp-border-color1);
+    padding: var(--jp-widgets-container-padding);
+}
+
+.jupyter-widgets.widget-tab .widget-tab-contents .widget-tab-child.p-mod-hidden {
+    display: none !important;
+}
+
+.jupyter-widgets.widget-tab .widget-tab-bar.p-TabBar {
+    font: var(--jp-widgets-font-size) Helvetica, Arial, sans-serif;
+}
+
+.jupyter-widgets.widget-tab .p-TabBar-tab {
+    flex: 0 1 var(--jp-widgets-horizontal-tab-width);
+    min-width: 35px;
+    min-height: calc(var(--jp-widgets-horizontal-tab-height) + var(--jp-border-width));
+    line-height: var(--jp-widgets-horizontal-tab-height);
+    margin-left: calc(-1 * var(--jp-border-width));
+    padding: 0px 10px;
+    background: var(--jp-layout-color2);
+    color: var(--jp-ui-font-color2);
+    border: var(--jp-border-width) solid var(--jp-border-color1);
+    border-bottom: none;
+    position: relative;
+}
+
+.jupyter-widgets.widget-tab .p-TabBar-tab.p-mod-current {
+    color: var(--jp-ui-font-color0);
+    /* We want the background to match the tab content background */
+    background: var(--jp-layout-color1);
+    min-height: calc(var(--jp-widgets-horizontal-tab-height) + 2 * var(--jp-border-width));
+    transform: translateY(var(--jp-border-width));
+}
+
+.jupyter-widgets.widget-tab .p-TabBar-tab.p-mod-current:before {
+    position: absolute;
+    top: calc(-1 * var(--jp-border-width));
+    left: calc(-1 * var(--jp-border-width));
+    content: '';
+    height: var(--jp-widgets-horizontal-tab-top-border);
+    width: calc(100% + 2 * var(--jp-border-width));
+    background: var(--jp-brand-color1);
+}
+
+.jupyter-widgets.widget-tab .p-TabBar-tab:first-child {
+    margin-left: 0;
+}
+
+.jupyter-widgets.widget-tab .p-TabBar-tab:hover:not(.p-mod-current) {
+    background: var(--jp-layout-color1);
+    color: var(--jp-ui-font-color1);
+}
+
+.jupyter-widgets.widget-tab.p-mod-closable > .p-TabBar-tabCloseIcon {
+    margin-left: 4px;
+}
+
+.jupyter-widgets.widget-tab.p-mod-closable > .p-TabBar-tabCloseIcon:before {
+    font-family: FontAwesome;
+    content: '\f00d'; /* close */
+}
+
+.jupyter-widgets.widget-tab .p-TabBar-tabIcon,
+.jupyter-widgets.widget-tab .p-TabBar-tabLabel,
+.jupyter-widgets.widget-tab .p-TabBar-tabCloseIcon {
+    line-height: var(--jp-widgets-horizontal-tab-height);
+}
+
+/* Accordion Widget */
+
+.p-Collapse {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.p-Collapse-header {
+    padding: var(--jp-widgets-input-padding);
+    cursor: pointer;
+    color: var(--jp-ui-font-color2);
+    background-color: var(--jp-layout-color2);
+    border: var(--jp-widgets-border-width) solid var(--jp-border-color1);
+    padding: calc(var(--jp-widgets-container-padding) * 2 / 3) var(--jp-widgets-container-padding);
+    font-weight: bold;
+}
+
+.p-Collapse-header:hover {
+    background-color: var(--jp-layout-color1);
+    color: var(--jp-ui-font-color1);
+}
+
+.p-Collapse-open .p-Collapse-header {
+    background-color: var(--jp-layout-color1);
+    color: var(--jp-ui-font-color0);
+    cursor: default;
+    border-bottom: none;
+}
+
+.p-Collapse .p-Collapse-header::before {
+    content: '\f0da\00A0';  /* caret-right, non-breaking space */
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.p-Collapse-open .p-Collapse-header::before {
+    content: '\f0d7\00A0'; /* caret-down, non-breaking space */
+}
+
+.p-Collapse-contents {
+    padding: var(--jp-widgets-container-padding);
+    background-color: var(--jp-layout-color1);
+    color: var(--jp-ui-font-color1);
+    border-left: var(--jp-widgets-border-width) solid var(--jp-border-color1);
+    border-right: var(--jp-widgets-border-width) solid var(--jp-border-color1);
+    border-bottom: var(--jp-widgets-border-width) solid var(--jp-border-color1);
+}
+
+.p-Accordion {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.p-Accordion .p-Collapse {
+    margin-bottom: 0;
+}
+
+.p-Accordion .p-Collapse + .p-Collapse {
+    margin-top: 4px;
+}
+
+
+
+/* HTML widget */
+
+.widget-html, .widget-htmlmath {
+    font-size: var(--jp-widgets-font-size);
+}
