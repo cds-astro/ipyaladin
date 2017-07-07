@@ -17,14 +17,14 @@ To install use pip:
 
 For a development installation (requires npm) you can either do:
 
-    $ git clone https://github.com/jupyter/test_ipyaladin.git
-    $ cd test_ipyaladin
+    $ git clone https://github.com/cds-astro/ipyaladin
+    $ cd ipyaladin
     $ pip install -e .
     $ jupyter nbextension install --py --symlink --sys-prefix ipyaladin
     $ jupyter nbextension enable --py --sys-prefix ipyaladin
 
 or directly use the compile.sh script:
 
-    $ git clone https://github.com/jupyter/test_ipyaladin.git
-    $ cd test_ipyaladin
+    $ git clone https://github.com/cds-astro/ipyaladin
+    $ cd ipyaladin
     $ ./compile.sh

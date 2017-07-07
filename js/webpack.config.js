@@ -72,6 +72,20 @@ module.exports = [
     /*{
         entry: './src/embed.js',
         output: {
+            filename: 'test.js',
+            path: './src/',
+            libraryTarget: 'amd',
+            publicPath: 'https://unpkg.com/jupyter-widget-ipyaladin@' + version + '/dist/'
+        },
+        devtool: 'source-map',
+        module: {
+            loaders: loaders
+        },
+        externals: ['jupyter-js-widgets']
+    }*/
+    /*{
+        entry: './src/embed.js',
+        output: {
             filename: 'test_aladin_output.js',
             // path: là où webpack build
             path: './dist/',
