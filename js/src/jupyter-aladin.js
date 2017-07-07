@@ -69,6 +69,8 @@ module.exports = {
 // TODO:
 // !!! documentation propre de code anglais avec explications, etc....
 // voir si module.exports possible de retirer qq uns
+// voir options (cf options non declarees en .py mais existantes dans lib)
+//  -> target='NGC 2175', cooFrame='galactic', reticleSize= 64 :fonctionne
 // sur example_1: flash des 2 widget lorsque reload du code d'1 cell
 // (=> normal cf m^ instance? => poser q.)
 // charger aladin.js depuis http...
