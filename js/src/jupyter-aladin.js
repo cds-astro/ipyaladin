@@ -25,7 +25,7 @@ var ViewAladin = widgets.DOMWidgetView.extend({
         link.rel = "stylesheet";
         link.href = "//aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.css";
         document.getElementsByTagName("head")[0].appendChild(link);
-
+/*
         requirejs.config({
             paths: { 
                 'path': ['http://aladin.u-strasbg.fr/AladinLite/api/v2/beta/aladin']
@@ -33,15 +33,24 @@ var ViewAladin = widgets.DOMWidgetView.extend({
             }
         })
         require(['path'], function(path) {   
+            console.log('toto');
+            console.log(path);
             return {};
         });
+*/
 
         // variation UN
         var div_test = document.createElement('div');
         div_test.id = 'aladin-lite-div';
         div_test.setAttribute("style","width:100%;height:400px;");
         this.el.appendChild(div_test);
-        var Aladin = A.aladin([div_test], {showFullscreenControl: false, fov:1.5});
+        var Aladin; 
+
+        // TODO: replace this with require call in package.json when Aladin Lite available as a NPM module
+        $.getScript('http://aladin.u-strasbg.fr/AladinLite/api/v2/beta/aladin.min.js', function() {
+            Aladin = A.aladin([div_test], {showFullscreenControl: false, fov:1.5});
+        });
+
     }
 });
 
