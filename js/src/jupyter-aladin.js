@@ -45,7 +45,6 @@ var ViewAladin = widgets.DOMWidgetView.extend({
         //     (jusqu'au rechargement de la page)
         test.A.aladin([div_test], aladin_options);
     },
-    
 });
 
 var ModelAladin = widgets.DOMWidgetModel.extend({
