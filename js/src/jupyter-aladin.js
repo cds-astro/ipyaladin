@@ -1,12 +1,25 @@
+// For the moment, the AladinLite library is not online,
+// and is located in the same repository of this file.
+// The version currently used is the beta version, whose url is:
+// http://aladin.u-strasbg.fr/AladinLite/api/v2/beta/aladin.js
+// For the library to be compatible with node.js, the following code must be added at the file's end:
+//module.exports = {
+//    A: A
+//};
+var aladin_lib= require('./aladin_lib.js');
+
+// Allow us to use the DOMWidgetView base class for our models/views.
+// Additionnaly, this is where we put by default all the external libraries
+// fetched by using webpack (see webpack.config.js file).
 var widgets = require('jupyter-js-widgets');
 
-var test= require('./aladin_lib.js');
-
+// The sole purpose of this module is to load the css stylesheet when the first instance
+// of the AladinLite widget
 var CSS_Loader= ({
+
     is_css_loaded: false,
 
     load_css: function(data){
-        // le chargement s'effectue uniquement si la feuille de style n'est pas déjà présente
         if(!CSS_Loader.is_css_loaded){
             var link = document.createElement('link');
             link.type = "text/css";
@@ -18,66 +31,97 @@ var CSS_Loader= ({
     }
 });
 
-var ViewAladin = widgets.DOMWidgetView.extend({
-    
-    initialize: function (options) {
-        ViewAladin.__super__.initialize.apply(this, arguments);
-    },
-
-    // Render the view.
-    render: function() {
-        // chargement de la feuille de style css
-        CSS_Loader.load_css();
-        // creation de l'element div contenant le widget
-        var div_test = document.createElement('div');
-        div_test.id = 'aladin-lite-div';
-        div_test.setAttribute("style","width:100%;height:400px;");
-        this.el.appendChild(div_test);
-        // creation de l'instance d'Aladin avec application des options passées dans le constructeur
-        var aladin_options= {};
-        var opt= this.model.get('options');
-        for(i=0; i<opt.length; i++)
-            aladin_options[opt[i]]= this.model.get(opt[i]);
-        // Attention!
-        // si de la forme Aladin= test.aladin(....) :
-        //  -> ne se lance pas automatiquement lors du chargement de la page
-        //  -> plante systématiquement lorsqu'on tente de réexécuter le code dans la cellule
-        //     (jusqu'au rechargement de la page)
-        test.A.aladin([div_test], aladin_options);
-    },
-});
-
+/**
+ * Definition of the AladinLite widget's model in the browser
+ * Useful documentation about the widget's global implementation : 
+ * (from http://ipywidgets.readthedocs.io/en/latest/examples/Widget%20Custom.html)
+ * The IPython widget framework front end relies heavily on Backbone.js.
+ * Backbone.js is an MVC (model view controller) framework. 
+ * Widgets defined in the back end are automatically synchronized with generic Backbone.js
+ * models in the front end.
+ * The traitlets are added to the front end instance automatically on first state push.
+ * The _view_name trait that you defined earlier is used by the widget framework to create
+ * the corresponding Backbone.js view and link that view to the model.
+ */
 var ModelAladin = widgets.DOMWidgetModel.extend({
     defaults: _.extend({}, widgets.DOMWidgetModel.prototype.defaults, {
         _view_name : "ViewAladin",
         _model_name : "ModelAladin",
         _model_module : "jupyter-aladin",
         _view_module : "jupyter-aladin",
-
-        target : "messier 104",
-        options : []
     })
 });
 
+
+/**
+ * Definition of the AladinLite widget's view in the browser
+ */
+var ViewAladin = widgets.DOMWidgetView.extend({
+
+    // This function is automatically called when the python-side widget's instance is displayed
+    // (by calling it at the end of a bloc or by using the display() function)
+    render: function() {
+        // We load the css stylesheet.
+        CSS_Loader.load_css();
+        // We create the DOM element that will contain our widget
+        // Note: it seems that the 'el' element cannot directly be used as a container for
+        // the AladinLite widget wihthout causing rendering issues.
+        // Thus we use a div element and put it inside the 'el' element.
+        var div_test = document.createElement('div');
+        div_test.id = 'aladin-lite-div'
+        div_test.setAttribute("style","width:100%;height:400px;");
+        this.el.appendChild(div_test);
+        // We get the options set on the python side and create an instance of the AladinLite object.
+        var aladin_options= {};
+        var opt= this.model.get('options');
+        for(i=0; i<opt.length; i++)
+            aladin_options[opt[i]]= this.model.get(opt[i]);
+        this.al= aladin_lib.A.aladin([div_test], aladin_options);
+        // Declaration of the variable's listeners:
+        this.aladin_events();
+        this.model_events();
+    },
+
+    // Variables's listeners on the js side:
+    aladin_events: function () {
+        var that = this;
+        /*this.al.view.fov.on('change', function (e) {
+            // TO COMPLETE
+        });*/
+    },
+
+    // Variables's listeners on the python side:
+    model_events: function () {
+        var that = this;
+        this.listenTo(this.model, 'change:fov', function () {
+            this.al.setFoV(this.model.get('fov'));
+        }, this);
+        this.listenTo(this.model, 'change:target', function () {
+            this.al.gotoObject(this.model.get('target'));
+        }, this);
+        this.listenTo(this.model, 'change:cooFrame', function () {
+            this.al.view.changeFrame(this.model.get('cooFrame'));
+        }, this);
+        this.listenTo(this.model, 'change:survey', function () {
+            this.al.setImageSurvey(this.model.get('survey'));
+        }, this);
+    }
+
+});
+
+// Node.js exports
 module.exports = {
-    CSS_Loader : CSS_Loader,
     ViewAladin : ViewAladin,
     ModelAladin : ModelAladin
 };
 
-// TODO:
-// !!! documentation propre de code anglais avec explications, etc....
-// voir si module.exports possible de retirer qq uns
-// voir options (cf options non declarees en .py mais existantes dans lib)
-//  -> target='NGC 2175', cooFrame='galactic', reticleSize= 64 :fonctionne
-// sur example_1: flash des 2 widget lorsque reload du code d'1 cell
-// (=> normal cf m^ instance? => poser q.)
-// charger aladin.js depuis http...
-// faire fonction changement état widget
-// autres fonctionnalités
-// problème du zoom
+/* TODO:
 
-//--------- notes:
-// maj cachées des notebook exemples (attention lors du puch sur dépôt)
-// nécessité de supprimer la librairie manuellement (??)
-//  -> dans ~/anaconda3/share/jupyter/nbextensions
+ PRIORITIES:
+      Synchrnoize options (js side)
+ POST-PRIORITIES:
+      implements others functionalities (more precisely: python-side functions)
+ DISTANT FUTURE:
+ load AladinLite library from http...
+ zoom problem...
+ */

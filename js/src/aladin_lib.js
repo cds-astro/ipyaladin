@@ -9814,7 +9814,7 @@ View = (function() {
             // in some contexts (Jupyter notebook for instance), the parent div changes little time after Aladin Lite creation
             // this results in canvas dimension to be incorrect.
             // The following line tries to fix this issue
-    		setTimeout(function() {self.fixLayoutDimensions(self)}, 1000);
+    		setTimeout(function() {self.fixLayoutDimensions(self);self.setZoomLevel(self.zoomLevel);}, 1000);
     	};
 	
     // different available modes
