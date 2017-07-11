@@ -6,7 +6,7 @@ Description
 
 A bridge between Jupyter and Aladin Lite, enabling interactive sky visualization in IPython notebooks.
 
-![hello.png](hello.png?raw=true "hello.png")
+![ipyaladin example](ipyaladin-screenshot.png)
 
 Installation
 ------------
