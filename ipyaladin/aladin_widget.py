@@ -1,5 +1,8 @@
 import ipywidgets as widgets
-from traitlets import (Float, Unicode, Bool, List, default)
+from traitlets import (Float, Unicode, Bool, List, Dict, default)
+
+# used in votable operations
+from astroquery.simbad import Simbad
 
 ''' Definition of the AladinLite widget in the python kernel '''
 class Aladin(widgets.DOMWidget):
@@ -36,6 +39,18 @@ class Aladin(widgets.DOMWidget):
 
     options = List(trait=Unicode).tag(sync=True)
 
+    # the following values are used in the classe's functions
+
+    # values used in the addCatalogFromUrl function
+    votableURL = Unicode('').tag(sync=True)
+    votableOptions = Dict().tag(sync=True)
+    votableFromURLFlag = Bool(True).tag(sync=True)
+
+    # values used in the addTable function
+    tableKeys = List().tag(sync=True)
+    tableColumns = List().tag(sync=True)
+    tableFlag = Bool(True).tag(sync=True)
+
     @default('options')
     def _default_options(self):
         ''' fill the options List with all the options declared '''
@@ -47,5 +62,32 @@ class Aladin(widgets.DOMWidget):
                 kwargs: widget options
         '''
         super(Aladin, self).__init__(**kwargs)
+
+    # Note: (about the classe's functions)
+    # As it is only possible to communicate with the js side of the application by using traitlets,
+    # we can not directly call a js function from the python side
+    # As such, we use a little trick that consists in delegating to one of the class's variable
+    # the role of a flag, whose change in value trigger a listener in the js side,
+    # who can then execute the function whose parameters are passed as trailets in its python equivalent
+
+    def addCatalogFromURL(self, votableURL, votableOptions):
+        ''' load a VOTable table from an url and load its data into the widget '''
+        self.votableURL= votableURL
+        self.votableOptions= votableOptions
+        self.votableFlag= not self.votableFromURLFlag
+
+    def addTable(self, table):
+        ''' load a VOTable -already accessible on the python side- into the widget '''
+        self.keys= table.keys()
+        self.columns= table.columns
+        self.tableFlag= not self.tableFlag
+
+
+ # note pour fonction
+ # 1 - creer classe python (ou methode!!) dont le constructeur/paramètres prend
+ #      en parametre les attributs de la classe: OK (qui sont synchro avec le serveur)
+ # 2 - la methode set a true/false un attribut synchro qui a un listener sur lui;
+ #     qui déclenche alors la méthode côté js
+
 
     

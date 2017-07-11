@@ -57,6 +57,13 @@ var ModelAladin = widgets.DOMWidgetModel.extend({
  * Definition of the AladinLite widget's view in the browser
  */
 var ViewAladin = widgets.DOMWidgetView.extend({
+    // The attr_js and attr_py variables are used as lock between the listeners
+    // of the corresponding attribute, python-side and javascript-side,
+    // in order to prevent infinite loop between listener calls on value change
+    fov_js: false,
+    fov_py: false,
+    target_js: false,
+    target_py: false,
 
     // This function is automatically called when the python-side widget's instance is displayed
     // (by calling it at the end of a bloc or by using the display() function)
@@ -85,25 +92,63 @@ var ViewAladin = widgets.DOMWidgetView.extend({
     // Variables's listeners on the js side:
     aladin_events: function () {
         var that = this;
-        /*this.al.view.fov.on('change', function (e) {
-            // TO COMPLETE
-        });*/
+        this.al.on('zoomChanged', function(fov) {
+            if(!that.fov_py){
+                that.fov_js= true;
+                // fov MUST be cast into float in order to be sent to the model
+                that.model.set('fov', parseFloat(fov.toFixed(5)));
+                // Note: touch function must be called after calling the model's set method
+                that.touch();
+            }else{
+                that.fov_py= false;
+            }
+        });
+        this.al.on('positionChanged', function(position) {
+            if(!that.target_py){
+                that.target_js= true;
+                that.model.set('target', '' + position.ra.toFixed(6) + ' ' + position.dec.toFixed(6));
+                that.touch();
+            }else{
+                that.target_py= false;
+            }
+            
+        });
     },
 
     // Variables's listeners on the python side:
     model_events: function () {
         var that = this;
+        // Model's class parameters listeners
         this.listenTo(this.model, 'change:fov', function () {
-            this.al.setFoV(this.model.get('fov'));
+            if(!that.fov_js){
+                that.fov_py= true;
+                that.al.setFoV(that.model.get('fov'));
+            }else{
+                that.fov_js= false;
+            }
         }, this);
         this.listenTo(this.model, 'change:target', function () {
-            this.al.gotoObject(this.model.get('target'));
+            if(!that.target_js){
+                that.target_py= true;
+                that.al.gotoObject(that.model.get('target'));
+            }else{
+                that.target_js= false;
+            }
         }, this);
         this.listenTo(this.model, 'change:cooFrame', function () {
-            this.al.view.changeFrame(this.model.get('cooFrame'));
+            console.log(that.al.view);
+            that.al.view.changeFrame(that.model.get('cooFrame'));
         }, this);
         this.listenTo(this.model, 'change:survey', function () {
-            this.al.setImageSurvey(this.model.get('survey'));
+            that.al.setImageSurvey(that.model.get('survey'));
+        }, this);
+        // Model's functions parameters listeners
+        this.listenTo(this.model, 'change:votableFromURLFlag', function(){
+            that.al.addCatalog(aladin_lib.A.catalogFromURL(that.model.get('votableURL'), that.model.get('votableOptions')));
+        }, this);
+        this.listenTo(this.model, 'change:tableFlag', function(){
+            console.log(this.model.get('tableKeys'));
+            console.log(this.model.get('tableColumns'));
         }, this);
     }
 
