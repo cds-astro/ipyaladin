@@ -8815,7 +8815,7 @@ HpxImageSurvey = (function() {
         }
 
         else {
-// REPRENDRE LA, CRER l'OBJET HiPSDefinition
+// REPRENDRE LA,  EN CREANT l'OBJET HiPSDefinition
             // old way, we retrofit parameters into a HiPSDefinition object
             this.id = idOrHiPSDefinition;
             this.name = name;
@@ -10388,7 +10388,13 @@ View = (function() {
             event.preventDefault();
             event.stopPropagation();
             var level = view.zoomLevel;
-            var delta = event.deltaY;
+
+             var delta = event.deltaY;
+            // this seems to happen in context of Jupyter notebook --> we have to invert the direction of scroll
+            // hope this won't trigger some side effects ...
+            if (event.hasOwnProperty('originalEvent')) {
+                delta = -event.originalEvent.deltaY;
+            } 
             if (delta>0) {
                 level += 1;
             }
@@ -11807,7 +11813,7 @@ Aladin = (function() {
     };
     
     /**** CONSTANTS ****/
-    Aladin.VERSION = "2017-07-11"; // will be filled by the build.sh script
+    Aladin.VERSION = "2017-07-12"; // will be filled by the build.sh script
     
     Aladin.JSONP_PROXY = "http://alasky.unistra.fr/cgi/JSONProxy";
 

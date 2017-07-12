@@ -158,6 +158,17 @@ var ViewAladin = widgets.DOMWidgetView.extend({
             that.al.addCatalog(cat);
             cat.addSourcesAsArray(that.model.get('table_keys'), that.model.get('table_columns'))
         }, this);
+        /*this.listenTo(this.model, 'change:listener_flag', function(){
+            that.al.on(that.model.get('listener_type'), function(object) {
+                var msg;
+                if (object) {
+                    msg = 'You hovered object ' + object.data.name + ' located at ' + object.ra + ', ' + object.dec;
+                }
+                else {
+                    msg = 'No object hovered';
+                }
+            });
+        }, this);*/
     }
 
 });
@@ -171,5 +182,4 @@ module.exports = {
 /** 
 TODO:
 load AladinLite library from http...
-zoom problem...
  */

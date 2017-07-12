@@ -44,15 +44,19 @@ class Aladin(widgets.DOMWidget):
 
     # the following values are used in the classe's functions
 
-    # values used in the addCatalogFromUrl function
+    # values used in the add_catalogFromUrl function
     votable_URL = Unicode('').tag(sync=True)
     votable_options = Dict().tag(sync=True)
     votable_from_URL_flag = Bool(True).tag(sync=True)
 
-    # values used in the addTable function
+    # values used in the add_table function
     table_keys = List().tag(sync=True)
-    table_columns = List([[1,2],[3,4]]).tag(sync=True)
+    table_columns = List().tag(sync=True)
     table_flag = Bool(True).tag(sync=True)
+
+    # values used in the add_listener function
+    #listener_type = Unicode('').tag(sync=True)
+    #listener_flag = Bool(True).tag(sync=True)
 
     @default('options')
     def _default_options(self):
