@@ -136,8 +136,7 @@ var ViewAladin = widgets.DOMWidgetView.extend({
             }
         }, this);
         this.listenTo(this.model, 'change:cooFrame', function () {
-            console.log(that.al.view);
-            that.al.view.changeFrame(that.model.get('cooFrame'));
+            that.al.setFrame(that.model.get('cooFrame'));
         }, this);
         this.listenTo(this.model, 'change:survey', function () {
             that.al.setImageSurvey(that.model.get('survey'));
@@ -147,8 +146,9 @@ var ViewAladin = widgets.DOMWidgetView.extend({
             that.al.addCatalog(aladin_lib.A.catalogFromURL(that.model.get('votableURL'), that.model.get('votableOptions')));
         }, this);
         this.listenTo(this.model, 'change:tableFlag', function(){
-            console.log(this.model.get('tableKeys'));
-            console.log(this.model.get('tableColumns'));
+            var cat = aladin_lib.A.catalog({onClick: 'showTable'});
+            that.al.addCatalog(cat);
+            cat.addSourcesAsArray(that.model.get('tableKeys'), that.model.get('tableColumns'))
         }, this);
     }
 
@@ -160,13 +160,8 @@ module.exports = {
     ModelAladin : ModelAladin
 };
 
-/* TODO:
-
- PRIORITIES:
-      Synchrnoize options (js side)
- POST-PRIORITIES:
-      implements others functionalities (more precisely: python-side functions)
- DISTANT FUTURE:
- load AladinLite library from http...
- zoom problem...
+/** 
+TODO:
+load AladinLite library from http...
+zoom problem...
  */

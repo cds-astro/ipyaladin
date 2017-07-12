@@ -1,8 +1,11 @@
 import ipywidgets as widgets
 from traitlets import (Float, Unicode, Bool, List, Dict, default)
 
-# used in votable operations
+# theses library must be installed, and are used in votable operations
+# https://astroquery.readthedocs.io/en/latest/
+# http://www.astropy.org/
 from astroquery.simbad import Simbad
+import astropy
 
 ''' Definition of the AladinLite widget in the python kernel '''
 class Aladin(widgets.DOMWidget):
@@ -48,7 +51,7 @@ class Aladin(widgets.DOMWidget):
 
     # values used in the addTable function
     tableKeys = List().tag(sync=True)
-    tableColumns = List().tag(sync=True)
+    tableColumns = List([[1,2],[3,4]]).tag(sync=True)
     tableFlag = Bool(True).tag(sync=True)
 
     @default('options')
@@ -76,18 +79,18 @@ class Aladin(widgets.DOMWidget):
         self.votableOptions= votableOptions
         self.votableFlag= not self.votableFromURLFlag
 
+    # Notes:
+    # 1 - The loaded table can possess fields tagged as 'masked', who can not be parsed by JSON
+    #     As such, the table's columns cant be obtained through the use of table.columns,
+    #     and the use of table.__array__() is requiered.
+    # 2 - It seems that the list.append() method does not work with traitlets,
+    #     the affectation of the columns must be done at once by using a buffer.
     def addTable(self, table):
         ''' load a VOTable -already accessible on the python side- into the widget '''
-        self.keys= table.keys()
-        self.columns= table.columns
+        table_array = table.__array__()
+        self.tableKeys= table.keys()
+        tableColumns= []
+        for i in range(0,len(table.columns[0])):
+            tableColumns.append(list(table_array[i]));
+        self.tableColumns = tableColumns
         self.tableFlag= not self.tableFlag
-
-
- # note pour fonction
- # 1 - creer classe python (ou methode!!) dont le constructeur/paramètres prend
- #      en parametre les attributs de la classe: OK (qui sont synchro avec le serveur)
- # 2 - la methode set a true/false un attribut synchro qui a un listener sur lui;
- #     qui déclenche alors la méthode côté js
-
-
-    
