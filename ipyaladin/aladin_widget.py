@@ -21,38 +21,38 @@ class Aladin(widgets.DOMWidget):
     # only theses 4 values are actually updated on one side when they change on the other
     fov = Float(60).tag(sync=True, o=True)
     target = Unicode("0 +0").tag(sync=True, o=True)
-    cooFrame = Unicode("J2000").tag(sync=True, o=True) 
+    coo_frame = Unicode("J2000").tag(sync=True, o=True) 
     survey = Unicode("P/DSS2/color").tag(sync=True, o=True)
 
     # the remaining values exists for the widget constructor's sole purpose
-    reticleSize = Float(22).tag(sync=True, o=True)
-    reticleColor = Unicode("rgb(178, 50, 178)").tag(sync=True, o=True)
-    showReticle = Bool(True).tag(sync=True, o=True)
-    showZoomControl = Bool(True).tag(sync=True, o=True)
-    showFullscreenControl = Bool(True).tag(sync=True, o=True)
-    showLayersControl = Bool(True).tag(sync=True, o=True)
-    showGotoControl = Bool(True).tag(sync=True, o=True)
-    showShareControl = Bool(False).tag(sync=True, o=True)
-    showCatalog = Bool(True).tag(sync=True, o=True)
-    showFrame = Bool(True).tag(sync=True, o=True)
-    showCooGrid = Bool(False).tag(sync=True, o=True)
-    fullScreen = Bool(False).tag(sync=True, o=True)
+    reticle_size = Float(22).tag(sync=True, o=True)
+    reticle_color = Unicode("rgb(178, 50, 178)").tag(sync=True, o=True)
+    show_reticle = Bool(True).tag(sync=True, o=True)
+    show_zoom_control = Bool(True).tag(sync=True, o=True)
+    show_fullscreen_control = Bool(True).tag(sync=True, o=True)
+    show_layers_control = Bool(True).tag(sync=True, o=True)
+    show_goto_control = Bool(True).tag(sync=True, o=True)
+    show_share_control = Bool(False).tag(sync=True, o=True)
+    show_catalog = Bool(True).tag(sync=True, o=True)
+    show_frame = Bool(True).tag(sync=True, o=True)
+    show_coo_grid = Bool(False).tag(sync=True, o=True)
+    full_screen = Bool(False).tag(sync=True, o=True)
     log = Bool(True).tag(sync=True, o=True)
-    allowFullZoomout = Bool(False).tag(sync=True, o=True)
+    allow_full_zoomout = Bool(False).tag(sync=True, o=True)
 
     options = List(trait=Unicode).tag(sync=True)
 
     # the following values are used in the classe's functions
 
     # values used in the addCatalogFromUrl function
-    votableURL = Unicode('').tag(sync=True)
-    votableOptions = Dict().tag(sync=True)
-    votableFromURLFlag = Bool(True).tag(sync=True)
+    votable_URL = Unicode('').tag(sync=True)
+    votable_options = Dict().tag(sync=True)
+    votable_from_URL_flag = Bool(True).tag(sync=True)
 
     # values used in the addTable function
-    tableKeys = List().tag(sync=True)
-    tableColumns = List([[1,2],[3,4]]).tag(sync=True)
-    tableFlag = Bool(True).tag(sync=True)
+    table_keys = List().tag(sync=True)
+    table_columns = List([[1,2],[3,4]]).tag(sync=True)
+    table_flag = Bool(True).tag(sync=True)
 
     @default('options')
     def _default_options(self):
@@ -73,11 +73,11 @@ class Aladin(widgets.DOMWidget):
     # the role of a flag, whose change in value trigger a listener in the js side,
     # who can then execute the function whose parameters are passed as trailets in its python equivalent
 
-    def addCatalogFromURL(self, votableURL, votableOptions):
+    def add_catalog_from_URL(self, votable_URL, votable_options):
         ''' load a VOTable table from an url and load its data into the widget '''
-        self.votableURL= votableURL
-        self.votableOptions= votableOptions
-        self.votableFromURLFlag= not self.votableFromURLFlag
+        self.votable_URL= votable_URL
+        self.votable_options= votable_options
+        self.votable_from_URL_flag= not self.votable_from_URL_flag
 
     # Notes:
     # 1 - The loaded table can possess fields tagged as 'masked', who can not be parsed by JSON
@@ -85,12 +85,12 @@ class Aladin(widgets.DOMWidget):
     #     and the use of table.__array__() is requiered.
     # 2 - It seems that the list.append() method does not work with traitlets,
     #     the affectation of the columns must be done at once by using a buffer.
-    def addTable(self, table):
+    def add_table(self, table):
         ''' load a VOTable -already accessible on the python side- into the widget '''
         table_array = table.__array__()
-        self.tableKeys= table.keys()
-        tableColumns= []
+        self.table_keys= table.keys()
+        table_columns= []
         for i in range(0,len(table.columns[0])):
-            tableColumns.append(list(table_array[i]));
-        self.tableColumns = tableColumns
-        self.tableFlag= not self.tableFlag
+            table_columns.append(list(table_array[i]));
+        self.table_columns = table_columns
+        self.table_flag= not self.table_flag

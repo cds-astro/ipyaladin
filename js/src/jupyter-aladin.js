@@ -82,11 +82,19 @@ var ViewAladin = widgets.DOMWidgetView.extend({
         var aladin_options= {};
         var opt= this.model.get('options');
         for(i=0; i<opt.length; i++)
-            aladin_options[opt[i]]= this.model.get(opt[i]);
+            aladin_options[this.convert_pyname_to_jsname(opt[i])]= this.model.get(opt[i]);
         this.al= aladin_lib.A.aladin([div_test], aladin_options);
         // Declaration of the variable's listeners:
         this.aladin_events();
         this.model_events();
+    },
+
+    convert_pyname_to_jsname: function (pyname) {
+        var i, temp= pyname.split('_');
+        for(i=1; i<temp.length; i++){
+            temp[i]= temp[i].charAt(0).toUpperCase() + temp[i].slice(1);
+        }
+        return temp.join('');
     },
 
     // Variables's listeners on the js side:
@@ -135,21 +143,20 @@ var ViewAladin = widgets.DOMWidgetView.extend({
                 that.target_js= false;
             }
         }, this);
-        this.listenTo(this.model, 'change:cooFrame', function () {
-            that.al.setFrame(that.model.get('cooFrame'));
+        this.listenTo(this.model, 'change:coo_frame', function () {
+            that.al.setFrame(that.model.get('coo_frame'));
         }, this);
         this.listenTo(this.model, 'change:survey', function () {
             that.al.setImageSurvey(that.model.get('survey'));
         }, this);
         // Model's functions parameters listeners
-        this.listenTo(this.model, 'change:votableFromURLFlag', function(){
-            console.log("CASIMIR");
-            that.al.addCatalog(aladin_lib.A.catalogFromURL(that.model.get('votableURL'), that.model.get('votableOptions')));
+        this.listenTo(this.model, 'change:votable_from_URL_flag', function(){
+            that.al.addCatalog(aladin_lib.A.catalogFromURL(that.model.get('votable_URL'), that.model.get('votable_options')));
         }, this);
-        this.listenTo(this.model, 'change:tableFlag', function(){
+        this.listenTo(this.model, 'change:table_flag', function(){
             var cat = aladin_lib.A.catalog({onClick: 'showTable'});
             that.al.addCatalog(cat);
-            cat.addSourcesAsArray(that.model.get('tableKeys'), that.model.get('tableColumns'))
+            cat.addSourcesAsArray(that.model.get('table_keys'), that.model.get('table_columns'))
         }, this);
     }
 
