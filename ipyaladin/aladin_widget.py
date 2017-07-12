@@ -77,7 +77,7 @@ class Aladin(widgets.DOMWidget):
         ''' load a VOTable table from an url and load its data into the widget '''
         self.votableURL= votableURL
         self.votableOptions= votableOptions
-        self.votableFlag= not self.votableFromURLFlag
+        self.votableFromURLFlag= not self.votableFromURLFlag
 
     # Notes:
     # 1 - The loaded table can possess fields tagged as 'masked', who can not be parsed by JSON

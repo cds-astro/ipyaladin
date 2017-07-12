@@ -143,6 +143,7 @@ var ViewAladin = widgets.DOMWidgetView.extend({
         }, this);
         // Model's functions parameters listeners
         this.listenTo(this.model, 'change:votableFromURLFlag', function(){
+            console.log("CASIMIR");
             that.al.addCatalog(aladin_lib.A.catalogFromURL(that.model.get('votableURL'), that.model.get('votableOptions')));
         }, this);
         this.listenTo(this.model, 'change:tableFlag', function(){
