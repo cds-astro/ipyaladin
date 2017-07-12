@@ -158,7 +158,7 @@ var ViewAladin = widgets.DOMWidgetView.extend({
             that.al.addCatalog(cat);
             cat.addSourcesAsArray(that.model.get('table_keys'), that.model.get('table_columns'))
         }, this);
-        /*this.listenTo(this.model, 'change:listener_flag', function(){
+        this.listenTo(this.model, 'change:listener_flag', function(){
             that.al.on(that.model.get('listener_type'), function(object) {
                 var msg;
                 if (object) {
@@ -167,8 +167,16 @@ var ViewAladin = widgets.DOMWidgetView.extend({
                 else {
                     msg = 'No object hovered';
                 }
+                var i;
+                for(i=msg.length; i<100; i++)
+                    msg+=' ';
+                // Send json object to the python-side of the application
+                that.send({
+                    'event': 'print',
+                    'message': msg
+                });
             });
-        }, this);*/
+        }, this);
     }
 
 });
@@ -181,5 +189,6 @@ module.exports = {
 
 /** 
 TODO:
+verify optional variables in python-side functions
 load AladinLite library from http...
  */
