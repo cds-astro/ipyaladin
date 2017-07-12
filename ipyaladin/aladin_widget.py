@@ -2,9 +2,7 @@ from ipywidgets import (widgets)
 from traitlets import (Float, Unicode, Bool, List, Dict, default)
 
 # theses library must be installed, and are used in votable operations
-# https://astroquery.readthedocs.io/en/latest/
 # http://www.astropy.org/
-from astroquery.simbad import Simbad
 import astropy
 
 ''' Definition of the AladinLite widget in the python kernel '''
