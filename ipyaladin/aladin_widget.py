@@ -5,7 +5,7 @@ from traitlets import (Float, Unicode, Bool, List, Dict, default)
 # http://www.astropy.org/
 import astropy
 
-''' Definition of the AladinLite widget in the python kernel '''
+""" Definition of the AladinLite widget in the python kernel """
 class Aladin(widgets.DOMWidget):
     _view_name = Unicode('ViewAladin').tag(sync=True)
     _model_name = Unicode('ModelAladin').tag(sync=True)
@@ -58,14 +58,14 @@ class Aladin(widgets.DOMWidget):
 
     @default('options')
     def _default_options(self):
-        ''' fill the options List with all the options declared '''
+        """ fill the options List with all the options declared """
         return [name for name in self.traits(o=True)]
 
     def __init__(self, **kwargs):
-        ''' class constructor
+        """ class constructor
             Args:
                 kwargs: widget options
-        '''
+        """
         super(Aladin, self).__init__(**kwargs)
         # trigger the handle_aladin_event function when the send function is called on the js-side
         self.on_msg(self.handle_aladin_event)
@@ -78,10 +78,10 @@ class Aladin(widgets.DOMWidget):
     # who can then execute the function whose parameters are passed as trailets in its python equivalent
 
     def add_catalog_from_URL(self, votable_URL, votable_options):
-        ''' load a VOTable table from an url and load its data into the widget 
+        """ load a VOTable table from an url and load its data into the widget 
             Args:
                 votable_URL: string url
-                votable_options: dictionary object'''
+                votable_options: dictionary object"""
         self.votable_URL= votable_URL
         self.votable_options= votable_options
         self.votable_from_URL_flag= not self.votable_from_URL_flag
@@ -93,27 +93,37 @@ class Aladin(widgets.DOMWidget):
     # 2 - It seems that the list.append() method does not work with traitlets,
     #     the affectation of the columns must be done at once by using a buffer.
     def add_table(self, table):
-        ''' load a VOTable -already accessible on the python side- into the widget
+        """ load a VOTable -already accessible on the python side- into the widget
             Args:
-                table: votable object'''
+                table: votable object"""
         table_array = table.__array__()
         self.table_keys= table.keys()
         table_columns= []
         for i in range(0,len(table.columns[0])):
-            table_columns.append(list(table_array[i]));
+            row_data = []
+
+            # this step is needed in order to properly retrieve strings data
+            # (otherwise, Aladin Lite shows these values as DataView object)
+            for item in table_array[i]:
+                if isinstance(item, bytes):
+                    row_data.append(item.decode('utf-8'))
+                else:
+                    row_data.append(item)
+            table_columns.append(row_data)
+
         self.table_columns = table_columns
         self.table_flag= not self.table_flag
 
     def add_listener(self, listener_type):
-        ''' add a listener to the widget
+        """ add a listener to the widget
             Args:
-                listener_type: string that can either be 'objectHovered' or 'objClicked' '''
+                listener_type: string that can either be 'objectHovered' or 'objClicked' """
         self.listener_type= listener_type
         self.listener_flag= not self.listener_flag
 
     # Note: the print() option end='\r' allow us to override the previous prints,
     # thus only the last message will be displayed at the screen
     def handle_aladin_event(self, _, content, buffers):
-        ''' used to collect json objects that are sent by the js-side of the application by using the send() method '''
+        """ used to collect json objects that are sent by the js-side of the application by using the send() method """
         if content.get('event', '').startswith('print'):
             print(content.get('message'), end='\r')
