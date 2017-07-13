@@ -22,7 +22,7 @@ log.set_verbosity(log.DEBUG)
 log.info('setup.py entered')
 log.info('$PATH=%s' % os.environ['PATH'])
 
-LONG_DESCRIPTION = 'test ipyaladin'
+LONG_DESCRIPTION = 'ipyaladin, a Jupyter widget for Aladin Lite'
 
 def js_prerelease(command, strict=False):
     """decorator for building minified js/css prior to another command"""
@@ -118,8 +118,9 @@ with open(os.path.join(here, 'ipyaladin', '_version.py')) as f:
 setup_args = {
     'name': 'ipyaladin',
     'version': version_ns['__version__'],
-    'description': 'test ipyaladin',
+    'description': 'ipyaladin',
     'long_description': LONG_DESCRIPTION,
+    'license': 'BSD-3-Clause',
     'include_package_data': True,
     'data_files': [
         ('share/jupyter/nbextensions/jupyter-widget-ipyaladin', [
@@ -140,13 +141,15 @@ setup_args = {
         'jsdeps': NPM,
     },
 
-    'author': 'JD',
-    'author_email': '',
-    'url': 'http://jupyter.org',
+    'author': 'Jerome Desroziers & Thomas Boch',
+    'author_email': 'thomas.boch@astro.unistra.fr',
+    'url': 'https://github.com/cds-astro/ipyaladin',
     'keywords': [
         'ipython',
         'jupyter',
         'widgets',
+        'aladin',
+        'astronomy'
     ],
     'classifiers': [
         'Development Status :: 4 - Beta',
