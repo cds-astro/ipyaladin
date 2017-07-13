@@ -57,6 +57,7 @@ class Aladin(widgets.DOMWidget):
     listener_flag = Bool(True).tag(sync=True)
     listener_callback_click = None
     listener_callback_hover = None
+    last_prompt_length = 0
 
     @default('options')
     def _default_options(self):
@@ -70,6 +71,7 @@ class Aladin(widgets.DOMWidget):
         """
         super(Aladin, self).__init__(**kwargs)
         # trigger the handle_aladin_event function when the send function is called on the js-side
+        # see: http://jupyter-notebook.readthedocs.io/en/latest/comms.html
         self.on_msg(self.handle_aladin_event)
 
     # Note: (about the classe's functions)
@@ -128,7 +130,7 @@ class Aladin(widgets.DOMWidget):
             self.listener_callback_click= callback
         self.listener_flag= not self.listener_flag
 
-    # Note: the print() options end='\r' and flush=True allow us to override the previous prints,
+    # Note: the print() options end='\r'allow us to override the previous prints,
     # thus only the last message will be displayed at the screen
     def handle_aladin_event(self, _, content, buffers):
         """ used to collect json objects that are sent by the js-side of the application by using the send() method """
@@ -137,4 +139,8 @@ class Aladin(widgets.DOMWidget):
                 result= self.listener_callback_hover(content.get('data'))
             if content.get('type') == 'objectClicked':
                 result= self.listener_callback_click(content.get('data'))
-            print(result, end='\r', flush=True)
+            result= str(result)
+            for i in  range(len(result),self.last_prompt_length):
+                result= result+' '
+            print(result, end='\r')
+            self.last_prompt_length= len(result)
