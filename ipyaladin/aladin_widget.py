@@ -57,6 +57,13 @@ class Aladin(widgets.DOMWidget):
     listener_callback_hover = None
     last_prompt_length = 0
 
+    # values used in the get_JPEG_thumbnail function
+    thumbnail_flag = Bool(True).tag(sync=True)
+
+    # 
+    color_map_name = Unicode('').tag(sync=True)
+    color_map_flag = Bool(True).tag(sync=True)
+
     @default('options')
     def _default_options(self):
         """ fill the options List with all the options declared """
@@ -147,3 +154,11 @@ class Aladin(widgets.DOMWidget):
                 result= result+' '
             print(result, end='\r')
             self.last_prompt_length= len(result)
+
+    def get_JPEG_thumbnail(self):
+        """ create a popup window that contains an image representing the widget's current state """
+        self.thumbnail_flag= not self.thumbnail_flag
+
+    def set_color_map(self, color_map_name):
+        self.color_map_name= color_map_name
+        self.color_map_flag= not self.color_map_flag

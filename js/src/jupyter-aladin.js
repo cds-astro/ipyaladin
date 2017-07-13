@@ -166,16 +166,25 @@ var ViewAladin = widgets.DOMWidgetView.extend({
                 // that cause error when trying to convert it into json
                 // (at least on chrome, due to object circularization)
                 if(object){
+                    console.log(object);
                     that.send({
                         'event': 'callback',
                         'type': type,
                         'data': {'data': object.data,
                                  'dec': object.dec,
-                                 'ra': object.ra}
+                                 'ra': object.ra,
+                                 'x': object.x,
+                                 'y': object.y}
                     });
                 }
             });
         }, this);
+        this.listenTo(this.model, 'change:thumbnail_flag', function(){
+            that.al.exportAsPNG();
+        });
+        this.listenTo(this.model, 'change:color_map_flag', function(){
+            that.al.getBaseImageLayer().getColorMap().update(that.model.get('color_map_name'));
+        });
     }
 
 });
@@ -188,6 +197,6 @@ module.exports = {
 
 /** 
 TODO:
-verify optional variables in python-side functions
+!!!: it seems that the rendering bug that occurs when the widget is displayed on full-screen is back......
 load AladinLite library from http...
  */
