@@ -159,22 +159,21 @@ var ViewAladin = widgets.DOMWidgetView.extend({
             cat.addSourcesAsArray(that.model.get('table_keys'), that.model.get('table_columns'))
         }, this);
         this.listenTo(this.model, 'change:listener_flag', function(){
+            var type= that.model.get('listener_type');
             that.al.on(that.model.get('listener_type'), function(object) {
-                var msg;
-                if (object) {
-                    msg = 'You hovered object ' + object.data.name + ' located at ' + object.ra + ', ' + object.dec;
-                }
-                else {
-                    msg = 'No object hovered';
-                }
-                var i;
-                for(i=msg.length; i<100; i++)
-                    msg+=' ';
                 // Send json object to the python-side of the application
-                that.send({
-                    'event': 'print',
-                    'message': msg
-                });
+                // We only send object.data because the whole object possess a catalog attribute
+                // that cause error when trying to convert it into json
+                // (at least on chrome, due to object circularization)
+                if(object){
+                    that.send({
+                        'event': 'callback',
+                        'type': type,
+                        'data': {'data': object.data,
+                                 'dec': object.dec,
+                                 'ra': object.ra}
+                    });
+                }
             });
         }, this);
     }

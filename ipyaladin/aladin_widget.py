@@ -55,6 +55,8 @@ class Aladin(widgets.DOMWidget):
     # values used in the add_listener function
     listener_type = Unicode('').tag(sync=True)
     listener_flag = Bool(True).tag(sync=True)
+    listener_callback_click = None
+    listener_callback_hover = None
 
     @default('options')
     def _default_options(self):
@@ -114,16 +116,25 @@ class Aladin(widgets.DOMWidget):
         self.table_columns = table_columns
         self.table_flag= not self.table_flag
 
-    def add_listener(self, listener_type):
+    def add_listener(self, listener_type, callback):
         """ add a listener to the widget
             Args:
-                listener_type: string that can either be 'objectHovered' or 'objClicked' """
+                listener_type: string that can either be 'objectHovered' or 'objClicked' 
+                callback: python function"""
         self.listener_type= listener_type
+        if listener_type == 'objectHovered':
+            self.listener_callback_hover= callback
+        if listener_type == 'objectClicked':
+            self.listener_callback_click= callback
         self.listener_flag= not self.listener_flag
 
-    # Note: the print() option end='\r' allow us to override the previous prints,
+    # Note: the print() options end='\r' and flush=True allow us to override the previous prints,
     # thus only the last message will be displayed at the screen
     def handle_aladin_event(self, _, content, buffers):
         """ used to collect json objects that are sent by the js-side of the application by using the send() method """
-        if content.get('event', '').startswith('print'):
-            print(content.get('message'), end='\r')
+        if content.get('event', '').startswith('callback'):
+            if content.get('type') == 'objectHovered':
+                result= self.listener_callback_hover(content.get('data'))
+            if content.get('type') == 'objectClicked':
+                result= self.listener_callback_click(content.get('data'))
+            print(result, end='\r', flush=True)
