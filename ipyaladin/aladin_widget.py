@@ -1,9 +1,7 @@
 from ipywidgets import (widgets)
 from traitlets import (Float, Unicode, Bool, List, Dict, default)
 
-# theses library must be installed, and are used in votable operations
-# http://www.astropy.org/
-import astropy
+
 
 """ Definition of the AladinLite widget in the python kernel """
 class Aladin(widgets.DOMWidget):
@@ -100,6 +98,11 @@ class Aladin(widgets.DOMWidget):
         """ load a VOTable -already accessible on the python side- into the widget
             Args:
                 table: votable object"""
+
+        # theses library must be installed, and are used in votable operations
+        # http://www.astropy.org/
+        import astropy
+        
         table_array = table.__array__()
         self.table_keys= table.keys()
         table_columns= []
