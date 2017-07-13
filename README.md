@@ -12,6 +12,11 @@ With a couple of lines, you can display Aladin Lite, center it on the target of 
 
 ![ipyaladin example](ipyaladin-screencast.gif)
 
+Examples
+-----------
+
+Some example notebooks can be found in the [examples directory](examples)
+
 Installation
 ------------
 
