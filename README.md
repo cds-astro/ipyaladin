@@ -8,6 +8,10 @@ A bridge between Jupyter and Aladin Lite, enabling interactive sky visualization
 
 ![ipyaladin example](ipyaladin-screenshot.png)
 
+With a couple of lines, you can display Aladin Lite, center it on the target of your choice, and overlay an Astropy table:
+
+![ipyaladin example](ipyaladin-screencast.gif)
+
 Installation
 ------------
 
