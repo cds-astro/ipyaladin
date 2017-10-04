@@ -23,6 +23,11 @@ Installation
 To install use pip:
 
     $ pip install ipyaladin
+
+Then, make sure to enable widgetsnbextension :
+    $ jupyter nbextension enable --py widgetsnbextension
+    
+Finally, enable ipyaladin :
     $ jupyter nbextension enable --py --sys-prefix ipyaladin
 
 
