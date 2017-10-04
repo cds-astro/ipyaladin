@@ -6,6 +6,9 @@
 //module.exports = {
 //    A: A
 //};
+// var astro = this.astro;
+
+
 var aladin_lib= require('./aladin_lib.js');
 
 // Allow us to use the DOMWidgetView base class for our models/views.
@@ -151,7 +154,14 @@ var ViewAladin = widgets.DOMWidgetView.extend({
         }, this);
         // Model's functions parameters listeners
         this.listenTo(this.model, 'change:votable_from_URL_flag', function(){
+        console.log('toto');
             that.al.addCatalog(aladin_lib.A.catalogFromURL(that.model.get('votable_URL'), that.model.get('votable_options')));
+        }, this);
+        this.listenTo(this.model, 'change:moc_from_URL_flag', function(){
+            that.al.addMOC(aladin_lib.A.MOCFromURL(that.model.get('moc_URL'), that.model.get('moc_options')));
+        }, this);
+        this.listenTo(this.model, 'change:moc_from_dict_flag', function(){
+            that.al.addMOC(aladin_lib.A.MOCFromJSON(that.model.get('moc_dict'), that.model.get('moc_options')));
         }, this);
         this.listenTo(this.model, 'change:table_flag', function(){
             var cat = aladin_lib.A.catalog({onClick: 'showTable'});

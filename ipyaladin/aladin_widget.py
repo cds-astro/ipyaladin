@@ -40,10 +40,19 @@ class Aladin(widgets.DOMWidget):
 
     # the following values are used in the classe's functions
 
-    # values used in the add_catalogFromUrl function
+    # values used in the add_catalog_from_URL function
     votable_URL = Unicode('').tag(sync=True)
     votable_options = Dict().tag(sync=True)
     votable_from_URL_flag = Bool(True).tag(sync=True)
+
+    # values used in the add_moc_from_URL function
+    moc_URL = Unicode('').tag(sync=True)
+    moc_options = Dict().tag(sync=True)
+    moc_from_URL_flag = Bool(True).tag(sync=True)
+
+    # values used in the add_moc_from_dict function
+    moc_dict = Dict().tag(sync=True)
+    moc_from_dict_flag = Bool(True).tag(sync=True)
 
     # values used in the add_table function
     table_keys = List().tag(sync=True)
@@ -86,7 +95,7 @@ class Aladin(widgets.DOMWidget):
     # the role of a flag, whose change in value trigger a listener in the js side,
     # who can then execute the function whose parameters are passed as trailets in its python equivalent
 
-    def add_catalog_from_URL(self, votable_URL, votable_options):
+    def add_catalog_from_URL(self, votable_URL, votable_options={}):
         """ load a VOTable table from an url and load its data into the widget 
             Args:
                 votable_URL: string url
@@ -94,6 +103,26 @@ class Aladin(widgets.DOMWidget):
         self.votable_URL= votable_URL
         self.votable_options= votable_options
         self.votable_from_URL_flag= not self.votable_from_URL_flag
+
+    def add_moc_from_URL(self, moc_URL, moc_options = {}):
+        """ load a MOC from a URL and display it in Aladin Lite widget
+            Arguments:
+            moc_URL: string url
+            moc_options: dictionary object"""
+        self.moc_URL = moc_URL
+        self.moc_options = moc_options
+        self.moc_from_URL_flag = not self.moc_from_URL_flag
+
+    def add_moc_from_dict(self, moc_dict, moc_options = {}):
+        """ load a MOC from a dict object and display it in Aladin Lite widget
+            Arguments:
+            moc_dict: the dict containing the MOC cells. Key are the HEALPix orders,
+                      values are the pixel indexes, eg: {"1":[1,2,4], "2":[12,13,14,21,23,25]} 
+            moc_options: dictionary object"""
+        self.moc_dict = moc_dict
+        self.moc_options = moc_options
+        self.moc_from_dict_flag = not self.moc_from_dict_flag
+
 
     # Notes:
     # 1 - The loaded table can possess fields tagged as 'masked', who can not be parsed by JSON

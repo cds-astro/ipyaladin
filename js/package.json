@@ -1,12 +1,12 @@
 {
   "name": "jupyter-widget-ipyaladin",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "test ipyaladin",
-  "author": "JD",
+  "author": "Jerome Desroziers and Thomas Boch",
   "main": "src/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jupyter/test_ipyaladin.git"
+    "url": "https://github.com/cds-astro/ipyaladin"
   },
   "keywords": [
     "jupyter",
