@@ -1,6 +1,6 @@
 {
   "name": "jupyter-widget-ipyaladin",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "test ipyaladin",
   "author": "Jerome Desroziers and Thomas Boch",
   "main": "src/index.js",
