@@ -78,7 +78,8 @@ var ViewAladin = widgets.DOMWidgetView.extend({
         // the AladinLite widget wihthout causing rendering issues.
         // Thus we use a div element and put it inside the 'el' element.
         var div_test = document.createElement('div');
-        div_test.id = 'aladin-lite-div'
+        div_test.id = 'aladin-lite-div' + parseInt(Math.random()*1000000);
+        // TODO: should this style be somehow inherited from the widget Layout attribute?
         div_test.setAttribute("style","width:100%;height:400px;");
         this.el.appendChild(div_test);
         // We get the options set on the python side and create an instance of the AladinLite object.
