@@ -62,8 +62,10 @@ class Aladin(widgets.DOMWidget):
     # values used in the add_listener function
     listener_type = Unicode('').tag(sync=True)
     listener_flag = Bool(True).tag(sync=True)
+    listener_callback_source_click = None
+    listener_callback_source_hover = None
     listener_callback_click = None
-    listener_callback_hover = None
+
     last_prompt_length = 0
 
     # values used in the get_JPEG_thumbnail function
@@ -164,9 +166,12 @@ class Aladin(widgets.DOMWidget):
                 callback: python function"""
         self.listener_type= listener_type
         if listener_type == 'objectHovered':
-            self.listener_callback_hover= callback
-        if listener_type == 'objectClicked':
+            self.listener_callback_source_hover= callback
+        elif listener_type == 'objectClicked':
+            self.listener_callback_source_click= callback
+        elif listener_type == 'click':
             self.listener_callback_click= callback
+
         self.listener_flag= not self.listener_flag
 
     # Note: the print() options end='\r'allow us to override the previous prints,
@@ -175,8 +180,10 @@ class Aladin(widgets.DOMWidget):
         """ used to collect json objects that are sent by the js-side of the application by using the send() method """
         if content.get('event', '').startswith('callback'):
             if content.get('type') == 'objectHovered':
-                result= self.listener_callback_hover(content.get('data'))
-            if content.get('type') == 'objectClicked':
+                result= self.listener_callback_source_hover(content.get('data'))
+            elif content.get('type') == 'objectClicked':
+                result= self.listener_callback_source_click(content.get('data'))
+            elif content.get('type') == 'click':
                 result= self.listener_callback_click(content.get('data'))
             result= str(result)
             for i in  range(len(result),self.last_prompt_length):
