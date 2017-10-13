@@ -24,13 +24,17 @@ To install use pip:
 
     $ pip install ipyaladin
 
-Then, make sure to enable widgetsnbextension :
+Then, make sure to enable widgetsnbextension:
 
     $ jupyter nbextension enable --py widgetsnbextension
     
-Finally, enable ipyaladin :
+Finally, enable ipyaladin:
 
     $ jupyter nbextension enable --py --sys-prefix ipyaladin
+
+There is also an experimental conda package that can be installed with:
+
+    $ conda install ipyaladin
 
 
 For a development installation (requires npm) you can either do:
