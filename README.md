@@ -34,7 +34,7 @@ Finally, enable ipyaladin:
 
 There is also an experimental conda package that can be installed with:
 
-    $ conda install ipyaladin
+    $  conda install -c tboch ipyaladin 
 
 
 For a development installation (requires npm) you can either do:
