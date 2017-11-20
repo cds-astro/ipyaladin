@@ -17,7 +17,7 @@ Examples
 
 Some example notebooks can be found in the [examples directory](examples).
 
-You can also try it directly [in mybinder](https://mybinder.org/v2/gh/cds-astro/ipyaladin/master?filepath=examples%2F1_Getting_Started.ipynb), without installing anything.
+You can also try it directly [in mybinder](https://mybinder.org/v2/gh/cds-astro/ipyaladin/master?filepath=examples), without installing anything.
 
 Installation
 ------------
