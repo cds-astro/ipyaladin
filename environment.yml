@@ -3,5 +3,5 @@ channels:
   - nodefaults
   - tboch
 dependencies:
-  - ipyleaflet
+  - ipyaladin
   
