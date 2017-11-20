@@ -1,6 +1,6 @@
 name: ipyaladin
 channels:
-  - nodefaults
+  - conda-forge
   - tboch
 dependencies:
   - ipyaladin
