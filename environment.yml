@@ -1,0 +1,7 @@
+name: ipyaladin
+channels:
+  - nodefaults
+  - tboch
+dependencies:
+  - ipyleaflet
+  
