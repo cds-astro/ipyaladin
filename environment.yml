@@ -4,4 +4,6 @@ channels:
   - tboch
 dependencies:
   - ipyaladin
+  - astropy
+  - astroquery
   
