@@ -15,7 +15,9 @@ With a couple of lines, you can display Aladin Lite, center it on the target of 
 Examples
 -----------
 
-Some example notebooks can be found in the [examples directory](examples)
+Some example notebooks can be found in the [examples directory](examples).
+
+You can also try it directly [in mybinder](https://mybinder.org/v2/gh/cds-astro/ipyaladin/master?filepath=examples), without installing anything.
 
 Installation
 ------------
