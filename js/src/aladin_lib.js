@@ -2364,7 +2364,8 @@ if (!Function.prototype.bind) {
 
 
 
-$ = $ || jQuery;
+//var $ = $ || jQuery;
+var $ = require('jquery')
 
 /* source : http://stackoverflow.com/a/8764051 */
 $.urlParam = function(name, queryString){
@@ -11675,6 +11676,7 @@ Aladin = (function() {
     
     // Constructor
     var Aladin = function(aladinDiv, requestedOptions) {
+    alert('coucou');    
         // check that aladinDiv exists, stop immediately otherwise
         if ($(aladinDiv).length==0) {
             console.log('Could not find div ' + aladinDiv + '. Aborting creation of Aladin Lite instance');

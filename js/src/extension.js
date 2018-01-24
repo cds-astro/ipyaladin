@@ -7,7 +7,7 @@ if (window.require) {
     window.require.config({
         map: {
             "*" : {
-                "jupyter-widget-ipyaladin": "nbextensions/jupyter-widget-ipyaladin/index",
+                "ipyaladin": "nbextensions/ipyaladin/index",
                 "jupyter-js-widgets": "nbextensions/jupyter-js-widgets/extension"
             }
         }

@@ -3,12 +3,17 @@ from traitlets import (Float, Unicode, Bool, List, Dict, default)
 
 
 
+
+
 """ Definition of the AladinLite widget in the python kernel """
 class Aladin(widgets.DOMWidget):
     _view_name = Unicode('ViewAladin').tag(sync=True)
     _model_name = Unicode('ModelAladin').tag(sync=True)
-    _view_module = Unicode('jupyter-widget-ipyaladin').tag(sync=True)
-    _model_module = Unicode('jupyter-widget-ipyaladin').tag(sync=True)
+    _view_module = Unicode('ipyaladin').tag(sync=True)
+    _model_module = Unicode('ipyaladin').tag(sync=True)
+    _view_module_version = Unicode('0.1.3').tag(sync=True)
+    _model_module_version = Unicode('0.1.3').tag(sync=True)
+
 
     # Aladin options must be declared here (as python class's attributes), 
     # so that they can be synchronized from the python side to the javascript side
@@ -19,6 +24,8 @@ class Aladin(widgets.DOMWidget):
     target = Unicode("0 +0").tag(sync=True, o=True)
     coo_frame = Unicode("J2000").tag(sync=True, o=True) 
     survey = Unicode("P/DSS2/color").tag(sync=True, o=True)
+    overlay_survey = Unicode('').tag(sync=True, o=True)
+    overlay_survey_opacity = Float(0.0).tag(sync=True, o=True)
 
     # the remaining values exists for the widget constructor's sole purpose
     reticle_size = Float(22).tag(sync=True, o=True)
