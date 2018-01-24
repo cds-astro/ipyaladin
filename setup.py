@@ -123,7 +123,7 @@ setup_args = {
     'license': 'BSD-3-Clause',
     'include_package_data': True,
     'data_files': [
-        ('share/jupyter/nbextensions/jupyter-widget-ipyaladin', [
+        ('share/jupyter/nbextensions/ipyaladin', [
             'ipyaladin/static/extension.js',
             'ipyaladin/static/index.js',
             'ipyaladin/static/index.js.map',

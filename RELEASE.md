@@ -10,7 +10,7 @@ git add and git commit
 git push
 git push --tags
 
-- To release a new version of jupyter-widget-ipyaladin on NPM:
+- To release a new version of ipyaladin on NPM:
 
 # nuke the  `dist` and `node_modules`
 git clean -fdx

@@ -41,7 +41,7 @@ module.exports = [
         },
         externals: ['jupyter-js-widgets']
     },
-    /*{// Embeddable jupyter-widget-ipyaladin bundle
+    /*{// Embeddable ipyaladin bundle
      //
      // This bundle is generally almost identical to the notebook bundle
      // containing the custom widget views and models.
@@ -60,7 +60,7 @@ module.exports = [
             filename: 'index.js',
             path: './dist/',
             libraryTarget: 'amd',
-            publicPath: 'https://unpkg.com/jupyter-widget-ipyaladin@' + version + '/dist/'
+            publicPath: 'https://unpkg.com/ipyaladin@' + version + '/dist/'
         },
         devtool: 'source-map',
         module: {
@@ -75,7 +75,7 @@ module.exports = [
             filename: 'test.js',
             path: './src/',
             libraryTarget: 'amd',
-            publicPath: 'https://unpkg.com/jupyter-widget-ipyaladin@' + version + '/dist/'
+            publicPath: 'https://unpkg.com/ipyaladin@' + version + '/dist/'
         },
         devtool: 'source-map',
         module: {

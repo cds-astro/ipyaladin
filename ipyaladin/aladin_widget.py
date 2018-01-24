@@ -9,8 +9,8 @@ from traitlets import (Float, Unicode, Bool, List, Dict, default)
 class Aladin(widgets.DOMWidget):
     _view_name = Unicode('ViewAladin').tag(sync=True)
     _model_name = Unicode('ModelAladin').tag(sync=True)
-    _view_module = Unicode('jupyter-widget-ipyaladin').tag(sync=True)
-    _model_module = Unicode('jupyter-widget-ipyaladin').tag(sync=True)
+    _view_module = Unicode('ipyaladin').tag(sync=True)
+    _model_module = Unicode('ipyaladin').tag(sync=True)
     _view_module_version = Unicode('0.1.3').tag(sync=True)
     _model_module_version = Unicode('0.1.3').tag(sync=True)
 
