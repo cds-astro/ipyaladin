@@ -8,13 +8,15 @@
 //};
 // var astro = this.astro;
 
-
-var aladin_lib= require('./aladin_lib.js');
+var jQuery = require('./jquery-1.12.1.min.js');
+var aladin_lib = require('./aladin_lib.js');
 
 // Allow us to use the DOMWidgetView base class for our models/views.
 // Additionnaly, this is where we put by default all the external libraries
 // fetched by using webpack (see webpack.config.js file).
 var widgets = require('jupyter-js-widgets');
+var _ = require("underscore");
+
 
 // The sole purpose of this module is to load the css stylesheet when the first instance
 // of the AladinLite widget
@@ -52,6 +54,8 @@ var ModelAladin = widgets.DOMWidgetModel.extend({
         _model_name : "ModelAladin",
         _model_module : "jupyter-aladin",
         _view_module : "jupyter-aladin",
+        _model_module_version : '0.1.3',
+        _view_module_version : '0.1.3',
     })
 });
 
@@ -152,6 +156,12 @@ var ViewAladin = widgets.DOMWidgetView.extend({
         }, this);
         this.listenTo(this.model, 'change:survey', function () {
             that.al.setImageSurvey(that.model.get('survey'));
+        }, this);
+        this.listenTo(this.model, 'change:overlay_survey', function () {
+            that.al.setOverlayImageLayer(that.model.get('overlay_survey'));
+        }, this);
+        this.listenTo(this.model, 'change:overlay_survey_opacity', function () {
+            that.al.getOverlayImageLayer().setAlpha(that.model.get('overlay_survey_opacity'));
         }, this);
         // Model's functions parameters listeners
         this.listenTo(this.model, 'change:votable_from_URL_flag', function(){
