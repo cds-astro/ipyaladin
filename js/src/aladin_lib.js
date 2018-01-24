@@ -11676,7 +11676,6 @@ Aladin = (function() {
     
     // Constructor
     var Aladin = function(aladinDiv, requestedOptions) {
-    alert('coucou');    
         // check that aladinDiv exists, stop immediately otherwise
         if ($(aladinDiv).length==0) {
             console.log('Could not find div ' + aladinDiv + '. Aborting creation of Aladin Lite instance');
