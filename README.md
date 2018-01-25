@@ -1,5 +1,5 @@
 ipyaladin
-===============================
+=========
 
 Description
 -----------
@@ -13,7 +13,7 @@ With a couple of lines, you can display Aladin Lite, center it on the target of 
 ![ipyaladin example](ipyaladin-screencast.gif)
 
 Examples
------------
+--------
 
 Some example notebooks can be found in the [examples directory](examples).
 
@@ -56,3 +56,12 @@ or directly use the compile.sh script:
 Note:
 Sometimes the module installation crash because of a conflict with an older occurence of itself, if so to solve this problem go to:  ~/anaconda3/share/jupyter/nbextensions
 Then suppress the ipyaladin corrupted file.
+
+Running in JupyterLab (experimental)
+------------------------------------
+
+To enable ipyaladin in JupyterLab:
+
+    $ git clone https://github.com/cds-astro/ipyaladin
+    $ cd ipyaladin/js
+    $ jupyter labextension install
