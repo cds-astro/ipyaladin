@@ -17,7 +17,7 @@ Examples
 
 Some example notebooks can be found in the [examples directory](examples).
 
-[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/cds-astro/ipyaladin/master) You can also try it directly [in mybinder](https://mybinder.org/v2/gh/cds-astro/ipyaladin/master?filepath=examples), without installing anything.
+[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/cds-astro/ipyaladin/master?filepath=examples)) You can also try it directly [in mybinder](https://mybinder.org/v2/gh/cds-astro/ipyaladin/master?filepath=examples), without installing anything.
 
 Installation
 ------------
