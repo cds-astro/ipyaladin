@@ -10263,56 +10263,61 @@ View = (function() {
         }
         
         
-        $(view.reticleCanvas).bind("mousedown touchstart", function(e) {
-            var xymouse = view.imageCanvas.relMouseCoords(e);
-            if (e.originalEvent && e.originalEvent.targetTouches) {
-                view.dragx = e.originalEvent.targetTouches[0].clientX;
-                view.dragy = e.originalEvent.targetTouches[0].clientY;
-            }
-            else {
-                /*
-                view.dragx = e.clientX;
-                view.dragy = e.clientY;
-                */
-                view.dragx = xymouse.x;
-                view.dragy = xymouse.y;
-            }
-            view.dragging = true;
-            if (view.mode==View.PAN) {
-                view.setCursor('move');
-            }
-            else if (view.mode==View.SELECT) {
-                view.selectStartCoo = {x: view.dragx, y: view.dragy};
-            }
+          $(view.reticleCanvas).bind("mousedown touchstart", function(e) {
+	    var  ctxM = view.imageCanvas.getContext("2d");
+	    ctxM.clearRect(0, 0, view.imageCanvas.width, view.imageCanvas.height);
+            // var xymouse = view.imageCanvas.relMouseCoords(e);
+            // if (e.originalEvent && e.originalEvent.targetTouches) {
+            //     view.dragx = e.originalEvent.targetTouches[0].clientX;
+            //     view.dragy = e.originalEvent.targetTouches[0].clientY;
+            // }
+            // else {
+            //     /*
+            //     view.dragx = e.clientX;
+            //     view.dragy = e.clientY;
+            //     */
+            //     view.dragx = xymouse.x;
+            //     view.dragy = xymouse.y;
+            // }
+            // view.dragging = true;
+            // if (view.mode==View.PAN) {
+            //     view.setCursor('move');
+            // }
+            // else if (view.mode==View.SELECT) {
+            //     view.selectStartCoo = {x: view.dragx, y: view.dragy};
+            // }
             return false; // to disable text selection
         });
         var lastClickedObject; // save last object clicked by mouse
 
         //$(view.reticleCanvas).bind("mouseup mouseout touchend", function(e) {
-        $(view.reticleCanvas).bind("click mouseout touchend", function(e) { // reacting on 'click' rather on 'mouseup' is more reliable when panning the view
-            if (view.mode==View.SELECT && view.dragging) {
-                view.aladin.fire('selectend', 
-                                 view.getObjectsInBBox(view.selectStartCoo.x, view.selectStartCoo.y,
-                                                       view.dragx-view.selectStartCoo.x, view.dragy-view.selectStartCoo.y));    
-            }
-            if (view.dragging) {
-                view.setCursor('default');
-                view.dragging = false;
+          $(view.reticleCanvas).bind("click mouseout touchend", function(e) { // reacting on 'click' rather on 'mouseup' is more reliable when panning the view
+	    var  ctxM = view.imageCanvas.getContext("2d");
+	    ctxM.clearRect(0, 0, view.imageCanvas.width, view.imageCanvas.height);
+            // if (view.mode==View.SELECT && view.dragging) {
+            //     view.aladin.fire('selectend', 
+            //                      view.getObjectsInBBox(view.selectStartCoo.x, view.selectStartCoo.y,
+            //                                            view.dragx-view.selectStartCoo.x, view.dragy-view.selectStartCoo.y));    
+            // }
+            // if (view.dragging) {
+            //     view.setCursor('default');
+            //     view.dragging = false;
                 
-            }
-            view.mustClearCatalog = true;
-            view.mustRedrawReticle = true; // pour effacer selection bounding box
-            view.dragx = view.dragy = null;
+            // }
+            // view.mustClearCatalog = true;
+            // view.mustRedrawReticle = true; // pour effacer selection bounding box
+            // view.dragx = view.dragy = null;
 
 
 
-            if (e.type==="mouseout") {
-                view.requestRedraw(true);
-                updateLocation(view, view.width/2, view.height/2, true);
+            // if (e.type==="mouseout") {
+            //     view.requestRedraw(true);
+            //     updateLocation(view, view.width/2, view.height/2, true);
 
-                return;
-            }
-
+            //     return;
+            // }
+	  
+          view.requestRedraw(true);
             var xymouse = view.imageCanvas.relMouseCoords(e);
             // popup to show ?
             var objs = view.closestObjects(xymouse.x, xymouse.y, 5);
@@ -10369,144 +10374,146 @@ View = (function() {
             view.requestRedraw(true);
         });
         var lastHoveredObject; // save last object hovered by mouse
-        $(view.reticleCanvas).bind("mousemove touchmove", function(e) {
-            e.preventDefault();
-            var xymouse = view.imageCanvas.relMouseCoords(e);
-            if (!view.dragging || hasTouchEvents) {
-                    updateLocation(view, xymouse.x, xymouse.y);
+          $(view.reticleCanvas).bind("mousemove touchmove", function(e) {
+	    var  ctxM = view.imageCanvas.getContext("2d");
+	    ctxM.clearRect(0, 0, view.imageCanvas.width, view.imageCanvas.height);	    
+//             e.preventDefault();
+//             var xymouse = view.imageCanvas.relMouseCoords(e);
+//             if (!view.dragging || hasTouchEvents) {
+//                     updateLocation(view, xymouse.x, xymouse.y);
 
-                if (!view.dragging && ! view.mode==View.SELECT) {
-                    // objects under the mouse ?
-                    var closest = view.closestObjects(xymouse.x, xymouse.y, 5);
-                    if (closest) {
-                        view.setCursor('pointer');
-                        var objHoveredFunction = view.aladin.callbacksByEventName['objectHovered'];
-                        if (typeof objHoveredFunction === 'function' && closest[0]!=lastHoveredObject) {
-                            var ret = objHoveredFunction(closest[0]);
-                        }
-                        lastHoveredObject = closest[0];
-                    }
-                    else {
-                        view.setCursor('default');
-                        var objHoveredFunction = view.aladin.callbacksByEventName['objectHovered'];
-                        if (typeof objHoveredFunction === 'function' && lastHoveredObject) {
-                            lastHoveredObject = null;
-                            // call callback function to notify we left the hovered object
-                            var ret = objHoveredFunction(null);
-                        }
-                    }
-                }
-                if (!hasTouchEvents) {
-                    return;
-                }
-            }
+//                 if (!view.dragging && ! view.mode==View.SELECT) {
+//                     // objects under the mouse ?
+//                     var closest = view.closestObjects(xymouse.x, xymouse.y, 5);
+//                     if (closest) {
+//                         view.setCursor('pointer');
+//                         var objHoveredFunction = view.aladin.callbacksByEventName['objectHovered'];
+//                         if (typeof objHoveredFunction === 'function' && closest[0]!=lastHoveredObject) {
+//                             var ret = objHoveredFunction(closest[0]);
+//                         }
+//                         lastHoveredObject = closest[0];
+//                     }
+//                     else {
+//                         view.setCursor('default');
+//                         var objHoveredFunction = view.aladin.callbacksByEventName['objectHovered'];
+//                         if (typeof objHoveredFunction === 'function' && lastHoveredObject) {
+//                             lastHoveredObject = null;
+//                             // call callback function to notify we left the hovered object
+//                             var ret = objHoveredFunction(null);
+//                         }
+//                     }
+//                 }
+//                 if (!hasTouchEvents) {
+//                     return;
+//                 }
+//             }
 
-            if (! view.dragging) {
-                return;
-            }
+//             if (! view.dragging) {
+//                 return;
+//             }
 
-            var xoffset, yoffset;
-            var pos1, pos2;
+//             var xoffset, yoffset;
+//             var pos1, pos2;
             
-            if (e.originalEvent && e.originalEvent.targetTouches) {
-                // ???
-                xoffset = e.originalEvent.targetTouches[0].clientX-view.dragx;
-                yoffset = e.originalEvent.targetTouches[0].clientY-view.dragy;
-                var xy1 = AladinUtils.viewToXy(e.originalEvent.targetTouches[0].clientX, e.originalEvent.targetTouches[0].clientY, view.width, view.height, view.largestDim, view.zoomFactor);
-                var xy2 = AladinUtils.viewToXy(view.dragx, view.dragy, view.width, view.height, view.largestDim, view.zoomFactor);
+//             if (e.originalEvent && e.originalEvent.targetTouches) {
+//                 // ???
+//                 xoffset = e.originalEvent.targetTouches[0].clientX-view.dragx;
+//                 yoffset = e.originalEvent.targetTouches[0].clientY-view.dragy;
+//                 var xy1 = AladinUtils.viewToXy(e.originalEvent.targetTouches[0].clientX, e.originalEvent.targetTouches[0].clientY, view.width, view.height, view.largestDim, view.zoomFactor);
+//                 var xy2 = AladinUtils.viewToXy(view.dragx, view.dragy, view.width, view.height, view.largestDim, view.zoomFactor);
 
-                pos1 = view.projection.unproject(xy1.x, xy1.y);
-                pos2 = view.projection.unproject(xy2.x, xy2.y);
-            }
-            else {
-                /*
-                xoffset = e.clientX-view.dragx;
-                yoffset = e.clientY-view.dragy;
-                */
-                xoffset = xymouse.x-view.dragx;
-                yoffset = xymouse.y-view.dragy;
+//                 pos1 = view.projection.unproject(xy1.x, xy1.y);
+//                 pos2 = view.projection.unproject(xy2.x, xy2.y);
+//             }
+//             else {
+//                 /*
+//                 xoffset = e.clientX-view.dragx;
+//                 yoffset = e.clientY-view.dragy;
+//                 */
+//                 xoffset = xymouse.x-view.dragx;
+//                 yoffset = xymouse.y-view.dragy;
                 
-                var xy1 = AladinUtils.viewToXy(xymouse.x, xymouse.y, view.width, view.height, view.largestDim, view.zoomFactor);
-                var xy2 = AladinUtils.viewToXy(view.dragx, view.dragy, view.width, view.height, view.largestDim, view.zoomFactor);
+//                 var xy1 = AladinUtils.viewToXy(xymouse.x, xymouse.y, view.width, view.height, view.largestDim, view.zoomFactor);
+//                 var xy2 = AladinUtils.viewToXy(view.dragx, view.dragy, view.width, view.height, view.largestDim, view.zoomFactor);
 
                 
-                pos1 = view.projection.unproject(xy1.x, xy1.y);
-                pos2 = view.projection.unproject(xy2.x, xy2.y);
+//                 pos1 = view.projection.unproject(xy1.x, xy1.y);
+//                 pos2 = view.projection.unproject(xy2.x, xy2.y);
                 
-            }
+//             }
             
-            // TODO : faut il faire ce test ??
-//            var distSquared = xoffset*xoffset+yoffset*yoffset;
-//            if (distSquared<3) {
-//                return;
-//            }
-            if (e.originalEvent && e.originalEvent.targetTouches) {
-                view.dragx = e.originalEvent.targetTouches[0].clientX;
-                view.dragy = e.originalEvent.targetTouches[0].clientY;
-            }
-            else {
-                view.dragx = xymouse.x;
-                view.dragy = xymouse.y;
-                /*
-                view.dragx = e.clientX;
-                view.dragy = e.clientY;
-                */
-            }
+//             // TODO : faut il faire ce test ??
+// //            var distSquared = xoffset*xoffset+yoffset*yoffset;
+// //            if (distSquared<3) {
+// //                return;
+// //            }
+//             if (e.originalEvent && e.originalEvent.targetTouches) {
+//                 view.dragx = e.originalEvent.targetTouches[0].clientX;
+//                 view.dragy = e.originalEvent.targetTouches[0].clientY;
+//             }
+//             else {
+//                 view.dragx = xymouse.x;
+//                 view.dragy = xymouse.y;
+//                 /*
+//                 view.dragx = e.clientX;
+//                 view.dragy = e.clientY;
+//                 */
+//             }
             
-            if (view.mode==View.SELECT) {
-                  view.requestRedraw();
-                  return;
-            }
+//             if (view.mode==View.SELECT) {
+//                   view.requestRedraw();
+//                   return;
+//             }
 
-            //view.viewCenter.lon += xoffset*view.mouseMoveIncrement/Math.cos(view.viewCenter.lat*Math.PI/180.0);
-            /*
-            view.viewCenter.lon += xoffset*view.mouseMoveIncrement;
-            view.viewCenter.lat += yoffset*view.mouseMoveIncrement;
-            */
-            view.viewCenter.lon += pos2.ra -  pos1.ra;
-            view.viewCenter.lat += pos2.dec - pos1.dec;
+//             //view.viewCenter.lon += xoffset*view.mouseMoveIncrement/Math.cos(view.viewCenter.lat*Math.PI/180.0);
+//             /*
+//             view.viewCenter.lon += xoffset*view.mouseMoveIncrement;
+//             view.viewCenter.lat += yoffset*view.mouseMoveIncrement;
+//             */
+//             view.viewCenter.lon += pos2.ra -  pos1.ra;
+//             view.viewCenter.lat += pos2.dec - pos1.dec;
             
 
             
-            // can not go beyond poles
-            if (view.viewCenter.lat>90) {
-                view.viewCenter.lat = 90;
-            }
-            else if (view.viewCenter.lat < -90) {
-                view.viewCenter.lat = -90;
-            }
+//             // can not go beyond poles
+//             if (view.viewCenter.lat>90) {
+//                 view.viewCenter.lat = 90;
+//             }
+//             else if (view.viewCenter.lat < -90) {
+//                 view.viewCenter.lat = -90;
+//             }
             
-            // limit lon to [0, 360]
-            if (view.viewCenter.lon < 0) {
-                view.viewCenter.lon = 360 + view.viewCenter.lon;
-            }
-            else if (view.viewCenter.lon > 360) {
-                view.viewCenter.lon = view.viewCenter.lon % 360;
-            }
-            view.requestRedraw();
+//             // limit lon to [0, 360]
+//             if (view.viewCenter.lon < 0) {
+//                 view.viewCenter.lon = 360 + view.viewCenter.lon;
+//             }
+//             else if (view.viewCenter.lon > 360) {
+//                 view.viewCenter.lon = view.viewCenter.lon % 360;
+//             }
+             view.requestRedraw();
         }); //// endof mousemove ////
         
         // disable text selection on IE
         $(view.aladinDiv).onselectstart = function () { return false; }
 
         $(view.reticleCanvas).on('mousewheel', function(event) {
-            event.preventDefault();
-            event.stopPropagation();
-            var level = view.zoomLevel;
+            // event.preventDefault();
+            // event.stopPropagation();
+            // var level = view.zoomLevel;
 
-             var delta = event.deltaY;
-            // this seems to happen in context of Jupyter notebook --> we have to invert the direction of scroll
-            // hope this won't trigger some side effects ...
-            if (event.hasOwnProperty('originalEvent')) {
-                delta = -event.originalEvent.deltaY;
-            } 
-            if (delta>0) {
-                level += 1;
-            }
-            else {
-                level -= 1;
-            }
-            view.setZoomLevel(level);
+            //  var delta = event.deltaY;
+            // // this seems to happen in context of Jupyter notebook --> we have to invert the direction of scroll
+            // // hope this won't trigger some side effects ...
+            // if (event.hasOwnProperty('originalEvent')) {
+            //     delta = -event.originalEvent.deltaY;
+            // } 
+            // if (delta>0) {
+            //     level += 1;
+            // }
+            // else {
+            //     level -= 1;
+            // }
+            // view.setZoomLevel(level);
             
             return false;
         });
