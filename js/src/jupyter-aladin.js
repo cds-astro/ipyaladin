@@ -8,7 +8,7 @@
 //};
 // var astro = this.astro;
 
-var jQuery = require('./jquery-1.12.1.min.js');
+var jQuery = require('./jquery-3.0.0.min.js');
 var aladin_lib = require('./aladin_lib.js');
 
 // Allow us to use the DOMWidgetView base class for our models/views.
@@ -181,13 +181,42 @@ var ViewAladin = widgets.DOMWidgetView.extend({
         }, this);
         this.listenTo(this.model, 'change:listener_flag', function(){
             var type= that.model.get('listener_type');
-            that.al.on(that.model.get('listener_type'), function(object) {
+            that.al.on(type, function(object) {
+                if (type==='select') {
+                    var sources = object;
+                    // first, deselect previously selected sources
+                    for (var k=0; k<that.al.view.catalogs.length; k++) {
+                        that.al.view.catalogs[k].deselectAll();
+                    }
+                    var sourcesData = [];
+                    for (var k = 0; k<sources.length ; k++) {
+                        var source = sources[k];
+                        source.select();
+                        sourcesData.push(
+                            {
+                                data: source.data,
+                                dec: source.dec,
+                                ra: source.ra,
+                                x: source.x,
+                                y: source.y
+                            }
+                        );
+                    }
+                    that.send({
+                        'event': 'callback',
+                        'type': type,
+                        'data': sourcesData,
+                    });
+
+                    return;
+
+                }
+
                 // Send json object to the python-side of the application
                 // We only send object.data because the whole object possess a catalog attribute
                 // that cause error when trying to convert it into json
                 // (at least on chrome, due to object circularization)
                 if(object){
-                    console.log(object);
                     that.send({
                         'event': 'callback',
                         'type': type,
@@ -200,6 +229,9 @@ var ViewAladin = widgets.DOMWidgetView.extend({
                 }
             });
         }, this);
+        this.listenTo(this.model, 'change:rectangular_selection_flag', function(){
+            that.al.select();
+        });
         this.listenTo(this.model, 'change:thumbnail_flag', function(){
             that.al.exportAsPNG();
         });

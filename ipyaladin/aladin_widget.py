@@ -73,6 +73,10 @@ class Aladin(widgets.DOMWidget):
     listener_callback_source_hover = None
     listener_callback_click = None
 
+    # values used in rectangular_selection function
+    rectangular_selection_flag = Bool(True).tag(sync=True)
+    rectangular_selection_callback = None
+
     last_prompt_length = 0
 
     # values used in the get_JPEG_thumbnail function
@@ -178,8 +182,15 @@ class Aladin(widgets.DOMWidget):
             self.listener_callback_source_click= callback
         elif listener_type == 'click':
             self.listener_callback_click= callback
+        elif listener_type == 'select':
+            self.listener_callback_select= callback
 
         self.listener_flag= not self.listener_flag
+
+    def rectangular_selection(self):
+        """ trigger a rectangular selection in Aladin Lite view
+        """
+        self.rectangular_selection_flag = not self.rectangular_selection_flag
 
     # Note: the print() options end='\r'allow us to override the previous prints,
     # thus only the last message will be displayed at the screen
@@ -192,6 +203,8 @@ class Aladin(widgets.DOMWidget):
                 result= self.listener_callback_source_click(content.get('data'))
             elif content.get('type') == 'click':
                 result= self.listener_callback_click(content.get('data'))
+            elif content.get('type') == 'select':
+                result= self.listener_callback_select(content.get('data'))
             result= str(result)
             for i in  range(len(result),self.last_prompt_length):
                 result= result+' '
