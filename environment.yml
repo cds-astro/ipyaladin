@@ -1,7 +1,9 @@
 name: ipyaladin
+
 channels:
   - conda-forge
   - tboch
+
 dependencies:
   - ipyaladin
   - astropy
