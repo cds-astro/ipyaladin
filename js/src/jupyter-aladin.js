@@ -8,7 +8,7 @@
 //};
 // var astro = this.astro;
 
-var jQuery = require('./jquery-3.0.0.min.js');
+var jQuery = require('jquery');
 var aladin_lib = require('./aladin_lib.js');
 
 // Allow us to use the DOMWidgetView base class for our models/views.
