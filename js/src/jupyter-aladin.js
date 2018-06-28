@@ -54,8 +54,8 @@ var ModelAladin = widgets.DOMWidgetModel.extend({
         _model_name : "ModelAladin",
         _model_module : "jupyter-aladin",
         _view_module : "jupyter-aladin",
-        _model_module_version : '0.1.3',
-        _view_module_version : '0.1.3',
+        _model_module_version : '0.1.5',
+        _view_module_version : '0.1.5',
     })
 });
 

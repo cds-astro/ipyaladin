@@ -1,6 +1,6 @@
 {
   "name": "ipyaladin",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "ipyaladin",
   "author": "Thomas Boch and Jerome Desroziers",
   "main": "src/index.js",

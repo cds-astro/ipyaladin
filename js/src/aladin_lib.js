@@ -2686,8 +2686,8 @@ if (!Function.prototype.bind) {
 
 
 
-
-$ = $ || jQuery;
+var $ = require('jquery');
+//var $ = $ || jQuery;
 
 /* source : http://stackoverflow.com/a/8764051 */
 $.urlParam = function(name, queryString){
