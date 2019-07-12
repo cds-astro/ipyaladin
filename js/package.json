@@ -1,6 +1,6 @@
 {
   "name": "ipyaladin",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "ipyaladin",
   "author": "Thomas Boch and Jerome Desroziers",
   "main": "src/index.js",
@@ -23,7 +23,7 @@
     "webpack": "^1.12.14"
   },
   "dependencies": {
-    "jupyter-js-widgets": "^2.1.4",
+    "@jupyter-widgets/base": "1.1 || ^2.0",
     "underscore": "^1.8.3",
     "jquery": "^3.0"
   },
