@@ -1,6 +1,6 @@
 {
   "name": "ipyaladin",
-  "version": "0.1.5",
+  "version": "0.1.7",
   "description": "ipyaladin",
   "author": "Thomas Boch and Jerome Desroziers",
   "main": "src/index.js",
@@ -23,9 +23,9 @@
     "webpack": "^1.12.14"
   },
   "dependencies": {
-    "jupyter-js-widgets": "^2.1.4",
-    "underscore": "^1.8.3",
-    "jquery": "^3.0"
+    "@jupyter-widgets/base": "1.1 || ^2.0",
+    "jquery": "^3.0",
+    "underscore": "^1.8.3"
   },
   "jupyterlab": {
     "extension": "src/jupyterlab-plugin.js"

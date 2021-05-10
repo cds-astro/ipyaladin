@@ -1,8 +1,6 @@
 var $ = require('jquery');
 
 
-
-
 // Copyright 2013 - UDS/CNRS
 // The Aladin Lite program is distributed under the terms
 // of the GNU General Public License version 3.
@@ -6007,7 +6005,7 @@ MOC = (function() {
             // high res cells
             degradedOrder = MOC.HIGHRES_MAXORDER; 
             degradedIpix  = Math.floor(ipix / Math.pow(4, (order - degradedOrder)));
-            var degradedIpixOrder3 = Math.floor(degradedIpix * Math.pow(4, (3 - degradedIpix)) );
+            var degradedIpixOrder3 = Math.floor(degradedIpix * Math.pow(4, (3 - degradedOrder)) );
             if (! (degradedOrder in this._highResIndexOrder3[degradedIpixOrder3])) {
                 this._highResIndexOrder3[degradedIpixOrder3][degradedOrder]= [];
             }
@@ -9386,6 +9384,8 @@ HpxImageSurvey = (function() {
     	    else {
     	        this.rootUrl = rootUrl;
     	    }
+            this.additionalParams = (options && options.additionalParams) || null; // parameters for cut, stretch, etc
+
             // make URL absolute
             this.rootUrl = Utils.getAbsoluteURL(this.rootUrl);
 
@@ -9464,7 +9464,7 @@ HpxImageSurvey = (function() {
             // testing if server supports CORS ( http://www.html5rocks.com/en/tutorials/cors/ )
             $.ajax({
                 type: 'GET',
-                url: this.rootUrl + '/properties',
+                url: this.rootUrl + '/properties'  + (this.additionalParams ? ('?' + this.additionalParams) : ''),
                 dataType: 'text',
                 xhrFields: {
                 },
@@ -9680,7 +9680,7 @@ HpxImageSurvey = (function() {
     
     HpxImageSurvey.prototype.getTileURL = function(norder, npix) {
     	var dirIdx = Math.floor(npix/10000)*10000;
-    	return this.rootUrl + "/" + "Norder" + norder + "/Dir" + dirIdx + "/Npix" + npix + "." + this.imgFormat;
+    	return this.rootUrl + "/" + "Norder" + norder + "/Dir" + dirIdx + "/Npix" + npix + "." + this.imgFormat  + (this.additionalParams ? ('?' + this.additionalParams) : '');;
     };
     
     HpxImageSurvey.prototype.retrieveAllskyTextures = function() {
@@ -9710,7 +9710,7 @@ HpxImageSurvey = (function() {
             */
     		self.view.requestRedraw();
     	};
-    	img.src = this.rootUrl + '/Norder3/Allsky.' + this.imgFormat;
+    	img.src = this.rootUrl + '/Norder3/Allsky.' + this.imgFormat + (this.additionalParams ? ('?' + this.additionalParams) : '');
     
     };
 
@@ -12730,7 +12730,7 @@ Aladin = (function() {
 	};
 	
     /**** CONSTANTS ****/
-    Aladin.VERSION = "2018-10-03"; // will be filled by the build.sh script
+    Aladin.VERSION = "2018-10-30"; // will be filled by the build.sh script
     
     Aladin.JSONP_PROXY = "https://alasky.unistra.fr/cgi/JSONProxy";
 
@@ -13355,6 +13355,7 @@ Aladin = (function() {
     // API
     A.catalogFromURL = function(url, options, successCallback, useProxy) {
         var catalog = A.catalog(options);
+        // TODO: should be self-contained in Catalog class
         cds.Catalog.parseVOTable(url, function(sources) {
                 catalog.addSources(sources);
                 if (successCallback) {
