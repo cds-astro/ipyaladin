@@ -52,10 +52,12 @@ var ModelAladin = widgets.DOMWidgetModel.extend({
     defaults: _.extend({}, widgets.DOMWidgetModel.prototype.defaults, {
         _view_name : "ViewAladin",
         _model_name : "ModelAladin",
+
         _model_module : "jupyter-aladin",
         _view_module : "jupyter-aladin",
-        _model_module_version : '0.1.7',
-        _view_module_version : '0.1.7',
+
+        _model_module_version : '0.1.8',
+        _view_module_version : '0.1.8',
     })
 });
 
@@ -163,22 +165,32 @@ var ViewAladin = widgets.DOMWidgetView.extend({
         this.listenTo(this.model, 'change:overlay_survey_opacity', function () {
             that.al.getOverlayImageLayer().setAlpha(that.model.get('overlay_survey_opacity'));
         }, this);
+
         // Model's functions parameters listeners
         this.listenTo(this.model, 'change:votable_from_URL_flag', function(){
-        console.log('toto');
             that.al.addCatalog(aladin_lib.A.catalogFromURL(that.model.get('votable_URL'), that.model.get('votable_options')));
         }, this);
+
         this.listenTo(this.model, 'change:moc_from_URL_flag', function(){
             that.al.addMOC(aladin_lib.A.MOCFromURL(that.model.get('moc_URL'), that.model.get('moc_options')));
         }, this);
+        
         this.listenTo(this.model, 'change:moc_from_dict_flag', function(){
             that.al.addMOC(aladin_lib.A.MOCFromJSON(that.model.get('moc_dict'), that.model.get('moc_options')));
         }, this);
+
         this.listenTo(this.model, 'change:table_flag', function(){
             var cat = aladin_lib.A.catalog({onClick: 'showTable'});
             that.al.addCatalog(cat);
             cat.addSourcesAsArray(that.model.get('table_keys'), that.model.get('table_columns'))
         }, this);
+
+        this.listenTo(this.model, 'change:overlay_from_stcs_flag', function() {
+            var overlay = aladin_lib.A.graphicOverlay(that.model.get('overlay_options'));
+            that.al.addOverlay(overlay);
+            overlay.addFootprints(that.al.createFootprintsFromSTCS(that.model.get('stc_string')));
+        }, this);
+
         this.listenTo(this.model, 'change:listener_flag', function(){
             var type= that.model.get('listener_type');
             that.al.on(type, function(object) {
@@ -229,12 +241,15 @@ var ViewAladin = widgets.DOMWidgetView.extend({
                 }
             });
         }, this);
+
         this.listenTo(this.model, 'change:rectangular_selection_flag', function(){
             that.al.select();
         });
+
         this.listenTo(this.model, 'change:thumbnail_flag', function(){
             that.al.exportAsPNG();
         });
+
         this.listenTo(this.model, 'change:color_map_flag', function(){
             that.al.getBaseImageLayer().getColorMap().update(that.model.get('color_map_name'));
         });

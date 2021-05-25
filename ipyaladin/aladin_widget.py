@@ -9,10 +9,12 @@ from traitlets import (Float, Unicode, Bool, List, Dict, default)
 class Aladin(widgets.DOMWidget):
     _view_name = Unicode('ViewAladin').tag(sync=True)
     _model_name = Unicode('ModelAladin').tag(sync=True)
+
     _view_module = Unicode('ipyaladin').tag(sync=True)
     _model_module = Unicode('ipyaladin').tag(sync=True)
-    _view_module_version = Unicode('0.1.7').tag(sync=True)
-    _model_module_version = Unicode('0.1.7').tag(sync=True)
+
+    _view_module_version = Unicode('0.1.8').tag(sync=True)
+    _model_module_version = Unicode('0.1.8').tag(sync=True)
 
 
     # Aladin options must be declared here (as python class's attributes), 
@@ -65,6 +67,11 @@ class Aladin(widgets.DOMWidget):
     table_keys = List().tag(sync=True)
     table_columns = List().tag(sync=True)
     table_flag = Bool(True).tag(sync=True)
+
+    # values used in the add_overlay_from_stcs function
+    stc_string = Unicode('').tag(sync=True)
+    overlay_options = Dict().tag(sync=True)
+    overlay_from_stcs_flag = Bool(True).tag(sync=True)
 
     # values used in the add_listener function
     listener_type = Unicode('').tag(sync=True)
@@ -169,6 +176,19 @@ class Aladin(widgets.DOMWidget):
 
         self.table_columns = table_columns
         self.table_flag= not self.table_flag
+
+    def add_overlay_from_stcs(self, stc_string, overlay_options={}):
+        """ Add an overlay layer defined by a STC-S string
+
+            Args:
+                stc_string: the STC-S string. Can be on multiple lines, delimited by \n separators
+                overlay_options: the STC-S string. Can be on multiple lines, delimited by \n separators"""
+
+        self.stc_string = stc_string
+        self.overlay_options = overlay_options
+
+        self.overlay_from_stcs_flag = not self.overlay_from_stcs_flag
+
 
     def add_listener(self, listener_type, callback):
         """ add a listener to the widget
