@@ -157,7 +157,15 @@ var ViewAladin = widgets.DOMWidgetView.extend({
             that.al.setFrame(that.model.get('coo_frame'));
         }, this);
         this.listenTo(this.model, 'change:survey', function () {
-            that.al.setImageSurvey(that.model.get('survey'));
+            var s = that.model.get('survey');
+            if (s.constructor == Object) {
+                s = that.al.createImageSurvey(s.hips_id,
+                                              s.hips_name,
+                                              s.base_url,
+                                              s.frame, s.max_order,
+                                              {imgFormat: s.image_format});
+            }
+            that.al.setImageSurvey(s);
         }, this);
         this.listenTo(this.model, 'change:overlay_survey', function () {
             that.al.setOverlayImageLayer(that.model.get('overlay_survey'));

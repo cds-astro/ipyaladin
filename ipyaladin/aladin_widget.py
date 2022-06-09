@@ -1,5 +1,5 @@
 from ipywidgets import (widgets)
-from traitlets import (Float, Unicode, Bool, List, Dict, default)
+from traitlets import (Float, Unicode, Bool, List, Dict, Union, default)
 
 
 
@@ -25,7 +25,8 @@ class Aladin(widgets.DOMWidget):
     fov = Float(60).tag(sync=True, o=True)
     target = Unicode("0 +0").tag(sync=True, o=True)
     coo_frame = Unicode("J2000").tag(sync=True, o=True) 
-    survey = Unicode("P/DSS2/color").tag(sync=True, o=True)
+    survey = Union([Unicode(), Dict()],
+                   default_value="P/DSS2/color").tag(sync=True, o=True)
     overlay_survey = Unicode('').tag(sync=True, o=True)
     overlay_survey_opacity = Float(0.0).tag(sync=True, o=True)
 
