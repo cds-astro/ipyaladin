@@ -67,3 +67,5 @@ To enable ipyaladin in JupyterLab:
     $ python -m pip install [-e] .
     $ cd ipyaladin/js
     $ jupyter labextension install @jupyter-widgets/jupyterlab-manager .
+
+Now when you start JupyterLab you will be prompted to rebuild the extension. Choose 'Rebuild' and all the ipyaladin examples should now work.
