@@ -1,7 +1,8 @@
 from ipywidgets import (widgets)
 from traitlets import (Float, Unicode, Bool, List, Dict, default)
-
-
+import requests
+import io
+import urllib.parse
 
 
 
@@ -53,6 +54,11 @@ class Aladin(widgets.DOMWidget):
     hips_URL = Unicode('').tag(sync=True)
     hips_id = Unicode('').tag(sync=True)
     hips_name = Unicode('').tag(sync=True)
+    hips_frame = Unicode('equatorial').tag(sync=True)
+    # For some reason trying to pass floats or ints seems to break things
+    # so using a string representation and parsing as an integer on the JS
+    # side.
+    hips_max_order = Unicode('9').tag(sync=True)
     hips_options = Dict().tag(sync=True)
     hips_from_URL_flag = Bool(True).tag(sync=True)
 
@@ -122,14 +128,60 @@ class Aladin(widgets.DOMWidget):
     # the role of a flag, whose change in value trigger a listener in the js side,
     # who can then execute the function whose parameters are passed as trailets in its python equivalent
 
-    def add_hips_from_URL(self, hips_URL, hips_id, hips_name, hips_options={}):
+    def _get_hips_properties(self, hips_URL):
+        mandatory_hips_kws = [
+            "creator_did",
+            "obs_title",
+            "dataproduct_type",
+            "hips_version",
+            "hips_release_date",
+            "hips_status",
+            "hips_tile_format",
+            "hips_order",
+            "hips_frame",
+        ]
+
+        try:
+            response = requests.get(
+                urllib.parse.urljoin(
+                    "https://hips.astron.nl/ASTRON/P/lotss_dr2_high" + "/",
+                    "properties",
+                )
+            )
+            if response:
+                with io.StringIO(response.content.decode()) as properties:
+                    parsed_properties = dict(
+                        [
+                            [r.split("=")[0].strip(), "=".join(r.split("=")[1:]).strip()]
+                            for r in properties.readlines()
+                            if not r.strip().startswith("#")
+                        ]
+                    )
+
+                for property in mandatory_hips_kws:
+                    if property not in parsed_properties:
+                        raise RuntimeError(
+                            f"Properties file from HiPS endpoint ({response.url}) is missing a mandatory keyword \"{property}\"."
+                        )
+                return parsed_properties
+            else:
+                raise RuntimeError(
+                    f"Could not retrieve mandatory properties file from HiPS endpoint: {response.url}."
+                )
+        except RuntimeError as e:
+            raise
+
+    def add_hips_from_URL(self, hips_URL, hips_options={}):
         """ load a VOTable table from an url and load its data into the widget
             Args:
                 votable_URL: string url
                 votable_options: dictionary object"""
         self.hips_URL= hips_URL
-        self.hips_id= hips_id
-        self.hips_name= hips_name
+        hips_properties = self._get_hips_properties(self.hips_URL)
+        self.hips_id= hips_properties["creator_did"]
+        self.hips_name= hips_properties["obs_title"]
+        self.hips_frame= hips_properties["hips_frame"]
+        self.hips_max_order= hips_properties["hips_order"]
         self.hips_options= hips_options
         self.hips_from_URL_flag= not self.hips_from_URL_flag
 

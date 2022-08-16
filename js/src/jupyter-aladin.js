@@ -168,7 +168,20 @@ var ViewAladin = widgets.DOMWidgetView.extend({
 
         // Model's functions parameters listeners
         this.listenTo(this.model, 'change:hips_from_URL_flag', function(){
-            that.al.setBaseImageLayer(aladin_lib.A.imageLayer(that.model.get('hips_id'), that.model.get('hips_name'), that.model.get('hips_URL'), that.model.get('hips_options')));
+            let hips_max_order = 9;
+            try {
+              hips_max_order = parseInt(that.model.get('hips_max_order'));
+            } catch(err){
+              console.log(`Could not convert HIPS max order to an integer defaulting to ${hips_max_order}`);
+            }
+            that.al.setBaseImageLayer(that.al.createImageSurvey(
+              that.model.get('hips_id'),
+              that.model.get('hips_name'),
+              that.model.get('hips_URL'),
+              that.model.get('hips_frame'),
+              hips_max_order,
+              that.model.get('hips_options')
+            ));
         }, this);
 
         this.listenTo(this.model, 'change:votable_from_URL_flag', function(){
