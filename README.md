@@ -29,14 +29,14 @@ To install use pip:
 Then, make sure to enable widgetsnbextension:
 
     $ jupyter nbextension enable --py widgetsnbextension
-    
+
 Finally, enable ipyaladin:
 
     $ jupyter nbextension enable --py --sys-prefix ipyaladin
 
 There is also an experimental conda package that can be installed with:
 
-    $  conda install -c tboch ipyaladin 
+    $  conda install -c tboch ipyaladin
 
 
 For a development installation (requires npm) you can either do:
@@ -63,5 +63,7 @@ Running in JupyterLab (experimental)
 To enable ipyaladin in JupyterLab:
 
     $ git clone https://github.com/cds-astro/ipyaladin
+    $ cd ipyaladin
+    $ python -m pip install [-e] .
     $ cd ipyaladin/js
-    $ jupyter labextension install
+    $ jupyter labextension install @jupyter-widgets/jupyterlab-manager .
