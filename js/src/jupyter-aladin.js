@@ -167,6 +167,10 @@ var ViewAladin = widgets.DOMWidgetView.extend({
         }, this);
 
         // Model's functions parameters listeners
+        this.listenTo(this.model, 'change:hips_from_URL_flag', function(){
+            that.al.setBaseImageLayer(aladin_lib.A.imageLayer(that.model.get('hips_id'), that.model.get('hips_name'), that.model.get('hips_URL'), that.model.get('hips_options')));
+        }, this);
+
         this.listenTo(this.model, 'change:votable_from_URL_flag', function(){
             that.al.addCatalog(aladin_lib.A.catalogFromURL(that.model.get('votable_URL'), that.model.get('votable_options')));
         }, this);

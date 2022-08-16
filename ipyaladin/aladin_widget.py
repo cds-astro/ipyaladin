@@ -17,14 +17,14 @@ class Aladin(widgets.DOMWidget):
     _model_module_version = Unicode('0.1.9').tag(sync=True)
 
 
-    # Aladin options must be declared here (as python class's attributes), 
+    # Aladin options must be declared here (as python class's attributes),
     # so that they can be synchronized from the python side to the javascript side
     # Default values are overwritten by values passed to the class's constructor
-    
+
     # only theses 4 values are actually updated on one side when they change on the other
     fov = Float(60).tag(sync=True, o=True)
     target = Unicode("0 +0").tag(sync=True, o=True)
-    coo_frame = Unicode("J2000").tag(sync=True, o=True) 
+    coo_frame = Unicode("J2000").tag(sync=True, o=True)
     survey = Unicode("P/DSS2/color").tag(sync=True, o=True)
     overlay_survey = Unicode('').tag(sync=True, o=True)
     overlay_survey_opacity = Float(0.0).tag(sync=True, o=True)
@@ -48,6 +48,13 @@ class Aladin(widgets.DOMWidget):
     options = List(trait=Unicode).tag(sync=True)
 
     # the following values are used in the classe's functions
+
+    # values used in the add_catalog_from_URL function
+    hips_URL = Unicode('').tag(sync=True)
+    hips_id = Unicode('').tag(sync=True)
+    hips_name = Unicode('').tag(sync=True)
+    hips_options = Dict().tag(sync=True)
+    hips_from_URL_flag = Bool(True).tag(sync=True)
 
     # values used in the add_catalog_from_URL function
     votable_URL = Unicode('').tag(sync=True)
@@ -89,7 +96,7 @@ class Aladin(widgets.DOMWidget):
     # values used in the get_JPEG_thumbnail function
     thumbnail_flag = Bool(True).tag(sync=True)
 
-    # 
+    #
     color_map_name = Unicode('').tag(sync=True)
     color_map_flag = Bool(True).tag(sync=True)
 
@@ -115,8 +122,19 @@ class Aladin(widgets.DOMWidget):
     # the role of a flag, whose change in value trigger a listener in the js side,
     # who can then execute the function whose parameters are passed as trailets in its python equivalent
 
+    def add_hips_from_URL(self, hips_URL, hips_id, hips_name, hips_options={}):
+        """ load a VOTable table from an url and load its data into the widget
+            Args:
+                votable_URL: string url
+                votable_options: dictionary object"""
+        self.hips_URL= hips_URL
+        self.hips_id= hips_id
+        self.hips_name= hips_name
+        self.hips_options= hips_options
+        self.hips_from_URL_flag= not self.hips_from_URL_flag
+
     def add_catalog_from_URL(self, votable_URL, votable_options={}):
-        """ load a VOTable table from an url and load its data into the widget 
+        """ load a VOTable table from an url and load its data into the widget
             Args:
                 votable_URL: string url
                 votable_options: dictionary object"""
@@ -137,7 +155,7 @@ class Aladin(widgets.DOMWidget):
         """ load a MOC from a dict object and display it in Aladin Lite widget
             Arguments:
             moc_dict: the dict containing the MOC cells. Key are the HEALPix orders,
-                      values are the pixel indexes, eg: {"1":[1,2,4], "2":[12,13,14,21,23,25]} 
+                      values are the pixel indexes, eg: {"1":[1,2,4], "2":[12,13,14,21,23,25]}
             moc_options: dictionary object"""
         self.moc_dict = moc_dict
         self.moc_options = moc_options
@@ -158,7 +176,7 @@ class Aladin(widgets.DOMWidget):
         # theses library must be installed, and are used in votable operations
         # http://www.astropy.org/
         import astropy
-        
+
         table_array = table.__array__()
         self.table_keys= table.keys()
         table_columns= []
@@ -193,7 +211,7 @@ class Aladin(widgets.DOMWidget):
     def add_listener(self, listener_type, callback):
         """ add a listener to the widget
             Args:
-                listener_type: string that can either be 'objectHovered' or 'objClicked' 
+                listener_type: string that can either be 'objectHovered' or 'objClicked'
                 callback: python function"""
         self.listener_type= listener_type
         if listener_type == 'objectHovered':
