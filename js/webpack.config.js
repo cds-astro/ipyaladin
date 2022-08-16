@@ -39,7 +39,7 @@ module.exports = [
         module: {
             loaders: loaders
         },
-        externals: ['jupyter-js-widgets']
+        externals: ['jupyter-widgets']
     },
     /*{// Embeddable ipyaladin bundle
      //
@@ -66,9 +66,9 @@ module.exports = [
         module: {
             loaders: loaders
         },
-        externals: ['jupyter-js-widgets']
+        externals: ['jupyter-widgets']
     }*/
-    // test 
+    // test
     /*{
         entry: './src/embed.js',
         output: {
@@ -81,7 +81,7 @@ module.exports = [
         module: {
             loaders: loaders
         },
-        externals: ['jupyter-js-widgets']
+        externals: ['jupyter-widgets']
     }*/
     /*{
         entry: './src/embed.js',
@@ -97,6 +97,6 @@ module.exports = [
         module: {
             loaders: loaders
         },
-        externals: ['jupyter-js-widgets']
+        externals: ['jupyter-widgets']
     }*/
 ];

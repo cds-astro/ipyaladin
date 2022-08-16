@@ -8,7 +8,7 @@ if (window.require) {
         map: {
             "*" : {
                 "ipyaladin": "nbextensions/ipyaladin/index",
-                "jupyter-js-widgets": "nbextensions/jupyter-js-widgets/extension"
+                // "jupyter-widgets": "nbextensions/jupyter-widgets/extension"
             }
         }
     });
