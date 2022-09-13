@@ -14,7 +14,7 @@ var aladin_lib = require('./aladin_lib.js');
 // Allow us to use the DOMWidgetView base class for our models/views.
 // Additionnaly, this is where we put by default all the external libraries
 // fetched by using webpack (see webpack.config.js file).
-var widgets = require('jupyter-js-widgets');
+var widgets = require('@jupyter-widgets/base');
 var _ = require("underscore");
 
 
@@ -38,10 +38,10 @@ var CSS_Loader= ({
 
 /**
  * Definition of the AladinLite widget's model in the browser
- * Useful documentation about the widget's global implementation : 
+ * Useful documentation about the widget's global implementation :
  * (from http://ipywidgets.readthedocs.io/en/latest/examples/Widget%20Custom.html)
  * The IPython widget framework front end relies heavily on Backbone.js.
- * Backbone.js is an MVC (model view controller) framework. 
+ * Backbone.js is an MVC (model view controller) framework.
  * Widgets defined in the back end are automatically synchronized with generic Backbone.js
  * models in the front end.
  * The traitlets are added to the front end instance automatically on first state push.
@@ -129,7 +129,7 @@ var ViewAladin = widgets.DOMWidgetView.extend({
             }else{
                 that.target_py= false;
             }
-            
+
         });
     },
 
@@ -174,7 +174,7 @@ var ViewAladin = widgets.DOMWidgetView.extend({
         this.listenTo(this.model, 'change:moc_from_URL_flag', function(){
             that.al.addMOC(aladin_lib.A.MOCFromURL(that.model.get('moc_URL'), that.model.get('moc_options')));
         }, this);
-        
+
         this.listenTo(this.model, 'change:moc_from_dict_flag', function(){
             that.al.addMOC(aladin_lib.A.MOCFromJSON(that.model.get('moc_dict'), that.model.get('moc_options')));
         }, this);
@@ -263,7 +263,7 @@ module.exports = {
     ModelAladin : ModelAladin
 };
 
-/** 
+/**
 TODO:
 !!!: it seems that the rendering bug that occurs when the widget is displayed on full-screen is back......
 load AladinLite library from http...
