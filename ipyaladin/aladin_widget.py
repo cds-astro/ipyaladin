@@ -1,4 +1,4 @@
-from ipywidgets import (widgets)
+from ipywidgets import widgets
 from traitlets import (Float, Unicode, Bool, List, Dict, default)
 
 
@@ -13,8 +13,8 @@ class Aladin(widgets.DOMWidget):
     _view_module = Unicode('ipyaladin').tag(sync=True)
     _model_module = Unicode('ipyaladin').tag(sync=True)
 
-    _view_module_version = Unicode('0.1.9').tag(sync=True)
-    _model_module_version = Unicode('0.1.9').tag(sync=True)
+    _view_module_version = Unicode('0.1.10').tag(sync=True)
+    _model_module_version = Unicode('0.1.10').tag(sync=True)
 
 
     # Aladin options must be declared here (as python class's attributes), 

@@ -7,21 +7,18 @@
 //    A: A
 //};
 // var astro = this.astro;
-
-var jQuery = require('jquery');
+import { DOMWidgetModel, DOMWidgetView } from '@jupyter-widgets/base';
 var aladin_lib = require('./aladin_lib.js');
 
 // Allow us to use the DOMWidgetView base class for our models/views.
 // Additionnaly, this is where we put by default all the external libraries
 // fetched by using webpack (see webpack.config.js file).
-var widgets = require('@jupyter-widgets/base');
 var _ = require("underscore");
 
 
 // The sole purpose of this module is to load the css stylesheet when the first instance
 // of the AladinLite widget
 var CSS_Loader= ({
-
     is_css_loaded: false,
 
     load_css: function(data){
@@ -48,35 +45,32 @@ var CSS_Loader= ({
  * The _view_name trait that you defined earlier is used by the widget framework to create
  * the corresponding Backbone.js view and link that view to the model.
  */
-var ModelAladin = widgets.DOMWidgetModel.extend({
-    defaults: _.extend({}, widgets.DOMWidgetModel.prototype.defaults, {
-        _view_name : "ViewAladin",
-        _model_name : "ModelAladin",
-
-        _model_module : "jupyter-aladin",
-        _view_module : "jupyter-aladin",
-
-        _model_module_version : '0.1.9',
-        _view_module_version : '0.1.9',
-    })
-});
-
+ export class ModelAladin extends DOMWidgetModel {
+    defaults() {
+      return {
+        ...super.defaults(),
+        _model_name: 'ModelAladin',
+        _view_name: 'ViewAladin',
+        _model_module : "ipyaladin",
+        _view_module : "ipyaladin",
+        _model_module_version: '0.1.10',
+        _view_module_version: '0.1.10',
+      };
+    }
+  }
 
 /**
  * Definition of the AladinLite widget's view in the browser
  */
-var ViewAladin = widgets.DOMWidgetView.extend({
-    // The attr_js and attr_py variables are used as lock between the listeners
-    // of the corresponding attribute, python-side and javascript-side,
-    // in order to prevent infinite loop between listener calls on value change
-    fov_js: false,
-    fov_py: false,
-    target_js: false,
-    target_py: false,
-
+ export class ViewAladin extends DOMWidgetView {
     // This function is automatically called when the python-side widget's instance is displayed
     // (by calling it at the end of a bloc or by using the display() function)
-    render: function() {
+    render() {
+        this.fov_js = false;
+        this.fov_py = false;
+        this.target_js = false;
+        this.target_py = false;
+
         // We load the css stylesheet.
         CSS_Loader.load_css();
         // We create the DOM element that will contain our widget
@@ -91,24 +85,24 @@ var ViewAladin = widgets.DOMWidgetView.extend({
         // We get the options set on the python side and create an instance of the AladinLite object.
         var aladin_options= {};
         var opt= this.model.get('options');
-        for(i=0; i<opt.length; i++)
-            aladin_options[this.convert_pyname_to_jsname(opt[i])]= this.model.get(opt[i]);
+        for(var i=0; i<opt.length; i++)
+            aladin_options[this.convert_pyname_to_jsname(opt[i])] = this.model.get(opt[i]);
         this.al= aladin_lib.A.aladin([div_test], aladin_options);
         // Declaration of the variable's listeners:
         this.aladin_events();
         this.model_events();
-    },
+    }
 
-    convert_pyname_to_jsname: function (pyname) {
+    convert_pyname_to_jsname(pyname) {
         var i, temp= pyname.split('_');
         for(i=1; i<temp.length; i++){
             temp[i]= temp[i].charAt(0).toUpperCase() + temp[i].slice(1);
         }
         return temp.join('');
-    },
+    }
 
     // Variables's listeners on the js side:
-    aladin_events: function () {
+    aladin_events() {
         var that = this;
         this.al.on('zoomChanged', function(fov) {
             if(!that.fov_py){
@@ -131,10 +125,10 @@ var ViewAladin = widgets.DOMWidgetView.extend({
             }
 
         });
-    },
+    }
 
     // Variables's listeners on the python side:
-    model_events: function () {
+    model_events() {
         var that = this;
         // Model's class parameters listeners
         this.listenTo(this.model, 'change:fov', function () {
@@ -254,14 +248,7 @@ var ViewAladin = widgets.DOMWidgetView.extend({
             that.al.getBaseImageLayer().getColorMap().update(that.model.get('color_map_name'));
         });
     }
-
-});
-
-// Node.js exports
-module.exports = {
-    ViewAladin : ViewAladin,
-    ModelAladin : ModelAladin
-};
+}
 
 /**
 TODO:

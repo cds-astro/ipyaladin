@@ -10,6 +10,7 @@
 // __webpack_public_path__ = document.querySelector('body').getAttribute('data-base-url') + 'nbextensions/ipyaladin/';
 
 // Export widget models and views, and the npm package version number.
-module.exports = require('./jupyter-aladin.js');
+//module.exports = require('./jupyter-aladin.js');
+//module.exports['version'] = require('../package.json').version;
 
-module.exports['version'] = require('../package.json').version;
+export {ModelAladin, ViewAladin} from './jupyter-aladin';
