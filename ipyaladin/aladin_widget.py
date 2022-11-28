@@ -116,6 +116,7 @@ class Aladin(widgets.DOMWidget):
         # see: http://jupyter-notebook.readthedocs.io/en/latest/comms.html
         self.on_msg(self.handle_aladin_event)
 
+
     # Note: (about the classe's functions)
     # As it is only possible to communicate with the js side of the application by using traitlets,
     # we can not directly call a js function from the python side
