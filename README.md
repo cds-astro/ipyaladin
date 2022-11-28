@@ -1,6 +1,20 @@
 # ipyaladin
 
-ipyaladin
+## Description
+
+A bridge between Jupyter and Aladin Lite, enabling interactive sky visualization in IPython notebooks.
+
+![ipyaladin example](ipyaladin-screenshot.png)
+
+With a couple of lines, you can display Aladin Lite, center it on the target of your choice, and overlay an Astropy table:
+
+![ipyaladin example](ipyaladin-screencast.gif)
+
+## Examples
+
+Some example notebooks can be found in the [examples directory](examples).
+
+[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/bmatthieu3/ipyaladin/develop)) You can also try it directly [in mybinder](https://mybinder.org/v2/gh/bmatthieu3/ipyaladin/develop), without installing anything.
 
 ## Installation
 
