@@ -1,0 +1,22 @@
+graft ipyaladin/nbextension
+graft ipyaladin/labextension
+
+graft js
+graft tests
+prune **/node_modules
+
+include ipyaladin.json
+
+include LICENSE
+include setup.py
+include setup.cfg
+include pyproject.toml
+include install.json
+
+# Patterns to exclude from any directory
+global-exclude *~
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude .git
+global-exclude .ipynb_checkpoints
+global-exclude *.map
