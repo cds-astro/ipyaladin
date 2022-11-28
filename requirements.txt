@@ -1,4 +1,0 @@
-astropy
-astroquery
-ipywidgets
-jupyter_packaging~=0.7.9
