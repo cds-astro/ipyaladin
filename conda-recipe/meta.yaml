@@ -1,5 +1,5 @@
 {% set name = "ipyaladin" %}
-{% set version = "0.1.4" %}
+{% set version = "0.1.10" %}
 {% set file_ext = "tar.gz" %}
 {% set hash_type = "sha256" %}
 {% set hash_value = "64f684a8c24f574e35f1285c0ca40e45fc28c4e9dca7a304b7b46f1e25607492" %}

@@ -16,7 +16,7 @@
   ],
   "scripts": {
     "build": "webpack --mode=development",
-    "prepublish": "webpack --mode=production",
+    "prepublish": "webpack --mode=development",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
