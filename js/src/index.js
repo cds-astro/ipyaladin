@@ -14,3 +14,5 @@
 //module.exports['version'] = require('../package.json').version;
 
 export {ModelAladin, ViewAladin} from './jupyter-aladin';
+
+//export {version} from '../package.json';

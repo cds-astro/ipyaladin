@@ -25,11 +25,18 @@
     "webpack-cli": "^4.10.0"
   },
   "dependencies": {
-    "@jupyter-widgets/base": "^6",
-    "jquery": "^3.0",
+    "@jupyter-widgets/base": "^1.1 || ^2 || ^3 || ^4 || ^6",
+    "jquery": "^3.6.1",
     "underscore": "^1.8.3"
   },
   "jupyterlab": {
-    "extension": "src/jupyterlab-plugin.js"
+    "extension": "src/jupyterlab-plugin.js",
+    "outputDir": "../ipyaladin/labextension",
+    "sharedPackages": {
+      "@jupyter-widgets/base": {
+        "bundled": false,
+        "singleton": true
+      }
+    }
   }
 }

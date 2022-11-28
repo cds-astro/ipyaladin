@@ -1,19 +1,17 @@
-var aladin = require('./index');
+import {ModelAladin, ViewAladin} from './index.js';
+import {IJupyterWidgetRegistry} from '@jupyter-widgets/base';
 
-var base = require('@jupyter-widgets/base');
-
-/**
- * The widget manager provider.
- */
-module.exports = {
-  id: 'ipyaladin',
-  requires: [base.IJupyterWidgetRegistry],
+export const IPyAladinWidgetPlugin = {
+  id: 'ipyaladin:plugin',
+  requires: [IJupyterWidgetRegistry],
   activate: function(app, widgets) {
       widgets.registerWidget({
           name: 'ipyaladin',
-          version: aladin.version,
-          exports: aladin
+          version: '0.1.10',
+          exports: { ModelAladin, ViewAladin }
       });
-    },
+  },
   autoStart: true
-}
+};
+
+export default IPyAladinWidgetPlugin;

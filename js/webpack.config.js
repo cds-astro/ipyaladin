@@ -25,7 +25,7 @@ module.exports = (env, argv) => {
         // custom widget.
         // It must be an amd module
         //
-            entry: './src/index.js',
+            entry: ['./amd-public-path.js', './src/index.js'],
             output: {
                 filename: 'index.js',
                 path: path.resolve(__dirname, '..', 'ipyaladin', 'static'),
@@ -33,8 +33,28 @@ module.exports = (env, argv) => {
                 publicPath: '',
             },
             devtool,
-            externals: ['@jupyter-widgets/base']
+            externals: ['@jupyter-widgets/base', 'module']
         },
+        /*{// Embeddable aladin lite bundle
+        //
+        // This bundle is identical to the notebook bundle containing the custom
+        // widget views and models. The only difference is it is placed in the
+        // dist/ directory and shipped with the npm package for use from a CDN
+        // like jsdelivr.
+        //
+        // The target bundle is always `dist/index.js`, which is the path
+        // required by the custom widget embedder.
+            entry: ['./amd-public-path.js', './src/index.js'],
+            output: {
+                filename: 'index.js',
+                path: path.resolve(__dirname, '..', 'ipyaladin', 'dist'),
+                libraryTarget: 'amd',
+                publicPath: '', // Set in amd-public-path.js
+            },
+            devtool,
+        // 'module' is the magic requirejs dependency used to set the publicPath
+            externals: ['@jupyter-widgets/base', 'module']
+        }*/
         /*{// Embeddable ipyaladin bundle
         //
         // This bundle is generally almost identical to the notebook bundle
