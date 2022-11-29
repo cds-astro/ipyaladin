@@ -22,15 +22,32 @@ To install use pip:
 
     $ pip install ipyaladin
 
+Then, make sure to enable widgetsnbextension:
+
+    $ jupyter nbextension enable --py widgetsnbextension
+
+Finally, enable ipyaladin:
+
+    $ jupyter nbextension enable --py --sys-prefix ipyaladin
+
+For a jupyterlab usage:
+
+    $ jupyter labextension develop ipyaladin --overwrite
+
+There is also an experimental conda package that can be installed with:
+
+    $  conda install -c tboch ipyaladin
+
 For a development installation (requires [Node.js](https://nodejs.org) and [Yarn version 1](https://classic.yarnpkg.com/)),
 
     $ git clone https://github.com/cds-astro/ipyaladin.git
     $ cd ipyaladin
+    $ npm install yarn
     $ pip install -e .
     $ jupyter nbextension install --py --symlink --overwrite --sys-prefix ipyaladin
     $ jupyter nbextension enable --py --sys-prefix ipyaladin
 
-When actively developing your extension for JupyterLab, run the command:
+When actively developing your extension for JupyterLab, you will need to run this command too:
 
     $ jupyter labextension develop --overwrite ipyaladin
 
