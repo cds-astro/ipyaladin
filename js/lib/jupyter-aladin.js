@@ -1,12 +1,3 @@
-// For the moment, the AladinLite library is not online,
-// and is located in the same repository of this file.
-// The version currently used is the beta version, whose url is:
-// http://aladin.u-strasbg.fr/AladinLite/api/v2/beta/aladin.js
-// For the library to be compatible with node.js, the following code must be added at the file's end:
-//module.exports = {
-//    A: A
-//};
-// var astro = this.astro;
 import { DOMWidgetModel, DOMWidgetView } from '@jupyter-widgets/base';
 var aladin_lib = require('./aladin_lib.js');
 
@@ -15,10 +6,10 @@ var aladin_lib = require('./aladin_lib.js');
 // fetched by using webpack (see webpack.config.js file).
 var _ = require("underscore");
 
-
 // The sole purpose of this module is to load the css stylesheet when the first instance
 // of the AladinLite widget
 var CSS_Loader= ({
+
     is_css_loaded: false,
 
     load_css: function(data){
@@ -33,38 +24,41 @@ var CSS_Loader= ({
     }
 });
 
-/**
- * Definition of the AladinLite widget's model in the browser
- * Useful documentation about the widget's global implementation :
- * (from http://ipywidgets.readthedocs.io/en/latest/examples/Widget%20Custom.html)
- * The IPython widget framework front end relies heavily on Backbone.js.
- * Backbone.js is an MVC (model view controller) framework.
- * Widgets defined in the back end are automatically synchronized with generic Backbone.js
- * models in the front end.
- * The traitlets are added to the front end instance automatically on first state push.
- * The _view_name trait that you defined earlier is used by the widget framework to create
- * the corresponding Backbone.js view and link that view to the model.
- */
- export class ModelAladin extends DOMWidgetModel {
+// See example.py for the kernel counterpart to this file.
+
+// Custom Model. Custom widgets models must at least provide default values
+// for model attributes, including
+//
+//  - `_view_name`
+//  - `_view_module`
+//  - `_view_module_version`
+//
+//  - `_model_name`
+//  - `_model_module`
+//  - `_model_module_version`
+//
+//  when different from the base class.
+
+// When serialiazing the entire widget state for embedding, only values that
+// differ from the defaults will be serialized.
+
+export class AladinModel extends DOMWidgetModel {
     defaults() {
       return {
         ...super.defaults(),
-        _model_name: 'ModelAladin',
-        _view_name: 'ViewAladin',
-        _model_module : "ipyaladin",
-        _view_module : "ipyaladin",
-        _model_module_version: '0.1.10',
-        _view_module_version: '0.1.10',
+        _model_name : 'AladinModel',
+        _view_name : 'AladinView',
+
+        _model_module : 'ipyaladin',
+        _view_module : 'ipyaladin',
+
+        _model_module_version : '0.1.10',
+        _view_module_version : '0.1.10',
       };
     }
   }
 
-/**
- * Definition of the AladinLite widget's view in the browser
- */
- export class ViewAladin extends DOMWidgetView {
-    // This function is automatically called when the python-side widget's instance is displayed
-    // (by calling it at the end of a bloc or by using the display() function)
+export class AladinView extends DOMWidgetView {
     render() {
         this.fov_js = false;
         this.fov_py = false;
@@ -86,7 +80,7 @@ var CSS_Loader= ({
         var aladin_options= {};
         var opt= this.model.get('options');
         for(var i=0; i<opt.length; i++)
-            aladin_options[this.convert_pyname_to_jsname(opt[i])] = this.model.get(opt[i]);
+            aladin_options[this.convert_pyname_to_jsname(opt[i])]= this.model.get(opt[i]);
         this.al= aladin_lib.A.aladin([div_test], aladin_options);
         // Declaration of the variable's listeners:
         this.aladin_events();
@@ -101,7 +95,6 @@ var CSS_Loader= ({
         return temp.join('');
     }
 
-    // Variables's listeners on the js side:
     aladin_events() {
         var that = this;
         this.al.on('zoomChanged', function(fov) {
@@ -127,7 +120,6 @@ var CSS_Loader= ({
         });
     }
 
-    // Variables's listeners on the python side:
     model_events() {
         var that = this;
         // Model's class parameters listeners
@@ -249,9 +241,3 @@ var CSS_Loader= ({
         });
     }
 }
-
-/**
-TODO:
-!!!: it seems that the rendering bug that occurs when the widget is displayed on full-screen is back......
-load AladinLite library from http...
- */

@@ -6,13 +6,11 @@
 if (window.require) {
     window.require.config({
         map: {
-            "*": {
+            "*" : {
                 "ipyaladin": "nbextensions/ipyaladin/index",
-                // "jupyter-widgets": "nbextensions/jupyter-widgets/extension"
             }
         }
     });
 }
 
-// Export the required load_ipython_extention
 export function load_ipython_extension() { };

@@ -1,17 +1,17 @@
-import {ModelAladin, ViewAladin} from './index.js';
+import {AladinModel, AladinView, version} from './index';
 import {IJupyterWidgetRegistry} from '@jupyter-widgets/base';
 
-export const IPyAladinWidgetPlugin = {
+export const aladinWidgetPlugin = {
   id: 'ipyaladin:plugin',
   requires: [IJupyterWidgetRegistry],
   activate: function(app, widgets) {
       widgets.registerWidget({
           name: 'ipyaladin',
-          version: '0.1.10',
-          exports: { ModelAladin, ViewAladin }
+          version: version,
+          exports: { AladinModel, AladinView }
       });
   },
   autoStart: true
 };
 
-export default IPyAladinWidgetPlugin;
+export default aladinWidgetPlugin;

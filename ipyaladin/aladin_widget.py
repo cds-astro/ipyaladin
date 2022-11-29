@@ -1,21 +1,29 @@
-from ipywidgets import (widgets)
+import ipywidgets as widgets
 from traitlets import (Float, Unicode, Bool, List, Dict, default)
+from ._version import NPM_PACKAGE_RANGE
 
+# See js/lib/example.js for the frontend counterpart to this file.
 
-
-
-
-""" Definition of the AladinLite widget in the python kernel """
+@widgets.register
 class Aladin(widgets.DOMWidget):
-    _view_name = Unicode('ViewAladin').tag(sync=True)
-    _model_name = Unicode('ModelAladin').tag(sync=True)
+    """An example widget."""
 
+    # Name of the widget view class in front-end
+    _view_name = Unicode('AladinView').tag(sync=True)
+
+    # Name of the widget model class in front-end
+    _model_name = Unicode('AladinModel').tag(sync=True)
+
+    # Name of the front-end module containing widget view
     _view_module = Unicode('ipyaladin').tag(sync=True)
+
+    # Name of the front-end module containing widget model
     _model_module = Unicode('ipyaladin').tag(sync=True)
 
-    _view_module_version = Unicode('0.1.9').tag(sync=True)
-    _model_module_version = Unicode('0.1.9').tag(sync=True)
-
+    # Version of the front-end module containing widget view
+    _view_module_version = Unicode(NPM_PACKAGE_RANGE).tag(sync=True)
+    # Version of the front-end module containing widget model
+    _model_module_version = Unicode(NPM_PACKAGE_RANGE).tag(sync=True)
 
     # Aladin options must be declared here (as python class's attributes), 
     # so that they can be synchronized from the python side to the javascript side
