@@ -1,10 +1,12 @@
-from ._version import version_info, __version__
+from ._version import __version__
 
 from .aladin_widget import *
+
 
 def _jupyter_labextension_paths():
     """Called by Jupyter Lab Server to detect if it is a valid labextension and
     to install the widget
+
     Returns
     =======
     src: Source directory name to copy files from. Webpack outputs generated files
@@ -15,7 +17,7 @@ def _jupyter_labextension_paths():
         during widget installation
     """
     return [{
-        'src': 'static',
+        'src': 'labextension',
         'dest': 'ipyaladin',
     }]
 
@@ -38,7 +40,7 @@ def _jupyter_nbextension_paths():
     """
     return [{
         'section': 'notebook',
-        'src': 'static',
+        'src': 'nbextension',
         'dest': 'ipyaladin',
         'require': 'ipyaladin/extension'
     }]

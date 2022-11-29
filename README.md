@@ -1,8 +1,6 @@
-ipyaladin
-=========
+# ipyaladin
 
-Description
------------
+## Description
 
 A bridge between Jupyter and Aladin Lite, enabling interactive sky visualization in IPython notebooks.
 
@@ -12,60 +10,33 @@ With a couple of lines, you can display Aladin Lite, center it on the target of 
 
 ![ipyaladin example](ipyaladin-screencast.gif)
 
-Examples
---------
+## Examples
 
 Some example notebooks can be found in the [examples directory](examples).
 
-[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/cds-astro/ipyaladin/master?filepath=examples)) You can also try it directly [in mybinder](https://mybinder.org/v2/gh/cds-astro/ipyaladin/master?filepath=examples), without installing anything.
+[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/bmatthieu3/ipyaladin/develop)) You can also try it directly [in mybinder](https://mybinder.org/v2/gh/bmatthieu3/ipyaladin/develop), without installing anything.
 
-Installation
-------------
+## Installation
 
 To install use pip:
 
     $ pip install ipyaladin
 
-Then, make sure to enable widgetsnbextension:
+For a development installation (requires [Node.js](https://nodejs.org) and [Yarn version 1](https://classic.yarnpkg.com/)),
 
-    $ jupyter nbextension enable --py widgetsnbextension
-
-Finally, enable ipyaladin:
-
-    $ jupyter nbextension enable --py --sys-prefix ipyaladin
-
-There is also an experimental conda package that can be installed with:
-
-    $  conda install -c tboch ipyaladin
-
-
-For a development installation (requires npm) you can either do:
-
-    $ git clone https://github.com/cds-astro/ipyaladin
+    $ git clone https://github.com/cds-astro/ipyaladin.git
     $ cd ipyaladin
     $ pip install -e .
-    $ jupyter nbextension install --py --symlink --sys-prefix ipyaladin
+    $ jupyter nbextension install --py --symlink --overwrite --sys-prefix ipyaladin
     $ jupyter nbextension enable --py --sys-prefix ipyaladin
 
-or directly use the compile.sh script:
+When actively developing your extension for JupyterLab, run the command:
 
-    $ git clone https://github.com/cds-astro/ipyaladin
-    $ cd ipyaladin
-    $ ./compile.sh
+    $ jupyter labextension develop --overwrite ipyaladin
 
-Note:
-Sometimes the module installation crash because of a conflict with an older occurence of itself, if so to solve this problem go to:  ~/anaconda3/share/jupyter/nbextensions
-Then suppress the ipyaladin corrupted file.
+Then you need to rebuild the JS when you make a code change:
 
-Running in JupyterLab (experimental)
-------------------------------------
+    $ cd js
+    $ yarn run build
 
-To enable ipyaladin in JupyterLab:
-
-    $ git clone https://github.com/cds-astro/ipyaladin
-    $ cd ipyaladin
-    $ python -m pip install [-e] .
-    $ cd ipyaladin/js
-    $ jupyter labextension install @jupyter-widgets/jupyterlab-manager .
-
-Now when you start JupyterLab you will be prompted to rebuild the extension. Choose 'Rebuild' and all the ipyaladin examples should now work.
+You then need to refresh the JupyterLab page when your javascript changes.
