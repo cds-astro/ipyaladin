@@ -20,7 +20,9 @@ build:
 requirements:
   build:
     - python
-    - setuptools
+    - jupyter_packaging
+    - jupyterlab
+    - setuptools >=40.8.0
     - ipywidgets >=6.0.0
   run:
     - python
@@ -44,4 +46,3 @@ about:
 extra:
   recipe-maintainers:
     - tboch
-
