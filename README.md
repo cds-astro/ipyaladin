@@ -22,6 +22,10 @@ To install use pip:
 
     $ pip install ipyaladin
 
+Make sure you have jupyter installed
+
+    $ pip install jupyter
+
 Then, make sure to enable widgetsnbextension:
 
     $ jupyter nbextension enable --py widgetsnbextension
@@ -30,13 +34,16 @@ Finally, enable ipyaladin:
 
     $ jupyter nbextension enable --py --sys-prefix ipyaladin
 
-For a jupyterlab usage:
+And you are ready to use ipyaladin inside your notebooks!
+Additionny, for a jupyterlab usage you will need to:
 
     $ jupyter labextension develop ipyaladin --overwrite
 
 There is also an experimental conda package that can be installed with:
 
     $  conda install -c tboch ipyaladin
+
+## Development
 
 For a development installation (requires [Node.js](https://nodejs.org) and [Yarn version 1](https://classic.yarnpkg.com/)),
 
