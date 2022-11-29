@@ -22,11 +22,11 @@ requirements:
     - python
     - jupyter_packaging
     - jupyterlab
-    - setuptools >=40.8.0
-    - ipywidgets >=6.0.0
+    - setuptools>=40.8.0
+    - ipywidgets>=7.6.0,<9
   run:
     - python
-    - ipywidgets >=6.0.0
+    - ipywidgets>=7.6.0,<9
     - astropy
 
 test:
