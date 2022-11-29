@@ -14,7 +14,7 @@ With a couple of lines, you can display Aladin Lite, center it on the target of 
 
 Some example notebooks can be found in the [examples directory](examples).
 
-[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/bmatthieu3/ipyaladin/fix-model-aladin). You can also try it directly [in mybinder](https://mybinder.org/v2/gh/bmatthieu3/ipyaladin/fix-model-aladin), without installing anything.
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/cds-astro/ipyaladin/master). You can also try it directly [in mybinder](https://mybinder.org/v2/gh/cds-astro/ipyaladin/master), without installing anything.
 
 ## Installation
 
