@@ -24,7 +24,6 @@ requirements:
     - jupyterlab
     - jupyter
     - ipywidgets>=7.6.0,<9
-    - astropy
 
 test:
   imports:

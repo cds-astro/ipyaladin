@@ -22,10 +22,6 @@ To install use pip:
 
     $ pip install ipyaladin
 
-Make sure you have jupyter installed
-
-    $ pip install jupyter
-
 Then, make sure to enable widgetsnbextension:
 
     $ jupyter nbextension enable --py widgetsnbextension
