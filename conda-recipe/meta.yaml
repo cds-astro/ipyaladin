@@ -1,31 +1,28 @@
 {% set name = "ipyaladin" %}
 {% set version = "0.1.11" %}
-{% set file_ext = "tar.gz" %}
-{% set hash_type = "sha256" %}
-{% set hash_value = "64f684a8c24f574e35f1285c0ca40e45fc28c4e9dca7a304b7b46f1e25607492" %}
 
 package:
-  name: '{{ name|lower }}'
-  version: '{{ version }}'
+  name: "{{ name|lower }}"
+  version: "{{ version }}"
 
 source:
-  fn: '{{ name }}-{{ version }}.{{ file_ext }}'
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.{{ file_ext }}
-  '{{ hash_type }}': '{{ hash_value }}'
+  url: "https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz"
+  sha256: 79dd79fd2c1c13930e5557b9e7706cfdcfd1836724dbfa96ba42d2450552949e
 
 build:
   number: 0
-  script: python setup.py install  --single-version-externally-managed --record=record.txt
+  script: "{{ PYTHON }} -m pip install . -vv"
 
 requirements:
   build:
     - python
-    - jupyter_packaging
+    - jupyter-packaging
     - jupyterlab
     - setuptools>=40.8.0
-    - ipywidgets>=7.6.0,<9
   run:
     - python
+    - jupyterlab
+    - jupyter
     - ipywidgets>=7.6.0,<9
     - astropy
 
@@ -37,12 +34,14 @@ about:
   home: https://github.com/cds-astro/ipyaladin
   license: BSD-3-Clause
   license_family: BSD
-  license_file: ''
+  license_file: LICENSE.md
   summary: ipyaladin
   description: ipyaladin, a Jupyter widget for Aladin Lite
-  doc_url: ''
-  dev_url: ''
+  doc_url: https://aladin.u-strasbg.fr/AladinLite/doc/API/
+  dev_url: https://github.com/cds-astro/ipyaladin
 
 extra:
   recipe-maintainers:
+    - bmatthieu3
     - tboch
+
