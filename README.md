@@ -39,9 +39,9 @@ Additionny, for a jupyterlab usage you will need to:
 
     $ jupyter labextension develop ipyaladin --overwrite
 
-There is also an experimental conda package that can be installed with:
+There is also a conda package that can be installed with:
 
-    $  conda install -c tboch ipyaladin
+    $  conda install -c bmatthieu3 ipyaladin==0.1.11
 
 ## Development
 
