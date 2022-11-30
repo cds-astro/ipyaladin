@@ -1,28 +1,39 @@
 import { DOMWidgetModel, DOMWidgetView } from '@jupyter-widgets/base';
-var aladin_lib = require('./aladin_lib.js');
-
 // Allow us to use the DOMWidgetView base class for our models/views.
 // Additionnaly, this is where we put by default all the external libraries
 // fetched by using webpack (see webpack.config.js file).
 var _ = require("underscore");
-
 // The sole purpose of this module is to load the css stylesheet when the first instance
 // of the AladinLite widget
-var CSS_Loader= ({
+const loadScript = (FILE_URL, async = true, type = "text/javascript") => {
+    return new Promise((resolve, reject) => {
+        try {
+            const scriptEle = document.createElement("script");
+            scriptEle.type = type;
+            scriptEle.async = async;
+            scriptEle.src = FILE_URL;
 
-    is_css_loaded: false,
+            scriptEle.addEventListener("load", (ev) => {
+                resolve({ status: true });
+            });
 
-    load_css: function(data){
-        if(!CSS_Loader.is_css_loaded){
-            var link = document.createElement('link');
-            link.type = "text/css";
-            link.rel = "stylesheet";
-            link.href = "//aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.css";
-            document.getElementsByTagName("head")[0].appendChild(link);
-            CSS_Loader.is_css_loaded= true;
+            scriptEle.addEventListener("error", (ev) => {
+                reject({
+                    status: false,
+                    message: `Failed to load the script ＄{FILE_URL}`
+                });
+            });
+
+            document.getElementsByTagName("head")[0].appendChild(scriptEle);
+        } catch (error) {
+            reject(error);
         }
-    }
-});
+    });
+};
+var AladinLiteJS_Loader = loadScript("//aladin.u-strasbg.fr/AladinLite/api/v3/beta/aladin.js")
+    .then(async () => {
+        await A.init;
+    });
 
 // See example.py for the kernel counterpart to this file.
 
@@ -52,39 +63,71 @@ export class AladinModel extends DOMWidgetModel {
         _model_module : 'ipyaladin',
         _view_module : 'ipyaladin',
 
-        _model_module_version : '0.1.10',
-        _view_module_version : '0.1.10',
+        _model_module_version : '0.2.0',
+        _view_module_version : '0.2.0',
       };
     }
   }
 
+
+var idxView = 0;
 export class AladinView extends DOMWidgetView {
     render() {
-        this.fov_js = false;
-        this.fov_py = false;
-        this.target_js = false;
-        this.target_py = false;
+        // We load the aladin lite script
+        AladinLiteJS_Loader.then(() => {
+            this.fov_js = false;
+            this.fov_py = false;
+            this.target_js = false;
+            this.target_py = false;
 
-        // We load the css stylesheet.
-        CSS_Loader.load_css();
-        // We create the DOM element that will contain our widget
-        // Note: it seems that the 'el' element cannot directly be used as a container for
-        // the AladinLite widget wihthout causing rendering issues.
-        // Thus we use a div element and put it inside the 'el' element.
-        var div_test = document.createElement('div');
-        div_test.id = 'aladin-lite-div' + parseInt(Math.random()*1000000);
-        // TODO: should this style be somehow inherited from the widget Layout attribute?
-        div_test.setAttribute("style","width:100%;height:400px;");
-        this.el.appendChild(div_test);
-        // We get the options set on the python side and create an instance of the AladinLite object.
-        var aladin_options= {};
-        var opt= this.model.get('options');
-        for(var i=0; i<opt.length; i++)
-            aladin_options[this.convert_pyname_to_jsname(opt[i])]= this.model.get(opt[i]);
-        this.al= aladin_lib.A.aladin([div_test], aladin_options);
-        // Declaration of the variable's listeners:
-        this.aladin_events();
-        this.model_events();
+            // We create the DOM element that will contain our widget
+            // Note: it seems that the 'el' element cannot directly be used as a container for
+            // the AladinLite widget wihthout causing rendering issues.
+            // Thus we use a div element and put it inside the 'el' element.
+            if (this.div) {
+                this.el.remove(this.div);
+            }
+
+            this.div = document.createElement('div');
+            this.div.id = 'aladin-lite-div' + parseInt(idxView);
+            idxView += 1;
+            // TODO: should this style be somehow inherited from the widget Layout attribute?
+            this.div.setAttribute("style","width:100%;height:400px;");
+
+            // We get the options set on the python side and create an instance of the AladinLite object.
+            var aladin_options = {};
+            var opt = this.model.get('options');
+            for(var i = 0; i < opt.length; i++) {
+                aladin_options[this.convert_pyname_to_jsname(opt[i])] = this.model.get(opt[i]);
+            }
+
+            // Observer triggered when this.el has been changed
+            const observer = new MutationObserver((mutations_list) => {
+                mutations_list.forEach((mutation) => {
+                    mutation.addedNodes.forEach((added_node) => {
+                        if(added_node.id == this.div.id) {
+                            // In some contexts (Jupyter notebook for instance), the parent div changes little time after Aladin Lite creation
+                            // this results in canvas dimension to be incorrect.
+                            // The following line tries to fix this issue
+                            // This timeout was found in the Aladin Lite code and concerns a fix
+                            // regarding its use inside jupyter notebook
+                            // Therefore it is better to let it here
+                            setTimeout(() => {
+                                this.al = A.aladin([this.div], aladin_options);
+
+                                // Declaration of the variable's listeners:
+                                this.aladin_events();
+                                this.model_events();
+                            }, 1000);
+                        }
+                    });
+                });
+            });
+
+            observer.observe(this.el, {subtree: false, childList: true});
+
+            this.el.appendChild(this.div);
+        })
     }
 
     convert_pyname_to_jsname(pyname) {
@@ -99,24 +142,23 @@ export class AladinView extends DOMWidgetView {
         var that = this;
         this.al.on('zoomChanged', function(fov) {
             if(!that.fov_py){
-                that.fov_js= true;
+                that.fov_js = true;
                 // fov MUST be cast into float in order to be sent to the model
                 that.model.set('fov', parseFloat(fov.toFixed(5)));
                 // Note: touch function must be called after calling the model's set method
                 that.touch();
-            }else{
-                that.fov_py= false;
+            } else {
+                that.fov_py = false;
             }
         });
         this.al.on('positionChanged', function(position) {
-            if(!that.target_py){
-                that.target_js= true;
+            if(!that.target_py) {
+                that.target_js = true;
                 that.model.set('target', '' + position.ra.toFixed(6) + ' ' + position.dec.toFixed(6));
                 that.touch();
-            }else{
-                that.target_py= false;
+            } else {
+                that.target_py = false;
             }
-
         });
     }
 
@@ -127,7 +169,7 @@ export class AladinView extends DOMWidgetView {
             if(!that.fov_js){
                 that.fov_py= true;
                 that.al.setFoV(that.model.get('fov'));
-            }else{
+            } else {
                 that.fov_js= false;
             }
         }, this);
@@ -135,7 +177,7 @@ export class AladinView extends DOMWidgetView {
             if(!that.target_js){
                 that.target_py= true;
                 that.al.gotoObject(that.model.get('target'));
-            }else{
+            } else {
                 that.target_js= false;
             }
         }, this);
@@ -154,25 +196,25 @@ export class AladinView extends DOMWidgetView {
 
         // Model's functions parameters listeners
         this.listenTo(this.model, 'change:votable_from_URL_flag', function(){
-            that.al.addCatalog(aladin_lib.A.catalogFromURL(that.model.get('votable_URL'), that.model.get('votable_options')));
+            that.al.addCatalog(A.catalogFromURL(that.model.get('votable_URL'), that.model.get('votable_options')));
         }, this);
 
         this.listenTo(this.model, 'change:moc_from_URL_flag', function(){
-            that.al.addMOC(aladin_lib.A.MOCFromURL(that.model.get('moc_URL'), that.model.get('moc_options')));
+            that.al.addMOC(A.MOCFromURL(that.model.get('moc_URL'), that.model.get('moc_options')));
         }, this);
 
         this.listenTo(this.model, 'change:moc_from_dict_flag', function(){
-            that.al.addMOC(aladin_lib.A.MOCFromJSON(that.model.get('moc_dict'), that.model.get('moc_options')));
+            that.al.addMOC(A.MOCFromJSON(that.model.get('moc_dict'), that.model.get('moc_options')));
         }, this);
 
         this.listenTo(this.model, 'change:table_flag', function(){
-            var cat = aladin_lib.A.catalog({onClick: 'showTable'});
+            var cat = A.catalog({onClick: 'showTable'});
             that.al.addCatalog(cat);
             cat.addSourcesAsArray(that.model.get('table_keys'), that.model.get('table_columns'))
         }, this);
 
         this.listenTo(this.model, 'change:overlay_from_stcs_flag', function() {
-            var overlay = aladin_lib.A.graphicOverlay(that.model.get('overlay_options'));
+            var overlay = A.graphicOverlay(that.model.get('overlay_options'));
             that.al.addOverlay(overlay);
             overlay.addFootprints(that.al.createFootprintsFromSTCS(that.model.get('stc_string')));
         }, this);
@@ -236,8 +278,9 @@ export class AladinView extends DOMWidgetView {
             that.al.exportAsPNG();
         });
 
-        this.listenTo(this.model, 'change:color_map_flag', function(){
-            that.al.getBaseImageLayer().getColorMap().update(that.model.get('color_map_name'));
+        this.listenTo(this.model, 'change:color_map_flag', function() {
+            const cmap = that.model.get('color_map_name');
+            that.al.getBaseImageLayer().setColormap(cmap);
         });
     }
 }
