@@ -30,7 +30,7 @@ const loadScript = (FILE_URL, async = true, type = "text/javascript") => {
         }
     });
 };
-var AladinLiteJS_Loader = loadScript("//aladin.u-strasbg.fr/AladinLite/api/v3/beta/aladin.js")
+var AladinLiteJS_Loader = loadScript("//aladin.u-strasbg.fr/AladinLite/api/v3/latest/aladin.js")
     .then(async () => {
         await A.init;
     });
@@ -216,7 +216,7 @@ export class AladinView extends DOMWidgetView {
         this.listenTo(this.model, 'change:overlay_from_stcs_flag', function() {
             var overlay = A.graphicOverlay(that.model.get('overlay_options'));
             that.al.addOverlay(overlay);
-            overlay.addFootprints(that.al.createFootprintsFromSTCS(that.model.get('stc_string')));
+            overlay.addFootprints(A.footprintsFromSTCS(that.model.get('stc_string')));
         }, this);
 
         this.listenTo(this.model, 'change:listener_flag', function(){

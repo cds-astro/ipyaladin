@@ -42,7 +42,7 @@ class Aladin(widgets.DOMWidget):
     reticle_color = Unicode("rgb(178, 50, 178)").tag(sync=True, o=True)
     show_reticle = Bool(True).tag(sync=True, o=True)
     show_zoom_control = Bool(True).tag(sync=True, o=True)
-    show_fullscreen_control = Bool(True).tag(sync=True, o=True)
+    show_fullscreen_control = Bool(False).tag(sync=True, o=True)
     show_layers_control = Bool(True).tag(sync=True, o=True)
     show_goto_control = Bool(True).tag(sync=True, o=True)
     show_share_control = Bool(False).tag(sync=True, o=True)
