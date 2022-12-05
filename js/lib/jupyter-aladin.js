@@ -1,4 +1,5 @@
 import { DOMWidgetModel, DOMWidgetView } from '@jupyter-widgets/base';
+import $ from "jquery";
 // Allow us to use the DOMWidgetView base class for our models/views.
 // Additionnaly, this is where we put by default all the external libraries
 // fetched by using webpack (see webpack.config.js file).
