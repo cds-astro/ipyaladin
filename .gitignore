@@ -16,3 +16,7 @@ js/yarn.lock
 
 # OS X
 .DS_Store
+
+# Conda builds
+conda-recipe/distrib
+conda-recipe/ipyaladin
