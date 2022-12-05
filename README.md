@@ -37,7 +37,7 @@ Additionny, for a jupyterlab usage you will need to:
 
 There is also a conda package that can be installed with:
 
-    $  conda install -c bmatthieu3 ipyaladin==0.2.0
+    $  conda install -c bmatthieu3 ipyaladin==0.2.1
 
 ## Development
 

@@ -1,5 +1,4 @@
 import { DOMWidgetModel, DOMWidgetView } from '@jupyter-widgets/base';
-import $ from "jquery";
 // Allow us to use the DOMWidgetView base class for our models/views.
 // Additionnaly, this is where we put by default all the external libraries
 // fetched by using webpack (see webpack.config.js file).
@@ -31,7 +30,8 @@ const loadScript = (FILE_URL, async = true, type = "text/javascript") => {
         }
     });
 };
-var AladinLiteJS_Loader = loadScript("https://aladin.u-strasbg.fr/AladinLite/api/v3/latest/aladin.js")
+var AladinLiteJS_Loader = loadScript("https://code.jquery.com/jquery-3.6.1.min.js")
+    .then(() => { return loadScript("https://aladin.u-strasbg.fr/AladinLite/api/v3/latest/aladin.js") })
     .then(async () => {
         await A.init;
     });
@@ -64,8 +64,8 @@ export class AladinModel extends DOMWidgetModel {
         _model_module : 'ipyaladin',
         _view_module : 'ipyaladin',
 
-        _model_module_version : '0.2.0',
-        _view_module_version : '0.2.0',
+        _model_module_version : '0.2.1',
+        _view_module_version : '0.2.1',
       };
     }
   }

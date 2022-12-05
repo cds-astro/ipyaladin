@@ -1,6 +1,6 @@
 {
   "name": "ipyaladin",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "ipyaladin",
   "author": "Thomas Boch, Jerome Desroziers and Matthieu Baumann",
   "license": "BSD-3-Clause",
@@ -37,7 +37,6 @@
   },
   "dependencies": {
     "@jupyter-widgets/base": "^1.1 || ^2 || ^3 || ^4 || ^6",
-    "jquery": "^3.6.1",
     "underscore": "^1.13.6"
   },
   "jupyterlab": {
