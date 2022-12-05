@@ -30,7 +30,7 @@ const loadScript = (FILE_URL, async = true, type = "text/javascript") => {
         }
     });
 };
-var AladinLiteJS_Loader = loadScript("//aladin.u-strasbg.fr/AladinLite/api/v3/latest/aladin.js")
+var AladinLiteJS_Loader = loadScript("https://aladin.u-strasbg.fr/AladinLite/api/v3/latest/aladin.js")
     .then(async () => {
         await A.init;
     });

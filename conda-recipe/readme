@@ -14,7 +14,7 @@ https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.h
 Une fois le package pip déja créé et uploadé
 
 cd conda-recipe
-conda skeleton pypi --extra-specs jupyter_packaging ipyaladin
+conda skeleton pypi --extra-specs jupyter-packaging ipyaladin
 // change the meta.yaml in ipyaladin/
 cp post-link.* pre-unlink.* ipyaladin
 conda build ipyaladin --output-folder distrib
