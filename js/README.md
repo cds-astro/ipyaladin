@@ -7,5 +7,5 @@ Package Install
 - [node](http://nodejs.org/)
 
 ```bash
-npm install --save ipyaladin2
+npm install --save ipyaladin
 ```

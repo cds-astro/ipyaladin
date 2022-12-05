@@ -16,3 +16,10 @@ js/yarn.lock
 
 # OS X
 .DS_Store
+
+# Conda builds
+conda-recipe/distrib
+conda-recipe/ipyaladin
+
+# npmjs recovery code
+npm_recovery_codes.txt
