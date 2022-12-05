@@ -1,0 +1,18 @@
+*.egg-info/
+.ipynb_checkpoints/
+dist/
+build/
+*.py[cod]
+node_modules/
+
+# Compiled javascript
+ipyaladin/nbextension/
+ipyaladin/labextension/
+
+# Yarn package json
+package.json
+package-lock.json
+js/yarn.lock
+
+# OS X
+.DS_Store

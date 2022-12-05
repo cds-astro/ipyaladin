@@ -256,7 +256,7 @@ export class AladinView extends DOMWidgetView {
                 // We only send object.data because the whole object possess a catalog attribute
                 // that cause error when trying to convert it into json
                 // (at least on chrome, due to object circularization)
-                if(object){
+                if (object) {
                     that.send({
                         'event': 'callback',
                         'type': type,
