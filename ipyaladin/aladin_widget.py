@@ -6,7 +6,35 @@ from ._version import NPM_PACKAGE_RANGE
 
 @widgets.register
 class Aladin(widgets.DOMWidget):
-    """An example widget."""
+    """An instance of the Aladin widget.
+    
+    Adaptative attributes can be updated later. 
+
+    ...
+    Attributes
+    ----------
+
+    fov : float, optional
+        The desired initial field of view, expressed in degrees.
+        Defaults to 60°.
+        adaptative
+    target : string, optional
+        The desired target. 
+        Defaults to "0 +0"
+        adaptative
+    coo_frame : string, optional
+        Reference frame.
+        Defaults to "J2000"
+        adaptative
+    survey : string, optional
+        Name of the survey.
+        Defaults to "P/DSS2/color"
+        adaptative
+    show_simbad_pointer_control : bool, optional
+        Control the Simbad tool apparition
+        
+    TODO: finish docstring
+    """
 
     # Name of the widget view class in front-end
     _view_name = Unicode('AladinView').tag(sync=True)
@@ -45,6 +73,7 @@ class Aladin(widgets.DOMWidget):
     show_fullscreen_control = Bool(False).tag(sync=True, o=True)
     show_layers_control = Bool(True).tag(sync=True, o=True)
     show_goto_control = Bool(True).tag(sync=True, o=True)
+    show_simbad_pointer_control = Bool(True).tag(sync=True, o=True)
     show_share_control = Bool(False).tag(sync=True, o=True)
     show_catalog = Bool(True).tag(sync=True, o=True)
     show_frame = Bool(True).tag(sync=True, o=True)

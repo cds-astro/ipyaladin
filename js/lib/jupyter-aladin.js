@@ -211,6 +211,8 @@ export class AladinView extends DOMWidgetView {
         this.listenTo(this.model, 'change:table_flag', function(){
             var cat = A.catalog({onClick: 'showTable'});
             that.al.addCatalog(cat);
+            console.log(that.model.get('table_keys'));
+            console.log(that.model.get('table_columns'));
             cat.addSourcesAsArray(that.model.get('table_keys'), that.model.get('table_columns'))
         }, this);
 
