@@ -30,7 +30,7 @@ const loadScript = (FILE_URL, async = true, type = "text/javascript") => {
         }
     });
 };
-var AladinLiteJS_Loader = loadScript("https://code.jquery.com/jquery-3.6.1.min.js")
+let AladinLiteJS_Loader = loadScript("https://code.jquery.com/jquery-3.6.1.min.js")
     .then(() => { return loadScript("https://aladin.u-strasbg.fr/AladinLite/api/v3/latest/aladin.js") })
     .then(async () => {
         await A.init;
@@ -211,8 +211,6 @@ export class AladinView extends DOMWidgetView {
         this.listenTo(this.model, 'change:table_flag', function(){
             var cat = A.catalog({onClick: 'showTable'});
             that.al.addCatalog(cat);
-            console.log(that.model.get('table_keys'));
-            console.log(that.model.get('table_columns'));
             cat.addSourcesAsArray(that.model.get('table_keys'), that.model.get('table_columns'))
         }, this);
 

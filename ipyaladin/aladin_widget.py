@@ -1,6 +1,7 @@
 import ipywidgets as widgets
 from traitlets import (Float, Unicode, Bool, List, Dict, default)
 from ._version import NPM_PACKAGE_RANGE
+import math
 
 # See js/lib/example.js for the frontend counterpart to this file.
 
@@ -188,11 +189,35 @@ class Aladin(widgets.DOMWidget):
     # 2 - It seems that the list.append() method does not work with traitlets,
     #     the affectation of the columns must be done at once by using a buffer.
     def add_table(self, table):
-        """ load a VOTable -already accessible on the python side- into the widget
-            Args:
-                table: votable object"""
+        """ Load a table into the widget.
 
-        # theses library must be installed, and are used in votable operations
+        Parameters
+        ----------
+        table : astropy.table.table.QTable or astropy.table.table.Table
+                table that must contain coordinates information
+        
+        Examples
+        --------
+        Cell 1:
+        >>> from ipyaladin import Aladin
+        >>> from astropy.table import QTable
+        >>> aladin = Aladin(fov=2, target='M1')
+        >>> aladin
+        Cell 2:
+        >>> ra = [83.63451584700, 83.61368056017, 83.58780251600]
+        >>> dec = [22.05652591227, 21.97517807639, 21.99277764451]
+        >>> name = ["Gaia EDR3 3403818589184411648",
+                    "Gaia EDR3 3403817661471500416",
+                    "Gaia EDR3 3403817936349408000",
+                   ]
+        >>> table = QTable([ra, dec, name],
+                            names=("ra", "dec", "name"),
+                            meta={"name": "my sample table"})
+        >>> aladin.add_table(table)
+        And the table should appear in the output of Cell 1!
+        """
+
+        # this library must be installed, and is used in votable operations
         # http://www.astropy.org/
         import astropy
         
@@ -208,7 +233,13 @@ class Aladin(widgets.DOMWidget):
                 if isinstance(item, bytes):
                     row_data.append(item.decode('utf-8'))
                 else:
+                    if not isinstance(item, str):
+                        # replace NaN by " ", this is a quick fix 
+                        # and should be questioned when doing a rework
+                        # of this function
+                        item = " " if math.isnan(item) else item 
                     row_data.append(item)
+                    
             table_columns.append(row_data)
 
         self.table_columns = table_columns
