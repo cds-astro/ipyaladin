@@ -75,6 +75,7 @@ class Aladin(widgets.DOMWidget):
     show_goto_control = Bool(True).tag(sync=True, o=True)
     show_simbad_pointer_control = Bool(True).tag(sync=True, o=True)
     show_share_control = Bool(False).tag(sync=True, o=True)
+    show_context_menu = Bool(True).tag(sync=True, o=True)
     show_catalog = Bool(True).tag(sync=True, o=True)
     show_frame = Bool(True).tag(sync=True, o=True)
     show_coo_grid = Bool(False).tag(sync=True, o=True)
