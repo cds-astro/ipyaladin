@@ -18,4 +18,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+* there is now a right-click menu with the following options:
+  * take snapshot
+  * add
+    * new image layer
+    * new catalog layer
+  *  load local file
+     * FITS Image
+     * FITS MOC
+     * VOTable
+  * What is this?
+  * HiPS2FITS cutout
+  * Select sources
+![image](https://github.com/cds-astro/ipyaladin/assets/16650466/8cd78b68-6634-4f24-ad9b-27e7dc02ba48)
 * the attribute "show_simbad_pointer_control" can now be set to `True` at the instantiation of the widget
