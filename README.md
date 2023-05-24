@@ -47,11 +47,17 @@ For a development installation [Node.js](https://nodejs.org) and [Yarn version 1
     git clone https://github.com/cds-astro/ipyaladin.git
     cd ipyaladin
     npm install yarn
+    cd js
+    npm install
+    cd ..
     pip install -e .
+
+For Jupyter Notebook, do
+ 
     jupyter nbextension install --py --symlink --overwrite --sys-prefix ipyaladin
     jupyter nbextension enable --py --sys-prefix ipyaladin
 
-When actively developing your extension for JupyterLab, you will need to run this command too:
+For JupyterLab, you will need to run this command too:
 
     jupyter labextension develop --overwrite ipyaladin
 
