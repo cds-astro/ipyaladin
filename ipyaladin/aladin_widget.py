@@ -172,16 +172,6 @@ class Aladin(widgets.DOMWidget):
         # see: http://jupyter-notebook.readthedocs.io/en/latest/comms.html
         self.on_msg(self.handle_aladin_event)
 
-    @observe("height")
-    def _immutable_height(self, change):
-        """Inform the users that height is immutable outside of instantiation.
-        """
-        # change["old"] is None when doing the instantiation, and has an other value
-        # at every other times
-        if change["old"] != None:
-            raise UserWarning("height cannot be changed outside of the instantiation"
-                              " of an Aladin() object.")
-
     # Note: (about the classe's functions)
     # As it is only possible to communicate with the js side of the application by using traitlets,
     # we can not directly call a js function from the python side

@@ -184,6 +184,10 @@ export class AladinView extends DOMWidgetView {
         this.listenTo(this.model, 'change:coo_frame', () => {
             this.al.setFrame(this.model.get('coo_frame'));
         }, this);
+        this.listenTo(this.model, 'change:height', () => {
+            let height = this.model.get('height');
+            this.div.setAttribute("style","width:100%;height:" + height + "px;");
+        }, this);
         this.listenTo(this.model, 'change:survey', () => {
             this.al.setImageSurvey(this.model.get('survey'));
         }, this);
