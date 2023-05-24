@@ -2,7 +2,7 @@ import { DOMWidgetModel, DOMWidgetView } from '@jupyter-widgets/base';
 // Allow us to use the DOMWidgetView base class for our models/views.
 // Additionnaly, this is where we put by default all the external libraries
 // fetched by using webpack (see webpack.config.js file).
-var _ = require("underscore");
+let _ = require("underscore");
 // The sole purpose of this module is to load the css stylesheet when the first instance
 // of the AladinLite widget
 const loadScript = (FILE_URL, async = true, type = "text/javascript") => {
@@ -71,7 +71,7 @@ export class AladinModel extends DOMWidgetModel {
   }
 
 
-var idxView = 0;
+let idxView = 0;
 export class AladinView extends DOMWidgetView {
     render() {
         // We load the aladin lite script
@@ -97,10 +97,10 @@ export class AladinView extends DOMWidgetView {
             this.div.setAttribute("style","width:100%;height:" + height + "px;");
 
             // We get the options set on the python side and create an instance of the AladinLite object.
-            var aladin_options = {};
-            var opt = this.model.get('options');
-            for(var i = 0; i < opt.length; i++) {
-                aladin_options[this.convert_pyname_to_jsname(opt[i])] = this.model.get(opt[i]);
+            let aladin_options = {};
+            let options = this.model.get('options');
+            for(let option of options) {
+                aladin_options[this.convert_pyname_to_jsname(option)] = this.model.get(option);
             }
 
             // Observer triggered when this.el has been changed
@@ -133,106 +133,103 @@ export class AladinView extends DOMWidgetView {
     }
 
     convert_pyname_to_jsname(pyname) {
-        var i, temp= pyname.split('_');
-        for(i=1; i<temp.length; i++){
+        let temp= pyname.split('_');
+        for(let i=1; i<temp.length; i++){
             temp[i]= temp[i].charAt(0).toUpperCase() + temp[i].slice(1);
         }
         return temp.join('');
     }
 
     aladin_events() {
-        var that = this;
-        this.al.on('zoomChanged', function(fov) {
-            if(!that.fov_py){
-                that.fov_js = true;
+        this.al.on('zoomChanged', (fov) => {
+            if(!this.fov_py){
+                this.fov_js = true;
                 // fov MUST be cast into float in order to be sent to the model
-                that.model.set('fov', parseFloat(fov.toFixed(5)));
+                this.model.set('fov', parseFloat(fov.toFixed(5)));
                 // Note: touch function must be called after calling the model's set method
-                that.touch();
+                this.touch();
             } else {
-                that.fov_py = false;
+                this.fov_py = false;
             }
         });
-        this.al.on('positionChanged', function(position) {
-            if(!that.target_py) {
-                that.target_js = true;
-                that.model.set('target', '' + position.ra.toFixed(6) + ' ' + position.dec.toFixed(6));
-                that.touch();
+        this.al.on('positionChanged', (position) => {
+            if(!this.target_py) {
+                this.target_js = true;
+                this.model.set('target', '' + position.ra.toFixed(6) + ' ' + position.dec.toFixed(6));
+                this.touch();
             } else {
-                that.target_py = false;
+                this.target_py = false;
             }
         });
     }
 
     model_events() {
-        var that = this;
         // Model's class parameters listeners
-        this.listenTo(this.model, 'change:fov', function () {
-            if(!that.fov_js){
-                that.fov_py= true;
-                that.al.setFoV(that.model.get('fov'));
+        this.listenTo(this.model, 'change:fov',  () => {
+            if(!this.fov_js){
+                this.fov_py= true;
+                this.al.setFoV(this.model.get('fov'));
             } else {
-                that.fov_js= false;
+                this.fov_js= false;
             }
         }, this);
-        this.listenTo(this.model, 'change:target', function () {
-            if(!that.target_js){
-                that.target_py= true;
-                that.al.gotoObject(that.model.get('target'));
+        this.listenTo(this.model, 'change:target', () => {
+            if(!this.target_js){
+                this.target_py= true;
+                this.al.gotoObject(this.model.get('target'));
             } else {
-                that.target_js= false;
+                this.target_js= false;
             }
         }, this);
-        this.listenTo(this.model, 'change:coo_frame', function () {
-            that.al.setFrame(that.model.get('coo_frame'));
+        this.listenTo(this.model, 'change:coo_frame', () => {
+            this.al.setFrame(this.model.get('coo_frame'));
         }, this);
-        this.listenTo(this.model, 'change:survey', function () {
-            that.al.setImageSurvey(that.model.get('survey'));
+        this.listenTo(this.model, 'change:survey', () => {
+            this.al.setImageSurvey(this.model.get('survey'));
         }, this);
-        this.listenTo(this.model, 'change:overlay_survey', function () {
-            that.al.setOverlayImageLayer(that.model.get('overlay_survey'));
+        this.listenTo(this.model, 'change:overlay_survey', () => {
+            this.al.setOverlayImageLayer(this.model.get('overlay_survey'));
         }, this);
-        this.listenTo(this.model, 'change:overlay_survey_opacity', function () {
-            that.al.getOverlayImageLayer().setAlpha(that.model.get('overlay_survey_opacity'));
+        this.listenTo(this.model, 'change:overlay_survey_opacity', () => {
+            this.al.getOverlayImageLayer().setAlpha(this.model.get('overlay_survey_opacity'));
         }, this);
 
         // Model's functions parameters listeners
-        this.listenTo(this.model, 'change:votable_from_URL_flag', function(){
-            that.al.addCatalog(A.catalogFromURL(that.model.get('votable_URL'), that.model.get('votable_options')));
+        this.listenTo(this.model, 'change:votable_from_URL_flag', () => {
+            this.al.addCatalog(A.catalogFromURL(this.model.get('votable_URL'), this.model.get('votable_options')));
         }, this);
 
-        this.listenTo(this.model, 'change:moc_from_URL_flag', function(){
-            that.al.addMOC(A.MOCFromURL(that.model.get('moc_URL'), that.model.get('moc_options')));
+        this.listenTo(this.model, 'change:moc_from_URL_flag', () => {
+            this.al.addMOC(A.MOCFromURL(this.model.get('moc_URL'), this.model.get('moc_options')));
         }, this);
 
-        this.listenTo(this.model, 'change:moc_from_dict_flag', function(){
-            that.al.addMOC(A.MOCFromJSON(that.model.get('moc_dict'), that.model.get('moc_options')));
+        this.listenTo(this.model, 'change:moc_from_dict_flag', () => {
+            this.al.addMOC(A.MOCFromJSON(this.model.get('moc_dict'), this.model.get('moc_options')));
         }, this);
 
-        this.listenTo(this.model, 'change:table_flag', function(){
-            var cat = A.catalog({onClick: 'showTable'});
-            that.al.addCatalog(cat);
-            cat.addSourcesAsArray(that.model.get('table_keys'), that.model.get('table_columns'))
+        this.listenTo(this.model, 'change:table_flag', () => {
+            let cat = A.catalog({onClick: 'showTable'});
+            this.al.addCatalog(cat);
+            cat.addSourcesAsArray(this.model.get('table_keys'), this.model.get('table_columns'))
         }, this);
 
-        this.listenTo(this.model, 'change:overlay_from_stcs_flag', function() {
-            var overlay = A.graphicOverlay(that.model.get('overlay_options'));
-            that.al.addOverlay(overlay);
-            overlay.addFootprints(A.footprintsFromSTCS(that.model.get('stc_string')));
+        this.listenTo(this.model, 'change:overlay_from_stcs_flag', () => {
+            let overlay = A.graphicOverlay(this.model.get('overlay_options'));
+            this.al.addOverlay(overlay);
+            overlay.addFootprints(A.footprintsFromSTCS(this.model.get('stc_string')));
         }, this);
 
-        this.listenTo(this.model, 'change:listener_flag', function(){
-            var type= that.model.get('listener_type');
-            that.al.on(type, function(object) {
+        this.listenTo(this.model, 'change:listener_flag', () => {
+            let type= this.model.get('listener_type');
+            this.al.on(type, function(object) {
                 if (type==='select') {
-                    var sources = object;
+                    let sources = object;
                     // first, deselect previously selected sources
-                    for (var k=0; k<that.al.view.catalogs.length; k++) {
-                        that.al.view.catalogs[k].deselectAll();
+                    for (let catalog of this.al.view.catalogs) {
+                        catalog.deselectAll();
                     }
-                    var sourcesData = [];
-                    for (var k = 0; k<sources.length ; k++) {
-                        var source = sources[k];
+                    let sourcesData = [];
+                    for (let source of sources) {
                         source.select();
                         sourcesData.push(
                             {
@@ -244,7 +241,7 @@ export class AladinView extends DOMWidgetView {
                             }
                         );
                     }
-                    that.send({
+                    this.send({
                         'event': 'callback',
                         'type': type,
                         'data': sourcesData,
@@ -259,7 +256,7 @@ export class AladinView extends DOMWidgetView {
                 // that cause error when trying to convert it into json
                 // (at least on chrome, due to object circularization)
                 if (object) {
-                    that.send({
+                    this.send({
                         'event': 'callback',
                         'type': type,
                         'data': {'data': object.data,
@@ -272,17 +269,17 @@ export class AladinView extends DOMWidgetView {
             });
         }, this);
 
-        this.listenTo(this.model, 'change:rectangular_selection_flag', function(){
-            that.al.select();
+        this.listenTo(this.model, 'change:rectangular_selection_flag', () => {
+            this.al.select();
         });
 
-        this.listenTo(this.model, 'change:thumbnail_flag', function(){
-            that.al.exportAsPNG();
+        this.listenTo(this.model, 'change:thumbnail_flag', () => {
+            this.al.exportAsPNG();
         });
 
-        this.listenTo(this.model, 'change:color_map_flag', function() {
-            const cmap = that.model.get('color_map_name');
-            that.al.getBaseImageLayer().setColormap(cmap);
+        this.listenTo(this.model, 'change:color_map_flag', () => {
+            const cmap = this.model.get('color_map_name');
+            this.al.getBaseImageLayer().setColormap(cmap);
         });
     }
 }
