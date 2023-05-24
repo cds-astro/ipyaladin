@@ -175,8 +175,6 @@ class Aladin(widgets.DOMWidget):
     @observe("height")
     def _immutable_height(self, change):
         """Inform the users that height is immutable outside of instantiation.
-        Raises:
-            ValueError: _description_
         """
         # change["old"] is None when doing the instantiation, and has an other value
         # at every other times
