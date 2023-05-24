@@ -92,8 +92,8 @@ export class AladinView extends DOMWidgetView {
             this.div = document.createElement('div');
             this.div.id = 'aladin-lite-div' + parseInt(idxView);
             idxView += 1;
+            // creates the div section, height is fixed by the user or defaults to 400px
             let height = this.model.get("height");
-            // TODO: should this style be somehow inherited from the widget Layout attribute?
             this.div.setAttribute("style","width:100%;height:" + height + "px;");
 
             // We get the options set on the python side and create an instance of the AladinLite object.
