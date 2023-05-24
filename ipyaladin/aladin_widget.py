@@ -1,5 +1,5 @@
 import ipywidgets as widgets
-from traitlets import (Float, Unicode, Bool, List, Dict, default)
+from traitlets import (Float, Unicode, Bool, List, Dict, default, observe)
 from ._version import NPM_PACKAGE_RANGE
 import math
 
@@ -9,30 +9,52 @@ import math
 class Aladin(widgets.DOMWidget):
     """An instance of the Aladin widget.
     
-    Adaptative attributes can be updated later. 
+    Adaptative attributes can be updated later. The other ones can only
+    be written when creating the widget instance, i.e. when calling Aladin() 
 
     ...
     Attributes
     ----------
 
-    fov : float, optional
+    fov : float, default: 60
         The desired initial field of view, expressed in degrees.
-        Defaults to 60°.
         adaptative
-    target : string, optional
+    target : string, default: "0 +0"
         The desired target. 
-        Defaults to "0 +0"
         adaptative
-    coo_frame : string, optional
+    coo_frame : string, default: "J2000"
         Reference frame.
-        Defaults to "J2000"
         adaptative
-    survey : string, optional
+    survey : string, default: "P/DSS2/color"
         Name of the survey.
-        Defaults to "P/DSS2/color"
         adaptative
-    show_simbad_pointer_control : bool, optional
-        Control the Simbad tool apparition
+    ...
+    height : float, default: 400
+        Height of the Aladin widget in pixels
+    reticle_size : float, default: 22
+        Size of the reticle.
+    reticle_color : string, default: "rgb(178, 50, 178)"
+        The color of the reticle.
+    show_reticle : bool, default: True
+        Controls wether a reticle is present in the middle of the view
+    show_zoom_control : bool, default: True
+    show_fullscreen_control = bool, default: False
+        Wether the fullscreen button appears in the top right corner
+        Defaults to False because this does not work in retrolab. 
+        Can safely be turned to True in Jupyterlab.
+    show_layers_control : bool, default: True
+    show_goto_control, bool, default: True
+    show_simbad_pointer_control : bool, default: True
+        Controls the quick search tool apparition on the left 
+        side of the view.
+    show_share_control : bool, default: False
+        Controls the apparition of the share button in the bottom
+        right corner. This button opens a popup with a sharable link
+        to an Aladin previewer that starts with the actual state of the
+        view.
+    show_context_menu : bool, default: True
+        Controls wether a right click will open a menu. This menu is documented
+        here # TODO add link to documentation when it will exist. 
         
     TODO: finish docstring
     """
@@ -85,6 +107,9 @@ class Aladin(widgets.DOMWidget):
     allow_full_zoomout = Bool(False).tag(sync=True, o=True)
 
     options = List(trait=Unicode).tag(sync=True)
+
+    # this sets the height of the widget
+    height = Float(400).tag(sync=True)
 
     # the following values are used in the classe's functions
 
@@ -146,6 +171,18 @@ class Aladin(widgets.DOMWidget):
         # trigger the handle_aladin_event function when the send function is called on the js-side
         # see: http://jupyter-notebook.readthedocs.io/en/latest/comms.html
         self.on_msg(self.handle_aladin_event)
+
+    @observe("height")
+    def _immutable_height(self, change):
+        """Inform the users that height is immutable outside of instantiation.
+        Raises:
+            ValueError: _description_
+        """
+        # change["old"] is None when doing the instantiation, and has an other value
+        # at every other times
+        if change["old"] != None:
+            raise UserWarning("height cannot be changed outside of the instantiation"
+                              " of an Aladin() object.")
 
     # Note: (about the classe's functions)
     # As it is only possible to communicate with the js side of the application by using traitlets,
