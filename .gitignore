@@ -13,6 +13,7 @@ ipyaladin/labextension/
 package.json
 package-lock.json
 js/yarn.lock
+js/.yarn
 
 # OS X
 .DS_Store
