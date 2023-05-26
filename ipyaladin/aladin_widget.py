@@ -1,5 +1,5 @@
 import ipywidgets as widgets
-from traitlets import (Float, Unicode, Bool, List, Dict, default, observe)
+from traitlets import (Float, Unicode, Bool, List, Dict, default)
 from ._version import NPM_PACKAGE_RANGE
 import math
 
