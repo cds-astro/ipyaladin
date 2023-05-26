@@ -1,12 +1,63 @@
 import ipywidgets as widgets
 from traitlets import (Float, Unicode, Bool, List, Dict, default)
 from ._version import NPM_PACKAGE_RANGE
+import math
 
 # See js/lib/example.js for the frontend counterpart to this file.
 
 @widgets.register
 class Aladin(widgets.DOMWidget):
-    """An example widget."""
+    """An instance of the Aladin widget.
+    
+    Adaptative attributes can be updated later. The other ones can only
+    be written when creating the widget instance, i.e. when calling Aladin() 
+
+    ...
+    Attributes
+    ----------
+
+    fov : float, default: 60
+        The desired initial field of view, expressed in degrees.
+        adaptative
+    target : string, default: "0 +0"
+        The desired target. 
+        adaptative
+    coo_frame : string, default: "J2000"
+        Reference frame.
+        adaptative
+    survey : string, default: "P/DSS2/color"
+        Name of the survey.
+        adaptative
+    ...
+    height : float, default: 400
+        Height of the Aladin widget in pixels
+    reticle_size : float, default: 22
+        Size of the reticle.
+    reticle_color : string, default: "rgb(178, 50, 178)"
+        The color of the reticle.
+    show_reticle : bool, default: True
+        Controls wether a reticle is present in the middle of the view
+    show_zoom_control : bool, default: True
+    show_fullscreen_control = bool, default: False
+        Wether the fullscreen button appears in the top right corner
+        Defaults to False because this does not work in retrolab. 
+        Can safely be turned to True in Jupyterlab.
+    show_layers_control : bool, default: True
+    show_goto_control, bool, default: True
+    show_simbad_pointer_control : bool, default: True
+        Controls the quick search tool apparition on the left 
+        side of the view.
+    show_share_control : bool, default: False
+        Controls the apparition of the share button in the bottom
+        right corner. This button opens a popup with a sharable link
+        to an Aladin previewer that starts with the actual state of the
+        view.
+    show_context_menu : bool, default: True
+        Controls wether a right click will open a menu. This menu is documented
+        here # TODO add link to documentation when it will exist. 
+        
+    TODO: finish docstring
+    """
 
     # Name of the widget view class in front-end
     _view_name = Unicode('AladinView').tag(sync=True)
@@ -45,7 +96,9 @@ class Aladin(widgets.DOMWidget):
     show_fullscreen_control = Bool(False).tag(sync=True, o=True)
     show_layers_control = Bool(True).tag(sync=True, o=True)
     show_goto_control = Bool(True).tag(sync=True, o=True)
+    show_simbad_pointer_control = Bool(True).tag(sync=True, o=True)
     show_share_control = Bool(False).tag(sync=True, o=True)
+    show_context_menu = Bool(True).tag(sync=True, o=True)
     show_catalog = Bool(True).tag(sync=True, o=True)
     show_frame = Bool(True).tag(sync=True, o=True)
     show_coo_grid = Bool(False).tag(sync=True, o=True)
@@ -54,6 +107,9 @@ class Aladin(widgets.DOMWidget):
     allow_full_zoomout = Bool(False).tag(sync=True, o=True)
 
     options = List(trait=Unicode).tag(sync=True)
+
+    # this sets the height of the widget
+    height = Float(400).tag(sync=True)
 
     # the following values are used in the classe's functions
 
@@ -159,11 +215,35 @@ class Aladin(widgets.DOMWidget):
     # 2 - It seems that the list.append() method does not work with traitlets,
     #     the affectation of the columns must be done at once by using a buffer.
     def add_table(self, table):
-        """ load a VOTable -already accessible on the python side- into the widget
-            Args:
-                table: votable object"""
+        """ Load a table into the widget.
 
-        # theses library must be installed, and are used in votable operations
+        Parameters
+        ----------
+        table : astropy.table.table.QTable or astropy.table.table.Table
+                table that must contain coordinates information
+        
+        Examples
+        --------
+        Cell 1:
+        >>> from ipyaladin import Aladin
+        >>> from astropy.table import QTable
+        >>> aladin = Aladin(fov=2, target='M1')
+        >>> aladin
+        Cell 2:
+        >>> ra = [83.63451584700, 83.61368056017, 83.58780251600]
+        >>> dec = [22.05652591227, 21.97517807639, 21.99277764451]
+        >>> name = ["Gaia EDR3 3403818589184411648",
+                    "Gaia EDR3 3403817661471500416",
+                    "Gaia EDR3 3403817936349408000",
+                   ]
+        >>> table = QTable([ra, dec, name],
+                            names=("ra", "dec", "name"),
+                            meta={"name": "my sample table"})
+        >>> aladin.add_table(table)
+        And the table should appear in the output of Cell 1!
+        """
+
+        # this library must be installed, and is used in votable operations
         # http://www.astropy.org/
         import astropy
         
@@ -179,7 +259,13 @@ class Aladin(widgets.DOMWidget):
                 if isinstance(item, bytes):
                     row_data.append(item.decode('utf-8'))
                 else:
+                    if not isinstance(item, str):
+                        # replace NaN by " ", this is a quick fix 
+                        # and should be questioned when doing a rework
+                        # of this function
+                        item = " " if math.isnan(item) else item 
                     row_data.append(item)
+                    
             table_columns.append(row_data)
 
         self.table_columns = table_columns

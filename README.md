@@ -1,14 +1,15 @@
 # ipyaladin
 
-## Description
-
 A bridge between Jupyter and Aladin Lite, enabling interactive sky visualization in IPython notebooks.
-
-![ipyaladin example](ipyaladin-screenshot.png)
-
 With a couple of lines, you can display Aladin Lite, center it on the target of your choice, and overlay an Astropy table:
 
-![ipyaladin example](ipyaladin-screencast.gif)
+![ipyaladin example](assets/ipyaladin-screencast.gif)
+
+- [ipyaladin](#ipyaladin)
+  - [Examples](#examples)
+  - [Installation](#installation)
+  - [New features corner](#new-features-corner)
+  - [Development installation](#development-installation)
 
 ## Examples
 
@@ -37,9 +38,13 @@ Additionny, for a jupyterlab usage you will need to:
 
 There is also a conda package that can be installed with:
 
-    conda install -c bmatthieu3 ipyaladin==0.2.1
+    conda install -c bmatthieu3 ipyaladin==0.2.2
 
-## Development
+## New features corner
+
+![new_features](assets/new_features.gif)
+
+## Development installation
 
 First, make sure you have installed jupyter on your python environnement: `pip install jupyter`.
 For a development installation [Node.js](https://nodejs.org) and [Yarn version 1](https://classic.yarnpkg.com/) are also required,
@@ -47,11 +52,17 @@ For a development installation [Node.js](https://nodejs.org) and [Yarn version 1
     git clone https://github.com/cds-astro/ipyaladin.git
     cd ipyaladin
     npm install yarn
+    cd js
+    npm install
+    cd ..
     pip install -e .
+
+For Jupyter Notebook, do
+ 
     jupyter nbextension install --py --symlink --overwrite --sys-prefix ipyaladin
     jupyter nbextension enable --py --sys-prefix ipyaladin
 
-When actively developing your extension for JupyterLab, you will need to run this command too:
+For JupyterLab, you will need to run this command too:
 
     jupyter labextension develop --overwrite ipyaladin
 
