@@ -25,7 +25,9 @@ jobs:
       run: |
         npm install yarn
     - name: Build ipyaladin
-      run: pip install .
+      run: |
+        pip install jupyterlab
+        pip install .
     - name: Build and deploy on NPM
       run: |
         cd js
