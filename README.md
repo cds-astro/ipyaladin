@@ -1,14 +1,20 @@
 # ipyaladin
 
+- [ipyaladin](#ipyaladin)
+  - [Description](#description)
+  - [Examples](#examples)
+  - [Installation](#installation)
+  - [New features corner](#new-features-corner)
+  - [Development](#development)
+
 ## Description
 
 A bridge between Jupyter and Aladin Lite, enabling interactive sky visualization in IPython notebooks.
-
-![ipyaladin example](ipyaladin-screenshot.png)
-
 With a couple of lines, you can display Aladin Lite, center it on the target of your choice, and overlay an Astropy table:
 
-![ipyaladin example](ipyaladin-screencast.gif)
+![ipyaladin example](assets/ipyaladin-screencast.gif)
+
+
 
 ## Examples
 
@@ -37,7 +43,11 @@ Additionny, for a jupyterlab usage you will need to:
 
 There is also a conda package that can be installed with:
 
-    conda install -c bmatthieu3 ipyaladin==0.2.1
+    conda install -c bmatthieu3 ipyaladin==0.2.2
+
+## New features corner
+
+![new_features](assets/new_features.gif)
 
 ## Development
 
