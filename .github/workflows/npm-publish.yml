@@ -17,11 +17,11 @@ jobs:
         node-version: 16
     - name: Build ipyaladin
       run: |
-      npm install yarn
-      cd js
-      yarn install
-      yarn run build:prod
-      cd ..
+        npm install yarn
+        cd js
+        yarn install
+        yarn run build:prod
+        cd ..
 
   publish-npm:
     needs: build
@@ -34,10 +34,10 @@ jobs:
         registry-url: https://registry.npmjs.org/
     - name: Build ipyaladin
       run: |
-      npm install yarn
-      cd js
-      yarn install
-      yarn run build:prod
+        npm install yarn
+        cd js
+        yarn install
+        yarn run build:prod
     - run: yarn publish
       env:
         NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
