@@ -16,8 +16,7 @@ permissions:
   contents: read
 
 jobs:
-  deploy:
-
+  deploy-pypi:
     runs-on: ubuntu-latest
 
     steps:
@@ -29,11 +28,38 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install build
+        python -m pip install --upgrade build 
     - name: Build package
       run: python -m build
     - name: Publish package
       uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
       with:
-        user: __token__
+        user: bmatthieu3
         password: ${{ secrets.PYPI_API_TOKEN }}
+      run: |
+        python -m pip install --upgrade twine
+        python -m twine upload --repository ipyaladin dist/*
+
+    # TODO
+    deploy-conda:
+      needs: deploy-pypi
+      runs-on: ubuntu-latest
+
+      steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.x'
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: anaconda-client-env
+          auto-activate-base: false
+      - run: |
+          cd conda-recipe
+          conda skeleton pypi --extra-specs jupyter-packaging ipyaladin
+          // change the meta.yaml in ipyaladin/
+          cp post-link.* pre-unlink.* ipyaladin
+
+      
+        

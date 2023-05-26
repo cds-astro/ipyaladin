@@ -1,10 +1,11 @@
 {
   "name": "ipyaladin",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "ipyaladin",
   "author": "Thomas Boch, Jerome Desroziers and Matthieu Baumann",
   "license": "BSD-3-Clause",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/cds-astro/ipyaladin.git"
@@ -17,7 +18,6 @@
     "jupyterlab-extension"
   ],
   "files": [
-    "lib/**/*.js",
     "dist/*.js"
   ],
   "scripts": {
