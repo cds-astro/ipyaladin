@@ -6,27 +6,10 @@ name: Deploy on NPM packages
 on:
   release:
     types: [created]
-    
   workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
-      with:
-        node-version: 16
-    - name: Build ipyaladin
-      run: |
-        npm install yarn
-        cd js
-        yarn install
-        yarn run build:prod
-        cd ..
-
   publish-npm:
-    needs: build
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -34,12 +17,22 @@ jobs:
       with:
         node-version: 16
         registry-url: https://registry.npmjs.org/
-    - name: Build ipyaladin
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.x'
+    - name: Install dependencies
       run: |
         npm install yarn
         cd js
         yarn install
+        cd ..
+    - name: Build ipyaladin
+      run: pip install .
+    - name: Build and deploy on NPM
+      run: |
+        cd js
         yarn run build:prod
-    - run: yarn publish
+        yarn publish
       env:
         NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
