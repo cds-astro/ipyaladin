@@ -14,6 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * **Fixed** for any bug fixes.
 * **Security** in case of vulnerabilities.
 
+## [0.2.3]
+
+### Changed
+
+* ipywidgets >= 8.0.6 install dependency
+* ipyaladin compatible jupyterlab 4 and python 3.11
+
 ## [0.2.2]
 
 ### Added
