@@ -225,7 +225,7 @@ export class AladinView extends DOMWidgetView {
 
         this.listenTo(this.model, 'change:listener_flag', () => {
             let type= this.model.get('listener_type');
-            this.al.on(type, function(object) {
+            this.al.on(type, (object) => {
                 if (type==='select') {
                     let sources = object;
                     // first, deselect previously selected sources
