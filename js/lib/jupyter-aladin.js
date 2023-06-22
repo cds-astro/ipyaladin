@@ -64,8 +64,8 @@ export class AladinModel extends DOMWidgetModel {
         _model_module : 'ipyaladin',
         _view_module : 'ipyaladin',
 
-        _model_module_version : '0.2.3',
-        _view_module_version : '0.2.3',
+        _model_module_version : '0.2.4',
+        _view_module_version : '0.2.4',
       };
     }
   }

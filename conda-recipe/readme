@@ -18,9 +18,9 @@ conda skeleton pypi --extra-specs jupyter-packaging ipyaladin
 // change the meta.yaml in ipyaladin/
 cp post-link.* pre-unlink.* ipyaladin
 conda build ipyaladin --output-folder distrib
-conda convert --platform all distrib/linux-64/ipyaladin-0.2.3-py39_0.tar.bz2 -o distrib
+conda convert --platform all distrib/linux-64/ipyaladin-4-py39_0.tar.bz2 -o distrib
 anaconda login
-anaconda upload distrib/osx-64/ipyaladin-0.2.3-py39_0.tar.bz2
-anaconda upload distrib/linux-64/ipyaladin-0.2.3-py39_0.tar.bz2
+anaconda upload distrib/osx-64/ipyaladin-0.2.4-py39_0.tar.bz2
+anaconda upload distrib/linux-64/ipyaladin-0.2.4-py39_0.tar.bz2
 
 rm -r distrib ipyaladin

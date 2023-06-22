@@ -14,6 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * **Fixed** for any bug fixes.
 * **Security** in case of vulnerabilities.
 
+## [0.2.4]
+
+### Fixed
+
+* add_listener function had a bug introduced in precedent version
+
 ## [0.2.3]
 
 ### Changed
