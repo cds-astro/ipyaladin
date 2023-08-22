@@ -54,6 +54,7 @@ jobs:
         auto-activate-base: false
     - run: |
         cd conda-recipe
+        conda install conda-build -y
         conda skeleton pypi --extra-specs jupyter-packaging ipyaladin
         // change the meta.yaml in ipyaladin/
         cp post-link.* pre-unlink.* ipyaladin
