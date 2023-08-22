@@ -14,6 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * **Fixed** for any bug fixes.
 * **Security** in case of vulnerabilities.
 
+## [0.2.5]
+
+### Fixed
+
+* fix traitlet warning on unicode (issue #69)
+* fix warning on version export in index.js
+
 ## [0.2.4]
 
 ### Fixed

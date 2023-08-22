@@ -106,7 +106,7 @@ class Aladin(widgets.DOMWidget):
     log = Bool(True).tag(sync=True, o=True)
     allow_full_zoomout = Bool(False).tag(sync=True, o=True)
 
-    options = List(trait=Unicode).tag(sync=True)
+    options = List(trait=Unicode()).tag(sync=True)
 
     # this sets the height of the widget
     height = Float(400).tag(sync=True)

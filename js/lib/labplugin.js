@@ -1,5 +1,6 @@
-import {AladinModel, AladinView, version} from './index';
+import {AladinModel, AladinView} from './index';
 import {IJupyterWidgetRegistry} from '@jupyter-widgets/base';
+import packageInfo from '../package.json';
 
 export const aladinWidgetPlugin = {
   id: 'ipyaladin:plugin',
@@ -7,7 +8,7 @@ export const aladinWidgetPlugin = {
   activate: function(app, widgets) {
       widgets.registerWidget({
           name: 'ipyaladin',
-          version: version,
+          version: packageInfo.version,
           exports: { AladinModel, AladinView }
       });
   },
