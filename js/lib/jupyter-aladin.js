@@ -1,4 +1,6 @@
 import { DOMWidgetModel, DOMWidgetView } from '@jupyter-widgets/base';
+import packageInfo from '../package.json';
+
 // Allow us to use the DOMWidgetView base class for our models/views.
 // Additionnaly, this is where we put by default all the external libraries
 // fetched by using webpack (see webpack.config.js file).
@@ -61,11 +63,11 @@ export class AladinModel extends DOMWidgetModel {
         _model_name : 'AladinModel',
         _view_name : 'AladinView',
 
-        _model_module : 'ipyaladin',
-        _view_module : 'ipyaladin',
+        _model_module : packageInfo.name,
+        _view_module : packageInfo.name,
 
-        _model_module_version : '0.2.4',
-        _view_module_version : '0.2.4',
+        _model_module_version : packageInfo.version,
+        _view_module_version : packageInfo.version,
       };
     }
   }
