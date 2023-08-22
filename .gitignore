@@ -10,7 +10,6 @@ ipyaladin/nbextension/
 ipyaladin/labextension/
 
 # Yarn package json
-package.json
 package-lock.json
 js/yarn.lock
 js/.yarn
