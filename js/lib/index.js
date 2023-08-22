@@ -1,3 +1,3 @@
-// Export widget models and views, and the npm package version number.
+// Export widget models and views
 
 export {AladinModel, AladinView} from './jupyter-aladin';
