@@ -2,6 +2,9 @@ import ipywidgets as widgets
 from traitlets import (Float, Unicode, Bool, List, Dict, default)
 from ._version import NPM_PACKAGE_RANGE
 import math
+import time
+import IPython
+
 
 # See js/lib/example.js for the frontend counterpart to this file.
 
@@ -137,6 +140,13 @@ class Aladin(widgets.DOMWidget):
     overlay_options = Dict().tag(sync=True)
     overlay_from_stcs_flag = Bool(True).tag(sync=True)
 
+    # flag for the get_view_WCS function
+    update_wcs_flag = Bool(True).tag(sync=True)
+    wcs = Dict({}).tag(sync=True)
+
+    # values used in the get_JPEG_thumbnail function
+    thumbnail_flag = Bool(True).tag(sync=True)
+
     # values used in the add_listener function
     listener_type = Unicode('').tag(sync=True)
     listener_flag = Bool(True).tag(sync=True)
@@ -149,9 +159,6 @@ class Aladin(widgets.DOMWidget):
     rectangular_selection_callback = None
 
     last_prompt_length = 0
-
-    # values used in the get_JPEG_thumbnail function
-    thumbnail_flag = Bool(True).tag(sync=True)
 
     # 
     color_map_name = Unicode('').tag(sync=True)
@@ -325,9 +332,16 @@ class Aladin(widgets.DOMWidget):
             print(result, end='\r')
             self.last_prompt_length= len(result)
 
+    
+    def update_WCS(self):
+        """Updates the WCS to represent the current view
+        """
+        self.update_wcs_flag = not self.update_wcs_flag
+
     def get_JPEG_thumbnail(self):
-        """ create a popup window that contains an image representing the widget's current state """
+        """Create a popup window that contains an image representing the widget's current state """
         self.thumbnail_flag= not self.thumbnail_flag
+        
 
     def set_color_map(self, color_map_name):
         self.color_map_name= color_map_name

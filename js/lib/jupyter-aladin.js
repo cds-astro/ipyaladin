@@ -283,6 +283,11 @@ export class AladinView extends DOMWidgetView {
             this.al.exportAsPNG();
         });
 
+        this.listenTo(this.model, 'change:update_wcs_flag', () => {
+            this.model.set("wcs", this.al.getViewWCS());
+            this.touch();
+        })
+
         this.listenTo(this.model, 'change:color_map_flag', () => {
             const cmap = this.model.get('color_map_name');
             this.al.getBaseImageLayer().setColormap(cmap);

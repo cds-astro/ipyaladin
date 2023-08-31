@@ -14,6 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * **Fixed** for any bug fixes.
 * **Security** in case of vulnerabilities.
 
+## [unreleased]
+
+## Added
+
+* add a `wcs` attribute to the Aladin class that can be updated with the `update_WCS()` method
+
 ## [0.2.5]
 
 ### Fixed
