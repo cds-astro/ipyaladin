@@ -320,7 +320,7 @@ class Aladin(widgets.DOMWidget):
             elif content.get('type') == 'select':
                 result= self.listener_callback_select(content.get('data'))
             result= str(result)
-            for i in  range(len(result),self.last_prompt_length):
+            for _ in  range(len(result),self.last_prompt_length):
                 result= result+' '
             print(result, end='\r')
             self.last_prompt_length= len(result)
