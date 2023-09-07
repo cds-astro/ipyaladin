@@ -81,30 +81,30 @@ class Aladin(widgets.DOMWidget):
     # Default values are overwritten by values passed to the class's constructor
     
     # only theses 4 values are actually updated on one side when they change on the other
-    fov = Float(60).tag(sync=True, o=True)
-    target = Unicode("0 +0").tag(sync=True, o=True)
-    coo_frame = Unicode("J2000").tag(sync=True, o=True) 
-    survey = Unicode("P/DSS2/color").tag(sync=True, o=True)
-    overlay_survey = Unicode('').tag(sync=True, o=True)
-    overlay_survey_opacity = Float(0.0).tag(sync=True, o=True)
+    fov = Float(60).tag(sync=True, options=True)
+    target = Unicode("0 +0").tag(sync=True, options=True)
+    coo_frame = Unicode("J2000").tag(sync=True, options=True) 
+    survey = Unicode("P/DSS2/color").tag(sync=True, options=True)
+    overlay_survey = Unicode('').tag(sync=True, options=True)
+    overlay_survey_opacity = Float(0.0).tag(sync=True, options=True)
 
     # the remaining values exists for the widget constructor's sole purpose
-    reticle_size = Float(22).tag(sync=True, o=True)
-    reticle_color = Unicode("rgb(178, 50, 178)").tag(sync=True, o=True)
-    show_reticle = Bool(True).tag(sync=True, o=True)
-    show_zoom_control = Bool(True).tag(sync=True, o=True)
-    show_fullscreen_control = Bool(False).tag(sync=True, o=True)
-    show_layers_control = Bool(True).tag(sync=True, o=True)
-    show_goto_control = Bool(True).tag(sync=True, o=True)
-    show_simbad_pointer_control = Bool(True).tag(sync=True, o=True)
-    show_share_control = Bool(False).tag(sync=True, o=True)
-    show_context_menu = Bool(True).tag(sync=True, o=True)
-    show_catalog = Bool(True).tag(sync=True, o=True)
-    show_frame = Bool(True).tag(sync=True, o=True)
-    show_coo_grid = Bool(False).tag(sync=True, o=True)
-    full_screen = Bool(False).tag(sync=True, o=True)
-    log = Bool(True).tag(sync=True, o=True)
-    allow_full_zoomout = Bool(False).tag(sync=True, o=True)
+    reticle_size = Float(22).tag(sync=True, options=True)
+    reticle_color = Unicode("rgb(178, 50, 178)").tag(sync=True, options=True)
+    show_reticle = Bool(True).tag(sync=True, options=True)
+    show_zoom_control = Bool(True).tag(sync=True, options=True)
+    show_fullscreen_control = Bool(False).tag(sync=True, options=True)
+    show_layers_control = Bool(True).tag(sync=True, options=True)
+    show_goto_control = Bool(True).tag(sync=True, options=True)
+    show_simbad_pointer_control = Bool(True).tag(sync=True, options=True)
+    show_share_control = Bool(False).tag(sync=True, options=True)
+    show_context_menu = Bool(True).tag(sync=True, options=True)
+    show_catalog = Bool(True).tag(sync=True, options=True)
+    show_frame = Bool(True).tag(sync=True, options=True)
+    show_coo_grid = Bool(False).tag(sync=True, options=True)
+    full_screen = Bool(False).tag(sync=True, options=True)
+    log = Bool(True).tag(sync=True, options=True)
+    allow_full_zoomout = Bool(False).tag(sync=True, options=True)
 
     options = List(trait=Unicode()).tag(sync=True)
 
@@ -157,10 +157,13 @@ class Aladin(widgets.DOMWidget):
     color_map_name = Unicode('').tag(sync=True)
     color_map_flag = Bool(True).tag(sync=True)
 
+    # values used for pix2world and world2pix
+    pix2world_flag = Bool(True).tag()
+
     @default('options')
     def _default_options(self):
         """ fill the options List with all the options declared """
-        return [name for name in self.traits(o=True)]
+        return [name for name in self.traits(options=True)]
 
     def __init__(self, **kwargs):
         """ class constructor
@@ -332,3 +335,7 @@ class Aladin(widgets.DOMWidget):
     def set_color_map(self, color_map_name):
         self.color_map_name= color_map_name
         self.color_map_flag= not self.color_map_flag
+
+    def pix2world(x, y):
+        ra, dec = 
+        return ra, dec
