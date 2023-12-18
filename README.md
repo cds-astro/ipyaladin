@@ -58,26 +58,23 @@ Additionny, for a jupyterlab < 4 usage you might need to
 First, make sure you have installed jupyter on your python environnement: `pip install jupyter`.
 For a development installation [Node.js](https://nodejs.org) and [Yarn version 1](https://classic.yarnpkg.com/) are also required,
 
-    git clone https://github.com/cds-astro/ipyaladin.git
-    cd ipyaladin
-    npm install yarn
-    cd js
-    npm install
-    cd ..
-    pip install -e .
+```shell
+> git clone https://github.com/cds-astro/ipyaladin.git
+> cd ipyaladin
+> npm install yarn
+> cd js
+> npm install
+> cd ..
+> pip install -e .
+```
 
-For Jupyter Notebook, do
- 
-    jupyter nbextension install --py --symlink --overwrite --sys-prefix ipyaladin
-    jupyter nbextension enable --py --sys-prefix ipyaladin
+(note that the point is important in the last instruction)
 
-For JupyterLab, you will need to run this command too:
+Then you need to rebuild the javascript when you change the code:
 
-    jupyter labextension develop --overwrite ipyaladin
-
-Then you need to rebuild the JS when you make a code change:
-
-    cd js
-    yarn run build
+```shell
+> cd js
+> yarn run build
+```
 
 You then need to refresh the JupyterLab page when your javascript changes.
