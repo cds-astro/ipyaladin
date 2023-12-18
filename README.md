@@ -19,26 +19,35 @@ Some example notebooks can be found in the [examples directory](examples).
 
 ## Installation
 
-To install use pip:
+To install use pip or conda :
 
-    pip install ipyaladin
+```shell
+> pip install ipyaladin
+> # OR
+> conda install -c bmatthieu3 ipyaladin
+```
 
-Then, make sure to enable widgetsnbextension:
+You can already try to load ipyaladin in a notebook.
 
-    jupyter nbextension enable --py widgetsnbextension
+```python
+from ipyaladin import Aladin
+aladin = Aladin()
+aladin
+```
 
-Finally, enable ipyaladin:
+If it does not work, make sure to enable `widgetsnbextension` and `ipyaladin`:
 
-    jupyter nbextension enable --py --sys-prefix ipyaladin
+```shell
+> jupyter nbextension enable --py widgetsnbextension
+> jupyter nbextension enable --py --sys-prefix ipyaladin
+```
 
-And you are ready to use ipyaladin inside your notebooks!
-Additionny, for a jupyterlab usage you will need to:
+Additionny, for a jupyterlab < 4 usage you will need to 
+(note that this is not needed for jupyterlab >= 4.0):
 
-    jupyter labextension develop ipyaladin --overwrite
-
-There is also a conda package that can be installed with:
-
-    conda install -c bmatthieu3 ipyaladin==0.2.5
+```shell
+> jupyter labextension develop ipyaladin --overwrite
+```
 
 ## New features corner
 
