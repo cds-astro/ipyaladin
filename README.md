@@ -42,7 +42,7 @@ If it does not work, make sure to enable `widgetsnbextension` and `ipyaladin`:
 > jupyter nbextension enable --py --sys-prefix ipyaladin
 ```
 
-Additionny, for a jupyterlab < 4 usage you will need to 
+Additionny, for a jupyterlab < 4 usage you might need to 
 (note that this is not needed for jupyterlab >= 4.0):
 
 ```shell
