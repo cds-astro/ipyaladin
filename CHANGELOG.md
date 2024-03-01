@@ -14,6 +14,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * **Fixed** for any bug fixes.
 * **Security** in case of vulnerabilities.
 
+## [0.2.6]
+
+### Fixed
+
+* fix deprecated npm_install module and replaced by hatch_jupyter_builder.npm_builder
+
+### Changed
+
+* The corresponding Aladin-lite version is now pinned instead of pointing to the latest version.
+
 ## [0.2.5]
 
 ### Fixed
