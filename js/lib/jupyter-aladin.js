@@ -32,8 +32,7 @@ const loadScript = (FILE_URL, async = true, type = "text/javascript") => {
         }
     });
 };
-let AladinLiteJS_Loader = loadScript("https://code.jquery.com/jquery-3.6.1.min.js")
-    .then(() => { return loadScript("https://aladin.u-strasbg.fr/AladinLite/api/v3/latest/aladin.js") })
+let AladinLiteJS_Loader = loadScript("https://aladin.cds.unistra.fr/AladinLite/api/v3/3.2.0/aladin.js")
     .then(async () => {
         await A.init;
     });
