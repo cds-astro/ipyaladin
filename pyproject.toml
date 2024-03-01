@@ -1,3 +1,45 @@
 [build-system]
 requires = ["jupyter_packaging>=0.7.9", "jupyterlab>=3.0", "setuptools>=40.8.0", "wheel", "traitlets>=5.9.0", "traitlets>=5.9.0"]
 build-backend = "setuptools.build_meta"
+
+
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build]
+artifacts = [
+    "ipyaladin/nbextension/index.*",
+    "ipyaladin/labextension/*.tgz",
+    "ipyaladin/labextension",
+]
+
+[tool.hatch.build.targets.wheel.shared-data]
+"ipyaladin/nbextension" = "share/jupyter/nbextensions/ipyaladin"
+"ipyaladin/labextension" = "share/jupyter/labextensions/ipyaladin"
+"./install.json" = "share/jupyter/labextensions/ipyaladin/install.json"
+"./ipyaladin.json" = "etc/jupyter/nbconfig/notebook.d/ipyaladin.json"
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+    ".github",
+]
+
+[tool.hatch.build.hooks.jupyter-builder]
+build-function = "hatch_jupyter_builder.npm_builder"
+ensured-targets = [
+    "ipyaladin/nbextension/index.js",
+    "ipyaladin/labextension/package.json",
+]
+skip-if-exists = [
+    "ipyaladin/nbextension/index.js",
+    "ipyaladin/labextension/package.json",
+]
+dependencies = [
+    "hatch-jupyter-builder>=0.8.3",
+]
+
+[tool.hatch.build.hooks.jupyter-builder.build-kwargs]
+path = "."
+build_cmd = "build:prod"
+npm = ["jlpm"]
