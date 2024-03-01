@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 * The corresponding Aladin-lite version is now pinned instead of pointing to the latest version.
+* There is no dependency to jquery anymore
 
 ## [0.2.5]
 
