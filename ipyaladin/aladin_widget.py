@@ -81,10 +81,10 @@ class Aladin(widgets.DOMWidget):
     # Default values are overwritten by values passed to the class's constructor
     
     # only theses 4 values are actually updated on one side when they change on the other
-    fov = Float(60).tag(sync=True, options=True)
-    target = Unicode("0 +0").tag(sync=True, options=True)
-    coo_frame = Unicode("J2000").tag(sync=True, options=True) 
-    survey = Unicode("P/DSS2/color").tag(sync=True, options=True)
+    fov = Float(60, help="Field of view in degrees").tag(sync=True, options=True)
+    target = Unicode("0 +0", help="Position of the center").tag(sync=True, options=True)
+    coo_frame = Unicode("J2000", help="Coordinates frame. Values can be 'J2000', 'J2000d', or 'GAL'").tag(sync=True, options=True) 
+    survey = Unicode("P/DSS2/color", help="Survey name").tag(sync=True, options=True)
     overlay_survey = Unicode('').tag(sync=True, options=True)
     overlay_survey_opacity = Float(0.0).tag(sync=True, options=True)
 
@@ -105,11 +105,10 @@ class Aladin(widgets.DOMWidget):
     full_screen = Bool(False).tag(sync=True, options=True)
     log = Bool(True).tag(sync=True, options=True)
     allow_full_zoomout = Bool(False).tag(sync=True, options=True)
+    # this sets the height of the widget
+    height = Float(400).tag(sync=True, options=True)
 
     options = List(trait=Unicode()).tag(sync=True)
-
-    # this sets the height of the widget
-    height = Float(400).tag(sync=True)
 
     # the following values are used in the classe's functions
 
@@ -157,8 +156,7 @@ class Aladin(widgets.DOMWidget):
     color_map_name = Unicode('').tag(sync=True)
     color_map_flag = Bool(True).tag(sync=True)
 
-    # values used for pix2world and world2pix
-    pix2world_flag = Bool(True).tag()
+
 
     @default('options')
     def _default_options(self):
@@ -335,7 +333,3 @@ class Aladin(widgets.DOMWidget):
     def set_color_map(self, color_map_name):
         self.color_map_name= color_map_name
         self.color_map_flag= not self.color_map_flag
-
-    def pix2world(x, y):
-        ra, dec = 
-        return ra, dec

@@ -33,7 +33,7 @@ const loadScript = (FILE_URL, async = true, type = "text/javascript") => {
     });
 };
 let AladinLiteJS_Loader = loadScript("https://code.jquery.com/jquery-3.6.1.min.js")
-    .then(() => { return loadScript("https://aladin.u-strasbg.fr/AladinLite/api/v3/latest/aladin.js") })
+    .then(() => { return loadScript("https://aladin.cds.unistra.fr/AladinLite/alpha/aladin.js") })
     .then(async () => {
         await A.init;
     });
@@ -117,7 +117,7 @@ export class AladinView extends DOMWidgetView {
                             // regarding its use inside jupyter notebook
                             // Therefore it is better to let it here
                             setTimeout(() => {
-                                this.al = A.aladin([this.div], aladin_options);
+                                this.al = A.aladin(this.div.id, aladin_options);
 
                                 // Declaration of the variable's listeners:
                                 this.aladin_events();
