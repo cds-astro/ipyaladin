@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-* fix deprecated npm_install module and replaced by hatch_jupyter_builder.npm_builder
+* fix deprecated npm_install jupyter module and replaced by hatch_jupyter_builder.npm_builder
 
 ### Changed
 
