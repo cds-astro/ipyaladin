@@ -4,6 +4,7 @@ dist/
 build/
 *.py[cod]
 node_modules/
+__pycache__/
 
 # Compiled javascript
 ipyaladin/nbextension/
