@@ -1,0 +1,10 @@
+{
+	"scripts": {
+		"dev": "pip install -e '.[dev]' && npm run build -- --sourcemap=inline --watch",
+		"build": "esbuild js/widget.js --minify --format=esm --bundle --outdir=src/ipyaladin/static"
+	},
+	"dependencies": {},
+	"devDependencies": {
+		"esbuild": "^0.20.0"
+	}
+}

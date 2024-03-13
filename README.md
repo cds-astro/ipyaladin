@@ -8,8 +8,8 @@ With a couple of lines, you can display Aladin Lite, center it on the target of 
 - [ipyaladin](#ipyaladin)
   - [Examples](#examples)
   - [Installation](#installation)
-  - [New features corner](#new-features-corner)
   - [Development installation](#development-installation)
+  - [How does it work?](#how-does-it-work)
 
 ## Examples
 
@@ -35,46 +35,23 @@ aladin = Aladin()
 aladin
 ```
 
-If it does not work, make sure to enable `widgetsnbextension` and `ipyaladin`:
-
-```shell
-> jupyter nbextension enable --py widgetsnbextension
-> jupyter nbextension enable --py --sys-prefix ipyaladin
-```
-
-Additionny, for a jupyterlab < 4 usage you might need to 
-(note that this is not needed for jupyterlab >= 4.0):
-
-```shell
-> jupyter labextension develop ipyaladin --overwrite
-```
-
-## New features corner
-
-![new_features](assets/new_features.gif)
-
 ## Development installation
 
-First, make sure you have installed jupyter on your python environnement: `pip install jupyter`.
+First, make sure you have installed jupyter in your python environnement: `pip install jupyter`.
 For a development installation [Node.js](https://nodejs.org) and [Yarn version 1](https://classic.yarnpkg.com/) are also required,
 
 ```shell
 > git clone https://github.com/cds-astro/ipyaladin.git
 > cd ipyaladin
-> npm install yarn
-> cd js
 > npm install
-> cd ..
-> pip install -e .
+> npm run dev
 ```
 
-(note that the point is important in the last instruction)
+And you are ready to develop! Any change done in the python, javascript, or css files should
+be directly reflected in the notebook editor of your choice (JupyterLab, VSCode,...)!
 
-Then you need to rebuild the javascript when you change the code:
+## How does it work?
 
-```shell
-> cd js
-> yarn run build
-```
+Ipyaladin brings [Aladin-lite](https://github.com/cds-astro/aladin-lite) into notebooks thanks to
+[Anywidget](https://anywidget.dev/).
 
-You then need to refresh the JupyterLab page when your javascript changes.

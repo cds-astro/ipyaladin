@@ -1,0 +1,13 @@
+.cell-output-ipywidget-background {
+    background: transparent;
+}
+.jp-OutputArea-output {
+    background-color: transparent;
+ }
+ .aladin-widget {
+    background-color: transparent;
+
+ }
+ .aladin-widget .aladin-measurement-div {
+    max-height: 100px;
+}

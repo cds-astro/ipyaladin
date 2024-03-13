@@ -14,6 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * **Fixed** for any bug fixes.
 * **Security** in case of vulnerabilities.
 
+## [0.3.0]
+
+### Changed
+
+* The ipyaladin module is now built on anywidget (https://anywidget.dev/)
+
 ## [0.2.6]
 
 ### Fixed
