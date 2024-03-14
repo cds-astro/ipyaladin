@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ipyaladin"
-version = "0.3.0"
+dynamic = ["version"]
 dependencies = ["anywidget"]
 readme = "README.md"
 
@@ -15,6 +15,8 @@ dev = ["watchfiles", "jupyterlab"]
 [tool.hatch.envs.default]
 features = ["dev"]
 
+[tool.hatch.version]
+path = "src/ipyaladin/__about__.py"
 
 [tool.hatch.build]
 only-packages = true
