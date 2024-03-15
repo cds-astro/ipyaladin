@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Aladin instances now have a `clicked_object` attribute that contains the information of
   the last clicked object (ra, dec, and catalog content)
 - Each ipyaladin version now point to a specific Aladin-lite version instead of the latest available version
+- add_table takes new arguments (documented here https://cds-astro.github.io/aladin-lite/Catalog.Catalog.html)
+- the new method `add_moc` can take mocpy.MOC objects, URLs, or the dictionnary serialization of a MOC. This will replace `moc_from_URL` and `moc_from_dict` in the future.
 
 ## [0.2.6]
 
