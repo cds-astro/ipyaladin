@@ -31,3 +31,18 @@ dependencies = ["hatch-jupyter-builder>=0.5.0"]
 [tool.hatch.build.hooks.jupyter-builder.build-kwargs]
 npm = "npm"
 build_cmd = "build"
+
+[tool.ruff]
+fix = true
+show-fixes = true
+extend-include = ["*.ipynb"]
+
+[tool.ruff.lint]
+extend-select = ["E", "W", "YTT", "ASYNC", "BLE", "B", "A",
+                 "C4", "ISC", "PIE", "PYI", "RSE", "RET", "SIM",
+                 "PTH", "TD", "ERA", "PL", "PERF", "RUF", "ARG"
+                ]
+ignore = ["ISC001"]
+
+[tool.ruff.format]
+docstring-code-format = false

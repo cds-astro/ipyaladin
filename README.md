@@ -54,4 +54,3 @@ be directly reflected in the notebook editor of your choice (JupyterLab, VSCode,
 
 Ipyaladin brings [Aladin-lite](https://github.com/cds-astro/aladin-lite) into notebooks thanks to
 [Anywidget](https://anywidget.dev/).
-

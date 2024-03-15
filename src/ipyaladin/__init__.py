@@ -1,18 +1,29 @@
 import importlib.metadata
-import math
 import pathlib
+from typing import ClassVar
 import warnings
 
 import anywidget
-from traitlets import (Float, Int, Unicode, Bool, List, Dict, Any, Bytes, default, Undefined)
+from traitlets import (
+    Float,
+    Int,
+    Unicode,
+    Bool,
+    List,
+    Dict,
+    Any,
+    Bytes,
+    default,
+    Undefined,
+)
 
 try:
     __version__ = importlib.metadata.version("ipyaladin")
 except importlib.metadata.PackageNotFoundError:
     __version__ = "unknown"
 
-class Aladin(anywidget.AnyWidget):
 
+class Aladin(anywidget.AnyWidget):
     _esm = pathlib.Path(__file__).parent / "static" / "widget.js"
     _css = pathlib.Path(__file__).parent / "static" / "widget.css"
 
@@ -20,7 +31,9 @@ class Aladin(anywidget.AnyWidget):
     height = Int(400).tag(sync=True, init_option=True)
     target = Unicode("0 0").tag(sync=True, init_option=True)
     fov = Float(60.0).tag(sync=True, init_option=True)
-    survey = Unicode("https://alaskybis.unistra.fr/DSS/DSSColor").tag(sync=True, init_option=True)
+    survey = Unicode("https://alaskybis.unistra.fr/DSS/DSSColor").tag(
+        sync=True, init_option=True
+    )
     coo_frame = Unicode("J2000").tag(sync=True, init_option=True)
     projection = Unicode("SIN").tag(sync=True, init_option=True)
     samp = Bool(False).tag(sync=True, init_option=True)
@@ -50,131 +63,141 @@ class Aladin(anywidget.AnyWidget):
     show_coo_grid_control = Bool(True).tag(sync=True, init_option=True)
     grid_color = Unicode("rgb(178, 50, 178)").tag(sync=True, init_option=True)
     grid_opacity = Float(0.5).tag(sync=True, init_option=True)
-    grid_options = Dict().tag(sync=True, init_option=True) # TODO: test once aladin 3.3.0 is out
+    grid_options = Dict().tag(sync=True, init_option=True)
 
     # content of the last click
     clicked = Dict().tag(sync=True)
-    # listener callback is only on the python side and contains functions to link to events
-    listener_callback = {}
+    # listener callback is on the python side and contains functions to link to events
+    listener_callback: ClassVar = {}
 
     # overlay survey
-    overlay_survey = Unicode('').tag(sync=True, init_option=True)
+    overlay_survey = Unicode("").tag(sync=True, init_option=True)
     overlay_survey_opacity = Float(0.0).tag(sync=True, init_option=True)
 
     # tables/catalogs
     _table = Bytes(Undefined).tag(sync=True)
-    
 
     init_options = List(trait=Any()).tag(sync=True)
+
     @default("init_options")
     def _init_options(self):
-        return [name for name in self.traits(init_option=True)]
-    
+        return list(self.traits(init_option=True))
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.on_msg(self._handle_custom_message)
-    
-    def __dir__(self):
-        return [
-            "add_moc",
-            "add_overlay_from_stcs",
-            "add_catalog_from_URL",
-            "add_listener",
-        ]
-    
-    def _handle_custom_message(self, model, message, list_of_buffers):
+
+    def _handle_custom_message(self, model, message, list_of_buffers):  # noqa: ARG002
         event_type = message["event_type"]
         message_content = message["content"]
-        if event_type == "object_clicked" and "object_clicked" in self.listener_callback:
+        if (
+            event_type == "object_clicked"
+            and "object_clicked" in self.listener_callback
+        ):
             self.listener_callback["object_clicked"](message_content)
-        elif event_type == "object_hovered" and "object_hovered" in self.listener_callback:
+        elif (
+            event_type == "object_hovered"
+            and "object_hovered" in self.listener_callback
+        ):
             self.listener_callback["object_hovered"](message_content)
         elif event_type == "click" and "click" in self.listener_callback:
             self.listener_callback["click"](message_content)
-    
-    # Note: (about the class's functions)
-    # As it is only possible to communicate with the js side of the application by using traitlets,
-    # we can not directly call a js function from the python side
-    # As such, we use a little trick that consists in delegating to one of the class's variable
-    # the role of a flag, whose change in value trigger a listener in the js side,
-    # who can then execute the function whose parameters are passed as trailets in its python equivalent
+        elif event_type == "select" and "select" in self.listener_callback:
+            self.listener_callback["select"](message_content)
 
-    def add_catalog_from_URL(self, votable_URL, votable_options={}):
-        """ load a VOTable table from an url and load its data into the widget 
-            Args:
-                votable_URL: string url
-                votable_options: dictionary object"""
-        self.send({
-            "event_name": "add_catalog_from_URL",
-            "votable_URL": votable_URL,
-            "options": votable_options
-        })
+    def add_catalog_from_URL(self, votable_URL, votable_options=None):
+        """load a VOTable table from an url and load its data into the widget
+        Args:
+            votable_URL: string url
+            votable_options: dictionary object"""
+        if votable_options is None:
+            votable_options = {}
+        self.send(
+            {
+                "event_name": "add_catalog_from_URL",
+                "votable_URL": votable_URL,
+                "options": votable_options,
+            }
+        )
 
     # MOCs
-    
+
     def add_moc(self, moc, **moc_options):
         if isinstance(moc, dict):
-            self.send({
-                "event_name": "add_MOC_from_dict",
-                "moc_dict": moc,
-                "options": moc_options
-            })
+            self.send(
+                {
+                    "event_name": "add_MOC_from_dict",
+                    "moc_dict": moc,
+                    "options": moc_options,
+                }
+            )
         elif isinstance(moc, str) and "://" in moc:
-            self.send({
-                "event_name": "add_MOC_from_URL",
-                "moc_URL": moc,
-                "options": moc_options
-            })
+            self.send(
+                {
+                    "event_name": "add_MOC_from_URL",
+                    "moc_URL": moc,
+                    "options": moc_options,
+                }
+            )
         else:
             try:
                 from mocpy import MOC
+
                 if isinstance(moc, MOC):
-                    self.send({
-                        "event_name": "add_MOC_from_dict",
-                        "moc_dict": moc.serialize("json"),
-                        "options": moc_options
-                    })
-            except ImportError:
-                raise ValueError("A MOC can be given as an URL, a dictionnary, or a mocpy.MOC object. "
-                                 "To read mocpy.MOC objects, you need to install the mocpy library with "
-                                 "'pip install mocpy'.")
+                    self.send(
+                        {
+                            "event_name": "add_MOC_from_dict",
+                            "moc_dict": moc.serialize("json"),
+                            "options": moc_options,
+                        }
+                    )
+            except ImportError as imp:
+                raise ValueError(
+                    "A MOC can be given as an URL, a dictionnary, or a mocpy.MOC "
+                    "object. To read mocpy.MOC objects, you need to install the mocpy "
+                    "library with 'pip install mocpy'."
+                ) from imp
 
-
-    def add_moc_from_URL(self, moc_URL, moc_options = {}):
-        """ load a MOC from a URL and display it in Aladin Lite widget
-            Arguments:
-            moc_URL: string url
-            moc_options: dictionary object"""
-        warnings.warn("add_moc_from_URL is replaced by add_moc that detects automatically"
-                      "that the MOC was given as an URL.", DeprecationWarning)
+    def add_moc_from_URL(self, moc_URL, moc_options=None):
+        """load a MOC from a URL and display it in Aladin Lite widget
+        Arguments:
+        moc_URL: string url
+        moc_options: dictionary object"""
+        warnings.warn(
+            "add_moc_from_URL is replaced by add_moc that detects automatically"
+            "that the MOC was given as an URL.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        if moc_options is None:
+            moc_options = {}
         self.add_moc(moc_URL, **moc_options)
 
-
-    def add_moc_from_dict(self, moc_dict, moc_options = {}):
-        """ load a MOC from a dict object and display it in Aladin Lite widget
-            Arguments:
-            moc_dict: the dict containing the MOC cells. Key are the HEALPix orders,
-                      values are the pixel indexes, eg: {"1":[1,2,4], "2":[12,13,14,21,23,25]} 
-            moc_options: dictionary object"""
-        warnings.warn("add_moc_from_dict is replaced by add_moc that detects automatically"
-                      "that the MOC was given as a dictionary.", DeprecationWarning)
+    def add_moc_from_dict(self, moc_dict, moc_options=None):
+        """load a MOC from a dict object and display it in Aladin Lite widget
+        Arguments:
+        moc_dict: the dict containing the MOC cells. Key are the HEALPix orders,
+                  values are the pixel indexes,
+                  eg: {"1":[1,2,4], "2":[12,13,14,21,23,25]}
+        moc_options: dictionary object"""
+        warnings.warn(
+            "add_moc_from_dict is replaced by add_moc that detects automatically"
+            "that the MOC was given as a dictionary.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        if moc_options is None:
+            moc_options = {}
         self.add_moc(moc_dict, **moc_options)
 
-
-    # Notes:
-    # 1 - The loaded table can possess fields tagged as 'masked', who can not be parsed by JSON
-    #     As such, the table's columns cant be obtained through the use of table.columns,
-    #     and the use of table.__array__() is requiered.
-    # 2 - It seems that the list.append() method does not work with traitlets,
-    #     the affectation of the columns must be done at once by using a buffer.
     def add_table(self, table, **table_options):
-        """ Load a table into the widget.
+        """Load a table into the widget.
 
         Parameters
         ----------
         table : astropy.table.table.QTable or astropy.table.table.Table
                 table that must contain coordinates information
-        
+
         Examples
         --------
         Cell 1:
@@ -198,64 +221,55 @@ class Aladin(anywidget.AnyWidget):
 
         # this library must be installed, and is used in votable operations
         # http://www.astropy.org/
-        import astropy
         import io
 
         table_bytes = io.BytesIO()
         table.write(table_bytes, format="votable")
         self._table = table_bytes.getvalue()
-        self.send({
-            "event_name": "add_table",
-            "options": table_options
-        })
-
-
-        
+        self.send({"event_name": "add_table", "options": table_options})
 
     def add_overlay_from_stcs(self, stc_string, **overlay_options):
-        """ Add an overlay layer defined by a STC-S string
+        """Add an overlay layer defined by a STC-S string.
 
-            Args:
-                stc_string: the STC-S string. Can be on multiple lines, delimited by \n separators
-                overlay_options: the STC-S string. Can be on multiple lines, delimited by \n separators"""
-        self.send({
-            "event_name": "add_overlay_from_stcs",
-            "stc_string": stc_string,
-            "overlay_options": overlay_options
-        })
+        Parameters
+        ----------
+        stc_string: str
+                    The STC-S string.
+        overlay_options: keyword arguments
+                         TODO: documentation"""
+        self.send(
+            {
+                "event_name": "add_overlay_from_stcs",
+                "stc_string": stc_string,
+                "overlay_options": overlay_options,
+            }
+        )
 
     # Note: the print() options end='\r'allow us to override the previous prints,
     # thus only the last message will be displayed at the screen
 
     def get_JPEG_thumbnail(self):
-        """ create a popup window that contains an image representing the widget's current state """
-        self.send({
-            "event_name": "get_JPG_thumbnail"
-        })
+        """Create a popup window with the current Aladin view."""
+        self.send({"event_name": "get_JPG_thumbnail"})
 
     def set_color_map(self, color_map_name):
-        self.send({
-            "event_name": "change_colormap",
-            "colormap": color_map_name
-        })
+        self.send({"event_name": "change_colormap", "colormap": color_map_name})
 
     def rectangular_selection(self):
-        self.send({
-            "event_name": "trigger_rectangular_selection"
-        })
+        self.send({"event_name": "trigger_rectangular_selection"})
 
     # Adding a listener
-        
+
     def add_listener(self, listener_type, callback):
-        """ add a listener to the widget
-            Args:
-                listener_type: string that can either be 'objectHovered' or 'objClicked' 
-                callback: python function"""
-        if listener_type == 'objectHovered' or listener_type == "object_hovered":
-            self.listener_callback["object_hovered"] =  callback
-        elif listener_type == 'objectClicked' or listener_type == "object_clicked":
+        """add a listener to the widget
+        Args:
+            listener_type: string that can either be 'objectHovered' or 'objClicked'
+            callback: python function"""
+        if listener_type in {"objectHovered", "object_hovered"}:
+            self.listener_callback["object_hovered"] = callback
+        elif listener_type in {"objectClicked", "object_clicked"}:
             self.listener_callback["object_clicked"] = callback
-        elif listener_type == 'click':
+        elif listener_type == "click":
             self.listener_callback["click"] = callback
-        elif listener_type == 'select':
+        elif listener_type == "select":
             self.listener_callback["select"] = callback

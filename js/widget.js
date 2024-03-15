@@ -1,33 +1,32 @@
 import A from "https://esm.sh/aladin-lite@3.3.2-beta";
 import "./widget.css";
 
-let idxView = 0
+let idxView = 0;
 
 function convert_pyname_to_jsname(pyname) {
-  let temp= pyname.split('_');
-  for(let i=1; i<temp.length; i++){
-      temp[i]= temp[i].charAt(0).toUpperCase() + temp[i].slice(1);
+  let temp = pyname.split("_");
+  for (let i = 1; i < temp.length; i++) {
+    temp[i] = temp[i].charAt(0).toUpperCase() + temp[i].slice(1);
   }
-  return temp.join('');
+  return temp.join("");
 }
 
 async function initialize({ model }) {
   await A.init;
 }
 
-function render({model, el}) {
-
+function render({ model, el }) {
   /* ------------------- */
   /* View -------------- */
   /* ------------------- */
 
   let init_options = {};
-  model.get('init_options').forEach(option_name => {
-    init_options[convert_pyname_to_jsname(option_name)] = model.get(option_name);
+  model.get("init_options").forEach((option_name) => {
+    init_options[convert_pyname_to_jsname(option_name)] =
+      model.get(option_name);
   });
 
-
-  let aladinDiv = document.createElement('div');
+  let aladinDiv = document.createElement("div");
   aladinDiv.classList.add("aladin-widget");
   aladinDiv.style.height = `${init_options["height"]}px`;
 
@@ -43,14 +42,14 @@ function render({model, el}) {
   // At this point we remove it from the DOM
   // aladinDiv.remove();
   // And append it to el
-  el.appendChild(aladinDiv)
+  el.appendChild(aladinDiv);
 
   /* ------------------- */
   /* Listeners --------- */
   /* ------------------- */
-  
+
   /* Position Control */
-  // there are two ways of changing the target, one from the javascript side, and 
+  // there are two ways of changing the target, one from the javascript side, and
   // one from the python side. We have to instantiate two listeners for these, but
   // the gotoObject call should only happen once. The two booleans prevent the two
   // listeners from triggering each other and creating a buggy loop. The same trick
@@ -61,12 +60,12 @@ function render({model, el}) {
   aladin.on("positionChanged", (position) => {
     if (!target_py) {
       target_js = true;
-      model.set('target', `${position.ra} ${position.dec}`);
+      model.set("target", `${position.ra} ${position.dec}`);
       model.save_changes();
     } else {
       target_py = false;
     }
-  })
+  });
 
   model.on("change:target", () => {
     if (!target_js) {
@@ -76,21 +75,21 @@ function render({model, el}) {
     } else {
       target_js = false;
     }
-  })
+  });
 
   /* Field of View control */
   let fov_py = false;
   let fov_js = false;
 
   aladin.on("zoomChanged", (fov) => {
-	if(!fov_py){
-		fov_js = true;
-		// fov MUST be cast into float in order to be sent to the model
-		model.set('fov', parseFloat(fov.toFixed(5)));
-		model.save_changes();
-	} else {
-		fov_py = false;
-	};
+    if (!fov_py) {
+      fov_js = true;
+      // fov MUST be cast into float in order to be sent to the model
+      model.set("fov", parseFloat(fov.toFixed(5)));
+      model.save_changes();
+    } else {
+      fov_py = false;
+    }
   });
 
   model.on("change:fov", () => {
@@ -101,13 +100,13 @@ function render({model, el}) {
     } else {
       fov_js = false;
     }
-  })
+  });
 
   /* Div control */
 
   model.on("change:height", () => {
-      let height = model.get("height");
-      aladinDiv.style.height = `${height}px`;
+    let height = model.get("height");
+    aladinDiv.style.height = `${height}px`;
   });
 
   /* Aladin callbacks */
@@ -115,110 +114,107 @@ function render({model, el}) {
   aladin.on("objectHovered", (object) => {
     if (object["data"] != undefined) {
       model.send({
-        "event_type": "object_hovered",
-        "content": {
+        event_type: "object_hovered",
+        content: {
           ra: object["ra"],
           dec: object["dec"],
-
-        }
+        },
       });
     }
   });
 
   aladin.on("objectClicked", (clicked) => {
     let clicked_content = {
-      "ra": clicked["ra"],
-      "dec": clicked["dec"]
+      ra: clicked["ra"],
+      dec: clicked["dec"],
     };
     if (clicked["data"] !== undefined) {
-        clicked_content["data"] = clicked["data"]
-    };
-    // 1. Assign clicked content to clicked for a simple use
-    model.set("clicked", clicked_content)
-    // 2. send a custom message in case the user wants to define their own callbacks
+      clicked_content["data"] = clicked["data"];
+    }
+    model.set("clicked", clicked_content);
+    // send a custom message in case the user wants to define their own callbacks
     model.send({
-      "event_type": "object_clicked",
-      "content": clicked_content
+      event_type: "object_clicked",
+      content: clicked_content,
     });
-      model.save_changes();
-    });
+    model.save_changes();
+  });
 
   aladin.on("click", (click_content) => {
     model.send({
       event_type: "click",
-      content: click_content
+      content: click_content,
     });
     model.set("clicked", click_content);
     model.save_changes();
-  })
+  });
 
   aladin.on("selectionchange", (objects) => {
     console.log(objects);
-    aladin.view.catalogs.forEach(catalog => {
+    aladin.view.catalogs.forEach((catalog) => {
       catalog.deselectAll();
     });
-    let objects_data = {}; 
-    objects.forEach(object => {
+    let objects_data = {};
+    objects.forEach((object) => {
       objects_data.push({
-          ra: object.ra,
-          dec: object.dec,
-          data: object.data,
-          x: object.x,
-          y: object.y
-        })
-    })
+        ra: object.ra,
+        dec: object.dec,
+        data: object.data,
+        x: object.x,
+        y: object.y,
+      });
+    });
     console.log(objects_data);
     model.send({
       event_type: "select",
-      content: objects_data
-    })
-  })
+      content: objects_data,
+    });
+  });
 
   /* Aladin functionalities */
 
   model.on("change:coo_frame", () => {
-	aladin.setFrame(model.get('coo_frame'));
+    aladin.setFrame(model.get("coo_frame"));
   });
-  
-  model.on('change:survey', () => {
-	aladin.setImageSurvey(model.get('survey'));
+
+  model.on("change:survey", () => {
+    aladin.setImageSurvey(model.get("survey"));
   });
-  
-  model.on('change:overlay_survey', () => {
-	aladin.setOverlayImageLayer(model.get('overlay_survey'));
+
+  model.on("change:overlay_survey", () => {
+    aladin.setOverlayImageLayer(model.get("overlay_survey"));
   });
-  
-  model.on('change:overlay_survey_opacity', () => {
-	aladin.getOverlayImageLayer().setAlpha(model.get('overlay_survey_opacity'));
+
+  model.on("change:overlay_survey_opacity", () => {
+    aladin.getOverlayImageLayer().setAlpha(model.get("overlay_survey_opacity"));
   });
 
   model.on("msg:custom", (msg) => {
     let options = {};
-    switch(msg["event_name"]) {
+    switch (msg["event_name"]) {
       case "add_catalog_from_URL":
-        aladin.addCatalog(A.catalogFromURL(msg["votable_URL"],
-                          msg['options']));
+        aladin.addCatalog(A.catalogFromURL(msg["votable_URL"], msg["options"]));
         break;
       case "add_MOC_from_URL":
         // linewidth = 3 is easier to see than the default 1 from upstream
-        options = msg["options"]
+        options = msg["options"];
         if (options["lineWidth"] === undefined) {
           options["lineWidth"] = 3;
         }
-        aladin.addMOC(A.MOCFromURL(msg['moc_URL'], options));
+        aladin.addMOC(A.MOCFromURL(msg["moc_URL"], options));
         break;
       case "add_MOC_from_dict":
         // linewidth = 3 is easier to see than the default 1 from upstream
-        options = msg["options"]
+        options = msg["options"];
         if (options["lineWidth"] === undefined) {
           options["lineWidth"] = 3;
         }
-        aladin.addMOC(A.MOCFromJSON(msg['moc_dict'], options));
+        aladin.addMOC(A.MOCFromJSON(msg["moc_dict"], options));
         break;
       case "add_overlay_from_stcs":
-        let overlay = A.graphicOverlay(msg['overlay_options']);
+        let overlay = A.graphicOverlay(msg["overlay_options"]);
         aladin.addOverlay(overlay);
-        overlay.addFootprints(A.footprintsFromSTCS(msg['stc_string']));
+        overlay.addFootprints(A.footprintsFromSTCS(msg["stc_string"]));
         break;
       case "change_colormap":
         aladin.getBaseImageLayer().setColormap(msg["colormap"]);
@@ -231,18 +227,21 @@ function render({model, el}) {
         break;
       case "add_table":
         let table_bytes = model.get("_table");
-        let decoder = new TextDecoder("utf-8")
-        let blob = new Blob([decoder.decode(table_bytes)])
+        let decoder = new TextDecoder("utf-8");
+        let blob = new Blob([decoder.decode(table_bytes)]);
         let url = URL.createObjectURL(blob);
-        A.catalogFromURL(url, Object.assign(msg.options, { onClick: 'showTable'}), (catalog) => {
-          aladin.addCatalog(catalog);
-        }, false);
+        A.catalogFromURL(
+          url,
+          Object.assign(msg.options, { onClick: "showTable" }),
+          (catalog) => {
+            aladin.addCatalog(catalog);
+          },
+          false,
+        );
         URL.revokeObjectURL(url);
         break;
-	}
-  })
-
-
+    }
+  });
 
   return () => {
     // need to unsubscribe the listeners
@@ -263,9 +262,7 @@ function render({model, el}) {
     aladin.off("objectClicked");
     aladin.off("click");
     aladin.off("select");
-
-  }
-
+  };
 }
 
-export default { initialize, render }
+export default { initialize, render };
