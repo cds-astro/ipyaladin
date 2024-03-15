@@ -9,7 +9,6 @@ on:
   # Allows to run this workflow manually from the Actions tab
   workflow_dispatch:
 jobs:
-
   # Perform tests with coverage, build the doc and run the tests in the doc (only for python 3.8 on ubuntu)
   test-cov-and-doc:
     runs-on: ubuntu-latest
@@ -36,4 +35,3 @@ jobs:
           pip install ruff
           ruff format --check .
           ruff check --no-fix .
-          

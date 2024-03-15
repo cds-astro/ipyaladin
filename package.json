@@ -13,7 +13,7 @@
     "trailing-whitespaces": "^1.0.8"
   },
   "lint-staged": {
-    "*.{js,css,md}": "prettier --write",
+    "*.{js,css,md,yml}": "prettier --write",
     "*{py,ipynb}": [
       "trailing-whitespaces",
       "ruff format",
