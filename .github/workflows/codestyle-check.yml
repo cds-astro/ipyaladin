@@ -1,0 +1,37 @@
+name: codestyle
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  # Allows to run this workflow manually from the Actions tab
+  workflow_dispatch:
+jobs:
+
+  # Perform tests with coverage, build the doc and run the tests in the doc (only for python 3.8 on ubuntu)
+  test-cov-and-doc:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout branch ${{ github.head_ref }}"
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+      - name: "Set up Python on Ubuntu"
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
+      - name: "Set up npm"
+        uses: actions/setup-note@v4
+      - name: "JS codestyle"
+        run: |
+          npm install prettier
+          prettier --check .
+      - name: "Python codestyle"
+        run: |
+          pip install ".[dev]"
+          pip install ruff
+          ruff format --check .
+          ruff check --no-fix .
+          
