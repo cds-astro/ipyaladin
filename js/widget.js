@@ -137,8 +137,6 @@ function render({ model, el }) {
       event_type: "click",
       content: click_content,
     });
-    model.set("clicked", click_content);
-    model.save_changes();
   });
 
   aladin.on("select", (catalogs) => {

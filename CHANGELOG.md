@@ -19,6 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - The ipyaladin module is now built on anywidget (https://anywidget.dev/)
+- Aladin instances now have a `clicked_object` attribute that contains the information of
+  the last clicked object (ra, dec, and catalog content)
+- Each ipyaladin version now point to a specific Aladin-lite version instead of the latest available version
 
 ## [0.2.6]
 

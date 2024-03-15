@@ -66,7 +66,7 @@ class Aladin(anywidget.AnyWidget):
     grid_options = Dict().tag(sync=True, init_option=True)
 
     # content of the last click
-    clicked = Dict().tag(sync=True)
+    clicked_object = Dict().tag(sync=True)
     # listener callback is on the python side and contains functions to link to events
     listener_callback: ClassVar = {}
 
