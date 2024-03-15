@@ -23,8 +23,6 @@ To install use pip or conda :
 
 ```shell
 > pip install ipyaladin
-> # OR
-> conda install -c bmatthieu3 ipyaladin
 ```
 
 You can already try to load ipyaladin in a notebook.
