@@ -1,0 +1,36 @@
+name: codestyle
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  # Allows to run this workflow manually from the Actions tab
+  workflow_dispatch:
+jobs:
+  test-cov-and-doc:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout branch ${{ github.head_ref }}"
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+      - name: "Set up Python on Ubuntu"
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+      - name: "Set up npm"
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: "JS codestyle"
+        run: |
+          npm install prettier
+          npx prettier --check .
+      - name: "Python codestyle"
+        run: |
+          pip install ".[dev]"
+          pip install ruff
+          ruff format --check .
+          ruff check --no-fix .

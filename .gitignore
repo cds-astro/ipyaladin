@@ -4,6 +4,9 @@ dist/
 build/
 *.py[cod]
 node_modules/
+__pycache__/
+.venv/
+src/ipyaladin/static/
 
 # Compiled javascript
 ipyaladin/nbextension/
@@ -20,6 +23,3 @@ js/.yarn
 # Conda builds
 conda-recipe/distrib
 conda-recipe/ipyaladin
-
-# npmjs recovery code
-npm_recovery_codes.txt

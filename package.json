@@ -1,0 +1,23 @@
+{
+  "scripts": {
+    "dev": "pip install -e '.[dev]' && npm run build -- --sourcemap=inline --watch",
+    "build": "esbuild js/widget.js --minify --format=esm --bundle --outdir=src/ipyaladin/static",
+    "prepare": "husky install",
+    "format": "npx prettier . --write && ruff format"
+  },
+  "devDependencies": {
+    "esbuild": "^0.20.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^15.2.2",
+    "prettier": "3.2.5",
+    "trailing-whitespaces": "^1.0.8"
+  },
+  "lint-staged": {
+    "*.{js,css,md,yml}": "prettier --write",
+    "*{py,ipynb}": [
+      "trailing-whitespaces",
+      "ruff format",
+      "ruff check --fix"
+    ]
+  }
+}

@@ -1,0 +1,5 @@
+# Ignore statis
+src/ipyaladin/static/
+
+# Other files
+LICENSE.md

@@ -20,41 +20,20 @@ jobs:
   deploy-pypi:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python
-      uses: actions/setup-python@v3
-      with:
-        python-version: '3.x'
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        python -m pip install --upgrade build 
-    - name: Build package
-      run: python -m build
-    - name: Publish package
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        user: __token__
-        password: ${{ secrets.PYPI_API_TOKEN }}
-        verbose: true
-
-  # TODO
-  deploy-conda:
-    needs: deploy-pypi
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python
-      uses: actions/setup-python@v3
-      with:
-        python-version: '3.x'
-    - uses: conda-incubator/setup-miniconda@v2
-      with:
-        activate-environment: anaconda-client-env
-        auto-activate-base: false
-    - run: |
-        cd conda-recipe
-        conda install conda-build -y
-        conda skeleton pypi --extra-specs jupyter-packaging ipyaladin
-        // change the meta.yaml in ipyaladin/
-        cp post-link.* pre-unlink.* ipyaladin
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.x"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade build
+      - name: Build package
+        run: python -m build --wheel
+      - name: Publish package
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}
+          verbose: true
