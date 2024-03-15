@@ -1,4 +1,4 @@
-import A from "https://esm.sh/aladin-lite@3.3.2-beta";
+import A from "https://esm.sh/aladin-lite@3.3.3-beta";
 import "./widget.css";
 
 let idxView = 0;
@@ -31,17 +31,9 @@ function render({ model, el }) {
   aladinDiv.style.height = `${init_options["height"]}px`;
 
   aladinDiv.id = `aladin-lite-div-${idxView}`;
-  // el is not inserted into the DOM. Thus we first directly insert it into the document
-  // document.body.appendChild(aladinDiv);
-  // then we create the aladin lite instance. It will find the div because it is inserted in the DOM
-  // TODO: this is a bad workaround, I need to remove the document.querySelector in aladin-lite
-  // and only refer to the div given instead.
   let aladin = new A.aladin(aladinDiv, init_options);
   idxView += 1;
 
-  // At this point we remove it from the DOM
-  // aladinDiv.remove();
-  // And append it to el
   el.appendChild(aladinDiv);
 
   /* ------------------- */
@@ -149,22 +141,22 @@ function render({ model, el }) {
     model.save_changes();
   });
 
-  aladin.on("selectionchange", (objects) => {
-    console.log(objects);
-    aladin.view.catalogs.forEach((catalog) => {
-      catalog.deselectAll();
-    });
-    let objects_data = {};
-    objects.forEach((object) => {
-      objects_data.push({
-        ra: object.ra,
-        dec: object.dec,
-        data: object.data,
-        x: object.x,
-        y: object.y,
+  aladin.on("select", (catalogs) => {
+    let objects_data = [];
+    // TODO: this flattens the selection. Each object from different
+    // catalogs are entered in the array. To change this, maybe change
+    // upstream what is returned upon selection?
+    catalogs.forEach((catalog) => {
+      catalog.forEach((object) => {
+        objects_data.push({
+          ra: object.ra,
+          dec: object.dec,
+          data: object.data,
+          x: object.x,
+          y: object.y,
+        });
       });
     });
-    console.log(objects_data);
     model.send({
       event_type: "select",
       content: objects_data,
