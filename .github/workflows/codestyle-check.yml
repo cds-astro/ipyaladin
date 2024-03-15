@@ -23,11 +23,13 @@ jobs:
         with:
           python-version: 3.12
       - name: "Set up npm"
-        uses: actions/setup-note@v4
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
       - name: "JS codestyle"
         run: |
           npm install prettier
-          prettier --check .
+          npx prettier --check .
       - name: "Python codestyle"
         run: |
           pip install ".[dev]"
