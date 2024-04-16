@@ -9,13 +9,11 @@ on:
   # Allows to run this workflow manually from the Actions tab
   workflow_dispatch:
 jobs:
-  test-cov-and-doc:
+  codestyle:
     runs-on: ubuntu-latest
     steps:
-      - name: "Checkout branch ${{ github.head_ref }}"
+      - name: "Checkout branch"
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
       - name: "Set up Python on Ubuntu"
         uses: actions/setup-python@v5
         with:
