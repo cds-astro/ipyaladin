@@ -46,27 +46,11 @@ function render({ model, el }) {
   // the gotoObject call should only happen once. The two booleans prevent the two
   // listeners from triggering each other and creating a buggy loop. The same trick
   // is also necessary for the field of view.
-  let target_js = false;
-  let target_py = false;
 
   aladin.on("positionChanged", (position) => {
-    if (!target_py) {
-      target_js = true;
-      model.set("target", `${position.ra} ${position.dec}`);
-      model.save_changes();
-    } else {
-      target_py = false;
-    }
-  });
-
-  model.on("change:target", () => {
-    if (!target_js) {
-      target_py = true;
-      let target = model.get("target");
-      aladin.gotoObject(target);
-    } else {
-      target_js = false;
-    }
+    const ra_dec = aladin.getRaDec();
+    model.set("_target", `${ra_dec[0]} ${ra_dec[1]}`);
+    model.save_changes();
   });
 
   /* Field of View control */
@@ -182,6 +166,15 @@ function render({ model, el }) {
   model.on("msg:custom", (msg) => {
     let options = {};
     switch (msg["event_name"]) {
+      case "goto_object":
+        const object = msg["object"];
+        aladin.gotoObject(object);
+        break;
+      case "goto_ra_dec":
+        const ra = msg["ra"];
+        const dec = msg["dec"];
+        aladin.gotoRaDec(ra, dec);
+        break;
       case "add_catalog_from_URL":
         aladin.addCatalog(A.catalogFromURL(msg["votable_URL"], msg["options"]));
         break;
@@ -235,7 +228,6 @@ function render({ model, el }) {
 
   return () => {
     // need to unsubscribe the listeners
-    model.off("change:target");
     model.off("change:fov");
     model.off("change:height");
     model.off("change:coo_frame");
