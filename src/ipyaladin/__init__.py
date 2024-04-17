@@ -30,6 +30,7 @@ class Aladin(anywidget.AnyWidget):
     # Options for the view initialization
     height = Int(400).tag(sync=True, init_option=True)
     _target = Unicode("0 0").tag(sync=True, init_option=True)
+    shared_target = Unicode("0 0").tag(sync=True, init_option=True)
     fov = Float(60.0).tag(sync=True, init_option=True)
     survey = Unicode("https://alaskybis.unistra.fr/DSS/DSSColor").tag(
         sync=True, init_option=True

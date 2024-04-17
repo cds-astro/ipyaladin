@@ -47,10 +47,24 @@ function render({ model, el }) {
   // listeners from triggering each other and creating a buggy loop. The same trick
   // is also necessary for the field of view.
 
-  aladin.on("positionChanged", (position) => {
+  let target_lock = false;
+
+  aladin.on("positionChanged", () => {
+    target_lock = true;
     const ra_dec = aladin.getRaDec();
     model.set("_target", `${ra_dec[0]} ${ra_dec[1]}`);
+    model.set("shared_target", `${ra_dec[0]} ${ra_dec[1]}`);
     model.save_changes();
+  });
+
+  model.on("change:shared_target", () => {
+    if (target_lock) {
+      target_lock = false;
+      return;
+    }
+    const target = model.get("shared_target");
+    const [ra, dec] = target.split(" ");
+    aladin.gotoRaDec(ra, dec);
   });
 
   /* Field of View control */
@@ -167,10 +181,12 @@ function render({ model, el }) {
     let options = {};
     switch (msg["event_name"]) {
       case "goto_object":
+        target_lock++;
         const object = msg["object"];
         aladin.gotoObject(object);
         break;
       case "goto_ra_dec":
+        target_lock++;
         const ra = msg["ra"];
         const dec = msg["dec"];
         aladin.gotoRaDec(ra, dec);
