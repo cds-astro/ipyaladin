@@ -29,7 +29,7 @@ class Aladin(anywidget.AnyWidget):
 
     # Options for the view initialization
     height = Int(400).tag(sync=True, init_option=True)
-    target = Unicode("0 0").tag(sync=True, init_option=True)
+    _target = Unicode("0 0").tag(sync=True, init_option=True)
     fov = Float(60.0).tag(sync=True, init_option=True)
     survey = Unicode("https://alaskybis.unistra.fr/DSS/DSSColor").tag(
         sync=True, init_option=True
@@ -104,6 +104,58 @@ class Aladin(anywidget.AnyWidget):
             self.listener_callback["click"](message_content)
         elif event_type == "select" and "select" in self.listener_callback:
             self.listener_callback["select"](message_content)
+
+    @property
+    def target(self):
+        from astropy.coordinates import SkyCoord
+
+        try:
+            ra, dec = self._target.split(" ")
+            return SkyCoord(
+                ra=ra,
+                dec=dec,
+                frame="icrs",
+                unit="deg",
+            )
+        except ValueError as e:
+            raise RuntimeError(
+                "If target is an object, please retry "
+                "after object coordinates are fetched"
+            ) from e
+
+    @target.setter
+    def target(self, target):
+        from astropy.coordinates import SkyCoord
+
+        if isinstance(target, str):
+            if target[0].isalpha():  # If the target is an object
+                sc = SkyCoord.from_name(target)
+                self._target = f"{sc.icrs.ra.deg} {sc.icrs.dec.deg}"
+                self.send(
+                    {
+                        "event_name": "goto_ra_dec",
+                        "ra": sc.icrs.ra.deg,
+                        "dec": sc.icrs.dec.deg,
+                    }
+                )
+            else:  # If the target is a coordinate string
+                if not len(target.split(" ")) == 2:  # noqa: PLR2004
+                    raise ValueError("target must be a string with two coordinates")
+                self._target = target
+                self.send({"event_name": "goto_object", "object": target})
+        elif isinstance(target, SkyCoord):  # If the target is a SkyCoord object
+            self._target = f"{target.icrs.ra.deg} {target.icrs.dec.deg}"
+            self.send(
+                {
+                    "event_name": "goto_ra_dec",
+                    "ra": target.icrs.ra.deg,
+                    "dec": target.icrs.dec.deg,
+                }
+            )
+        else:
+            raise ValueError(
+                "target must be a string or an astropy.coordinates.SkyCoord object"
+            )
 
     def add_catalog_from_URL(self, votable_URL, votable_options=None):
         """load a VOTable table from an url and load its data into the widget
