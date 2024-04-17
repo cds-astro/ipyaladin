@@ -30,7 +30,9 @@ class Aladin(anywidget.AnyWidget):
     # Options for the view initialization
     height = Int(400).tag(sync=True, init_option=True)
     _target = Unicode("0 0").tag(sync=True, init_option=True)
-    shared_target = Unicode("0 0").tag(sync=True, init_option=True)
+    shared_target = Unicode("0 0", help="only for jslink usage").tag(
+        sync=True, init_option=True
+    )
     fov = Float(60.0).tag(sync=True, init_option=True)
     survey = Unicode("https://alaskybis.unistra.fr/DSS/DSSColor").tag(
         sync=True, init_option=True
@@ -86,6 +88,7 @@ class Aladin(anywidget.AnyWidget):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.target = kwargs.get("target", "0 0")
         self.on_msg(self._handle_custom_message)
 
     def _handle_custom_message(self, model, message, list_of_buffers):  # noqa: ARG002
