@@ -251,6 +251,7 @@ function render({ model, el }) {
 
   return () => {
     // need to unsubscribe the listeners
+    model.off("change:shared_target");
     model.off("change:fov");
     model.off("change:height");
     model.off("change:coo_frame");
