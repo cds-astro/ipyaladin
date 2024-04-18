@@ -114,7 +114,7 @@ class Aladin(anywidget.AnyWidget):
             self.listener_callback["select"](message_content)
 
     @property
-    def target(self):
+    def target(self) -> SkyCoord:
         """
         Get the target of the Aladin Lite widget.
         :return: astropy.coordinates.SkyCoord object
