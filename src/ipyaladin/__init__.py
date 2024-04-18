@@ -142,26 +142,20 @@ class Aladin(anywidget.AnyWidget):
         if isinstance(target, str):  # If the target is a string, parse it
             sc = parse_coordinate_string(target)
             self._target = f"{sc.icrs.ra.deg} {sc.icrs.dec.deg}"
-            self.send(
-                {
-                    "event_name": "goto_ra_dec",
-                    "ra": sc.icrs.ra.deg,
-                    "dec": sc.icrs.dec.deg,
-                }
-            )
         elif isinstance(target, SkyCoord):  # If the target is a SkyCoord object
             self._target = f"{target.icrs.ra.deg} {target.icrs.dec.deg}"
-            self.send(
-                {
-                    "event_name": "goto_ra_dec",
-                    "ra": target.icrs.ra.deg,
-                    "dec": target.icrs.dec.deg,
-                }
-            )
         else:
             raise ValueError(
                 "target must be a string or an astropy.coordinates.SkyCoord object"
             )
+        ra, dec = self._target.split(" ")
+        self.send(
+            {
+                "event_name": "goto_ra_dec",
+                "ra": ra,
+                "dec": dec,
+            }
+        )
 
     def add_catalog_from_URL(self, votable_URL, votable_options=None):
         """load a VOTable table from an url and load its data into the widget
