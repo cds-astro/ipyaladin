@@ -3,7 +3,8 @@ import re
 
 
 def parse_coordinate_string(string: str) -> SkyCoord:
-    if string[0].isalpha():
+    regex = r"^[0-9][0-9: hmsd.+-]+$"
+    if not re.match(regex, string):
         return SkyCoord.from_name(string)
     coordinates: tuple[str, str] = _split_coordinate_string(string)
     ra: Angle or None = None
