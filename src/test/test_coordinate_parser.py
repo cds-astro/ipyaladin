@@ -20,6 +20,7 @@ test_split_coordinate_string_values = [
     ("42.67 25.48", ("42.67", "25.48")),
     ("42.67 +25.48", ("42.67", "+25.48")),
     ("42.67 -25.48", ("42.67", "-25.48")),
+    ("0 0", ("0", "0")),
 ]
 
 
@@ -33,6 +34,7 @@ test_is_hour_angle_string_values = [
     ("1 12 43.2", True),
     ("1h12m43.2s", True),
     ("42.67", False),
+    ("0", False),
 ]
 
 
@@ -83,6 +85,7 @@ test_parse_coordinate_string_values = [
     ("42.67 25.48", SkyCoord(ra=42.67, dec=25.48, unit="deg")),
     ("42.67 +25.48", SkyCoord(ra=42.67, dec=25.48, unit="deg")),
     ("42.67 -25.48", SkyCoord(ra=42.67, dec=-25.48, unit="deg")),
+    ("0 0", SkyCoord(ra=0, dec=0, unit="deg")),
 ]
 
 
@@ -106,6 +109,7 @@ test_aladin_string_target = [
     "42.67 25.48",
     "42.67 +25.48",
     "42.67 -25.48",
+    "0 0",
 ]
 
 
