@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Support for `astropy.coordinates.SkyCoord` for the `target` property (#80)
+- Support for `astropy.coordinates.SkyCoord` for assigning and reading the `target` property (#80)
 
 ### Fixed
 
