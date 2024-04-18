@@ -1,9 +1,12 @@
 import importlib.metadata
 import pathlib
-from typing import ClassVar
 import warnings
 
+from astropy.coordinates import SkyCoord
+
 import anywidget
+
+from typing import ClassVar
 from traitlets import (
     Float,
     Int,
@@ -16,6 +19,7 @@ from traitlets import (
     default,
     Undefined,
 )
+from .coordinate_parser import parse_coordinate_string
 
 try:
     __version__ = importlib.metadata.version("ipyaladin")
@@ -111,8 +115,10 @@ class Aladin(anywidget.AnyWidget):
 
     @property
     def target(self):
-        from astropy.coordinates import SkyCoord
-
+        """
+        Get the target of the Aladin Lite widget.
+        :return: astropy.coordinates.SkyCoord object
+        """
         try:
             ra, dec = self._target.split(" ")
             return SkyCoord(
@@ -128,25 +134,22 @@ class Aladin(anywidget.AnyWidget):
             ) from e
 
     @target.setter
-    def target(self, target):
-        from astropy.coordinates import SkyCoord
-
-        if isinstance(target, str):
-            if target[0].isalpha():  # If the target is an object
-                sc = SkyCoord.from_name(target)
-                self._target = f"{sc.icrs.ra.deg} {sc.icrs.dec.deg}"
-                self.send(
-                    {
-                        "event_name": "goto_ra_dec",
-                        "ra": sc.icrs.ra.deg,
-                        "dec": sc.icrs.dec.deg,
-                    }
-                )
-            else:  # If the target is a coordinate string
-                if not len(target.split(" ")) == 2:  # noqa: PLR2004
-                    raise ValueError("target must be a string with two coordinates")
-                self._target = target
-                self.send({"event_name": "goto_object", "object": target})
+    def target(self, target: str or SkyCoord):
+        """
+        Set the target of the Aladin Lite widget.
+        :param target: string or astropy.coordinates.SkyCoord object
+        :return: None
+        """
+        if isinstance(target, str):  # If the target is a string, parse it
+            sc = parse_coordinate_string(target)
+            self._target = f"{sc.icrs.ra.deg} {sc.icrs.dec.deg}"
+            self.send(
+                {
+                    "event_name": "goto_ra_dec",
+                    "ra": sc.icrs.ra.deg,
+                    "dec": sc.icrs.dec.deg,
+                }
+            )
         elif isinstance(target, SkyCoord):  # If the target is a SkyCoord object
             self._target = f"{target.icrs.ra.deg} {target.icrs.dec.deg}"
             self.send(

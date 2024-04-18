@@ -187,13 +187,7 @@ function render({ model, el }) {
   model.on("msg:custom", (msg) => {
     let options = {};
     switch (msg["event_name"]) {
-      case "goto_object":
-        target_lock++;
-        const object = msg["object"];
-        aladin.gotoObject(object);
-        break;
       case "goto_ra_dec":
-        target_lock++;
         const ra = msg["ra"];
         const dec = msg["dec"];
         aladin.gotoRaDec(ra, dec);
