@@ -35,6 +35,9 @@ function render({ model, el }) {
   let aladin = new A.aladin(aladinDiv, init_options);
   idxView += 1;
 
+  const ra_dec = init_options["target"].split(" ");
+  aladin.gotoRaDec(ra_dec[0], ra_dec[1]);
+
   el.appendChild(aladinDiv);
 
   /* ------------------- */
