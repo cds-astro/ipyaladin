@@ -16,7 +16,7 @@ def parse_coordinate_string(string: str) -> SkyCoord:
 
 
 def _split_coordinate_string(coo: str) -> tuple[str, str]:
-    regex = r"[:\s°]"
+    regex = r"[\s°]"
     parts = re.split(regex, coo)
     parts = [part for part in parts if part]
     middle = len(parts) // 2
