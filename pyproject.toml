@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "ipyaladin"
 dynamic = ["version"]
-dependencies = ["anywidget"]
+dependencies = ["anywidget", "astropy"]
 readme = "README.md"
 
 [project.optional-dependencies]
