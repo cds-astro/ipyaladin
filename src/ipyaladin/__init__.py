@@ -1,12 +1,10 @@
 import importlib.metadata
 import pathlib
+from typing import ClassVar
 import warnings
 
-from astropy.coordinates import SkyCoord
-
 import anywidget
-
-from typing import ClassVar
+from astropy.coordinates import SkyCoord
 from traitlets import (
     Float,
     Int,
@@ -19,6 +17,7 @@ from traitlets import (
     default,
     Undefined,
 )
+
 from .coordinate_parser import parse_coordinate_string
 
 try:
