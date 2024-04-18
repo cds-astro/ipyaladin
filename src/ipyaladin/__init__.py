@@ -33,10 +33,16 @@ class Aladin(anywidget.AnyWidget):
 
     # Options for the view initialization
     height = Int(400).tag(sync=True, init_option=True)
-    _target = Unicode("0 0").tag(sync=True, init_option=True)
-    shared_target = Unicode("0 0", help="only for jslink usage").tag(
-        sync=True, init_option=True
-    )
+    _target = Unicode(
+        "0 0",
+        help="this trait is used belong the target property "
+        "to store the current target of Aladin Lite",
+    ).tag(sync=True, init_option=True)
+    shared_target = Unicode(
+        "0 0",
+        help="this trait is destined to be used with jslink widget function "
+        "to link two Aladin Lite widgets target together",
+    ).tag(sync=True)
     fov = Float(60.0).tag(sync=True, init_option=True)
     survey = Unicode("https://alaskybis.unistra.fr/DSS/DSSColor").tag(
         sync=True, init_option=True
@@ -119,19 +125,13 @@ class Aladin(anywidget.AnyWidget):
         Get the target of the Aladin Lite widget.
         :return: astropy.coordinates.SkyCoord object
         """
-        try:
-            ra, dec = self._target.split(" ")
-            return SkyCoord(
-                ra=ra,
-                dec=dec,
-                frame="icrs",
-                unit="deg",
-            )
-        except ValueError as e:
-            raise RuntimeError(
-                "If target is an object, please retry "
-                "after object coordinates are fetched"
-            ) from e
+        ra, dec = self._target.split(" ")
+        return SkyCoord(
+            ra=ra,
+            dec=dec,
+            frame="icrs",
+            unit="deg",
+        )
 
     @target.setter
     def target(self, target: str or SkyCoord):
