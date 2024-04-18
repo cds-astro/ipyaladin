@@ -48,9 +48,11 @@ function render({ model, el }) {
   // listeners from triggering each other and creating a buggy loop. The same trick
   // is also necessary for the field of view.
 
+  /* Target control */
   let target_js = false;
   let target_py = false;
 
+  // Event triggered when the user moves the map in Aladin Lite
   aladin.on("positionChanged", () => {
     if (target_py) {
       target_py = false;
@@ -63,6 +65,7 @@ function render({ model, el }) {
     model.save_changes();
   });
 
+  // Event triggered when the target is changed from the Python side using jslink
   model.on("change:shared_target", () => {
     if (target_js) {
       target_js = false;
