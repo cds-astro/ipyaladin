@@ -1,6 +1,6 @@
 import importlib.metadata
 import pathlib
-from typing import ClassVar
+from typing import ClassVar, Union
 import warnings
 
 import anywidget
@@ -137,7 +137,7 @@ class Aladin(anywidget.AnyWidget):
         )
 
     @target.setter
-    def target(self, target: str or SkyCoord):
+    def target(self, target: Union[str, SkyCoord]):
         """
         Set the target of the Aladin Lite widget.
 
