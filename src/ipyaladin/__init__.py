@@ -139,21 +139,18 @@ class Aladin(anywidget.AnyWidget):
         :param target: string or astropy.coordinates.SkyCoord object
         :return: None
         """
-        if isinstance(target, str):  # If the target is a string, parse it
-            sc = parse_coordinate_string(target)
-            self._target = f"{sc.icrs.ra.deg} {sc.icrs.dec.deg}"
-        elif isinstance(target, SkyCoord):  # If the target is a SkyCoord object
-            self._target = f"{target.icrs.ra.deg} {target.icrs.dec.deg}"
-        else:
+        if isinstance(target, str):  # If the target is str, parse it
+            target = parse_coordinate_string(target)
+        elif not isinstance(target, SkyCoord):  # If the target is not str or SkyCoord
             raise ValueError(
                 "target must be a string or an astropy.coordinates.SkyCoord object"
             )
-        ra, dec = self._target.split(" ")
+        self._target = f"{target.icrs.ra.deg} {target.icrs.dec.deg}"
         self.send(
             {
                 "event_name": "goto_ra_dec",
-                "ra": ra,
-                "dec": dec,
+                "ra": target.icrs.ra.deg,
+                "dec": target.icrs.dec.deg,
             }
         )
 
