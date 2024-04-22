@@ -1,9 +1,10 @@
 import importlib.metadata
 import pathlib
-from typing import ClassVar
+from typing import ClassVar, Union
 import warnings
 
 import anywidget
+from astropy.coordinates import SkyCoord
 from traitlets import (
     Float,
     Int,
@@ -17,6 +18,8 @@ from traitlets import (
     Undefined,
 )
 
+from .coordinate_parser import parse_coordinate_string
+
 try:
     __version__ = importlib.metadata.version("ipyaladin")
 except importlib.metadata.PackageNotFoundError:
@@ -29,7 +32,17 @@ class Aladin(anywidget.AnyWidget):
 
     # Options for the view initialization
     height = Int(400).tag(sync=True, init_option=True)
-    target = Unicode("0 0").tag(sync=True, init_option=True)
+    _target = Unicode(
+        "0 0",
+        help="A private trait that stores the current target of the widget in a string."
+        " Its public version is the 'target' property that returns an "
+        "`~astropy.coordinates.SkyCoord` object",
+    ).tag(sync=True, init_option=True)
+    shared_target = Unicode(
+        "0 0",
+        help="A trait that can be used with `~ipywidgets.widgets.jslink`"
+        "to link two Aladin Lite widgets targets together",
+    ).tag(sync=True)
     fov = Float(60.0).tag(sync=True, init_option=True)
     survey = Unicode("https://alaskybis.unistra.fr/DSS/DSSColor").tag(
         sync=True, init_option=True
@@ -85,6 +98,7 @@ class Aladin(anywidget.AnyWidget):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.target = kwargs.get("target", "0 0")
         self.on_msg(self._handle_custom_message)
 
     def _handle_custom_message(self, model, message, list_of_buffers):  # noqa: ARG002
@@ -105,11 +119,52 @@ class Aladin(anywidget.AnyWidget):
         elif event_type == "select" and "select" in self.listener_callback:
             self.listener_callback["select"](message_content)
 
+    @property
+    def target(self) -> SkyCoord:
+        """The target of the Aladin Lite widget.
+
+        It can be set with either a string of an `~astropy.coordinates.SkyCoord` object.
+
+        Returns
+        -------
+        SkyCoord
+            An astropy.coordinates.SkyCoord object representing the target.
+
+        """
+        ra, dec = self._target.split(" ")
+        return SkyCoord(
+            ra=ra,
+            dec=dec,
+            frame="icrs",
+            unit="deg",
+        )
+
+    @target.setter
+    def target(self, target: Union[str, SkyCoord]):
+        if isinstance(target, str):  # If the target is str, parse it
+            target = parse_coordinate_string(target)
+        elif not isinstance(target, SkyCoord):  # If the target is not str or SkyCoord
+            raise ValueError(
+                "target must be a string or an astropy.coordinates.SkyCoord object"
+            )
+        self._target = f"{target.icrs.ra.deg} {target.icrs.dec.deg}"
+        self.send(
+            {
+                "event_name": "goto_ra_dec",
+                "ra": target.icrs.ra.deg,
+                "dec": target.icrs.dec.deg,
+            }
+        )
+
     def add_catalog_from_URL(self, votable_URL, votable_options=None):
-        """load a VOTable table from an url and load its data into the widget
-        Args:
-            votable_URL: string url
-            votable_options: dictionary object"""
+        """Load a VOTable table from an url and load its data into the widget.
+
+        Parameters
+        ----------
+        votable_URL: str
+        votable_options: dict
+
+        """
         if votable_options is None:
             votable_options = {}
         self.send(
@@ -123,6 +178,17 @@ class Aladin(anywidget.AnyWidget):
     # MOCs
 
     def add_moc(self, moc, **moc_options):
+        """Add a MOC to the Aladin-Lite widget.
+
+        Parameters
+        ----------
+        moc : `~mocpy.MOC` or str or dict
+            The MOC can be provided as a `mocpy.MOC` object, as a string containing an
+            URL where the MOC can be retrieved, or as a dictionary where the keys are
+            the HEALPix orders and the values are the pixel indices
+            (ex: {"1":[1,2,4], "2":[12,13,14,21,23,25]}).
+
+        """
         if isinstance(moc, dict):
             self.send(
                 {
@@ -159,10 +225,15 @@ class Aladin(anywidget.AnyWidget):
                 ) from imp
 
     def add_moc_from_URL(self, moc_URL, moc_options=None):
-        """load a MOC from a URL and display it in Aladin Lite widget
-        Arguments:
-        moc_URL: string url
-        moc_options: dictionary object"""
+        """Load a MOC from a URL and display it in Aladin Lite widget.
+
+        Parameters
+        ----------
+        moc_URL: str
+            An URL to retrieve the MOC from
+        moc_options: dict
+
+        """
         warnings.warn(
             "add_moc_from_URL is replaced by add_moc that detects automatically"
             "that the MOC was given as an URL.",
@@ -174,12 +245,16 @@ class Aladin(anywidget.AnyWidget):
         self.add_moc(moc_URL, **moc_options)
 
     def add_moc_from_dict(self, moc_dict, moc_options=None):
-        """load a MOC from a dict object and display it in Aladin Lite widget
-        Arguments:
-        moc_dict: the dict containing the MOC cells. Key are the HEALPix orders,
-                  values are the pixel indexes,
-                  eg: {"1":[1,2,4], "2":[12,13,14,21,23,25]}
-        moc_options: dictionary object"""
+        """Load a MOC from a dict object and display it in Aladin Lite widget.
+
+        Parameters
+        ----------
+        moc_dict: dict
+            It contains the MOC cells. Key are the HEALPix orders, values are the pixel
+            indexes, eg: {"1":[1,2,4], "2":[12,13,14,21,23,25]}
+        moc_options: dict
+
+        """
         warnings.warn(
             "add_moc_from_dict is replaced by add_moc that detects automatically"
             "that the MOC was given as a dictionary.",
@@ -217,8 +292,8 @@ class Aladin(anywidget.AnyWidget):
                             meta={"name": "my sample table"})
         >>> aladin.add_table(table)
         And the table should appear in the output of Cell 1!
-        """
 
+        """
         # this library must be installed, and is used in votable operations
         # http://www.astropy.org/
         import io
@@ -234,9 +309,10 @@ class Aladin(anywidget.AnyWidget):
         Parameters
         ----------
         stc_string: str
-                    The STC-S string.
+            The STC-S string.
         overlay_options: keyword arguments
-                         TODO: documentation"""
+
+        """
         self.send(
             {
                 "event_name": "add_overlay_from_stcs",
@@ -261,10 +337,17 @@ class Aladin(anywidget.AnyWidget):
     # Adding a listener
 
     def add_listener(self, listener_type, callback):
-        """add a listener to the widget
-        Args:
-            listener_type: string that can either be 'objectHovered' or 'objClicked'
-            callback: python function"""
+        """Add a listener to the widget.
+
+        Parameters
+        ----------
+        listener_type: str
+            Can either be 'objectHovered' or 'objClicked'
+        callback: Callable
+            A python function to be called when the event corresponding to the
+            listener_type is detected
+
+        """
         if listener_type in {"objectHovered", "object_hovered"}:
             self.listener_callback["object_hovered"] = callback
         elif listener_type in {"objectClicked", "object_clicked"}:

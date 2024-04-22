@@ -4,6 +4,7 @@ import "./widget.css";
 let idxView = 0;
 
 function convert_pyname_to_jsname(pyname) {
+  if (pyname.charAt(0) === "_") pyname = pyname.slice(1);
   let temp = pyname.split("_");
   for (let i = 1; i < temp.length; i++) {
     temp[i] = temp[i].charAt(0).toUpperCase() + temp[i].slice(1);
@@ -34,6 +35,9 @@ function render({ model, el }) {
   let aladin = new A.aladin(aladinDiv, init_options);
   idxView += 1;
 
+  const ra_dec = init_options["target"].split(" ");
+  aladin.gotoRaDec(ra_dec[0], ra_dec[1]);
+
   el.appendChild(aladinDiv);
 
   /* ------------------- */
@@ -46,27 +50,34 @@ function render({ model, el }) {
   // the gotoObject call should only happen once. The two booleans prevent the two
   // listeners from triggering each other and creating a buggy loop. The same trick
   // is also necessary for the field of view.
+
+  /* Target control */
   let target_js = false;
   let target_py = false;
 
-  aladin.on("positionChanged", (position) => {
-    if (!target_py) {
-      target_js = true;
-      model.set("target", `${position.ra} ${position.dec}`);
-      model.save_changes();
-    } else {
+  // Event triggered when the user moves the map in Aladin Lite
+  aladin.on("positionChanged", () => {
+    if (target_py) {
       target_py = false;
+      return;
     }
+    target_js = true;
+    const ra_dec = aladin.getRaDec();
+    model.set("_target", `${ra_dec[0]} ${ra_dec[1]}`);
+    model.set("shared_target", `${ra_dec[0]} ${ra_dec[1]}`);
+    model.save_changes();
   });
 
-  model.on("change:target", () => {
-    if (!target_js) {
-      target_py = true;
-      let target = model.get("target");
-      aladin.gotoObject(target);
-    } else {
+  // Event triggered when the target is changed from the Python side using jslink
+  model.on("change:shared_target", () => {
+    if (target_js) {
       target_js = false;
+      return;
     }
+    target_py = true;
+    const target = model.get("shared_target");
+    const [ra, dec] = target.split(" ");
+    aladin.gotoRaDec(ra, dec);
   });
 
   /* Field of View control */
@@ -182,6 +193,11 @@ function render({ model, el }) {
   model.on("msg:custom", (msg) => {
     let options = {};
     switch (msg["event_name"]) {
+      case "goto_ra_dec":
+        const ra = msg["ra"];
+        const dec = msg["dec"];
+        aladin.gotoRaDec(ra, dec);
+        break;
       case "add_catalog_from_URL":
         aladin.addCatalog(A.catalogFromURL(msg["votable_URL"], msg["options"]));
         break;
@@ -235,7 +251,7 @@ function render({ model, el }) {
 
   return () => {
     // need to unsubscribe the listeners
-    model.off("change:target");
+    model.off("change:shared_target");
     model.off("change:fov");
     model.off("change:height");
     model.off("change:coo_frame");

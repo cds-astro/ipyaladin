@@ -14,6 +14,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Fixed** for any bug fixes.
 - **Security** in case of vulnerabilities.
 
+## [Unreleased]
+
+### Added
+
+- Support for `astropy.coordinates.SkyCoord` for assigning and reading the `target` property (#80)
+
+### Fixed
+
+- Fix asynchronous update for the `target` property (#80)
+
+### Changed
+
+- Change the jslink target trait from `target` to `shared_target` (#80)
+
 ## [0.3.0]
 
 ### Changed
