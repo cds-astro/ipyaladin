@@ -19,29 +19,18 @@ def parse_coordinate_string(string: str) -> SkyCoord:
     if not _is_coordinate_string(string):
         return SkyCoord.from_name(string)
     coordinates: tuple[str, str] = _split_coordinate_string(string)
-    # Determine frame
-    if string[0] == "J" or string[0] not in ["J", "G", "B"]:
-        frame = "icrs"
-    elif string[0] == "G":
-        frame = "galactic"
-    elif string[0] == "B":
-        frame = "fk4"
-    else:
-        raise ValueError(f"Invalid coordinate string: {string}")
     # Parse ra and dec to astropy Angle objects
     dec: Angle = Angle(coordinates[1], unit="deg")
     if _is_hour_angle_string(coordinates[0]):
         ra = Angle(coordinates[0], unit="hour")
     else:
         ra = Angle(coordinates[0], unit="deg")
-    # Return SkyCoord object
-    match frame:
-        case "icrs":
-            return SkyCoord(ra=ra, dec=dec, frame="icrs")
-        case "galactic":
-            return SkyCoord(l=ra, b=dec, frame="galactic")
-        case "fk4":
-            return SkyCoord(ra=ra, dec=dec, equinox="B1950", frame="fk4")
+    # Create SkyCoord object
+    if string[0] == "B":
+        return SkyCoord(ra=ra, dec=dec, equinox="B1950", frame="fk4")
+    if string[0] == "G":
+        return SkyCoord(l=ra, b=dec, frame="galactic")
+    return SkyCoord(ra=ra, dec=dec, frame="icrs")
 
 
 def _is_coordinate_string(string: str) -> bool:
