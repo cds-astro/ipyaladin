@@ -122,7 +122,11 @@ class Aladin(anywidget.AnyWidget):
     def target(self) -> SkyCoord:
         """
         Get the target of the Aladin Lite widget.
-        :return: astropy.coordinates.SkyCoord object
+
+        Returns
+        -------
+        SkyCoord
+            An astropy.coordinates.SkyCoord object representing the target.
         """
         ra, dec = self._target.split(" ")
         return SkyCoord(
@@ -136,8 +140,16 @@ class Aladin(anywidget.AnyWidget):
     def target(self, target: str or SkyCoord):
         """
         Set the target of the Aladin Lite widget.
-        :param target: string or astropy.coordinates.SkyCoord object
-        :return: None
+
+        Parameters
+        ----------
+        target : str or SkyCoord
+            The target as either a string or an astropy.coordinates.SkyCoord object.
+
+        Raises
+        ------
+        ValueError
+            If the target is not a string or an astropy.coordinates.SkyCoord object.
         """
         if isinstance(target, str):  # If the target is str, parse it
             target = parse_coordinate_string(target)

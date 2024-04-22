@@ -5,8 +5,16 @@ import re
 def parse_coordinate_string(string: str) -> SkyCoord:
     """
     Parse a string containing coordinates.
-    :param string: The string containing the coordinates.
-    :return: A SkyCoord object representing the coordinates.
+
+    Parameters
+    ----------
+    string : str
+        The string containing the coordinates.
+
+    Returns
+    -------
+    SkyCoord
+        A SkyCoord object representing the coordinates.
     """
     if not _is_coordinate_string(string):
         return SkyCoord.from_name(string)
@@ -39,8 +47,16 @@ def parse_coordinate_string(string: str) -> SkyCoord:
 def _is_coordinate_string(string: str) -> bool:
     """
     Check if a string is a coordinate string.
-    :param string: The string to check.
-    :return: True if the string is a coordinate string, False otherwise.
+
+    Parameters
+    ----------
+    string : str
+        The string to check.
+
+    Returns
+    -------
+    bool
+        True if the string is a coordinate string, False otherwise.
     """
     regex = r"^([JGB].*|[0-9][0-9: hmsd.°′'\"+-]+)$"  # noqa RUF001
     return bool(re.match(regex, string))
@@ -49,8 +65,16 @@ def _is_coordinate_string(string: str) -> bool:
 def _split_coordinate_string(coo: str) -> tuple[str, str]:
     """
     Split a string containing coordinates in two parts.
-    :param coo: The string containing the coordinates.
-    :return: A tuple containing the two parts of the coordinate as strings.
+
+    Parameters
+    ----------
+    coo : str
+        The string containing the coordinates.
+
+    Returns
+    -------
+    tuple[str, str]
+        A tuple containing the two parts of the coordinate as strings.
     """
     # Remove first char if it is J, G or B
     jgb_regex = r"^[JGB].*"
@@ -69,8 +93,16 @@ def _split_coordinate_string(coo: str) -> tuple[str, str]:
 def _is_hour_angle_string(coo: str) -> bool:
     """
     Check if a string is an hour angle string.
-    :param coo: The string to check.
-    :return: True if the string is an hour angle string, False otherwise.
+
+    Parameters
+    ----------
+    coo : str
+        The string to check.
+
+    Returns
+    -------
+    bool
+        True if the string is an hour angle string, False otherwise.
     """
     regex = r"[hms°: ]"
     return bool(re.search(regex, coo))
