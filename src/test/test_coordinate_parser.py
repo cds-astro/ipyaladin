@@ -34,8 +34,7 @@ test_is_coordinate_string_values = [
 
 @pytest.mark.parametrize(("inp", "expected"), test_is_coordinate_string_values)
 def test_is_coordinate_string(inp, expected):
-    """
-    Test the function _is_coordinate_string
+    """Test the function _is_coordinate_string.
 
     Parameters
     ----------
@@ -43,6 +42,7 @@ def test_is_coordinate_string(inp, expected):
         A string with an object name or coordinates to check.
     expected : bool
         The expected result as a boolean.
+
     """
     assert _is_coordinate_string(inp) == expected
 
@@ -69,8 +69,7 @@ test_split_coordinate_string_values = [
 
 @pytest.mark.parametrize(("inp", "expected"), test_split_coordinate_string_values)
 def test_split_coordinate_string(inp, expected):
-    """
-    Test the function _split_coordinate_string
+    """Test the function _split_coordinate_string.
 
     Parameters
     ----------
@@ -78,6 +77,7 @@ def test_split_coordinate_string(inp, expected):
         A string with coordinates to split.
     expected : tuple of str
         The expected result as a tuple of strings.
+
     """
     assert _split_coordinate_string(inp) == expected
 
@@ -93,8 +93,7 @@ test_is_hour_angle_string_values = [
 
 @pytest.mark.parametrize(("inp", "expected"), test_is_hour_angle_string_values)
 def test_is_hour_angle_string(inp, expected):
-    """
-    Test the function _is_hour_angle_string
+    """Test the function _is_hour_angle_string.
 
     Parameters
     ----------
@@ -102,6 +101,7 @@ def test_is_hour_angle_string(inp, expected):
         A coordinate part as a string.
     expected : bool
         The expected result as a boolean.
+
     """
     assert _is_hour_angle_string(inp) == expected
 
@@ -177,8 +177,7 @@ test_parse_coordinate_string_values = [
 
 @pytest.mark.parametrize(("inp", "expected"), test_parse_coordinate_string_values)
 def test_parse_coordinate_string(inp, expected):
-    """
-    Test the function parse_coordinate_string
+    """Test the function parse_coordinate_string.
 
     Parameters
     ----------
@@ -186,6 +185,7 @@ def test_parse_coordinate_string(inp, expected):
         The string to parse.
     expected : SkyCoord
         The expected result as a SkyCoord object.
+
     """
     assert parse_coordinate_string(inp) == expected
 
@@ -222,13 +222,13 @@ test_aladin_string_target = [
 
 @pytest.mark.parametrize("target", test_aladin_string_target)
 def test_aladin_string_target_set(target):
-    """
-    Test setting the target of an Aladin object with a string or a SkyCoord object
+    """Test setting the target of an Aladin object with a string or a SkyCoord object.
 
     Parameters
     ----------
     target : str
         The target string.
+
     """
     aladin = Aladin()
     aladin.target = target
@@ -239,13 +239,13 @@ def test_aladin_string_target_set(target):
 
 @pytest.mark.parametrize("target", test_aladin_string_target)
 def test_aladin_sky_coord_target_set(target):
-    """
-    Test setting and getting the target of an Aladin object with a SkyCoord object
+    """Test setting and getting the target of an Aladin object with a SkyCoord object.
 
     Parameters
     ----------
     target : str
         The target string.
+
     """
     sc_target = parse_coordinate_string(target)
     aladin = Aladin()

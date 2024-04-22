@@ -3,8 +3,7 @@ import re
 
 
 def parse_coordinate_string(string: str) -> SkyCoord:
-    """
-    Parse a string containing coordinates.
+    """Parse a string containing coordinates.
 
     Parameters
     ----------
@@ -14,7 +13,8 @@ def parse_coordinate_string(string: str) -> SkyCoord:
     Returns
     -------
     SkyCoord
-        A SkyCoord object representing the coordinates.
+        An `astropy.coordinates.SkyCoord` object representing the coordinates.
+
     """
     if not _is_coordinate_string(string):
         return SkyCoord.from_name(string)
@@ -34,8 +34,7 @@ def parse_coordinate_string(string: str) -> SkyCoord:
 
 
 def _is_coordinate_string(string: str) -> bool:
-    """
-    Check if a string is a coordinate string.
+    """Check if a string is a coordinate string.
 
     Parameters
     ----------
@@ -46,14 +45,14 @@ def _is_coordinate_string(string: str) -> bool:
     -------
     bool
         True if the string is a coordinate string, False otherwise.
+
     """
     regex = r"^([JGB].*|[0-9][0-9: hmsd.°′'\"+-]+)$"  # noqa RUF001
     return bool(re.match(regex, string))
 
 
 def _split_coordinate_string(coo: str) -> tuple[str, str]:
-    """
-    Split a string containing coordinates in two parts.
+    """Split a string containing coordinates in two parts.
 
     Parameters
     ----------
@@ -64,6 +63,7 @@ def _split_coordinate_string(coo: str) -> tuple[str, str]:
     -------
     tuple[str, str]
         A tuple containing the two parts of the coordinate as strings.
+
     """
     # Remove first char if it is J, G or B
     jgb_regex = r"^[JGB].*"
@@ -80,8 +80,7 @@ def _split_coordinate_string(coo: str) -> tuple[str, str]:
 
 
 def _is_hour_angle_string(coo: str) -> bool:
-    """
-    Check if a string is an hour angle string.
+    """Check if a string is an hour angle string.
 
     Parameters
     ----------
@@ -92,6 +91,7 @@ def _is_hour_angle_string(coo: str) -> bool:
     -------
     bool
         True if the string is an hour angle string, False otherwise.
+
     """
     regex = r"[hms°: ]"
     return bool(re.search(regex, coo))
