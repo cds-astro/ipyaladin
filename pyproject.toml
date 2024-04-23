@@ -7,9 +7,12 @@ name = "ipyaladin"
 dynamic = ["version"]
 dependencies = ["anywidget", "astropy"]
 readme = "README.md"
+license = "BSD-3-Clause"
 
 [project.optional-dependencies]
-dev = ["watchfiles", "jupyterlab", "ruff"]
+test = ["pytest"]
+dev = ["ipyaladin[test]", "watchfiles", "jupyterlab", "ruff"]
+recommended = ["mocpy"]
 
 # automatically add the dev feature to the default env (e.g., hatch shell)
 [tool.hatch.envs.default]
