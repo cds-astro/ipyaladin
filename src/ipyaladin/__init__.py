@@ -4,7 +4,7 @@ from typing import ClassVar, Union
 import warnings
 
 import anywidget
-from astropy.coordinates import SkyCoord
+from astropy.coordinates import SkyCoord, Angle
 from traitlets import (
     Float,
     Int,
@@ -43,7 +43,8 @@ class Aladin(anywidget.AnyWidget):
         help="A trait that can be used with `~ipywidgets.widgets.jslink`"
         "to link two Aladin Lite widgets targets together",
     ).tag(sync=True)
-    fov = Float(60.0).tag(sync=True, init_option=True)
+    _fov = Float(60.0).tag(sync=True, init_option=True)
+    shared_fov = Float(60.0).tag(sync=True)
     survey = Unicode("https://alaskybis.unistra.fr/DSS/DSSColor").tag(
         sync=True, init_option=True
     )
@@ -99,6 +100,7 @@ class Aladin(anywidget.AnyWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.target = kwargs.get("target", "0 0")
+        self.fov = kwargs.get("fov", 60.0)
         self.on_msg(self._handle_custom_message)
 
     def _handle_custom_message(self, model, message, list_of_buffers):  # noqa: ARG002
@@ -118,6 +120,27 @@ class Aladin(anywidget.AnyWidget):
             self.listener_callback["click"](message_content)
         elif event_type == "select" and "select" in self.listener_callback:
             self.listener_callback["select"](message_content)
+
+    @property
+    def fov(self) -> Angle:
+        """The field of view of the Aladin Lite widget.
+
+        It can be set with either a float or an `~astropy.units.Angle` object.
+
+        Returns
+        -------
+        Angle
+            An astropy.units.Angle object representing the field of view.
+
+        """
+        return Angle(self._fov, unit="deg")
+
+    @fov.setter
+    def fov(self, fov: Union[float, Angle]):
+        if isinstance(fov, Angle):
+            fov = fov.deg
+        self._fov = fov
+        self.send({"event_name": "change_fov", "fov": fov})
 
     @property
     def target(self) -> SkyCoord:
