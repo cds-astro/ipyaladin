@@ -37,6 +37,7 @@ function render({ model, el }) {
 
   const ra_dec = init_options["target"].split(" ");
   aladin.gotoRaDec(ra_dec[0], ra_dec[1]);
+  aladin.setFoV(init_options["fov"]);
 
   el.appendChild(aladinDiv);
 
@@ -85,24 +86,25 @@ function render({ model, el }) {
   let fov_js = false;
 
   aladin.on("zoomChanged", (fov) => {
-    if (!fov_py) {
-      fov_js = true;
-      // fov MUST be cast into float in order to be sent to the model
-      model.set("fov", parseFloat(fov.toFixed(5)));
-      model.save_changes();
-    } else {
+    if (fov_py) {
       fov_py = false;
+      return;
     }
+    fov_js = true;
+    // fov MUST be cast into float in order to be sent to the model
+    model.set("_fov", parseFloat(fov.toFixed(5)));
+    model.set("shared_fov", parseFloat(fov.toFixed(5)));
+    model.save_changes();
   });
 
-  model.on("change:fov", () => {
-    if (!fov_js) {
-      fov_py = true;
-      let fov = model.get("fov");
-      aladin.setFoV(fov);
-    } else {
+  model.on("change:shared_fov", () => {
+    if (fov_js) {
       fov_js = false;
+      return;
     }
+    fov_py = true;
+    let fov = model.get("shared_fov");
+    aladin.setFoV(fov);
   });
 
   /* Div control */
@@ -193,6 +195,9 @@ function render({ model, el }) {
   model.on("msg:custom", (msg) => {
     let options = {};
     switch (msg["event_name"]) {
+      case "change_fov":
+        aladin.setFoV(msg["fov"]);
+        break;
       case "goto_ra_dec":
         const ra = msg["ra"];
         const dec = msg["dec"];
@@ -252,7 +257,7 @@ function render({ model, el }) {
   return () => {
     // need to unsubscribe the listeners
     model.off("change:shared_target");
-    model.off("change:fov");
+    model.off("change:shared_fov");
     model.off("change:height");
     model.off("change:coo_frame");
     model.off("change:survey");
