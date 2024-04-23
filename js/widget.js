@@ -3,7 +3,7 @@ import "./widget.css";
 
 let idxView = 0;
 
-function convert_pyname_to_jsname(pyname) {
+function camelCaseToSnakeCase(pyname) {
   if (pyname.charAt(0) === "_") pyname = pyname.slice(1);
   let temp = pyname.split("_");
   for (let i = 1; i < temp.length; i++) {
@@ -21,22 +21,21 @@ function render({ model, el }) {
   /* View -------------- */
   /* ------------------- */
 
-  let init_options = {};
+  let initOptions = {};
   model.get("init_options").forEach((option_name) => {
-    init_options[convert_pyname_to_jsname(option_name)] =
-      model.get(option_name);
+    initOptions[camelCaseToSnakeCase(option_name)] = model.get(option_name);
   });
 
   let aladinDiv = document.createElement("div");
   aladinDiv.classList.add("aladin-widget");
-  aladinDiv.style.height = `${init_options["height"]}px`;
+  aladinDiv.style.height = `${initOptions["height"]}px`;
 
   aladinDiv.id = `aladin-lite-div-${idxView}`;
-  let aladin = new A.aladin(aladinDiv, init_options);
+  let aladin = new A.aladin(aladinDiv, initOptions);
   idxView += 1;
 
-  const ra_dec = init_options["target"].split(" ");
-  aladin.gotoRaDec(ra_dec[0], ra_dec[1]);
+  const raDec = initOptions["target"].split(" ");
+  aladin.gotoRaDec(raDec[0], raDec[1]);
 
   el.appendChild(aladinDiv);
 
@@ -52,44 +51,44 @@ function render({ model, el }) {
   // is also necessary for the field of view.
 
   /* Target control */
-  let target_js = false;
-  let target_py = false;
+  let targetJs = false;
+  let targetPy = false;
 
   // Event triggered when the user moves the map in Aladin Lite
   aladin.on("positionChanged", () => {
-    if (target_py) {
-      target_py = false;
+    if (targetPy) {
+      targetPy = false;
       return;
     }
-    target_js = true;
-    const ra_dec = aladin.getRaDec();
-    model.set("_target", `${ra_dec[0]} ${ra_dec[1]}`);
-    model.set("shared_target", `${ra_dec[0]} ${ra_dec[1]}`);
+    targetJs = true;
+    const raDec = aladin.getRaDec();
+    model.set("_target", `${raDec[0]} ${raDec[1]}`);
+    model.set("shared_target", `${raDec[0]} ${raDec[1]}`);
     model.save_changes();
   });
 
   // Event triggered when the target is changed from the Python side using jslink
   model.on("change:shared_target", () => {
-    if (target_js) {
-      target_js = false;
+    if (targetJs) {
+      targetJs = false;
       return;
     }
-    target_py = true;
+    targetPy = true;
     const target = model.get("shared_target");
     const [ra, dec] = target.split(" ");
     aladin.gotoRaDec(ra, dec);
   });
 
   /* Field of View control */
-  let fov_py = false;
-  let fov_js = false;
+  let fovJs = false;
+  let fovPy = false;
 
   aladin.on("zoomChanged", (fov) => {
-    if (fov_py) {
-      fov_py = false;
+    if (fovPy) {
+      fovPy = false;
       return;
     }
-    fov_js = true;
+    fovJs = true;
     // fov MUST be cast into float in order to be sent to the model
     model.set("_fov", parseFloat(fov.toFixed(5)));
     model.set("shared_fov", parseFloat(fov.toFixed(5)));
@@ -97,11 +96,11 @@ function render({ model, el }) {
   });
 
   model.on("change:shared_fov", () => {
-    if (fov_js) {
-      fov_js = false;
+    if (fovJs) {
+      fovJs = false;
       return;
     }
-    fov_py = true;
+    fovPy = true;
     let fov = model.get("shared_fov");
     aladin.setFoV(fov);
   });
@@ -116,7 +115,7 @@ function render({ model, el }) {
   /* Aladin callbacks */
 
   aladin.on("objectHovered", (object) => {
-    if (object["data"] != undefined) {
+    if (object["data"] !== undefined) {
       model.send({
         event_type: "object_hovered",
         content: {
@@ -128,37 +127,37 @@ function render({ model, el }) {
   });
 
   aladin.on("objectClicked", (clicked) => {
-    let clicked_content = {
+    let clickedContent = {
       ra: clicked["ra"],
       dec: clicked["dec"],
     };
     if (clicked["data"] !== undefined) {
-      clicked_content["data"] = clicked["data"];
+      clickedContent["data"] = clicked["data"];
     }
-    model.set("clicked", clicked_content);
+    model.set("clicked", clickedContent);
     // send a custom message in case the user wants to define their own callbacks
     model.send({
       event_type: "object_clicked",
-      content: clicked_content,
+      content: clickedContent,
     });
     model.save_changes();
   });
 
-  aladin.on("click", (click_content) => {
+  aladin.on("click", (clickContent) => {
     model.send({
       event_type: "click",
-      content: click_content,
+      content: clickContent,
     });
   });
 
   aladin.on("select", (catalogs) => {
-    let objects_data = [];
+    let objectsData = [];
     // TODO: this flattens the selection. Each object from different
     // catalogs are entered in the array. To change this, maybe change
     // upstream what is returned upon selection?
     catalogs.forEach((catalog) => {
       catalog.forEach((object) => {
-        objects_data.push({
+        objectsData.push({
           ra: object.ra,
           dec: object.dec,
           data: object.data,
@@ -169,7 +168,7 @@ function render({ model, el }) {
     });
     model.send({
       event_type: "select",
-      content: objects_data,
+      content: objectsData,
     });
   });
 
@@ -236,9 +235,9 @@ function render({ model, el }) {
         aladin.select();
         break;
       case "add_table":
-        let table_bytes = buffers[0].buffer;
+        let tableBytes = buffers[0].buffer;
         let decoder = new TextDecoder("utf-8");
-        let blob = new Blob([decoder.decode(table_bytes)]);
+        let blob = new Blob([decoder.decode(tableBytes)]);
         let url = URL.createObjectURL(blob);
         A.catalogFromURL(
           url,
