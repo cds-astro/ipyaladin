@@ -191,7 +191,7 @@ function render({ model, el }) {
     aladin.getOverlayImageLayer().setAlpha(model.get("overlay_survey_opacity"));
   });
 
-  model.on("msg:custom", (msg) => {
+  model.on("msg:custom", (msg, buffers) => {
     let options = {};
     switch (msg["event_name"]) {
       case "change_fov":
@@ -236,7 +236,7 @@ function render({ model, el }) {
         aladin.select();
         break;
       case "add_table":
-        let table_bytes = model.get("_table");
+        let table_bytes = buffers[0].buffer;
         let decoder = new TextDecoder("utf-8");
         let blob = new Blob([decoder.decode(table_bytes)]);
         let url = URL.createObjectURL(blob);
@@ -263,7 +263,6 @@ function render({ model, el }) {
     model.off("change:overlay_survey");
     model.off("change:overlay_survey_opacity");
     model.off("change:trigger_event");
-    model.off("change:_table");
     model.off("msg:custom");
 
     aladin.off("positionChanged");

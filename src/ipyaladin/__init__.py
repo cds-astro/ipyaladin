@@ -13,9 +13,7 @@ from traitlets import (
     List,
     Dict,
     Any,
-    Bytes,
     default,
-    Undefined,
 )
 
 from .coordinate_parser import parse_coordinate_string
@@ -96,9 +94,6 @@ class Aladin(anywidget.AnyWidget):
     # overlay survey
     overlay_survey = Unicode("").tag(sync=True, init_option=True)
     overlay_survey_opacity = Float(0.0).tag(sync=True, init_option=True)
-
-    # tables/catalogs
-    _table = Bytes(Undefined).tag(sync=True)
 
     init_options = List(trait=Any()).tag(sync=True)
 
@@ -333,8 +328,10 @@ class Aladin(anywidget.AnyWidget):
 
         table_bytes = io.BytesIO()
         table.write(table_bytes, format="votable")
-        self._table = table_bytes.getvalue()
-        self.send({"event_name": "add_table", "options": table_options})
+        self.send(
+            {"event_name": "add_table", "options": table_options},
+            buffers=[table_bytes.getvalue()],
+        )
 
     def add_overlay_from_stcs(self, stc_string, **overlay_options):
         """Add an overlay layer defined by a STC-S string.
