@@ -1,9 +1,10 @@
 import MessageHandler from "./message_handler";
 
 export default class EventHandler {
-  constructor(A, aladin, model) {
+  constructor(A, aladin, aladinDiv, model) {
     this.A = A;
     this.aladin = aladin;
+    this.aladinDiv = aladinDiv;
     this.model = model;
     this.messageHandler = new MessageHandler(A, aladin);
   }
@@ -78,7 +79,7 @@ export default class EventHandler {
     /* Div control */
     this.model.on("change:height", () => {
       let height = this.model.get("height");
-      aladinDiv.style.height = `${height}px`;
+      this.aladinDiv.style.height = `${height}px`;
     });
 
     /* Aladin callbacks */
