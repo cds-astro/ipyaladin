@@ -1,3 +1,5 @@
+import { camelCaseToSnakeCase } from "../utils";
+
 export default class MessageHandler {
   constructor(A, aladin) {
     this.A = A;
@@ -13,29 +15,26 @@ export default class MessageHandler {
   }
 
   handleAddCatalogFromURL(msg) {
-    this.aladin.addCatalog(
-      this.A.catalogFromURL(msg["votable_URL"], msg["options"]),
-    );
+    const options = MessageHandler.parseOptions(msg["options"] || {});
+    this.aladin.addCatalog(this.A.catalogFromURL(msg["votable_URL"], options));
   }
 
   handleAddMOCFromURL(msg) {
-    const options = msg["options"] || {};
-    if (options["lineWidth"] === undefined) {
-      options["lineWidth"] = 3;
-    }
+    const options = MessageHandler.parseOptions(msg["options"] || {});
+    if (options["lineWidth"] === undefined) options["lineWidth"] = 3;
     this.aladin.addMOC(this.A.MOCFromURL(msg["moc_URL"], options));
   }
 
   handleAddMOCFromDict(msg) {
-    const options = msg["options"] || {};
-    if (options["lineWidth"] === undefined) {
-      options["lineWidth"] = 3;
-    }
+    const options = MessageHandler.parseOptions(msg["options"] || {});
+    if (options["lineWidth"] === undefined) options["lineWidth"] = 3;
     this.aladin.addMOC(this.A.MOCFromJSON(msg["moc_dict"], options));
   }
 
   handleAddOverlayFromSTCS(msg) {
-    const overlayOptions = msg["overlay_options"];
+    const overlayOptions = MessageHandler.parseOptions(
+      msg["overlay_options"] || {},
+    );
     const stcString = msg["stc_string"];
     const overlay = this.A.graphicOverlay(overlayOptions);
     this.aladin.addOverlay(overlay);
@@ -55,7 +54,7 @@ export default class MessageHandler {
   }
 
   handleAddTable(msg, buffers) {
-    const options = msg["options"] || {};
+    const options = MessageHandler.parseOptions(msg["options"] || {});
     const buffer = buffers[0].buffer;
     const decoder = new TextDecoder("utf-8");
     const blob = new Blob([decoder.decode(buffer)]);
@@ -69,5 +68,13 @@ export default class MessageHandler {
       false,
     );
     URL.revokeObjectURL(url);
+  }
+
+  static parseOptions(options) {
+    for (const optionName in options) {
+      const convertedOptionName = camelCaseToSnakeCase(optionName);
+      options[convertedOptionName] = options[optionName];
+    }
+    return options;
   }
 }
