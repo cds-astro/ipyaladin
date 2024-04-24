@@ -31,7 +31,7 @@ function initAladinLite(model, el) {
   aladin.gotoRaDec(raDec[0], raDec[1]);
 
   el.appendChild(aladinDiv);
-  return aladin;
+  return { aladin, aladinDiv };
 }
 
 async function initialize({ model }) {
@@ -43,8 +43,9 @@ function render({ model, el }) {
   /* View -------------- */
   /* ------------------- */
 
-  const aladin = initAladinLite(model, el);
-  const eventHandler = new EventHandler(A, aladin, model);
+  const { aladin, aladinDiv } = initAladinLite(model, el);
+
+  const eventHandler = new EventHandler(A, aladin, aladinDiv, model);
   eventHandler.subscribeAll();
 
   return () => {
