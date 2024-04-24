@@ -194,12 +194,5 @@ export default class EventHandler {
     this.model.off("change:overlay_survey_opacity");
     this.model.off("change:trigger_event");
     this.model.off("msg:custom");
-
-    this.aladin.off("positionChanged");
-    this.aladin.off("zoomChanged");
-    this.aladin.off("objectHovered");
-    this.aladin.off("objectClicked");
-    this.aladin.off("click");
-    this.aladin.off("select");
   }
 }
