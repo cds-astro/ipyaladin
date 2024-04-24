@@ -4,40 +4,46 @@ export default class MessageHandler {
     this.aladin = aladin;
   }
 
-  handleChangeFoV(fov) {
-    this.aladin.setFoV(fov);
+  handleChangeFoV(msg) {
+    this.aladin.setFoV(msg["fov"]);
   }
 
-  handleGotoRaDec(ra, dec) {
-    this.aladin.gotoRaDec(ra, dec);
+  handleGotoRaDec(msg) {
+    this.aladin.gotoRaDec(msg["ra"], msg["dec"]);
   }
 
-  handleAddCatalogFromURL(votableURL, options) {
-    this.aladin.addCatalog(this.A.catalogFromURL(votableURL, options));
+  handleAddCatalogFromURL(msg) {
+    this.aladin.addCatalog(
+      this.A.catalogFromURL(msg["votable_URL"], msg["options"]),
+    );
   }
 
-  handleAddMOCFromURL(mocURL, options) {
+  handleAddMOCFromURL(msg) {
+    const options = msg["options"] || {};
     if (options["lineWidth"] === undefined) {
       options["lineWidth"] = 3;
     }
-    this.aladin.addMOC(this.A.MOCFromURL(mocURL, options));
+    this.aladin.addMOC(this.A.MOCFromURL(msg["moc_URL"], options));
   }
 
-  handleAddMOCFromDict(mocDict, options) {
+  handleAddMOCFromDict(msg) {
+    const options = msg["options"] || {};
     if (options["lineWidth"] === undefined) {
       options["lineWidth"] = 3;
     }
-    this.aladin.addMOC(this.A.MOCFromJSON(mocDict, options));
+    this.aladin.addMOC(this.A.MOCFromJSON(msg["moc_dict"], options));
   }
 
-  handleAddOverlayFromSTCS(overlayOptions, stcString) {
-    let overlay = this.A.graphicOverlay(overlayOptions);
+  handleAddOverlayFromSTCS(msg) {
+    const overlayOptions = msg["overlay_options"];
+    const stcString = msg["stc_string"];
+    const overlay = this.A.graphicOverlay(overlayOptions);
     this.aladin.addOverlay(overlay);
     overlay.addFootprints(this.A.footprintsFromSTCS(stcString));
   }
 
-  handleChangeColormap(colormap) {
-    this.aladin.getBaseImageLayer().setColormap(colormap);
+  handleChangeColormap(msg) {
+    this.aladin.getBaseImageLayer().setColormap(msg["colormap"]);
   }
 
   handleGetJPGThumbnail() {
@@ -48,11 +54,12 @@ export default class MessageHandler {
     this.aladin.select();
   }
 
-  handleAddTable(buffer, options) {
-    let tableBytes = buffer;
-    let decoder = new TextDecoder("utf-8");
-    let blob = new Blob([decoder.decode(tableBytes)]);
-    let url = URL.createObjectURL(blob);
+  handleAddTable(msg, buffers) {
+    const options = msg["options"] || {};
+    const buffer = buffers[0].buffer;
+    const decoder = new TextDecoder("utf-8");
+    const blob = new Blob([decoder.decode(buffer)]);
+    const url = URL.createObjectURL(blob);
     this.A.catalogFromURL(
       url,
       Object.assign(options, { onClick: "showTable" }),

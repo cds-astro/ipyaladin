@@ -76,7 +76,6 @@ export default class EventHandler {
     });
 
     /* Div control */
-
     this.model.on("change:height", () => {
       let height = this.model.get("height");
       aladinDiv.style.height = `${height}px`;
@@ -162,52 +161,25 @@ export default class EventHandler {
         .setAlpha(this.model.get("overlay_survey_opacity"));
     });
 
+    this.eventHandlers = {
+      change_fov: this.messageHandler.handleChangeFoV,
+      goto_ra_dec: this.messageHandler.handleGotoRaDec,
+      add_catalog_from_URL: this.messageHandler.handleAddCatalogFromURL,
+      add_MOC_from_URL: this.messageHandler.handleAddMOCFromURL,
+      add_MOC_from_dict: this.messageHandler.handleAddMOCFromDict,
+      add_overlay_from_stcs: this.messageHandler.handleAddOverlayFromSTCS,
+      change_colormap: this.messageHandler.handleChangeColormap,
+      get_JPG_thumbnail: this.messageHandler.handleGetJPGThumbnail,
+      trigger_rectangular_selection:
+        this.messageHandler.handleTriggerRectangularSelection,
+      add_table: this.messageHandler.handleAddTable,
+    };
+
     this.model.on("msg:custom", (msg, buffers) => {
-      let options = {};
-      switch (msg["event_name"]) {
-        case "change_fov":
-          this.messageHandler.handleChangeFoV(msg["fov"]);
-          break;
-        case "goto_ra_dec":
-          this.messageHandler.handleGotoRaDec(msg["ra"], msg["dec"]);
-          break;
-        case "add_catalog_from_URL":
-          this.messageHandler.handleAddCatalogFromURL(
-            msg["votable_URL"],
-            msg["options"],
-          );
-          break;
-        case "add_MOC_from_URL":
-          this.messageHandler.handleAddMOCFromURL(
-            msg["moc_URL"],
-            msg["options"],
-          );
-          break;
-        case "add_MOC_from_dict":
-          this.messageHandler.handleAddMOCFromDict(
-            msg["moc_dict"],
-            msg["options"],
-          );
-          break;
-        case "add_overlay_from_stcs":
-          this.messageHandler.handleAddOverlayFromSTCS(
-            msg["overlay_options"],
-            msg["stc_string"],
-          );
-          break;
-        case "change_colormap":
-          this.messageHandler.handleChangeColormap(msg["colormap"]);
-          break;
-        case "get_JPG_thumbnail":
-          this.messageHandler.handleGetJPGThumbnail();
-          break;
-        case "trigger_rectangular_selection":
-          this.messageHandler.handleTriggerRectangularSelection();
-          break;
-        case "add_table":
-          this.messageHandler.handleAddTable(buffers[0].buffer, msg.options);
-          break;
-      }
+      const eventName = msg["event_name"];
+      const handler = this.eventHandlers[eventName];
+      if (handler) handler.call(this, msg, buffers);
+      else throw new Error(`Unknown event name: ${eventName}`);
     });
   }
 
