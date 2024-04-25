@@ -19,6 +19,7 @@ function initAladinLite(model, el) {
   let aladin = new A.aladin(aladinDiv, initOptions);
   idxView += 1;
 
+  // Set the target again after the initialization to be sure that the target is set from icrs coordinates because of the use of gotoObject in the Aladin Lite API
   const raDec = initOptions["target"].split(" ");
   aladin.gotoRaDec(raDec[0], raDec[1]);
 
