@@ -366,18 +366,42 @@ class Aladin(anywidget.AnyWidget):
 
     # Adding a listener
 
-    def add_listener(self, listener_type, callback):
-        """Add a listener to the widget.
+    def set_listener(self, listener_type, callback):
+        """Set a listener for an event to the widget.
 
         Parameters
         ----------
         listener_type: str
-            Can either be 'objectHovered' or 'objClicked'
+            Can either be 'object_hovered', 'object_clicked', 'click' or 'select'
         callback: Callable
             A python function to be called when the event corresponding to the
             listener_type is detected
 
         """
+        self.add_listener(listener_type, callback, False)
+
+    def add_listener(self, listener_type, callback, _dWarning=True):
+        """Add a listener to the widget. Use set_listener instead.
+
+        Parameters
+        ----------
+        listener_type: str
+            Can either be 'object_hovered', 'object_clicked', 'click' or 'select'
+        callback: Callable
+            A python function to be called when the event corresponding to the
+            listener_type is detected
+
+        Note
+        ----
+        This method is deprecated, use set_listener instead
+
+        """
+        if _dWarning:
+            warnings.warn(
+                "add_listener is deprecated, use set_listener instead",
+                DeprecationWarning,
+                stacklevel=2,
+            )
         if listener_type in {"objectHovered", "object_hovered"}:
             self.listener_callback["object_hovered"] = callback
         elif listener_type in {"objectClicked", "object_clicked"}:
@@ -386,3 +410,8 @@ class Aladin(anywidget.AnyWidget):
             self.listener_callback["click"] = callback
         elif listener_type == "select":
             self.listener_callback["select"] = callback
+        else:
+            raise ValueError(
+                "listener_type must be 'object_hovered', "
+                "'object_clicked', 'click' or 'select'"
+            )
