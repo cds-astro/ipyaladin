@@ -1,4 +1,4 @@
-import A from "https://esm.sh/aladin-lite@3.3.3-beta";
+import A from "https://esm.sh/aladin-lite@3.4.0-beta";
 import "./widget.css";
 
 let idxView = 0;
