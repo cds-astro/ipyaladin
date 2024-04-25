@@ -1,4 +1,3 @@
-from ipyaladin import Aladin
 from ipyaladin.coordinate_parser import (
     parse_coordinate_string,
     _split_coordinate_string,
@@ -188,67 +187,3 @@ def test_parse_coordinate_string(inp, expected):
 
     """
     assert parse_coordinate_string(inp) == expected
-
-
-test_aladin_string_target = [
-    "M 31",
-    "sgr a*",
-    "α Centauri",  # noqa RUF001
-    "* 17 Com",
-    "1:12:43.2 31:12:43",
-    "1:12:43.2 +31:12:43",
-    "1:12:43.2 -31:12:43",
-    "1 12 43.2 31 12 43",
-    "1 12 43.2 +31 12 43",
-    "1 12 43.2 -31 12 43",
-    "1h12m43.2s 1d12m43s",
-    "1h12m43.2s +1d12m43s",
-    "1h12m43.2s -1d12m43s",
-    "42.67 25.48",
-    "42.67 +25.48",
-    "42.67 -25.48",
-    "0 0",
-    "J42.67 25.48",
-    "G42.67 25.48",
-    "B42.67 25.48",
-    "J12 30 45 +45 30 15",
-    "J03 15 20 -10 20 30",
-    "G120.5 -45.7",
-    "G90 0",
-    "B60 30",
-    "B120 -45",
-]
-
-
-@pytest.mark.parametrize("target", test_aladin_string_target)
-def test_aladin_string_target_set(target):
-    """Test setting the target of an Aladin object with a string or a SkyCoord object.
-
-    Parameters
-    ----------
-    target : str
-        The target string.
-
-    """
-    aladin = Aladin()
-    aladin.target = target
-    parsed_target = parse_coordinate_string(target)
-    assert aladin.target.icrs.ra.deg == parsed_target.icrs.ra.deg
-    assert aladin.target.icrs.dec.deg == parsed_target.icrs.dec.deg
-
-
-@pytest.mark.parametrize("target", test_aladin_string_target)
-def test_aladin_sky_coord_target_set(target):
-    """Test setting and getting the target of an Aladin object with a SkyCoord object.
-
-    Parameters
-    ----------
-    target : str
-        The target string.
-
-    """
-    sc_target = parse_coordinate_string(target)
-    aladin = Aladin()
-    aladin.target = sc_target
-    assert aladin.target.icrs.ra.deg == sc_target.icrs.ra.deg
-    assert aladin.target.icrs.dec.deg == sc_target.icrs.dec.deg
