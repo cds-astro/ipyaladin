@@ -43,8 +43,17 @@ class Aladin(anywidget.AnyWidget):
         help="A trait that can be used with `~ipywidgets.widgets.jslink`"
         "to link two Aladin Lite widgets targets together",
     ).tag(sync=True)
-    _fov = Float(60.0).tag(sync=True, init_option=True)
-    shared_fov = Float(60.0).tag(sync=True)
+    _fov = Float(
+        60.0,
+        help="A private trait that stores the current field of view of the widget."
+        " Its public version is the 'fov' property that returns an "
+        "`~astropy.units.Angle` object",
+    ).tag(sync=True, init_option=True)
+    shared_fov = Float(
+        60.0,
+        help="A trait that can be used with `~ipywidgets.widgets.jslink`"
+        "to link two Aladin Lite widgets field of view together",
+    ).tag(sync=True)
     survey = Unicode("https://alaskybis.unistra.fr/DSS/DSSColor").tag(
         sync=True, init_option=True
     )
