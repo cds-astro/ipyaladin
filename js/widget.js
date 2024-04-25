@@ -37,7 +37,6 @@ function render({ model, el }) {
 
   const ra_dec = init_options["target"].split(" ");
   aladin.gotoRaDec(ra_dec[0], ra_dec[1]);
-  aladin.setFoV(init_options["fov"]);
 
   el.appendChild(aladinDiv);
 
