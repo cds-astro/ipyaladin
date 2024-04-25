@@ -1,12 +1,11 @@
 import MessageHandler from "./message_handler";
 
 export default class EventHandler {
-  constructor(A, aladin, aladinDiv, model) {
-    this.A = A;
+  constructor(aladin, aladinDiv, model) {
     this.aladin = aladin;
     this.aladinDiv = aladinDiv;
     this.model = model;
-    this.messageHandler = new MessageHandler(A, aladin);
+    this.messageHandler = new MessageHandler(aladin);
   }
 
   subscribeAll() {

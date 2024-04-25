@@ -1,4 +1,6 @@
-export function camelCaseToSnakeCase(pyname) {
+import A from "https://esm.sh/aladin-lite@3.3.3-beta";
+
+function camelCaseToSnakeCase(pyname) {
   if (pyname.charAt(0) === "_") pyname = pyname.slice(1);
   let temp = pyname.split("_");
   for (let i = 1; i < temp.length; i++) {
@@ -6,3 +8,5 @@ export function camelCaseToSnakeCase(pyname) {
   }
   return temp.join("");
 }
+
+export { camelCaseToSnakeCase, A };
