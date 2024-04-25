@@ -1,7 +1,6 @@
-import A from "https://esm.sh/aladin-lite@3.4.0-beta";
 import "./widget.css";
 import EventHandler from "./models/event_handler";
-import { camelCaseToSnakeCase } from "./utils";
+import { A, camelCaseToSnakeCase } from "./utils";
 
 let idxView = 0;
 
@@ -38,7 +37,7 @@ function render({ model, el }) {
 
   const { aladin, aladinDiv } = initAladinLite(model, el);
 
-  const eventHandler = new EventHandler(A, aladin, aladinDiv, model);
+  const eventHandler = new EventHandler(aladin, aladinDiv, model);
   eventHandler.subscribeAll();
 
   return () => {
