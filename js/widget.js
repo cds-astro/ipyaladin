@@ -1,13 +1,13 @@
 import "./widget.css";
 import EventHandler from "./models/event_handler";
-import { A, camelCaseToSnakeCase } from "./utils";
+import { A, snakeCaseToCamelCase } from "./utils";
 
 let idxView = 0;
 
 function initAladinLite(model, el) {
   let initOptions = {};
   model.get("init_options").forEach((option_name) => {
-    initOptions[camelCaseToSnakeCase(option_name)] = model.get(option_name);
+    initOptions[snakeCaseToCamelCase(option_name)] = model.get(option_name);
   });
 
   let aladinDiv = document.createElement("div");
@@ -18,7 +18,8 @@ function initAladinLite(model, el) {
   let aladin = new A.aladin(aladinDiv, initOptions);
   idxView += 1;
 
-  // Set the target again after the initialization to be sure that the target is set from icrs coordinates because of the use of gotoObject in the Aladin Lite API
+  // Set the target again after the initialization to be sure that the target is set
+  // from icrs coordinates because of the use of gotoObject in the Aladin Lite API
   const raDec = initOptions["target"].split(" ");
   aladin.gotoRaDec(raDec[0], raDec[1]);
 
@@ -41,7 +42,7 @@ function render({ model, el }) {
   eventHandler.subscribeAll();
 
   return () => {
-    // need to unsubscribe the listeners
+    // Need to unsubscribe the listeners
     eventHandler.unsubscribeAll();
   };
 }

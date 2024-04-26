@@ -1,4 +1,4 @@
-import { A, camelCaseToSnakeCase } from "../utils";
+import { A, convertOptionNamesToCamelCase } from "../utils";
 
 export default class MessageHandler {
   constructor(aladin) {
@@ -14,24 +14,24 @@ export default class MessageHandler {
   }
 
   handleAddCatalogFromURL(msg) {
-    const options = MessageHandler.parseOptions(msg["options"] || {});
+    const options = convertOptionNamesToCamelCase(msg["options"] || {});
     this.aladin.addCatalog(A.catalogFromURL(msg["votable_URL"], options));
   }
 
   handleAddMOCFromURL(msg) {
-    const options = MessageHandler.parseOptions(msg["options"] || {});
+    const options = convertOptionNamesToCamelCase(msg["options"] || {});
     if (options["lineWidth"] === undefined) options["lineWidth"] = 3;
     this.aladin.addMOC(A.MOCFromURL(msg["moc_URL"], options));
   }
 
   handleAddMOCFromDict(msg) {
-    const options = MessageHandler.parseOptions(msg["options"] || {});
+    const options = convertOptionNamesToCamelCase(msg["options"] || {});
     if (options["lineWidth"] === undefined) options["lineWidth"] = 3;
     this.aladin.addMOC(A.MOCFromJSON(msg["moc_dict"], options));
   }
 
   handleAddOverlayFromSTCS(msg) {
-    const overlayOptions = MessageHandler.parseOptions(
+    const overlayOptions = convertOptionNamesToCamelCase(
       msg["overlay_options"] || {},
     );
     const stcString = msg["stc_string"];
@@ -53,7 +53,7 @@ export default class MessageHandler {
   }
 
   handleAddTable(msg, buffers) {
-    const options = MessageHandler.parseOptions(msg["options"] || {});
+    const options = convertOptionNamesToCamelCase(msg["options"] || {});
     const buffer = buffers[0].buffer;
     const decoder = new TextDecoder("utf-8");
     const blob = new Blob([decoder.decode(buffer)]);
@@ -67,13 +67,5 @@ export default class MessageHandler {
       false,
     );
     URL.revokeObjectURL(url);
-  }
-
-  static parseOptions(options) {
-    for (const optionName in options) {
-      const convertedOptionName = camelCaseToSnakeCase(optionName);
-      options[convertedOptionName] = options[optionName];
-    }
-    return options;
   }
 }
