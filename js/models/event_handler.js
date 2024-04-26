@@ -1,6 +1,12 @@
 import MessageHandler from "./message_handler";
 
 export default class EventHandler {
+  /**
+   * Constructor for the EventHandler class.
+   * @param aladin The Aladin instance
+   * @param aladinDiv The Aladin div
+   * @param model The model instance
+   */
   constructor(aladin, aladinDiv, model) {
     this.aladin = aladin;
     this.aladinDiv = aladinDiv;
@@ -8,6 +14,9 @@ export default class EventHandler {
     this.messageHandler = new MessageHandler(aladin);
   }
 
+  /**
+   * Subscribes to all the events needed for the Aladin Lite widget.
+   */
   subscribeAll() {
     /* ------------------- */
     /* Listeners --------- */
@@ -183,6 +192,10 @@ export default class EventHandler {
     });
   }
 
+  /**
+   * Unsubscribe from all the model events.
+   * There is no need to unsubscribe from the Aladin Lite events.
+   */
   unsubscribeAll() {
     this.model.off("change:shared_target");
     this.model.off("change:fov");
