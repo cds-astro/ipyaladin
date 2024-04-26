@@ -1,9 +1,11 @@
 import importlib.metadata
 import pathlib
-from typing import ClassVar, Union
+from typing import ClassVar, Union, Final, Optional
 import warnings
 
 import anywidget
+from astropy.table.table import QTable
+from astropy.table import Table
 from astropy.coordinates import SkyCoord, Angle
 from traitlets import (
     Float,
@@ -25,8 +27,8 @@ except importlib.metadata.PackageNotFoundError:
 
 
 class Aladin(anywidget.AnyWidget):
-    _esm = pathlib.Path(__file__).parent / "static" / "widget.js"
-    _css = pathlib.Path(__file__).parent / "static" / "widget.css"
+    _esm: Final = pathlib.Path(__file__).parent / "static" / "widget.js"
+    _css: Final = pathlib.Path(__file__).parent / "static" / "widget.css"
 
     # Options for the view initialization
     height = Int(400).tag(sync=True, init_option=True)
@@ -89,7 +91,7 @@ class Aladin(anywidget.AnyWidget):
     # content of the last click
     clicked_object = Dict().tag(sync=True)
     # listener callback is on the python side and contains functions to link to events
-    listener_callback: ClassVar = {}
+    listener_callback: ClassVar[dict[str, callable]] = {}
 
     # overlay survey
     overlay_survey = Unicode("").tag(sync=True, init_option=True)
@@ -107,7 +109,7 @@ class Aladin(anywidget.AnyWidget):
         self.fov = kwargs.get("fov", 60.0)
         self.on_msg(self._handle_custom_message)
 
-    def _handle_custom_message(self, model, message, list_of_buffers):  # noqa: ARG002
+    def _handle_custom_message(self, model, message: dict, buffers: list):  # noqa: ARG002
         event_type = message["event_type"]
         message_content = message["content"]
         if (
@@ -184,7 +186,7 @@ class Aladin(anywidget.AnyWidget):
             }
         )
 
-    def add_catalog_from_URL(self, votable_URL, votable_options=None):
+    def add_catalog_from_URL(self, votable_URL: str, votable_options: Dict = None):
         """Load a VOTable table from an url and load its data into the widget.
 
         Parameters
@@ -252,7 +254,7 @@ class Aladin(anywidget.AnyWidget):
                     "library with 'pip install mocpy'."
                 ) from imp
 
-    def add_moc_from_URL(self, moc_URL, moc_options=None):
+    def add_moc_from_URL(self, moc_URL: str, moc_options: Optional[dict] = None):
         """Load a MOC from a URL and display it in Aladin Lite widget.
 
         Parameters
@@ -272,7 +274,7 @@ class Aladin(anywidget.AnyWidget):
             moc_options = {}
         self.add_moc(moc_URL, **moc_options)
 
-    def add_moc_from_dict(self, moc_dict, moc_options=None):
+    def add_moc_from_dict(self, moc_dict: dict, moc_options: Optional[dict] = None):
         """Load a MOC from a dict object and display it in Aladin Lite widget.
 
         Parameters
@@ -293,7 +295,7 @@ class Aladin(anywidget.AnyWidget):
             moc_options = {}
         self.add_moc(moc_dict, **moc_options)
 
-    def add_table(self, table, **table_options):
+    def add_table(self, table: Union[QTable, Table], **table_options):
         """Load a table into the widget.
 
         Parameters
@@ -333,7 +335,7 @@ class Aladin(anywidget.AnyWidget):
             buffers=[table_bytes.getvalue()],
         )
 
-    def add_overlay_from_stcs(self, stc_string, **overlay_options):
+    def add_overlay_from_stcs(self, stc_string: str, **overlay_options):
         """Add an overlay layer defined by a STC-S string.
 
         Parameters
@@ -358,38 +360,51 @@ class Aladin(anywidget.AnyWidget):
         """Create a popup window with the current Aladin view."""
         self.send({"event_name": "get_JPG_thumbnail"})
 
-    def set_color_map(self, color_map_name):
+    def set_color_map(self, color_map_name: str):
+        """Change the color map of the Aladin Lite widget.
+
+        Parameters
+        ----------
+        color_map_name: str
+            The name of the color map to use.
+
+        """
         self.send({"event_name": "change_colormap", "colormap": color_map_name})
 
     def rectangular_selection(self):
+        """Trigger the rectangular selection tool."""
         self.send({"event_name": "trigger_rectangular_selection"})
 
     # Adding a listener
 
-    def set_listener(self, listener_type, callback):
+    def set_listener(self, listener_type: str, callback: callable):
         """Set a listener for an event to the widget.
 
         Parameters
         ----------
         listener_type: str
             Can either be 'object_hovered', 'object_clicked', 'click' or 'select'
-        callback: Callable
+        callback: callable
             A python function to be called when the event corresponding to the
             listener_type is detected
 
         """
         self.add_listener(listener_type, callback, False)
 
-    def add_listener(self, listener_type, callback, _dWarning=True):
+    def add_listener(
+        self, listener_type: str, callback: callable, _dWarning: bool = True
+    ):
         """Add a listener to the widget. Use set_listener instead.
 
         Parameters
         ----------
         listener_type: str
             Can either be 'object_hovered', 'object_clicked', 'click' or 'select'
-        callback: Callable
+        callback: callable
             A python function to be called when the event corresponding to the
             listener_type is detected
+        _dWarning: bool
+            If True, a deprecation warning is raised
 
         Note
         ----
