@@ -34,7 +34,7 @@ test_aladin_string_target = [
 
 
 @pytest.mark.parametrize("target", test_aladin_string_target)
-def test_aladin_string_target_set(target):
+def test_aladin_string_target_set(target: str) -> None:
     """Test setting the target of an Aladin object with a string or a SkyCoord object.
 
     Parameters
@@ -51,7 +51,7 @@ def test_aladin_string_target_set(target):
 
 
 @pytest.mark.parametrize("target", test_aladin_string_target)
-def test_aladin_sky_coord_target_set(target):
+def test_aladin_sky_coord_target_set(target: str) -> None:
     """Test setting and getting the target of an Aladin object with a SkyCoord object.
 
     Parameters
@@ -77,7 +77,7 @@ test_aladin_float_fov = [
 
 
 @pytest.mark.parametrize("angle", test_aladin_float_fov)
-def test_aladin_float_fov_set(angle):
+def test_aladin_float_fov_set(angle: float) -> None:
     """Test setting the angle of an Aladin object with a float.
 
     Parameters
@@ -92,7 +92,7 @@ def test_aladin_float_fov_set(angle):
 
 
 @pytest.mark.parametrize("angle", test_aladin_float_fov)
-def test_aladin_angle_fov_set(angle):
+def test_aladin_angle_fov_set(angle: float) -> None:
     """Test setting the angle of an Aladin object with an Angle object.
 
     Parameters
