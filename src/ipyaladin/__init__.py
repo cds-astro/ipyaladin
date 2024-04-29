@@ -100,16 +100,16 @@ class Aladin(anywidget.AnyWidget):
     init_options = List(trait=Any()).tag(sync=True)
 
     @default("init_options")
-    def _init_options(self):
+    def _init_options(self) -> list[str]:
         return list(self.traits(init_option=True))
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: any, **kwargs: any) -> None:
         super().__init__(*args, **kwargs)
         self.target = kwargs.get("target", "0 0")
         self.fov = kwargs.get("fov", 60.0)
         self.on_msg(self._handle_custom_message)
 
-    def _handle_custom_message(self, model, message: dict, buffers: list):  # noqa: ARG002
+    def _handle_custom_message(self, _: any, message: dict, __: any) -> None:
         event_type = message["event_type"]
         message_content = message["content"]
         if (
@@ -170,7 +170,7 @@ class Aladin(anywidget.AnyWidget):
         )
 
     @target.setter
-    def target(self, target: Union[str, SkyCoord]):
+    def target(self, target: Union[str, SkyCoord]) -> None:
         if isinstance(target, str):  # If the target is str, parse it
             target = parse_coordinate_string(target)
         elif not isinstance(target, SkyCoord):  # If the target is not str or SkyCoord
@@ -186,7 +186,9 @@ class Aladin(anywidget.AnyWidget):
             }
         )
 
-    def add_catalog_from_URL(self, votable_URL: str, votable_options: Dict = None):
+    def add_catalog_from_URL(
+        self, votable_URL: str, votable_options: Optional[dict] = None
+    ) -> None:
         """Load a VOTable table from an url and load its data into the widget.
 
         Parameters
@@ -207,7 +209,7 @@ class Aladin(anywidget.AnyWidget):
 
     # MOCs
 
-    def add_moc(self, moc, **moc_options):
+    def add_moc(self, moc: any, **moc_options: any) -> None:
         """Add a MOC to the Aladin-Lite widget.
 
         Parameters
@@ -254,7 +256,9 @@ class Aladin(anywidget.AnyWidget):
                     "library with 'pip install mocpy'."
                 ) from imp
 
-    def add_moc_from_URL(self, moc_URL: str, moc_options: Optional[dict] = None):
+    def add_moc_from_URL(
+        self, moc_URL: str, moc_options: Optional[dict] = None
+    ) -> None:
         """Load a MOC from a URL and display it in Aladin Lite widget.
 
         Parameters
@@ -274,7 +278,9 @@ class Aladin(anywidget.AnyWidget):
             moc_options = {}
         self.add_moc(moc_URL, **moc_options)
 
-    def add_moc_from_dict(self, moc_dict: dict, moc_options: Optional[dict] = None):
+    def add_moc_from_dict(
+        self, moc_dict: dict, moc_options: Optional[dict] = None
+    ) -> None:
         """Load a MOC from a dict object and display it in Aladin Lite widget.
 
         Parameters
@@ -295,7 +301,7 @@ class Aladin(anywidget.AnyWidget):
             moc_options = {}
         self.add_moc(moc_dict, **moc_options)
 
-    def add_table(self, table: Union[QTable, Table], **table_options):
+    def add_table(self, table: Union[QTable, Table], **table_options: any) -> None:
         """Load a table into the widget.
 
         Parameters
@@ -335,7 +341,7 @@ class Aladin(anywidget.AnyWidget):
             buffers=[table_bytes.getvalue()],
         )
 
-    def add_overlay_from_stcs(self, stc_string: str, **overlay_options):
+    def add_overlay_from_stcs(self, stc_string: str, **overlay_options: any) -> None:
         """Add an overlay layer defined by a STC-S string.
 
         Parameters
@@ -356,11 +362,11 @@ class Aladin(anywidget.AnyWidget):
     # Note: the print() options end='\r'allow us to override the previous prints,
     # thus only the last message will be displayed at the screen
 
-    def get_JPEG_thumbnail(self):
+    def get_JPEG_thumbnail(self) -> None:
         """Create a popup window with the current Aladin view."""
         self.send({"event_name": "get_JPG_thumbnail"})
 
-    def set_color_map(self, color_map_name: str):
+    def set_color_map(self, color_map_name: str) -> None:
         """Change the color map of the Aladin Lite widget.
 
         Parameters
@@ -371,13 +377,13 @@ class Aladin(anywidget.AnyWidget):
         """
         self.send({"event_name": "change_colormap", "colormap": color_map_name})
 
-    def rectangular_selection(self):
+    def rectangular_selection(self) -> None:
         """Trigger the rectangular selection tool."""
         self.send({"event_name": "trigger_rectangular_selection"})
 
     # Adding a listener
 
-    def set_listener(self, listener_type: str, callback: callable):
+    def set_listener(self, listener_type: str, callback: callable) -> None:
         """Set a listener for an event to the widget.
 
         Parameters
@@ -393,7 +399,7 @@ class Aladin(anywidget.AnyWidget):
 
     def add_listener(
         self, listener_type: str, callback: callable, _dWarning: bool = True
-    ):
+    ) -> None:
         """Add a listener to the widget. Use set_listener instead.
 
         Parameters
