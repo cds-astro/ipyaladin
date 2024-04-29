@@ -32,7 +32,7 @@ test_is_coordinate_string_values = [
 
 
 @pytest.mark.parametrize(("inp", "expected"), test_is_coordinate_string_values)
-def test_is_coordinate_string(inp, expected):
+def test_is_coordinate_string(inp: str, expected: bool) -> None:
     """Test the function _is_coordinate_string.
 
     Parameters
@@ -67,7 +67,7 @@ test_split_coordinate_string_values = [
 
 
 @pytest.mark.parametrize(("inp", "expected"), test_split_coordinate_string_values)
-def test_split_coordinate_string(inp, expected):
+def test_split_coordinate_string(inp: str, expected: tuple[str, str]) -> None:
     """Test the function _split_coordinate_string.
 
     Parameters
@@ -91,7 +91,7 @@ test_is_hour_angle_string_values = [
 
 
 @pytest.mark.parametrize(("inp", "expected"), test_is_hour_angle_string_values)
-def test_is_hour_angle_string(inp, expected):
+def test_is_hour_angle_string(inp: str, expected: bool) -> None:
     """Test the function _is_hour_angle_string.
 
     Parameters
@@ -175,7 +175,7 @@ test_parse_coordinate_string_values = [
 
 
 @pytest.mark.parametrize(("inp", "expected"), test_parse_coordinate_string_values)
-def test_parse_coordinate_string(inp, expected):
+def test_parse_coordinate_string(inp: str, expected: SkyCoord) -> None:
     """Test the function parse_coordinate_string.
 
     Parameters
