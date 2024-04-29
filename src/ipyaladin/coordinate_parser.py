@@ -1,3 +1,5 @@
+from typing import Tuple
+
 from astropy.coordinates import SkyCoord, Angle
 import re
 
@@ -18,7 +20,7 @@ def parse_coordinate_string(string: str) -> SkyCoord:
     """
     if not _is_coordinate_string(string):
         return SkyCoord.from_name(string)
-    coordinates: tuple[str, str] = _split_coordinate_string(string)
+    coordinates: Tuple[str, str] = _split_coordinate_string(string)
     # Parse ra and dec to astropy Angle objects
     dec: Angle = Angle(coordinates[1], unit="deg")
     if _is_hour_angle_string(coordinates[0]):
@@ -51,7 +53,7 @@ def _is_coordinate_string(string: str) -> bool:
     return bool(re.match(regex, string))
 
 
-def _split_coordinate_string(coo: str) -> tuple[str, str]:
+def _split_coordinate_string(coo: str) -> Tuple[str, str]:
     """Split a string containing coordinates in two parts.
 
     Parameters
