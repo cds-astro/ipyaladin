@@ -11,8 +11,7 @@ license = "BSD-3-Clause"
 requires-python = ">=3.8"
 
 [project.optional-dependencies]
-test = ["pytest"]
-dev = ["ipyaladin[test]", "watchfiles", "jupyterlab", "ruff"]
+dev = ["pytest", "watchfiles", "jupyterlab", "ruff"]
 recommended = ["mocpy"]
 
 # automatically add the dev feature to the default env (e.g., hatch shell)
