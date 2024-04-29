@@ -132,9 +132,10 @@ class Aladin(anywidget.AnyWidget):
 
     @property
     def fov(self) -> Angle:
-        """The field of view of the Aladin Lite widget.
+        """The field of view of the Aladin Lite widget along the horizontal axis.
 
-        It can be set with either a float or an `~astropy.units.Angle` object.
+        It can be set with either a float in degrees
+        or an `~astropy.units.Angle` object.
 
         Returns
         -------
