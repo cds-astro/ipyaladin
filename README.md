@@ -55,6 +55,7 @@ Ipyaladin brings [Aladin-lite](https://github.com/cds-astro/aladin-lite) into no
 
 Correspondence table between ipyaladin versions and Aladin-lite versions:
 
-| ipyaladin | Aladin-Lite |
-| --------- | ----------- |
-| 0.3.0     | 3.3.3-dev   |
+| ipyaladin  | Aladin-Lite |
+| ---------- | ----------- |
+| 0.3.0      | 3.3.3-dev   |
+| unreleased | 3.4.0-beta  |
