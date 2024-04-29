@@ -1,3 +1,4 @@
+from typing import Tuple
 from ipyaladin.coordinate_parser import (
     parse_coordinate_string,
     _split_coordinate_string,
@@ -67,7 +68,7 @@ test_split_coordinate_string_values = [
 
 
 @pytest.mark.parametrize(("inp", "expected"), test_split_coordinate_string_values)
-def test_split_coordinate_string(inp: str, expected: tuple[str, str]) -> None:
+def test_split_coordinate_string(inp: str, expected: Tuple[str, str]) -> None:
     """Test the function _split_coordinate_string.
 
     Parameters

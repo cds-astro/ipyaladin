@@ -1,5 +1,6 @@
 import importlib.metadata
 import pathlib
+import typing
 from typing import ClassVar, Union, Final, Optional
 import warnings
 
@@ -7,13 +8,12 @@ import anywidget
 from astropy.table.table import QTable
 from astropy.table import Table
 from astropy.coordinates import SkyCoord, Angle
+import traitlets
 from traitlets import (
     Float,
     Int,
     Unicode,
     Bool,
-    List,
-    Dict,
     Any,
     default,
 )
@@ -86,21 +86,21 @@ class Aladin(anywidget.AnyWidget):
     show_coo_grid_control = Bool(True).tag(sync=True, init_option=True)
     grid_color = Unicode("rgb(178, 50, 178)").tag(sync=True, init_option=True)
     grid_opacity = Float(0.5).tag(sync=True, init_option=True)
-    grid_options = Dict().tag(sync=True, init_option=True)
+    grid_options = traitlets.Dict().tag(sync=True, init_option=True)
 
     # content of the last click
-    clicked_object = Dict().tag(sync=True)
+    clicked_object = traitlets.Dict().tag(sync=True)
     # listener callback is on the python side and contains functions to link to events
-    listener_callback: ClassVar[dict[str, callable]] = {}
+    listener_callback: ClassVar[typing.Dict[str, callable]] = {}
 
     # overlay survey
     overlay_survey = Unicode("").tag(sync=True, init_option=True)
     overlay_survey_opacity = Float(0.0).tag(sync=True, init_option=True)
 
-    init_options = List(trait=Any()).tag(sync=True)
+    init_options = traitlets.List(trait=Any()).tag(sync=True)
 
     @default("init_options")
-    def _init_options(self) -> list[str]:
+    def _init_options(self) -> typing.List[str]:
         return list(self.traits(init_option=True))
 
     def __init__(self, *args: any, **kwargs: any) -> None:
