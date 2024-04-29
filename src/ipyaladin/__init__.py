@@ -143,7 +143,7 @@ class Aladin(anywidget.AnyWidget):
         return Angle(self._fov, unit="deg")
 
     @fov.setter
-    def fov(self, fov: Union[float, Angle]):
+    def fov(self, fov: Union[float, Angle]) -> None:
         if isinstance(fov, Angle):
             fov = fov.deg
         self._fov = fov
