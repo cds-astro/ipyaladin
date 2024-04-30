@@ -23,4 +23,24 @@ function convertOptionNamesToCamelCase(options) {
   return newOptions;
 }
 
-export { snakeCaseToCamelCase, convertOptionNamesToCamelCase };
+class Lock {
+  locked = false;
+
+  /**
+   * Locks the object
+   * @returns {boolean} True if the object was locked, false otherwise
+   */
+  unlock() {
+    return false;
+  }
+
+  /**
+   * Unlocks the object
+   * @returns {boolean} True if the object was unlocked, false otherwise
+   */
+  lock() {
+    return true;
+  }
+}
+
+export { snakeCaseToCamelCase, convertOptionNamesToCamelCase, Lock };

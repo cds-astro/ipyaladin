@@ -1,4 +1,5 @@
 import MessageHandler from "./message_handler";
+import { Lock } from "../utils";
 
 export default class EventHandler {
   /**
@@ -30,16 +31,15 @@ export default class EventHandler {
     // is also necessary for the field of view.
 
     /* Target control */
-    let targetJs = false;
-    let targetPy = false;
+    let targetLock = new Lock();
 
     // Event triggered when the user moves the map in Aladin Lite
     this.aladin.on("positionChanged", () => {
-      if (targetPy) {
-        targetPy = false;
+      if (targetLock.locked) {
+        targetLock.unlock();
         return;
       }
-      targetJs = true;
+      targetLock.lock();
       const raDec = this.aladin.getRaDec();
       this.model.set("_target", `${raDec[0]} ${raDec[1]}`);
       this.model.set("shared_target", `${raDec[0]} ${raDec[1]}`);
@@ -48,26 +48,20 @@ export default class EventHandler {
 
     // Event triggered when the target is changed from the Python side using jslink
     this.model.on("change:shared_target", () => {
-      if (targetJs) {
-        targetJs = false;
-        return;
-      }
-      targetPy = true;
       const target = this.model.get("shared_target");
       const [ra, dec] = target.split(" ");
       this.aladin.gotoRaDec(ra, dec);
     });
 
     /* Field of View control */
-    let fovJs = false;
-    let fovPy = false;
+    let fovLock = new Lock();
 
     this.aladin.on("zoomChanged", (fov) => {
-      if (fovPy) {
-        fovPy = false;
+      if (fovLock.locked) {
+        fovLock.unlock();
         return;
       }
-      fovJs = true;
+      fovLock.lock();
       // fov MUST be cast into float in order to be sent to the model
       this.model.set("_fov", parseFloat(fov.toFixed(5)));
       this.model.set("shared_fov", parseFloat(fov.toFixed(5)));
@@ -75,11 +69,6 @@ export default class EventHandler {
     });
 
     this.model.on("change:shared_fov", () => {
-      if (fovJs) {
-        fovJs = false;
-        return;
-      }
-      fovPy = true;
       let fov = this.model.get("shared_fov");
       this.aladin.setFoV(fov);
     });
