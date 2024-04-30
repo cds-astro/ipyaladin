@@ -408,34 +408,6 @@ class Aladin(anywidget.AnyWidget):
             listener_type is detected
 
         """
-        self.add_listener(listener_type, callback, False)
-
-    def add_listener(
-        self, listener_type: str, callback: callable, _dWarning: bool = True
-    ) -> None:
-        """Add a listener to the widget. Use set_listener instead.
-
-        Parameters
-        ----------
-        listener_type: str
-            Can either be 'object_hovered', 'object_clicked', 'click' or 'select'
-        callback: callable
-            A python function to be called when the event corresponding to the
-            listener_type is detected
-        _dWarning: bool
-            If True, a deprecation warning is raised
-
-        Note
-        ----
-        This method is deprecated, use set_listener instead
-
-        """
-        if _dWarning:
-            warnings.warn(
-                "add_listener is deprecated, use set_listener instead",
-                DeprecationWarning,
-                stacklevel=2,
-            )
         if listener_type in {"objectHovered", "object_hovered"}:
             self.listener_callback["object_hovered"] = callback
         elif listener_type in {"objectClicked", "object_clicked"}:
@@ -449,3 +421,26 @@ class Aladin(anywidget.AnyWidget):
                 "listener_type must be 'object_hovered', "
                 "'object_clicked', 'click' or 'select'"
             )
+
+    def add_listener(self, listener_type: str, callback: callable) -> None:
+        """Add a listener to the widget. Use set_listener instead.
+
+        Parameters
+        ----------
+        listener_type: str
+            Can either be 'object_hovered', 'object_clicked', 'click' or 'select'
+        callback: callable
+            A python function to be called when the event corresponding to the
+            listener_type is detected
+
+        Note
+        ----
+        This method is deprecated, use set_listener instead
+
+        """
+        warnings.warn(
+            "add_listener is deprecated, use set_listener instead",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        self.set_listener(listener_type, callback)
