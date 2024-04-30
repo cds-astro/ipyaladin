@@ -44,9 +44,12 @@ extend-include = ["*.ipynb"]
 extend-select = ["E", "W", "YTT", "ASYNC", "BLE", "B", "A",
                  "C4", "ISC", "PIE", "PYI", "RSE", "RET", "SIM",
                  "PTH", "TD", "ERA", "PL", "PERF", "RUF", "ARG",
-                 "ANN"
+                 "ANN", "D"
                 ]
-ignore = ["ISC001", "ANN101"]
+ignore = ["ISC001", "ANN101", "D203", "D213", "D100", "D105"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
 
 [tool.ruff.format]
 docstring-code-format = false
