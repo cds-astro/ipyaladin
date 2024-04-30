@@ -1,5 +1,3 @@
-import A from "https://esm.sh/aladin-lite@3.3.3-beta";
-
 /**
  * Converts a string from camelCase to snake_case.
  * @param {string} snakeCaseStr - The string to convert.
@@ -25,4 +23,4 @@ function convertOptionNamesToCamelCase(options) {
   return newOptions;
 }
 
-export { snakeCaseToCamelCase, convertOptionNamesToCamelCase, A };
+export { snakeCaseToCamelCase, convertOptionNamesToCamelCase };
