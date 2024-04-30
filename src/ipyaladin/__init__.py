@@ -1,3 +1,10 @@
+"""
+Aladin Lite widget for Jupyter Notebook.
+
+This module provides a Python wrapper around the Aladin Lite JavaScript library.
+It allows to display astronomical images and catalogs in an interactive way.
+"""
+
 import importlib.metadata
 import pathlib
 import typing
@@ -27,6 +34,12 @@ except importlib.metadata.PackageNotFoundError:
 
 
 class Aladin(anywidget.AnyWidget):
+    """Aladin Lite widget.
+
+    This widget is a Python wrapper around the Aladin Lite JavaScript library.
+    It allows to display astronomical images and catalogs in an interactive way.
+    """
+
     _esm: Final = pathlib.Path(__file__).parent / "static" / "widget.js"
     _css: Final = pathlib.Path(__file__).parent / "static" / "widget.css"
 
