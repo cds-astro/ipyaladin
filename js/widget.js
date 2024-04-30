@@ -1,6 +1,7 @@
 import "./widget.css";
 import EventHandler from "./models/event_handler";
-import { A, snakeCaseToCamelCase } from "./utils";
+import { snakeCaseToCamelCase } from "./utils";
+import A from "./imports";
 
 let idxView = 0;
 

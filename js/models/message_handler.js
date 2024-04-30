@@ -1,4 +1,5 @@
-import { A, convertOptionNamesToCamelCase } from "../utils";
+import { convertOptionNamesToCamelCase } from "../utils";
+import A from "../imports";
 
 export default class MessageHandler {
   constructor(aladin) {
