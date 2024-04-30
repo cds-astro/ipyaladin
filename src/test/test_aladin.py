@@ -1,7 +1,8 @@
 import pytest
 from astropy.coordinates import Angle
 
-from ipyaladin import Aladin, parse_coordinate_string
+from ipyaladin import Aladin
+from ipyaladin.coordinate_parser import parse_coordinate_string
 
 test_aladin_string_target = [
     "M 31",
