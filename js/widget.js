@@ -1,7 +1,7 @@
 import "./widget.css";
 import EventHandler from "./models/event_handler";
 import { snakeCaseToCamelCase } from "./utils";
-import A from "./imports";
+import A from "./aladin_lite";
 
 let idxView = 0;
 
