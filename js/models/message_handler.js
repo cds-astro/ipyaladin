@@ -21,13 +21,11 @@ export default class MessageHandler {
 
   handleAddMOCFromURL(msg) {
     const options = convertOptionNamesToCamelCase(msg["options"] || {});
-    if (options["lineWidth"] === undefined) options["lineWidth"] = 3;
     this.aladin.addMOC(A.MOCFromURL(msg["moc_URL"], options));
   }
 
   handleAddMOCFromDict(msg) {
     const options = convertOptionNamesToCamelCase(msg["options"] || {});
-    if (options["lineWidth"] === undefined) options["lineWidth"] = 3;
     this.aladin.addMOC(A.MOCFromJSON(msg["moc_dict"], options));
   }
 
