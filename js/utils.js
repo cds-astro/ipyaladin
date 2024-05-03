@@ -28,18 +28,16 @@ class Lock {
 
   /**
    * Locks the object
-   * @returns {boolean} True if the object was locked, false otherwise
    */
   unlock() {
-    return false;
+    this.locked = false;
   }
 
   /**
    * Unlocks the object
-   * @returns {boolean} True if the object was unlocked, false otherwise
    */
   lock() {
-    return true;
+    this.locked = true;
   }
 }
 
