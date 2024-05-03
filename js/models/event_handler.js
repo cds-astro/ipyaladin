@@ -31,45 +31,55 @@ export default class EventHandler {
     // is also necessary for the field of view.
 
     /* Target control */
-    let targetLock = new Lock();
+    const jsTargetLock = new Lock();
+    const pyTargetLock = new Lock();
 
     // Event triggered when the user moves the map in Aladin Lite
-    this.aladin.on("positionChanged", () => {
-      if (targetLock.locked) {
-        targetLock.unlock();
+    this.aladin.on("positionChanged", (position) => {
+      if (pyTargetLock.locked) {
+        pyTargetLock.unlock();
         return;
       }
-      targetLock.lock();
-      const raDec = this.aladin.getRaDec();
+      jsTargetLock.lock();
+      const raDec = [position.ra, position.dec];
+      // const raDec = this.aladin.getRaDec();
       this.model.set("_target", `${raDec[0]} ${raDec[1]}`);
-      this.model.set("shared_target", `${raDec[0]} ${raDec[1]}`);
       this.model.save_changes();
     });
 
-    // Event triggered when the target is changed from the Python side using jslink
-    this.model.on("change:shared_target", () => {
-      const target = this.model.get("shared_target");
+    this.model.on("change:_target", () => {
+      if (jsTargetLock.locked) {
+        jsTargetLock.unlock();
+        return;
+      }
+      pyTargetLock.lock();
+      let target = this.model.get("_target");
       const [ra, dec] = target.split(" ");
       this.aladin.gotoRaDec(ra, dec);
     });
 
     /* Field of View control */
-    let fovLock = new Lock();
+    const jsFovLock = new Lock();
+    const pyFovLock = new Lock();
 
     this.aladin.on("zoomChanged", (fov) => {
-      if (fovLock.locked) {
-        fovLock.unlock();
+      if (pyFovLock.locked) {
+        pyFovLock.unlock();
         return;
       }
-      fovLock.lock();
+      jsFovLock.lock();
       // fov MUST be cast into float in order to be sent to the model
       this.model.set("_fov", parseFloat(fov.toFixed(5)));
-      this.model.set("shared_fov", parseFloat(fov.toFixed(5)));
       this.model.save_changes();
     });
 
-    this.model.on("change:shared_fov", () => {
-      let fov = this.model.get("shared_fov");
+    this.model.on("change:_fov", () => {
+      if (jsFovLock.locked) {
+        jsFovLock.unlock();
+        return;
+      }
+      pyFovLock.lock();
+      let fov = this.model.get("_fov");
       this.aladin.setFoV(fov);
     });
 
@@ -186,8 +196,8 @@ export default class EventHandler {
    * There is no need to unsubscribe from the Aladin Lite events.
    */
   unsubscribeAll() {
-    this.model.off("change:shared_target");
-    this.model.off("change:fov");
+    this.model.off("change:_target");
+    this.model.off("change:_fov");
     this.model.off("change:height");
     this.model.off("change:coo_frame");
     this.model.off("change:survey");
