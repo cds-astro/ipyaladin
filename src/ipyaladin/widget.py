@@ -14,6 +14,7 @@ import anywidget
 from astropy.table.table import QTable
 from astropy.table import Table
 from astropy.coordinates import SkyCoord, Angle
+from astropy.io.fits import HDUList
 import traitlets
 
 try:
@@ -240,6 +241,21 @@ class Aladin(anywidget.AnyWidget):
                 "options": votable_options,
             }
         )
+
+    def add_fits(self, fits: HDUList) -> None:
+        """Load a FITS file into the widget.
+
+        Parameters
+        ----------
+        fits : astropy.io.fits
+            The FITS file to load into the widget.
+
+        """
+        import io
+
+        fits_bytes = io.BytesIO()
+        fits.writeto(fits_bytes)
+        self.send({"event_name": "add_fits"}, buffers=[fits_bytes.getvalue()])
 
     # MOCs
 
