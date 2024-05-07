@@ -150,7 +150,7 @@ class Aladin(anywidget.AnyWidget):
     def target(self) -> SkyCoord:
         """The target of the Aladin Lite widget.
 
-        It can be set with either a string of an `~astropy.coordinates.SkyCoord` object.
+        It can be set with either a string or an `~astropy.coordinates.SkyCoord` object.
 
         Returns
         -------
@@ -327,8 +327,6 @@ class Aladin(anywidget.AnyWidget):
         And the table should appear in the output of Cell 1!
 
         """
-        # this library must be installed, and is used in votable operations
-        # http://www.astropy.org/
         import io
 
         table_bytes = io.BytesIO()
@@ -355,9 +353,6 @@ class Aladin(anywidget.AnyWidget):
                 "overlay_options": overlay_options,
             }
         )
-
-    # Note: the print() options end='\r'allow us to override the previous prints,
-    # thus only the last message will be displayed at the screen
 
     def get_JPEG_thumbnail(self) -> None:
         """Create a popup window with the current Aladin view."""
