@@ -15,6 +15,7 @@ from astropy.table.table import QTable
 from astropy.table import Table
 from astropy.coordinates import SkyCoord, Angle
 import traitlets
+from regions import CircleSkyRegion, EllipseSkyRegion, LineSkyRegion
 from traitlets import (
     Float,
     Int,
@@ -334,6 +335,61 @@ class Aladin(anywidget.AnyWidget):
         self.send(
             {"event_name": "add_table", "options": table_options},
             buffers=[table_bytes.getvalue()],
+        )
+
+    def add_overlay(
+        self,
+        region: Union[str, CircleSkyRegion, EllipseSkyRegion, LineSkyRegion],
+        **overlay_options: any,
+    ) -> None:
+        """Add an overlay layer to the Aladin Lite widget.
+
+        Parameters
+        ----------
+        region: str, CircleSkyRegion, EllipseSkyRegion, LineSkyRegion
+            The region to overlay. It can be a string, a CircleSkyRegion,
+            an EllipseSkyRegion or a LineSkyRegion.
+        overlay_options: keyword arguments
+
+        """
+        region_type = ""
+        infos = {}
+
+        if isinstance(region, str):
+            self.add_overlay_from_stcs(region, **overlay_options)
+            return
+        if isinstance(region, CircleSkyRegion):
+            region_type = "circle"
+            infos = {
+                "ra": region.center.ra.deg,
+                "dec": region.center.dec.deg,
+                "radius": region.radius.deg,
+            }
+        elif isinstance(region, EllipseSkyRegion):
+            region_type = "ellipse"
+            infos = {
+                "ra": region.center.ra.deg,
+                "dec": region.center.dec.deg,
+                "a": region.width.deg,
+                "b": region.height.deg,
+                "theta": region.angle.deg,
+            }
+        elif isinstance(region, LineSkyRegion):
+            region_type = "line"
+            infos = {
+                "ra1": region.start.ra.deg,
+                "dec1": region.start.dec.deg,
+                "ra2": region.end.ra.deg,
+                "dec2": region.end.dec.deg,
+            }
+
+        self.send(
+            {
+                "event_name": "add_overlay",
+                "region_type": region_type,
+                "infos": infos,
+                "options": overlay_options,
+            }
         )
 
     def add_overlay_from_stcs(self, stc_string: str, **overlay_options: any) -> None:
