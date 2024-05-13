@@ -33,32 +33,23 @@ export default class MessageHandler {
     const infos = msg["infos"];
     const options = convertOptionNamesToCamelCase(msg["options"] || {});
     const overlay = A.graphicOverlay(options);
+    this.aladin.addOverlay(overlay);
     switch (msg["region_type"]) {
+      case "stcs":
+        overlay.addFootprints(A.footprintsFromSTCS(infos.stcs));
+        break;
       case "circle":
-        this.aladin.addOverlay(overlay);
         overlay.add(A.circle(infos.ra, infos.dec, infos.radius));
         break;
       case "ellipse":
-        this.aladin.addOverlay(overlay);
         overlay.add(
           A.ellipse(infos.ra, infos.dec, infos.a, infos.b, infos.theta),
         );
         break;
       case "line":
-        this.aladin.addOverlay(overlay);
         overlay.add(A.line(infos.ra1, infos.dec1, infos.ra2, infos.dec2));
         break;
     }
-  }
-
-  handleAddOverlayFromSTCS(msg) {
-    const overlayOptions = convertOptionNamesToCamelCase(
-      msg["overlay_options"] || {},
-    );
-    const stcString = msg["stc_string"];
-    const overlay = A.graphicOverlay(overlayOptions);
-    this.aladin.addOverlay(overlay);
-    overlay.addFootprints(A.footprintsFromSTCS(stcString));
   }
 
   handleChangeColormap(msg) {

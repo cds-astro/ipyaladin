@@ -176,7 +176,6 @@ export default class EventHandler {
       add_MOC_from_URL: this.messageHandler.handleAddMOCFromURL,
       add_MOC_from_dict: this.messageHandler.handleAddMOCFromDict,
       add_overlay: this.messageHandler.handleAddOverlay,
-      add_overlay_from_stcs: this.messageHandler.handleAddOverlayFromSTCS,
       change_colormap: this.messageHandler.handleChangeColormap,
       get_JPG_thumbnail: this.messageHandler.handleGetJPGThumbnail,
       trigger_rectangular_selection:
