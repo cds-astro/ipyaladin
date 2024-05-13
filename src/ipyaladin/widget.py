@@ -242,19 +242,25 @@ class Aladin(anywidget.AnyWidget):
             }
         )
 
-    def add_fits(self, fits: HDUList) -> None:
+    def add_fits(self, fits: Union[str, HDUList]) -> None:
         """Load a FITS file into the widget.
 
         Parameters
         ----------
-        fits : astropy.io.fits
-            The FITS file to load into the widget.
+        fits: a path as a string or an `~astropy.io.fits.HDUList` object
 
         """
+        is_path = isinstance(fits, str)
+        if is_path:
+            from astropy.io import fits as astropy_fits
+
+            fits = astropy_fits.open(fits)
         import io
 
         fits_bytes = io.BytesIO()
         fits.writeto(fits_bytes)
+        if is_path:
+            fits.close()
         self.send({"event_name": "add_fits"}, buffers=[fits_bytes.getvalue()])
 
     # MOCs
