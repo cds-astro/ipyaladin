@@ -27,13 +27,12 @@ export default class MessageHandler {
       "temp",
       options,
       (ra, dec) => {
-        //console.log(`Goto ra: ${ra}, dec: ${dec}`)
-        //this.aladin.gotoRaDec(ra, dec);
+        console.log(`FITS located at ra: ${ra}, dec: ${dec}`);
+        URL.revokeObjectURL(url);
       },
     );
     console.log(image);
     this.aladin.setOverlayImageLayer(image, "temp");
-    // URL.revokeObjectURL(url);
   }
 
   handleAddCatalogFromURL(msg) {
