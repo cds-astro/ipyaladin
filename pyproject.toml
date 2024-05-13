@@ -12,7 +12,7 @@ requires-python = ">=3.8"
 
 [project.optional-dependencies]
 dev = ["pytest", "watchfiles", "jupyterlab", "ruff"]
-recommended = ["mocpy"]
+recommended = ["mocpy", "regions"]
 
 # automatically add the dev feature to the default env (e.g., hatch shell)
 [tool.hatch.envs.default]

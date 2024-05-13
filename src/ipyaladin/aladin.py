@@ -15,7 +15,13 @@ from astropy.table.table import QTable
 from astropy.table import Table
 from astropy.coordinates import SkyCoord, Angle
 import traitlets
-from regions import CircleSkyRegion, EllipseSkyRegion, LineSkyRegion
+
+try:
+    from regions import CircleSkyRegion, EllipseSkyRegion, LineSkyRegion
+except ImportError:
+    CircleSkyRegion = None
+    EllipseSkyRegion = None
+    LineSkyRegion = None
 from traitlets import (
     Float,
     Int,
@@ -352,13 +358,22 @@ class Aladin(anywidget.AnyWidget):
         overlay_options: keyword arguments
 
         """
+        if not isinstance(region, str) and (
+            CircleSkyRegion is None or EllipseSkyRegion is None or LineSkyRegion is None
+        ):
+            raise ValueError(
+                "A region can be given as an STC-S string or a regions "
+                "object. To read regions objects, you need to install the regions "
+                "library with 'pip install regions'."
+            )
+
         region_type = ""
         infos = {}
 
         if isinstance(region, str):
-            self.add_overlay_from_stcs(region, **overlay_options)
-            return
-        if isinstance(region, CircleSkyRegion):
+            region_type = "stcs"
+            infos = {"stcs": region}
+        elif isinstance(region, CircleSkyRegion):
             region_type = "circle"
             infos = {
                 "ra": region.center.ra.deg,
@@ -402,13 +417,11 @@ class Aladin(anywidget.AnyWidget):
         overlay_options: keyword arguments
 
         """
-        self.send(
-            {
-                "event_name": "add_overlay_from_stcs",
-                "stc_string": stc_string,
-                "overlay_options": overlay_options,
-            }
+        # Add deprecation warning
+        warnings.warn(
+            "add_overlay_from_stcs is deprecated, use add_overlay instead", stacklevel=2
         )
+        self.add_overlay(stc_string, **overlay_options)
 
     def get_JPEG_thumbnail(self) -> None:
         """Create a popup window with the current Aladin view."""
