@@ -87,7 +87,6 @@ class RefToLocalRotMatrix:
             The x, y, and z coordinates.
 
         """
-        print(self.r11, self.r21, self.r31)
         return (
             self.r11 * x + self.r21 * y + self.r31 * z,
             self.r12 * x + self.r22 * y + self.r32 * z,
@@ -175,12 +174,12 @@ def box2polygon(region: RectangleSkyRegion) -> PolygonSkyRegion:
 
     frame_rotation = RefToLocalRotMatrix.from_center(longitude, latitude)
 
-    _, cos_lon = math.sin(width), math.cos(width)
+    sin_lon, cos_lon = math.sin(width), math.cos(width)
     latitude = math.atan(cos_lon * math.tan(height))
     sin_lat, cos_lat = math.sin(latitude), math.cos(latitude)
     sin_pa, cos_pa = math.sin(position_angle), math.cos(position_angle)
 
-    x1, y1, z1 = cos_lon * cos_lat, math.sin(longitude) * cos_lat, sin_lat
+    x1, y1, z1 = cos_lon * cos_lat, sin_lon * cos_lat, sin_lat
 
     y2 = y1 * sin_pa - z1 * cos_pa
     z2 = y1 * cos_pa + z1 * sin_pa
