@@ -49,6 +49,9 @@ export default class MessageHandler {
       case "line":
         overlay.add(A.line(infos.ra1, infos.dec1, infos.ra2, infos.dec2));
         break;
+      case "polygon":
+        overlay.add(A.polygon(infos.vertices));
+        break;
     }
   }
 
