@@ -23,12 +23,15 @@ try:
         LineSkyRegion,
         PolygonSkyRegion,
         RectangleSkyRegion,
+        Region,
     )
 except ImportError:
     CircleSkyRegion = None
     EllipseSkyRegion = None
     LineSkyRegion = None
     PolygonSkyRegion = None
+    RectangleSkyRegion = None
+    Region = None
 from traitlets import (
     Float,
     Int,
@@ -353,7 +356,12 @@ class Aladin(anywidget.AnyWidget):
     def add_overlay(
         self,
         region: Union[
-            str, CircleSkyRegion, EllipseSkyRegion, LineSkyRegion, PolygonSkyRegion
+            str,
+            CircleSkyRegion,
+            EllipseSkyRegion,
+            LineSkyRegion,
+            PolygonSkyRegion,
+            RectangleSkyRegion,
         ],
         **overlay_options: any,
     ) -> None:
@@ -363,7 +371,7 @@ class Aladin(anywidget.AnyWidget):
         ----------
         region: str, CircleSkyRegion, EllipseSkyRegion, LineSkyRegion
             The region to overlay. It can be a string, a CircleSkyRegion,
-            an EllipseSkyRegion or a LineSkyRegion.
+            an EllipseSkyRegion, a LineSkyRegion or a RectangleSkyRegion.
         overlay_options: keyword arguments
 
         """
@@ -377,9 +385,6 @@ class Aladin(anywidget.AnyWidget):
             )
 
         from .converter import box2polygon
-
-        region_type = ""
-        infos = {}
 
         if isinstance(region, str):
             region_type = "stcs"
@@ -418,6 +423,16 @@ class Aladin(anywidget.AnyWidget):
             region = box2polygon(region)
             vertices = [[coord.ra.deg, coord.dec.deg] for coord in region.vertices]
             infos = {"vertices": vertices}
+        elif isinstance(region, Region):
+            raise NotImplementedError(
+                "Unsupported region type. See the documentation "
+                "for the supported region types."
+            )
+        else:
+            raise ValueError(
+                "Unsupported object type. See the documentation "
+                "for the supported object types."
+            )
 
         self.send(
             {
