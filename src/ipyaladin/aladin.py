@@ -22,6 +22,7 @@ try:
         EllipseSkyRegion,
         LineSkyRegion,
         PolygonSkyRegion,
+        RectangleSkyRegion,
     )
 except ImportError:
     CircleSkyRegion = None
@@ -375,6 +376,8 @@ class Aladin(anywidget.AnyWidget):
                 "library with 'pip install regions'."
             )
 
+        from .converter import box2polygon
+
         region_type = ""
         infos = {}
 
@@ -408,6 +411,11 @@ class Aladin(anywidget.AnyWidget):
         elif isinstance(region, PolygonSkyRegion):
             region_type = "polygon"
             # Create a list of 2 elements arrays
+            vertices = [[coord.ra.deg, coord.dec.deg] for coord in region.vertices]
+            infos = {"vertices": vertices}
+        elif isinstance(region, RectangleSkyRegion):
+            region_type = "polygon"
+            region = box2polygon(region)
             vertices = [[coord.ra.deg, coord.dec.deg] for coord in region.vertices]
             infos = {"vertices": vertices}
 
