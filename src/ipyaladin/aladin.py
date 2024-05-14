@@ -17,11 +17,17 @@ from astropy.coordinates import SkyCoord, Angle
 import traitlets
 
 try:
-    from regions import CircleSkyRegion, EllipseSkyRegion, LineSkyRegion
+    from regions import (
+        CircleSkyRegion,
+        EllipseSkyRegion,
+        LineSkyRegion,
+        PolygonSkyRegion,
+    )
 except ImportError:
     CircleSkyRegion = None
     EllipseSkyRegion = None
     LineSkyRegion = None
+    PolygonSkyRegion = None
 from traitlets import (
     Float,
     Int,
@@ -345,7 +351,9 @@ class Aladin(anywidget.AnyWidget):
 
     def add_overlay(
         self,
-        region: Union[str, CircleSkyRegion, EllipseSkyRegion, LineSkyRegion],
+        region: Union[
+            str, CircleSkyRegion, EllipseSkyRegion, LineSkyRegion, PolygonSkyRegion
+        ],
         **overlay_options: any,
     ) -> None:
         """Add an overlay layer to the Aladin Lite widget.
@@ -358,9 +366,9 @@ class Aladin(anywidget.AnyWidget):
         overlay_options: keyword arguments
 
         """
-        if not isinstance(region, str) and (
-            CircleSkyRegion is None or EllipseSkyRegion is None or LineSkyRegion is None
-        ):
+        if (
+            not isinstance(region, str) and CircleSkyRegion is None
+        ):  # Only need to check one of the imports
             raise ValueError(
                 "A region can be given as an STC-S string or a regions "
                 "object. To read regions objects, you need to install the regions "
@@ -397,6 +405,11 @@ class Aladin(anywidget.AnyWidget):
                 "ra2": region.end.ra.deg,
                 "dec2": region.end.dec.deg,
             }
+        elif isinstance(region, PolygonSkyRegion):
+            region_type = "polygon"
+            # Create a list of 2 elements arrays
+            vertices = [[coord.ra.deg, coord.dec.deg] for coord in region.vertices]
+            infos = {"vertices": vertices}
 
         self.send(
             {
