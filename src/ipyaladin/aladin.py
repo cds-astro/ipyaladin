@@ -18,9 +18,19 @@ import traitlets
 
 try:
     from regions import (
+        CircleSkyRegion,
+        EllipseSkyRegion,
+        LineSkyRegion,
+        PolygonSkyRegion,
+        RectangleSkyRegion,
         Region,
     )
 except ImportError:
+    CircleSkyRegion = None
+    EllipseSkyRegion = None
+    LineSkyRegion = None
+    PolygonSkyRegion = None
+    RectangleSkyRegion = None
     Region = None
 from traitlets import (
     Float,
@@ -347,7 +357,11 @@ class Aladin(anywidget.AnyWidget):
         self,
         region: Union[
             str,
-            Region,
+            CircleSkyRegion,
+            EllipseSkyRegion,
+            LineSkyRegion,
+            PolygonSkyRegion,
+            RectangleSkyRegion,
         ],
         **overlay_options: any,
     ) -> None:
@@ -355,15 +369,17 @@ class Aladin(anywidget.AnyWidget):
 
         Parameters
         ----------
-        region: str or regions object
+        region: str, CircleSkyRegion, EllipseSkyRegion, LineSkyRegion
+            The region to overlay. It can be a string, a CircleSkyRegion,
+            an EllipseSkyRegion, a LineSkyRegion or a RectangleSkyRegion.
         overlay_options: keyword arguments
 
         """
         # Check if the regions library is installed and raise an error if not
         if (
-            not isinstance(region, str) and Region is None
+            not isinstance(region, str) and CircleSkyRegion is None
         ):  # Only need to check one of the imports
-            raise ImportError(
+            raise ValueError(
                 "A region can be given as an STC-S string or a regions "
                 "object. To read regions objects, you need to install the regions "
                 "library with 'pip install regions'."
