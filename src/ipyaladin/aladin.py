@@ -395,14 +395,20 @@ class Aladin(anywidget.AnyWidget):
 
         # Visual mapping to Aladin Lite overlay options
         if isinstance(region, Region):
-            visual = dict(region.visual)
-            if "linewidth" in visual:
-                visual["line_width"] = visual.pop("linewidth")
-            if "facecolor" in visual:
-                visual["fill_color"] = visual.pop("facecolor")
-            if "edgecolor" in visual:
-                visual["color"] = visual.pop("edgecolor")
-            overlay_options = {**overlay_options, **region.visual}
+            # Check if overlay options are empty
+            if overlay_options and region.visual:
+                warnings.warn(
+                    "region visuals will be used instead of provided overlay_options",
+                    stacklevel=2,
+                )
+            if region.visual:
+                overlay_options = dict(region.visual)
+                if "linewidth" in overlay_options:
+                    overlay_options["line_width"] = overlay_options.pop("linewidth")
+                if "color" in overlay_options:
+                    overlay_options["fill_color"] = overlay_options.pop("color")
+                if "edgecolor" in overlay_options:
+                    overlay_options["color"] = overlay_options.pop("edgecolor")
 
         # Define behavior for each region type
         region_infos = RegionInfos(region)

@@ -32,25 +32,36 @@ export default class MessageHandler {
   handleAddOverlay(msg) {
     const infos = msg["infos"];
     const options = convertOptionNamesToCamelCase(msg["options"] || {});
-    const overlay = A.graphicOverlay(options);
+    // Define default color for graphic overlay
+    const overlay_color = options["color"] || options["fillColor"] || "red";
+    const overlay = A.graphicOverlay({ color: overlay_color });
     this.aladin.addOverlay(overlay);
     switch (msg["region_type"]) {
       case "stcs":
-        overlay.addFootprints(A.footprintsFromSTCS(infos.stcs));
+        overlay.add(A.footprintsFromSTCS(infos.stcs, options));
         break;
       case "circle":
-        overlay.add(A.circle(infos.ra, infos.dec, infos.radius));
+        overlay.add(A.circle(infos.ra, infos.dec, infos.radius, options));
         break;
       case "ellipse":
         overlay.add(
-          A.ellipse(infos.ra, infos.dec, infos.a, infos.b, infos.theta),
+          A.ellipse(
+            infos.ra,
+            infos.dec,
+            infos.a,
+            infos.b,
+            infos.theta,
+            options,
+          ),
         );
         break;
       case "line":
-        overlay.add(A.line(infos.ra1, infos.dec1, infos.ra2, infos.dec2));
+        overlay.add(
+          A.line(infos.ra1, infos.dec1, infos.ra2, infos.dec2, options),
+        );
         break;
       case "polygon":
-        overlay.add(A.polygon(infos.vertices));
+        overlay.add(A.polygon(infos.vertices, options));
         break;
     }
   }
