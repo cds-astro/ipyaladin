@@ -375,6 +375,7 @@ class Aladin(anywidget.AnyWidget):
         overlay_options: keyword arguments
 
         """
+        # Check if the regions library is installed and raise an error if not
         if (
             not isinstance(region, str) and CircleSkyRegion is None
         ):  # Only need to check one of the imports
@@ -384,61 +385,33 @@ class Aladin(anywidget.AnyWidget):
                 "library with 'pip install regions'."
             )
 
-        from .converter import box2polygon
-
-        if isinstance(region, str):
-            region_type = "stcs"
-            infos = {"stcs": region}
-        elif isinstance(region, CircleSkyRegion):
-            region_type = "circle"
-            infos = {
-                "ra": region.center.ra.deg,
-                "dec": region.center.dec.deg,
-                "radius": region.radius.deg,
-            }
-        elif isinstance(region, EllipseSkyRegion):
-            region_type = "ellipse"
-            infos = {
-                "ra": region.center.ra.deg,
-                "dec": region.center.dec.deg,
-                "a": region.width.deg,
-                "b": region.height.deg,
-                "theta": region.angle.deg,
-            }
-        elif isinstance(region, LineSkyRegion):
-            region_type = "line"
-            infos = {
-                "ra1": region.start.ra.deg,
-                "dec1": region.start.dec.deg,
-                "ra2": region.end.ra.deg,
-                "dec2": region.end.dec.deg,
-            }
-        elif isinstance(region, PolygonSkyRegion):
-            region_type = "polygon"
-            # Create a list of 2 elements arrays
-            vertices = [[coord.ra.deg, coord.dec.deg] for coord in region.vertices]
-            infos = {"vertices": vertices}
-        elif isinstance(region, RectangleSkyRegion):
-            region_type = "polygon"
-            region = box2polygon(region)
-            vertices = [[coord.ra.deg, coord.dec.deg] for coord in region.vertices]
-            infos = {"vertices": vertices}
-        elif isinstance(region, Region):
-            raise NotImplementedError(
-                "Unsupported region type. See the documentation "
+        if not isinstance(region, str) and not isinstance(region, Region):
+            raise ValueError(
+                "region must be a string or a regions object. See the documentation "
                 "for the supported region types."
             )
-        else:
-            raise ValueError(
-                "Unsupported object type. See the documentation "
-                "for the supported object types."
-            )
+
+        from .region_converter import RegionInfos
+
+        # Visual mapping to Aladin Lite overlay options
+        if isinstance(region, Region):
+            visual = dict(region.visual)
+            if "linewidth" in visual:
+                visual["line_width"] = visual.pop("linewidth")
+            if "facecolor" in visual:
+                visual["fill_color"] = visual.pop("facecolor")
+            if "edgecolor" in visual:
+                visual["color"] = visual.pop("edgecolor")
+            overlay_options = {**overlay_options, **region.visual}
+
+        # Define behavior for each region type
+        region_infos = RegionInfos(region)
 
         self.send(
             {
                 "event_name": "add_overlay",
-                "region_type": region_type,
-                "infos": infos,
+                "region_type": region_infos.region_type,
+                "infos": region_infos.infos,
                 "options": overlay_options,
             }
         )
