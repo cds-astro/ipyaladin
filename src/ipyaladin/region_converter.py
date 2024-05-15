@@ -6,12 +6,6 @@ from regions import (
     CircleSkyRegion,
     EllipseSkyRegion,
     LineSkyRegion,
-    CirclePixelRegion,
-    EllipsePixelRegion,
-    LinePixelRegion,
-    PolygonPixelRegion,
-    RectanglePixelRegion,
-    PixCoord,
 )
 from astropy.coordinates import SkyCoord
 from typing import Union
@@ -190,47 +184,6 @@ def rectangle_to_polygon_region(region: RectangleSkyRegion) -> PolygonSkyRegion:
     )
 
 
-def rectangle_pixel_to_polygon_pixel(
-    region: RectanglePixelRegion,
-) -> PolygonPixelRegion:
-    """Convert a RectanglePixelRegion to a PolygonPixelRegion.
-
-    Parameters
-    ----------
-    region : RectanglePixelRegion
-        The region to convert.
-
-    Returns
-    -------
-    PolygonPixelRegion
-        The converted region.
-
-    """
-    center = region.center
-    vertices = [
-        [center.x - region.width / 2, center.y - region.height / 2],
-        [center.x + region.width / 2, center.y - region.height / 2],
-        [center.x + region.width / 2, center.y + region.height / 2],
-        [center.x - region.width / 2, center.y + region.height / 2],
-    ]
-    rotation = region.angle.deg
-    if rotation != 0:
-        rotation = math.radians(rotation)
-        cos_rot = math.cos(rotation)
-        sin_rot = math.sin(rotation)
-        for vertex in vertices:
-            x = vertex[0] - center.x
-            y = vertex[1] - center.y
-            vertex[0] = x * cos_rot - y * sin_rot + center.x
-            vertex[1] = x * sin_rot + y * cos_rot + center.y
-    vertices = {
-        "x": [vertex[0] for vertex in vertices],
-        "y": [vertex[1] for vertex in vertices],
-    }
-    vertices = PixCoord(x=vertices["x"], y=vertices["y"])
-    return PolygonPixelRegion(vertices=vertices, visual=region.visual, meta=region.meta)
-
-
 class RegionInfos:
     """Extract information from a region.
 
@@ -247,15 +200,10 @@ class RegionInfos:
         self._region_parsers = {
             "str": self._from_stcs,
             "CircleSkyRegion": self._from_circle_sky_region,
-            "CirclePixelRegion": self._from_circle_pixel_region,
             "EllipseSkyRegion": self._from_ellipse_sky_region,
-            "EllipsePixelRegion": self._from_ellipse_pixel_region,
             "LineSkyRegion": self._from_line_sky_region,
-            "LinePixelRegion": self._from_line_pixel_region,
             "PolygonSkyRegion": self._from_polygon_sky_region,
-            "PolygonPixelRegion": self._from_polygon_pixel_region,
             "RectangleSkyRegion": self._from_rectangle_sky_region,
-            "RectanglePixelRegion": self._from_rectangle_pixel_region,
         }
         self.from_region(region)
 
@@ -278,23 +226,15 @@ class RegionInfos:
         self.infos = {"stcs": stcs}
 
     def _from_circle_sky_region(self, region: CircleSkyRegion) -> None:
-        self.region_type = "circle_sky"
+        self.region_type = "circle"
         self.infos = {
             "ra": region.center.ra.deg,
             "dec": region.center.dec.deg,
             "radius": region.radius.deg,
         }
 
-    def _from_circle_pixel_region(self, region: CirclePixelRegion) -> None:
-        self.region_type = "circle_pixel"
-        self.infos = {
-            "x": region.center.x,
-            "y": region.center.y,
-            "radius": region.radius,
-        }
-
     def _from_ellipse_sky_region(self, region: EllipseSkyRegion) -> None:
-        self.region_type = "ellipse_sky"
+        self.region_type = "ellipse"
         self.infos = {
             "ra": region.center.ra.deg,
             "dec": region.center.dec.deg,
@@ -303,18 +243,8 @@ class RegionInfos:
             "theta": region.angle.deg,
         }
 
-    def _from_ellipse_pixel_region(self, region: EllipsePixelRegion) -> None:
-        self.region_type = "ellipse_pixel"
-        self.infos = {
-            "x": region.center.x,
-            "y": region.center.y,
-            "a": region.width,
-            "b": region.height,
-            "theta": region.angle.deg,
-        }
-
     def _from_line_sky_region(self, region: LineSkyRegion) -> None:
-        self.region_type = "line_sky"
+        self.region_type = "line"
         self.infos = {
             "ra1": region.start.ra.deg,
             "dec1": region.start.dec.deg,
@@ -322,29 +252,11 @@ class RegionInfos:
             "dec2": region.end.dec.deg,
         }
 
-    def _from_line_pixel_region(self, region: LinePixelRegion) -> None:
-        self.region_type = "line_pixel"
-        self.infos = {
-            "x1": region.start.x,
-            "y1": region.start.y,
-            "x2": region.end.x,
-            "y2": region.end.y,
-        }
-
     def _from_polygon_sky_region(self, region: PolygonSkyRegion) -> None:
-        self.region_type = "polygon_sky"
+        self.region_type = "polygon"
         vertices = [[coord.ra.deg, coord.dec.deg] for coord in region.vertices]
-        self.infos = {"vertices": vertices}
-
-    def _from_polygon_pixel_region(self, region: PolygonPixelRegion) -> None:
-        self.region_type = "polygon_pixel"
-        vertices = [[coord.x, coord.y] for coord in region.vertices]
         self.infos = {"vertices": vertices}
 
     def _from_rectangle_sky_region(self, region: RectangleSkyRegion) -> None:
         # Rectangle is interpreted as a polygon in Aladin Lite
         self._from_polygon_sky_region(rectangle_to_polygon_region(region))
-
-    def _from_rectangle_pixel_region(self, region: RectanglePixelRegion) -> None:
-        # Rectangle is interpreted as a polygon in Aladin Lite
-        self._from_polygon_pixel_region(rectangle_pixel_to_polygon_pixel(region))
