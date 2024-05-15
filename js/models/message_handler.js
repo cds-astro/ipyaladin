@@ -40,10 +40,37 @@ export default class MessageHandler {
       case "stcs":
         overlay.add(A.footprintsFromSTCS(infos.stcs, options));
         break;
-      case "circle":
+      case "circle_pixel":
+        [infos.ra, infos.dec] = this.aladin.pix2world(infos.x, infos.y, "ICRS");
+        infos.radius = this.aladin.angularDist(
+          infos.x,
+          infos.y,
+          infos.x + infos.radius,
+          infos.y,
+          "ICRS",
+        );
+      // Voluntary fallthrough
+      case "circle_sky":
         overlay.add(A.circle(infos.ra, infos.dec, infos.radius, options));
         break;
-      case "ellipse":
+      case "ellipse_pixel":
+        [infos.ra, infos.dec] = this.aladin.pix2world(infos.x, infos.y, "ICRS");
+        infos.a = this.aladin.angularDist(
+          infos.x,
+          infos.y,
+          infos.x + infos.a,
+          infos.y,
+          "ICRS",
+        );
+        infos.b = this.aladin.angularDist(
+          infos.x,
+          infos.y,
+          infos.x,
+          infos.y + infos.b,
+          "ICRS",
+        );
+      // Voluntary fallthrough
+      case "ellipse_sky":
         overlay.add(
           A.ellipse(
             infos.ra,
@@ -55,12 +82,29 @@ export default class MessageHandler {
           ),
         );
         break;
-      case "line":
+      case "line_pixel":
+        [infos.ra1, infos.dec1] = this.aladin.pix2world(
+          infos.x1,
+          infos.y1,
+          "ICRS",
+        );
+        [infos.ra2, infos.dec2] = this.aladin.pix2world(
+          infos.x2,
+          infos.y2,
+          "ICRS",
+        );
+      // Voluntary fallthrough
+      case "line_sky":
         overlay.add(
           A.line(infos.ra1, infos.dec1, infos.ra2, infos.dec2, options),
         );
         break;
-      case "polygon":
+      case "polygon_pixel":
+        infos.vertices = infos.vertices.map(([x, y]) =>
+          this.aladin.pix2world(x, y, "ICRS"),
+        );
+      // Voluntary fallthrough
+      case "polygon_sky":
         overlay.add(A.polygon(infos.vertices, options));
         break;
     }
