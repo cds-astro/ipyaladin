@@ -1,6 +1,14 @@
 import math
-from regions import RectangleSkyRegion, PolygonSkyRegion
+from regions import (
+    RectangleSkyRegion,
+    PolygonSkyRegion,
+    Region,
+    CircleSkyRegion,
+    EllipseSkyRegion,
+    LineSkyRegion,
+)
 from astropy.coordinates import SkyCoord
+from typing import Union
 
 TWICE_PI = 2 * math.pi
 
@@ -30,14 +38,6 @@ class RefToLocalRotMatrix:
         r32: float,
         r33: float,
     ) -> None:
-        """Create a rotation matrix.
-
-        Parameters
-        ----------
-        r11-r33 : float
-            The elements of the rotation matrix.
-
-        """
         self.r11 = r11
         self.r12 = r12
         self.r13 = r13
@@ -112,36 +112,16 @@ class RefToLocalRotMatrix:
 
         """
         x, y, z = self.to_global_xyz(x, y, z)
-        return xyz_to_lonlat(x, y, z)
+        # Convert cartesian coordinates to spherical coordinates.
+        r2 = x * x + y * y
+        lat = math.atan2(z, math.sqrt(r2))
+        lon = math.atan2(y, x)
+        if lon < 0:
+            lon += TWICE_PI
+        return lon, lat
 
 
-def xyz_to_lonlat(x: float, y: float, z: float) -> tuple[float, float]:
-    """Convert cartesian coordinates to spherical coordinates.
-
-    Parameters
-    ----------
-    x : float
-        The x coordinate.
-    y : float
-        The y coordinate.
-    z : float
-        The z coordinate.
-
-    Returns
-    -------
-    tuple[float, float]
-        The longitude and latitude.
-
-    """
-    r2 = x * x + y * y
-    lat = math.atan2(z, math.sqrt(r2))
-    lon = math.atan2(y, x)
-    if lon < 0:
-        lon += TWICE_PI
-    return lon, lat
-
-
-def box2polygon(region: RectangleSkyRegion) -> PolygonSkyRegion:
+def rectangle_to_polygon_region(region: RectangleSkyRegion) -> PolygonSkyRegion:
     """Convert a RectangleSkyRegion to a PolygonSkyRegion.
 
     Parameters
@@ -197,4 +177,86 @@ def box2polygon(region: RectangleSkyRegion) -> PolygonSkyRegion:
     z2 = -y1 * cos_pa + z1 * sin_pa
     vertices.append(frame_rotation.to_global_coo(x1, y2, z2))
 
-    return PolygonSkyRegion(vertices=SkyCoord(vertices, unit="rad", frame="icrs"))
+    return PolygonSkyRegion(
+        vertices=SkyCoord(vertices, unit="rad", frame="icrs"),
+        visual=region.visual,
+        meta=region.meta,
+    )
+
+
+class RegionInfos:
+    """Extract information from a region.
+
+    Attributes
+    ----------
+    region_type : str
+        The type of the region.
+    infos : dict
+        The information extracted from the region.
+
+    """
+
+    def __init__(self, region: Union[str, Region]) -> None:
+        self._region_parsers = {
+            "str": self._from_stcs,
+            "CircleSkyRegion": self._from_circle_sky_region,
+            "EllipseSkyRegion": self._from_ellipse_sky_region,
+            "LineSkyRegion": self._from_line_sky_region,
+            "PolygonSkyRegion": self._from_polygon_sky_region,
+            "RectangleSkyRegion": self._from_rectangle_sky_region,
+        }
+        self.from_region(region)
+
+    def from_region(self, region: Union[str, Region]) -> None:
+        """Parse a region to extract its information.
+
+        Parameters
+        ----------
+        region : Union[str, Region]
+            The region to parse.
+
+        """
+        if type(region).__name__ not in self._region_parsers:
+            raise ValueError(f"Unsupported region type: {type(region).__name__}")
+        region_parser = self._region_parsers[type(region).__name__]
+        region_parser(region)
+
+    def _from_stcs(self, stcs: str) -> None:
+        self.region_type = "stcs"
+        self.infos = {"stcs": stcs}
+
+    def _from_circle_sky_region(self, region: CircleSkyRegion) -> None:
+        self.region_type = "circle"
+        self.infos = {
+            "ra": region.center.ra.deg,
+            "dec": region.center.dec.deg,
+            "radius": region.radius.deg,
+        }
+
+    def _from_ellipse_sky_region(self, region: EllipseSkyRegion) -> None:
+        self.region_type = "ellipse"
+        self.infos = {
+            "ra": region.center.ra.deg,
+            "dec": region.center.dec.deg,
+            "a": region.width.deg,
+            "b": region.height.deg,
+            "theta": region.angle.deg,
+        }
+
+    def _from_line_sky_region(self, region: LineSkyRegion) -> None:
+        self.region_type = "line"
+        self.infos = {
+            "ra1": region.start.ra.deg,
+            "dec1": region.start.dec.deg,
+            "ra2": region.end.ra.deg,
+            "dec2": region.end.dec.deg,
+        }
+
+    def _from_polygon_sky_region(self, region: PolygonSkyRegion) -> None:
+        self.region_type = "polygon"
+        vertices = [[coord.ra.deg, coord.dec.deg] for coord in region.vertices]
+        self.infos = {"vertices": vertices}
+
+    def _from_rectangle_sky_region(self, region: RectangleSkyRegion) -> None:
+        # Rectangle is interpreted as a polygon in Aladin Lite
+        self._from_polygon_sky_region(rectangle_to_polygon_region(region))
