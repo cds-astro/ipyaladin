@@ -45,6 +45,26 @@ from traitlets import (
 
 from .coordinate_parser import parse_coordinate_string
 
+SupportedRegion = Union[
+    typing.List[
+        Union[
+            str,
+            CircleSkyRegion,
+            EllipseSkyRegion,
+            LineSkyRegion,
+            PolygonSkyRegion,
+            RectangleSkyRegion,
+        ]
+    ],
+    str,
+    CircleSkyRegion,
+    EllipseSkyRegion,
+    LineSkyRegion,
+    PolygonSkyRegion,
+    RectangleSkyRegion,
+    Regions,
+]
+
 
 class Aladin(anywidget.AnyWidget):
     """Aladin Lite widget.
@@ -357,25 +377,7 @@ class Aladin(anywidget.AnyWidget):
 
     def add_overlay(
         self,
-        region: Union[
-            typing.List[
-                Union[
-                    str,
-                    CircleSkyRegion,
-                    EllipseSkyRegion,
-                    LineSkyRegion,
-                    PolygonSkyRegion,
-                    RectangleSkyRegion,
-                ]
-            ],
-            str,
-            CircleSkyRegion,
-            EllipseSkyRegion,
-            LineSkyRegion,
-            PolygonSkyRegion,
-            RectangleSkyRegion,
-            Regions,
-        ],
+        region: SupportedRegion,
         **graphic_options: any,
     ) -> None:
         """Add an overlay layer to the Aladin Lite widget.
