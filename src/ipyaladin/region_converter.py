@@ -1,12 +1,21 @@
 import math
-from regions import (
-    RectangleSkyRegion,
-    PolygonSkyRegion,
-    Region,
-    CircleSkyRegion,
-    EllipseSkyRegion,
-    LineSkyRegion,
-)
+
+try:
+    from regions import (
+        RectangleSkyRegion,
+        PolygonSkyRegion,
+        Region,
+        CircleSkyRegion,
+        EllipseSkyRegion,
+        LineSkyRegion,
+    )
+except ImportError:
+    RectangleSkyRegion = None
+    PolygonSkyRegion = None
+    Region = None
+    CircleSkyRegion = None
+    EllipseSkyRegion = None
+    LineSkyRegion = None
 from astropy.coordinates import SkyCoord
 from typing import Union
 
@@ -220,6 +229,8 @@ class RegionInfos:
             raise ValueError(f"Unsupported region type: {type(region).__name__}")
         region_parser = self._region_parsers[type(region).__name__]
         region_parser(region)
+        if isinstance(region, Region):
+            self._parse_visuals(region)
 
     def _from_stcs(self, stcs: str) -> None:
         self.region_type = "stcs"
@@ -260,3 +271,28 @@ class RegionInfos:
     def _from_rectangle_sky_region(self, region: RectangleSkyRegion) -> None:
         # Rectangle is interpreted as a polygon in Aladin Lite
         self._from_polygon_sky_region(rectangle_to_polygon_region(region))
+
+    def _parse_visuals(self, region: Region) -> None:
+        visual = dict(region.visual)
+        if "linewidth" in visual:
+            visual["line_width"] = visual.pop("linewidth")
+        if "facecolor" in visual:
+            visual["fill_color"] = visual.pop("facecolor")
+        if "edgecolor" in visual:
+            visual["color"] = visual.pop("edgecolor")
+        self.options = visual
+
+    def to_clean_dict(self) -> dict:
+        """Return a clean dictionary representation of the region.
+
+        Returns
+        -------
+        dict
+            The dictionary representation of the region.
+
+        """
+        return {
+            "region_type": self.region_type,
+            "infos": self.infos,
+            "options": self.options,
+        }

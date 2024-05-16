@@ -356,6 +356,16 @@ class Aladin(anywidget.AnyWidget):
     def add_overlay(
         self,
         region: Union[
+            typing.List[
+                Union[
+                    str,
+                    CircleSkyRegion,
+                    EllipseSkyRegion,
+                    LineSkyRegion,
+                    PolygonSkyRegion,
+                    RectangleSkyRegion,
+                ]
+            ],
             str,
             CircleSkyRegion,
             EllipseSkyRegion,
@@ -363,56 +373,53 @@ class Aladin(anywidget.AnyWidget):
             PolygonSkyRegion,
             RectangleSkyRegion,
         ],
-        **overlay_options: any,
+        **graphic_options: any,
     ) -> None:
         """Add an overlay layer to the Aladin Lite widget.
 
         Parameters
         ----------
-        region: str, CircleSkyRegion, EllipseSkyRegion, LineSkyRegion
-            The region to overlay. It can be a string, a CircleSkyRegion,
-            an EllipseSkyRegion, a LineSkyRegion or a RectangleSkyRegion.
-        overlay_options: keyword arguments
+        region: str, `~CircleSkyRegion`, `~EllipseSkyRegion`, `~LineSkyRegion`,
+         `~PolygonSkyRegion`, `~RectangleSkyRegion`
+            The region to add in Aladin Lite. It can be given
+            as a string or one of the supported regions
+        graphic_options: keyword arguments
+            The options for the graphic overlay. Use Region visual for region options.
 
         """
-        # Check if the regions library is installed and raise an error if not
-        if (
-            not isinstance(region, str) and CircleSkyRegion is None
-        ):  # Only need to check one of the imports
-            raise ValueError(
-                "A region can be given as an STC-S string or a regions "
-                "object. To read regions objects, you need to install the regions "
-                "library with 'pip install regions'."
-            )
+        if not isinstance(region, list):
+            region = [region]
 
-        if not isinstance(region, str) and not isinstance(region, Region):
-            raise ValueError(
-                "region must be a string or a regions object. See the documentation "
-                "for the supported region types."
-            )
+        regions_infos = []
+        for region_element in region:
+            # Check if the regions library is installed and raise an error if not
+            if (
+                not isinstance(region_element, str) and Region is None
+            ):  # Only need to check one of the imports
+                raise ValueError(
+                    "A region can be given as an STC-S string or a regions "
+                    "object. To read regions objects, you need to install the regions "
+                    "library with 'pip install regions'."
+                )
 
-        from .region_converter import RegionInfos
+            if not isinstance(region_element, str) and not isinstance(
+                region_element, Region
+            ):
+                raise ValueError(
+                    "region must be a string or a regions object. See the "
+                    "documentation for the supported region types."
+                )
 
-        # Visual mapping to Aladin Lite overlay options
-        if isinstance(region, Region):
-            visual = dict(region.visual)
-            if "linewidth" in visual:
-                visual["line_width"] = visual.pop("linewidth")
-            if "facecolor" in visual:
-                visual["fill_color"] = visual.pop("facecolor")
-            if "edgecolor" in visual:
-                visual["color"] = visual.pop("edgecolor")
-            overlay_options = {**overlay_options, **region.visual}
+            from .region_converter import RegionInfos
 
-        # Define behavior for each region type
-        region_infos = RegionInfos(region)
+            # Define behavior for each region type
+            regions_infos.append(RegionInfos(region_element).to_clean_dict())
 
         self.send(
             {
                 "event_name": "add_overlay",
-                "region_type": region_infos.region_type,
-                "infos": region_infos.infos,
-                "options": overlay_options,
+                "regions_infos": regions_infos,
+                "graphic_options": graphic_options,
             }
         )
 
