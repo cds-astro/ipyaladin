@@ -24,6 +24,7 @@ try:
         PolygonSkyRegion,
         RectangleSkyRegion,
         Region,
+        Regions,
     )
 except ImportError:
     CircleSkyRegion = None
@@ -32,6 +33,7 @@ except ImportError:
     PolygonSkyRegion = None
     RectangleSkyRegion = None
     Region = None
+    Regions = None
 from traitlets import (
     Float,
     Int,
@@ -372,6 +374,7 @@ class Aladin(anywidget.AnyWidget):
             LineSkyRegion,
             PolygonSkyRegion,
             RectangleSkyRegion,
+            Regions,
         ],
         **graphic_options: any,
     ) -> None:
@@ -387,11 +390,15 @@ class Aladin(anywidget.AnyWidget):
             The options for the graphic overlay. Use Region visual for region options.
 
         """
-        if not isinstance(region, list):
-            region = [region]
+        if isinstance(region, Regions):
+            region_list = region.regions
+        elif not isinstance(region, list):
+            region_list = [region]
+        else:
+            region_list = region
 
         regions_infos = []
-        for region_element in region:
+        for region_element in region_list:
             # Check if the regions library is installed and raise an error if not
             if (
                 not isinstance(region_element, str) and Region is None
