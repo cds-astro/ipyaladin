@@ -1,5 +1,7 @@
 import math
 
+import numpy as np
+
 try:
     from regions import (
         RectangleSkyRegion,
@@ -37,25 +39,9 @@ class RefToLocalRotMatrix:
 
     def __init__(
         self,
-        r11: float,
-        r12: float,
-        r13: float,
-        r21: float,
-        r22: float,
-        r23: float,
-        r31: float,
-        r32: float,
-        r33: float,
+        rotation_matrix: np.ndarray,
     ) -> None:
-        self.r11 = r11
-        self.r12 = r12
-        self.r13 = r13
-        self.r21 = r21
-        self.r22 = r22
-        self.r23 = r23
-        self.r31 = r31
-        self.r32 = r32
-        self.r33 = r33
+        self.rotation_matrix = rotation_matrix
 
     @classmethod
     def from_center(cls: any, lon: float, lat: float) -> "RefToLocalRotMatrix":
@@ -76,7 +62,9 @@ class RefToLocalRotMatrix:
         """
         ca, sa = math.cos(lon), math.sin(lon)
         cd, sd = math.cos(lat), math.sin(lat)
-        return cls(ca * cd, sa * cd, sd, -sa, ca, 0.0, -ca * sd, -sa * sd, cd)
+        return cls(
+            np.array([[ca * cd, sa * cd, sd], [-sa, ca, 0.0], [-ca * sd, -sa * sd, cd]])
+        )
 
     def to_global_xyz(self, x: float, y: float, z: float) -> tuple[float, float, float]:
         """Convert local cartesian coordinates to global cartesian coordinates.
@@ -96,11 +84,10 @@ class RefToLocalRotMatrix:
             The x, y, and z coordinates.
 
         """
-        return (
-            self.r11 * x + self.r21 * y + self.r31 * z,
-            self.r12 * x + self.r22 * y + self.r32 * z,
-            self.r13 * x + self.r23 * y + self.r33 * z,
+        rotated_matrix = np.sum(
+            np.multiply(self.rotation_matrix, np.array([[x], [y], [z]])), axis=0
         )
+        return rotated_matrix[0], rotated_matrix[1], rotated_matrix[2]
 
     def to_global_coo(self, x: float, y: float, z: float) -> tuple[float, float]:
         """Convert local cartesian coordinates to global spherical coordinates.
