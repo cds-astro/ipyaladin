@@ -85,7 +85,7 @@ class RefToLocalRotMatrix:
 
         """
         rotated_matrix = np.sum(
-            np.multiply(self.rotation_matrix, np.array([[x], [y], [z]])), axis=0
+            self.rotation_matrix * np.array([[x], [y], [z]]), axis=0
         )
         return rotated_matrix[0], rotated_matrix[1], rotated_matrix[2]
 
@@ -156,21 +156,19 @@ def rectangle_to_polygon_region(region: RectangleSkyRegion) -> PolygonSkyRegion:
 
     x1, y1, z1 = cos_lon * cos_lat, sin_lon * cos_lat, sin_lat
 
-    y2 = y1 * sin_pa - z1 * cos_pa
-    z2 = y1 * cos_pa + z1 * sin_pa
-    vertices = [frame_rotation.to_global_coo(x1, y2, z2)]
+    pa_matrix = np.array([[y1 * sin_pa, z1 * sin_pa], [y1 * cos_pa, z1 * sin_pa]])
 
-    y2 = y1 * sin_pa + z1 * cos_pa
-    z2 = y1 * cos_pa - z1 * sin_pa
-    vertices.append(frame_rotation.to_global_coo(x1, y2, z2))
+    multipliers = [
+        [[1, -1], [1, 1]],
+        [[1, 1], [1, -1]],
+        [[-1, 1], [-1, -1]],
+        [[-1, -1], [-1, 1]],
+    ]
+    vertices = []
 
-    y2 = -y1 * sin_pa + z1 * cos_pa
-    z2 = -y1 * cos_pa - z1 * sin_pa
-    vertices.append(frame_rotation.to_global_coo(x1, y2, z2))
-
-    y2 = -y1 * sin_pa - z1 * cos_pa
-    z2 = -y1 * cos_pa + z1 * sin_pa
-    vertices.append(frame_rotation.to_global_coo(x1, y2, z2))
+    for multiplier in multipliers:
+        y2, z2 = np.sum(np.array(multiplier) * pa_matrix, axis=1)
+        vertices.append(frame_rotation.to_global_coo(x1, y2, z2))
 
     return PolygonSkyRegion(
         vertices=SkyCoord(vertices, unit="rad", frame="icrs"),
