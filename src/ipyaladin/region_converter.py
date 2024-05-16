@@ -149,17 +149,16 @@ def rectangle_to_polygon_region(region: RectangleSkyRegion) -> PolygonSkyRegion:
     height = region.height.rad
     position_angle = region.angle.rad
 
-    assert (
-        0.0 <= longitude < TWICE_PI
-    ), f"Expected: lon in [0, 2pi[. Actual: {longitude}"
-    assert (
-        -math.pi / 2 <= latitude <= math.pi / 2
-    ), f"Expected: lat in [-pi/2, pi/2]. Actual: {latitude}"
-    assert 0.0 < width <= math.pi / 2, f"Expected: a in ]0, pi/2]. Actual: {width}"
-    assert 0.0 < height <= width, f"Expected: b in ]0, a]. Actual: {height}"
-    assert (
-        0.0 <= position_angle < math.pi
-    ), f"Expected: pa in [0, pi[. Actual: {position_angle}"
+    if not 0.0 <= longitude < TWICE_PI:
+        raise ValueError(f"Expected: lon in [0, 2pi[. Actual: {longitude}")
+    if not -math.pi / 2 <= latitude <= math.pi / 2:
+        raise ValueError(f"Expected: lat in [-pi/2, pi/2]. Actual: {latitude}")
+    if not 0.0 < width <= math.pi / 2:
+        raise ValueError(f"Expected: a in ]0, pi/2]. Actual: {width}")
+    if not 0.0 < height <= width:
+        raise ValueError(f"Expected: b in ]0, a]. Actual: {height}")
+    if not 0.0 <= position_angle < math.pi:
+        raise ValueError(f"Expected: pa in [0, pi[. Actual: {position_angle}")
 
     frame_rotation = RefToLocalRotMatrix.from_center(longitude, latitude)
 
