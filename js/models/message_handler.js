@@ -35,8 +35,10 @@ export default class MessageHandler {
       msg["graphic_options"] || {},
     );
     if (!graphic_options["color"]) graphic_options["color"] = "red";
+    console.log(graphic_options);
     const overlay = A.graphicOverlay(graphic_options);
     this.aladin.addOverlay(overlay);
+    console.log(regions);
     for (const region of regions) {
       const infos = region["infos"];
       switch (region["region_type"]) {
@@ -52,8 +54,14 @@ export default class MessageHandler {
           break;
         case "ellipse":
           overlay.add(
-            A.ellipse(infos.ra, infos.dec, infos.a, infos.b, infos.theta),
-            region.options,
+            A.ellipse(
+              infos.ra,
+              infos.dec,
+              infos.a,
+              infos.b,
+              infos.theta,
+              region.options,
+            ),
           );
           break;
         case "line":
@@ -63,6 +71,7 @@ export default class MessageHandler {
               infos.dec1,
               infos.ra2,
               infos.dec2,
+              "ICRS",
               region.options,
             ),
           );
