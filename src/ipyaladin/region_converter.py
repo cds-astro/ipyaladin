@@ -214,6 +214,7 @@ class RegionInfos:
             "PolygonSkyRegion": self._from_polygon_sky_region,
             "RectangleSkyRegion": self._from_rectangle_sky_region,
         }
+        self.options = {}
         self.from_region(region)
 
     def from_region(self, region: Union[str, Region]) -> None:
@@ -229,7 +230,7 @@ class RegionInfos:
             raise ValueError(f"Unsupported region type: {type(region).__name__}")
         region_parser = self._region_parsers[type(region).__name__]
         region_parser(region)
-        if isinstance(region, Region):
+        if not isinstance(region, str):
             self._parse_visuals(region)
 
     def _from_stcs(self, stcs: str) -> None:
