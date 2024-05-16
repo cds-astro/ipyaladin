@@ -46,7 +46,7 @@ extend-select = ["E", "W", "YTT", "ASYNC", "BLE", "B", "A",
                  "PTH", "TD", "ERA", "PL", "PERF", "RUF", "ARG",
                  "ANN", "D"
                 ]
-ignore = ["ISC001", "ANN101", "D203", "D213", "D100", "D105", "PLR0913"]
+ignore = ["ISC001", "ANN101", "D203", "D213", "D100", "D105"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
