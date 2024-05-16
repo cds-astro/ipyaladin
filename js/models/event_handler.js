@@ -42,7 +42,6 @@ export default class EventHandler {
       }
       jsTargetLock.lock();
       const raDec = [position.ra, position.dec];
-      // const raDec = this.aladin.getRaDec();
       this.model.set("_target", `${raDec[0]} ${raDec[1]}`);
       this.model.save_changes();
     });
