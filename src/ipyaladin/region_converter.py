@@ -2,6 +2,8 @@ import math
 
 import numpy as np
 
+from astropy.coordinates import SkyCoord
+
 try:
     from regions import (
         RectangleSkyRegion,
@@ -18,7 +20,6 @@ except ImportError:
     CircleSkyRegion = None
     EllipseSkyRegion = None
     LineSkyRegion = None
-from astropy.coordinates import SkyCoord
 from typing import Union
 
 TWICE_PI = 2 * math.pi
@@ -32,14 +33,14 @@ class RefToLocalRotMatrix:
 
     Attributes
     ----------
-    r11-r33 : float
-        The elements of the rotation matrix.
+    rotation_matrix : np.ndarray[float]
+        The rotation matrix.
 
     """
 
     def __init__(
         self,
-        rotation_matrix: np.ndarray,
+        rotation_matrix: np.ndarray[float],
     ) -> None:
         self.rotation_matrix = rotation_matrix
 
@@ -119,6 +120,9 @@ class RefToLocalRotMatrix:
 
 def rectangle_to_polygon_region(region: RectangleSkyRegion) -> PolygonSkyRegion:
     """Convert a RectangleSkyRegion to a PolygonSkyRegion.
+
+    Converted code from cdshealpix:
+    https://github.com/cds-astro/cds-healpix-rust/blob/master/src/nested/mod.rs#L3687-3742
 
     Parameters
     ----------
