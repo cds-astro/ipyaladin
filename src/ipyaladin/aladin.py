@@ -375,7 +375,7 @@ class Aladin(anywidget.AnyWidget):
             buffers=[table_bytes.getvalue()],
         )
 
-    def add_overlay(
+    def add_overlay_from_region(
         self,
         region: SupportedRegion,
         **graphic_options: any,
@@ -394,6 +394,15 @@ class Aladin(anywidget.AnyWidget):
             See graphicOverlay options  here https://cds-astro.github.io/aladin-lite/A.html
 
         """
+        if Region is None:
+            raise ModuleNotFoundError(
+                "A region can be given as a regions object. To read "
+                "regions objects, you need to install the regions library with "
+                "'pip install regions'."
+            )
+
+        # Check if the region is a list of regions or a single
+        # Region and convert it to a list of Regions
         if isinstance(region, Regions):
             region_list = region.regions
         elif not isinstance(region, list):
@@ -404,18 +413,7 @@ class Aladin(anywidget.AnyWidget):
         regions_infos = []
         for region_element in region_list:
             # Check if the regions library is installed and raise an error if not
-            if (
-                not isinstance(region_element, str) and Region is None
-            ):  # Only need to check one of the imports
-                raise ModuleNotFoundError(
-                    "A region can be given as an STC-S string or a regions "
-                    "object. To read regions objects, you need to install the regions "
-                    "library with 'pip install regions'."
-                )
-
-            if not isinstance(region_element, str) and not isinstance(
-                region_element, Region
-            ):
+            if not isinstance(region_element, Region):
                 raise ValueError(
                     "region must be a string or a `~regions` object. See the "
                     "documentation for the supported region types."
@@ -434,8 +432,10 @@ class Aladin(anywidget.AnyWidget):
             }
         )
 
-    def add_overlay_from_stcs(self, stc_string: str, **overlay_options: any) -> None:
-        """Add an overlay layer defined by a STC-S string.
+    def add_overlay_from_stcs(
+        self, stc_string: Union[typing.List[str], str], **overlay_options: any
+    ) -> None:
+        """Add an overlay layer defined by an STC-S string.
 
         Parameters
         ----------
@@ -444,11 +444,23 @@ class Aladin(anywidget.AnyWidget):
         overlay_options: keyword arguments
 
         """
-        # Add deprecation warning
-        warnings.warn(
-            "add_overlay_from_stcs is deprecated, use add_overlay instead", stacklevel=2
+        region_list = [stc_string] if not isinstance(stc_string, list) else stc_string
+
+        regions_infos = [
+            {
+                "region_type": "stcs",
+                "infos": {"stcs": region_element},
+                "options": overlay_options,
+            }
+            for region_element in region_list
+        ]
+        self.send(
+            {
+                "event_name": "add_overlay",
+                "regions_infos": regions_infos,
+                "graphic_options": {},
+            }
         )
-        self.add_overlay(stc_string, **overlay_options)
 
     def get_JPEG_thumbnail(self) -> None:
         """Create a popup window with the current Aladin view."""
