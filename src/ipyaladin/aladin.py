@@ -384,12 +384,14 @@ class Aladin(anywidget.AnyWidget):
 
         Parameters
         ----------
-        region: str, `~CircleSkyRegion`, `~EllipseSkyRegion`, `~LineSkyRegion`,
-         `~PolygonSkyRegion`, `~RectangleSkyRegion`
-            The region to add in Aladin Lite. It can be given
-            as a string or one of the supported regions
+        region: str, `~regions.CircleSkyRegion`, `~regions.EllipseSkyRegion`,
+        `~regions.LineSkyRegion`,`~regions.PolygonSkyRegion`,
+        `~regions.RectangleSkyRegion`
+            The region to add in Aladin Lite. It can be given as a standard
+            STC-string or as a supported region from the regions package
         graphic_options: keyword arguments
             The options for the graphic overlay. Use Region visual for region options.
+            See graphicOverlay options  here https://cds-astro.github.io/aladin-lite/A.html
 
         """
         if isinstance(region, Regions):
@@ -405,7 +407,7 @@ class Aladin(anywidget.AnyWidget):
             if (
                 not isinstance(region_element, str) and Region is None
             ):  # Only need to check one of the imports
-                raise ValueError(
+                raise ModuleNotFoundError(
                     "A region can be given as an STC-S string or a regions "
                     "object. To read regions objects, you need to install the regions "
                     "library with 'pip install regions'."
@@ -415,7 +417,7 @@ class Aladin(anywidget.AnyWidget):
                 region_element, Region
             ):
                 raise ValueError(
-                    "region must be a string or a regions object. See the "
+                    "region must be a string or a `~regions` object. See the "
                     "documentation for the supported region types."
                 )
 
