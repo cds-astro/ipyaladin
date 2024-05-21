@@ -11,7 +11,7 @@
   },
   "devDependencies": {
     "@jupyterlab/galata": "^5.1.8",
-    "@playwright/test": "^1.43.1",
+    "@playwright/test": "^1.44.0",
     "esbuild": "^0.20.0",
     "husky": "^8.0.0",
     "lint-staged": "^15.2.2",
