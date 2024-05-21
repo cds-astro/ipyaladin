@@ -189,8 +189,11 @@ class Aladin(anywidget.AnyWidget):
         Parameters
         ----------
         src: str
-            The URL of the HiPS survey.
+            The id or url of the HiPS survey.
+            List of survey ids: https://aladin.cds.unistra.fr/hips/list
         hips_options: keyword arguments
+            See https://cds-astro.github.io/aladin-lite/global.html#ImageHiPSOptions for
+            the list of available options.
 
         """
         self.send(
