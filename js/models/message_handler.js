@@ -14,6 +14,8 @@ export default class MessageHandler {
     this.aladin.gotoRaDec(msg["ra"], msg["dec"]);
   }
 
+  handleAddHips(msg) {}
+
   handleAddCatalogFromURL(msg) {
     const options = convertOptionNamesToCamelCase(msg["options"] || {});
     this.aladin.addCatalog(A.catalogFromURL(msg["votable_URL"], options));
