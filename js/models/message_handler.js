@@ -14,7 +14,11 @@ export default class MessageHandler {
     this.aladin.gotoRaDec(msg["ra"], msg["dec"]);
   }
 
-  handleAddHips(msg) {}
+  handleAddHips(msg) {
+    const options = convertOptionNamesToCamelCase(msg["options"] || {});
+    const hips = A.imageHiPS(msg["src"], options);
+    this.aladin.addNewImageLayer(hips);
+  }
 
   handleAddCatalogFromURL(msg) {
     const options = convertOptionNamesToCamelCase(msg["options"] || {});
