@@ -69,7 +69,6 @@ export default class MessageHandler {
               infos.dec1,
               infos.ra2,
               infos.dec2,
-              "ICRS",
               region.options,
             ),
           );
