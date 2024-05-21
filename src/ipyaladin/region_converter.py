@@ -36,36 +36,36 @@ def rectangle_to_polygon_region(region: RectangleSkyRegion) -> PolygonSkyRegion:
         The converted region.
 
     """
-    bl_x, bl_y, bl_z = (
+    bottom_left = (
         region.center.spherical_offsets_by(-region.width / 2, -region.height / 2)
         .represent_as("cartesian")
-        .xyz.value
+        .xyz
     )
-    br_x, br_y, br_z = (
+    bottom_right = (
         region.center.spherical_offsets_by(-region.width / 2, region.height / 2)
         .represent_as("cartesian")
-        .xyz.value
+        .xyz
     )
-    tr_x, tr_y, tr_z = (
+    top_right = (
         region.center.spherical_offsets_by(region.width / 2, region.height / 2)
         .represent_as("cartesian")
-        .xyz.value
+        .xyz
     )
-    rl_x, tly, tl_z = (
+    top_left = (
         region.center.spherical_offsets_by(region.width / 2, -region.height / 2)
         .represent_as("cartesian")
-        .xyz.value
+        .xyz
     )
-    c_x, c_y, c_z = region.center.represent_as("cartesian").xyz.value
+    center = region.center.represent_as("cartesian").xyz
 
-    rot_mat = rotation_matrix(Angle(-region.angle.deg, unit="deg"), (c_x, c_y, c_z))
+    rot_mat = rotation_matrix(Angle(-region.angle.deg, unit="deg"), center)
 
     corners = np.array(
         [
-            [bl_x, bl_y, bl_z],
-            [br_x, br_y, br_z],
-            [tr_x, tr_y, tr_z],
-            [rl_x, tly, tl_z],
+            bottom_left,
+            bottom_right,
+            top_right,
+            top_left,
         ]
     )
     rotated_corners = np.dot(corners, rot_mat)
