@@ -386,7 +386,14 @@ class Aladin(anywidget.AnyWidget):
         `~regions.LineSkyRegion`,`~regions.PolygonSkyRegion`,
         `~regions.RectangleSkyRegion`, `~regions.Regions`
             The region to add in Aladin Lite. It can be given
-            as a supported region or a list of regions from the regions package
+            as a supported region or a list of regions from the regions package.
+            Region Visual object is mapped to graphic options with the following
+            mapping:
+            - edgecolor -> color
+            - facecolor -> fillColor
+            - color -> color & fillColor
+            - alpha -> opacity
+            - linewidth -> lineWidth
         graphic_options: keyword arguments
             The options for the graphic overlay. Use Region visual for region options.
             See graphicOverlay options  here https://cds-astro.github.io/aladin-lite/A.html
