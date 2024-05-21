@@ -375,7 +375,7 @@ class Aladin(anywidget.AnyWidget):
             buffers=[table_bytes.getvalue()],
         )
 
-    def add_overlay_from_region(
+    def add_graphic_overlay_from_region(
         self,
         region: SupportedRegion,
         **graphic_options: any,
@@ -433,6 +433,26 @@ class Aladin(anywidget.AnyWidget):
         )
 
     def add_overlay_from_stcs(
+        self, stc_string: Union[typing.List[str], str], **overlay_options: any
+    ) -> None:
+        """Add an overlay layer defined by an STC-S string.
+
+        Parameters
+        ----------
+        stc_string: str
+            The STC-S string.
+        overlay_options: keyword arguments
+
+        """
+        warnings.warn(
+            "add_overlay_from_stcs is deprecated, "
+            "use add_graphic_overlay_from_stcs instead",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        self.add_overlay_from_region(stc_string, **overlay_options)
+
+    def add_graphic_overlay_from_stcs(
         self, stc_string: Union[typing.List[str], str], **overlay_options: any
     ) -> None:
         """Add an overlay layer defined by an STC-S string.
