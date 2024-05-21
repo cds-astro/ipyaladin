@@ -2,6 +2,7 @@ import numpy as np
 
 from astropy.coordinates import SkyCoord, CartesianRepresentation, Angle
 from astropy.coordinates.matrix_utilities import rotation_matrix
+from astropy.units import Quantity
 
 try:
     from regions import (
@@ -58,7 +59,10 @@ def rectangle_to_polygon_region(region: RectangleSkyRegion) -> PolygonSkyRegion:
     )
     center = region.center.represent_as("cartesian").xyz
 
-    rot_mat = rotation_matrix(Angle(-region.angle.deg, unit="deg"), center)
+    angle = region.angle
+    if isinstance(region.angle, Quantity):
+        angle = Angle(region.angle)
+    rot_mat = rotation_matrix(Angle(-angle.deg, unit="deg"), center)
 
     corners = np.array(
         [
@@ -131,20 +135,32 @@ class RegionInfos:
 
     def _from_circle_sky_region(self, region: CircleSkyRegion) -> None:
         self.region_type = "circle"
+        radius = region.radius
+        if isinstance(region.radius, Quantity):
+            radius = Angle(region.radius)
         self.infos = {
             "ra": region.center.ra.deg,
             "dec": region.center.dec.deg,
-            "radius": region.radius.deg,
+            "radius": radius.deg,
         }
 
     def _from_ellipse_sky_region(self, region: EllipseSkyRegion) -> None:
         self.region_type = "ellipse"
+        angle = region.angle
+        if isinstance(region.angle, Quantity):
+            angle = Angle(region.angle)
+        a = region.width
+        if isinstance(region.width, Quantity):
+            a = Angle(region.width)
+        b = region.height
+        if isinstance(region.height, Quantity):
+            b = Angle(region.height)
         self.infos = {
             "ra": region.center.ra.deg,
             "dec": region.center.dec.deg,
-            "a": region.width.deg,
-            "b": region.height.deg,
-            "theta": region.angle.deg,
+            "a": a.deg,
+            "b": b.deg,
+            "theta": angle.deg,
         }
 
     def _from_line_sky_region(self, region: LineSkyRegion) -> None:
