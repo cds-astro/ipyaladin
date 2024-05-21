@@ -37,3 +37,17 @@ notebooks testing.
 ```sh
 npx playwright test my_test.spec.js --debug
 ```
+
+## Update the snapshots
+
+Open the test server
+
+```sh
+npm run start-test-server
+```
+
+then update the snapshots
+
+```sh
+npx playwright test --update-snapshots
+```
