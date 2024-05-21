@@ -438,9 +438,9 @@ class Aladin(anywidget.AnyWidget):
         Parameters
         ----------
         stc_string: str, list[str]
-            The STC-S string or an array of STC-S string.
+            The STC-S string or an array of STC-S strings.
         overlay_options: keyword arguments
-            The overlay options for all the STC-S string
+            The overlay options for all the STC-S strings
 
         """
         warnings.warn(
