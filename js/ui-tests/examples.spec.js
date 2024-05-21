@@ -25,7 +25,7 @@ test("1-Getting-Started", async ({ page, request, tmpPath }) => {
   // Execute all cells
   await page.notebook.runCellByCell();
   // Wait for Aladin to pop
-  await setTimeout(2000); // 2s
+  await setTimeout(3000); // 3s
   // Save
   await page.notebook.save();
   // And check snapshot (maybe we should clip to div jp-main-dock-panel)
