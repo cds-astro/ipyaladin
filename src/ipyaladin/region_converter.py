@@ -183,12 +183,19 @@ class RegionInfos:
 
     def _parse_visuals(self, region: Region) -> None:
         visual = dict(region.visual)
-        if "linewidth" in visual:
-            visual["line_width"] = visual.pop("linewidth")
+        # Color parsing
         if "facecolor" in visual:
             visual["fill_color"] = visual.pop("facecolor")
         if "edgecolor" in visual:
             visual["color"] = visual.pop("edgecolor")
+        if "color" in visual:
+            visual["fill_color"] = visual["color"]
+
+        # Other parsing
+        if "alpha" in visual:
+            visual["opacity"] = visual.pop("alpha")
+        if "linewidth" in visual:
+            visual["line_width"] = visual.pop("linewidth")
         self.options = visual
 
     def to_clean_dict(self) -> dict:
