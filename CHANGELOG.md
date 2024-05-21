@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Support for `astropy.coordinates.SkyCoord` for assigning and reading the `target` property (#80)
 - Support for `astropy.coordinates.Angle` for reading the `fov` property (#83)
+- Support for adding a new HiPS layer with `add_hips` (#84)
 
 ### Fixed
 
