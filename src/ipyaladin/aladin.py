@@ -48,7 +48,6 @@ from .coordinate_parser import parse_coordinate_string
 SupportedRegion = Union[
     typing.List[
         Union[
-            str,
             CircleSkyRegion,
             EllipseSkyRegion,
             LineSkyRegion,
@@ -56,7 +55,6 @@ SupportedRegion = Union[
             RectangleSkyRegion,
         ]
     ],
-    str,
     CircleSkyRegion,
     EllipseSkyRegion,
     LineSkyRegion,
@@ -384,11 +382,11 @@ class Aladin(anywidget.AnyWidget):
 
         Parameters
         ----------
-        region: str, `~regions.CircleSkyRegion`, `~regions.EllipseSkyRegion`,
+        region: `~regions.CircleSkyRegion`, `~regions.EllipseSkyRegion`,
         `~regions.LineSkyRegion`,`~regions.PolygonSkyRegion`,
-        `~regions.RectangleSkyRegion`
-            The region to add in Aladin Lite. It can be given as a standard
-            STC-string or as a supported region from the regions package
+        `~regions.RectangleSkyRegion`, `~regions.Regions`
+            The region to add in Aladin Lite. It can be given
+            as a supported region or a list of regions from the regions package
         graphic_options: keyword arguments
             The options for the graphic overlay. Use Region visual for region options.
             See graphicOverlay options  here https://cds-astro.github.io/aladin-lite/A.html
@@ -439,9 +437,10 @@ class Aladin(anywidget.AnyWidget):
 
         Parameters
         ----------
-        stc_string: str
-            The STC-S string.
+        stc_string: str, list[str]
+            The STC-S string or an array of STC-S string.
         overlay_options: keyword arguments
+            The overlay options for all the STC-S string
 
         """
         warnings.warn(
@@ -450,7 +449,7 @@ class Aladin(anywidget.AnyWidget):
             DeprecationWarning,
             stacklevel=2,
         )
-        self.add_overlay_from_region(stc_string, **overlay_options)
+        self.add_graphic_overlay_from_stcs(stc_string, **overlay_options)
 
     def add_graphic_overlay_from_stcs(
         self, stc_string: Union[typing.List[str], str], **overlay_options: any
@@ -459,9 +458,10 @@ class Aladin(anywidget.AnyWidget):
 
         Parameters
         ----------
-        stc_string: str
-            The STC-S string.
+        stc_string: str, list[str]
+            The STC-S string or an array of STC-S string.
         overlay_options: keyword arguments
+            The overlay options for all the STC-S string
 
         """
         region_list = [stc_string] if not isinstance(stc_string, list) else stc_string
