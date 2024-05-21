@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Support for `astropy.coordinates.SkyCoord` for assigning and reading the `target` property (#80)
 - Support for `astropy.coordinates.Angle` for reading the `fov` property (#83)
-- Support for `regions.LineSkyRegion`, `regions.CircleSkyRegion`, `regions.EllipseSkyRegion`, `regions.PolygonSkyRegion`, `regions.RectangleSkyRegion`, `regions.Regions` with `add_overlay_from_region` (#88)
+- Support for `regions.LineSkyRegion`, `regions.CircleSkyRegion`, `regions.EllipseSkyRegion`, `regions.PolygonSkyRegion`, `regions.RectangleSkyRegion`, `regions.Regions` with `add_graphic_overlay_from_region` (#88)
 
 ### Fixed
 
@@ -32,6 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Change the jslink fov trait from `fov` to `shared_fov` (#83)
 - Deprecate the `add_listener` method for a preferred use of `set_listener` method (#82)
 - Upgrade Aladin Lite version to 3.4.1-beta (#88)
+- Add support for list of strings in `add_overlay_from_stcs` (#88)
+- Deprecate `add_overlay_from_stcs` in favor of `add_graphic_overlay_from_stcs` (#88)
 
 ## [0.3.0]
 
