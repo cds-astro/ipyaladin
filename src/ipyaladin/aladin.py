@@ -183,6 +183,27 @@ class Aladin(anywidget.AnyWidget):
             }
         )
 
+    def add_hips(self, src: str, **hips_options: any) -> None:
+        """Load a HiPS survey into the Aladin Lite widget.
+
+        Parameters
+        ----------
+        src: str
+            The id or url of the HiPS survey.
+            List of survey ids: https://aladin.cds.unistra.fr/hips/list
+        hips_options: keyword arguments
+            See https://cds-astro.github.io/aladin-lite/global.html#ImageHiPSOptions for
+            the list of available options.
+
+        """
+        self.send(
+            {
+                "event_name": "add_hips",
+                "src": src,
+                "options": hips_options,
+            }
+        )
+
     def add_catalog_from_URL(
         self, votable_URL: str, votable_options: Optional[dict] = None
     ) -> None:
