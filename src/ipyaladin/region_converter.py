@@ -149,6 +149,7 @@ class RegionInfos:
         angle = region.angle
         if isinstance(region.angle, Quantity):
             angle = Angle(region.angle)
+        angle = Angle(angle.deg - 90, unit="deg")
         a = region.width
         if isinstance(region.width, Quantity):
             a = Angle(region.width)
