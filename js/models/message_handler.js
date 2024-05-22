@@ -17,7 +17,6 @@ export default class MessageHandler {
   handleAddHips(msg) {
     const options = convertOptionNamesToCamelCase(msg["options"] || {});
     const hips = A.imageHiPS(msg["src"], options);
-    if (msg["src"].includes("http")) hips.url = msg["src"];
     this.aladin.addNewImageLayer(hips);
   }
 

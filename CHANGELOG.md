@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Change the jslink target trait from `target` to `shared_target` (#80)
 - Change the jslink fov trait from `fov` to `shared_fov` (#83)
 - Deprecate the `add_listener` method for a preferred use of `set_listener` method (#82)
+- Upgrade Aladin Lite version to 3.4.1-beta (#84)
 
 ## [0.3.0]
 
