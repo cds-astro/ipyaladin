@@ -378,31 +378,42 @@ class Aladin(anywidget.AnyWidget):
         region: SupportedRegion,
         **graphic_options: any,
     ) -> None:
-        """Add an overlay layer to the Aladin Lite widget.
+        """Add an overlay graphic layer to the Aladin Lite widget.
 
         Parameters
         ----------
         region: `~regions.CircleSkyRegion`, `~regions.EllipseSkyRegion`,
         `~regions.LineSkyRegion`,`~regions.PolygonSkyRegion`,
-        `~regions.RectangleSkyRegion`, `~regions.Regions`
-            The region to add in Aladin Lite. It can be given
-            as a supported region or a list of regions from the regions package.
-            Region Visual object is mapped to graphic options with the following
-            mapping:
-            - edgecolor -> color
-            - facecolor -> fillColor
-            - color -> color & fillColor
-            - alpha -> opacity
-            - linewidth -> lineWidth
+        `~regions.RectangleSkyRegion`, `~regions.Regions`, or a list of these.
+            The region(s) to add in Aladin Lite. It can be given as a supported region
+            or a list of regions from the
+            `regions package<https://astropy-regions.readthedocs.io>`_.
         graphic_options: keyword arguments
             The options for the graphic overlay. Use Region visual for region options.
-            See graphicOverlay options  here https://cds-astro.github.io/aladin-lite/A.html
+            See the Aladin Lite
+            `graphicOverlay options<https://cds-astro.github.io/aladin-lite/A.html>`_
+
+        See Also
+        --------
+        add_graphic_overlay_from_stcs: for shapes described as STC-S strings.
+
+        Notes
+        -----
+        The possible `~regions.RegionVisual` options correspond to the
+        Aladin Lite / ipyaladin parameters:
+
+        | RegionVisual |      AladinLite     |        ipyaladin     |
+        |--------------|---------------------|----------------------|
+        | edgecolor    | color               | color                |
+        | facecolor    | fillColor           | fill_color           |
+        | color        | color and fillColor | color and fill_color |
+        | alpha        | opacity             | opacity              |
+        | linewidth    | lineWidth           | line_width           |
 
         """
         if Region is None:
             raise ModuleNotFoundError(
-                "A region can be given as a regions object. To read "
-                "regions objects, you need to install the regions library with "
+                "To read regions objects, you need to install the regions library with "
                 "'pip install regions'."
             )
 
@@ -420,8 +431,8 @@ class Aladin(anywidget.AnyWidget):
             # Check if the regions library is installed and raise an error if not
             if not isinstance(region_element, Region):
                 raise ValueError(
-                    "region must be a string or a `~regions` object. See the "
-                    "documentation for the supported region types."
+                    "region must a `~regions` object or a list of `~regions` objects. "
+                    "See the documentation for the supported region types."
                 )
 
             from .region_converter import RegionInfos
@@ -445,14 +456,14 @@ class Aladin(anywidget.AnyWidget):
         Parameters
         ----------
         stc_string: str, list[str]
-            The STC-S string or an array of STC-S strings.
+            The STC-S string or a list of STC-S strings.
         overlay_options: keyword arguments
             The overlay options for all the STC-S strings
 
         """
         warnings.warn(
-            "add_overlay_from_stcs is deprecated, "
-            "use add_graphic_overlay_from_stcs instead",
+            "'add_overlay_from_stcs' is deprecated, "
+            "use 'add_graphic_overlay_from_stcs' instead",
             DeprecationWarning,
             stacklevel=2,
         )
@@ -466,9 +477,14 @@ class Aladin(anywidget.AnyWidget):
         Parameters
         ----------
         stc_string: str, list[str]
-            The STC-S string or an array of STC-S string.
+            The STC-S string or a list of STC-S strings.
         overlay_options: keyword arguments
-            The overlay options for all the STC-S string
+            The overlay options for all the STC-S strings.
+
+        See Also
+        --------
+        add_graphic_overlay_from_region: if the shape is in an astropy `~regions`
+        object.
 
         """
         region_list = [stc_string] if not isinstance(stc_string, list) else stc_string
@@ -547,8 +563,8 @@ class Aladin(anywidget.AnyWidget):
             A python function to be called when the event corresponding to the
             listener_type is detected
 
-        Note
-        ----
+        Notes
+        -----
         This method is deprecated, use set_listener instead
 
         """
