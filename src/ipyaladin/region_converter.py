@@ -159,8 +159,8 @@ class RegionInfos:
         self.infos = {
             "ra": region.center.ra.deg,
             "dec": region.center.dec.deg,
-            "a": a.deg,
-            "b": b.deg,
+            "a": a.deg / 2,
+            "b": b.deg / 2,
             "theta": angle.deg,
         }
 
