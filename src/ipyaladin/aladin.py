@@ -11,10 +11,10 @@ from typing import ClassVar, Union, Final, Optional
 import warnings
 
 import anywidget
+from astropy.coordinates import SkyCoord, Angle
 from astropy.table.table import QTable
 from astropy.table import Table
-from astropy.coordinates import SkyCoord, Angle
-import traitlets
+from astropy.wcs import WCS
 
 try:
     from regions import (
@@ -34,6 +34,7 @@ except ImportError:
     RectangleSkyRegion = None
     Region = None
     Regions = None
+import traitlets
 from traitlets import (
     Float,
     Int,
@@ -121,6 +122,9 @@ class Aladin(anywidget.AnyWidget):
     grid_color = Unicode("rgb(178, 50, 178)").tag(sync=True, init_option=True)
     grid_opacity = Float(0.5).tag(sync=True, init_option=True)
     grid_options = traitlets.Dict().tag(sync=True, init_option=True)
+
+    # Synchronized traitlets
+    _wcs = traitlets.Dict().tag(sync=True)
 
     # content of the last click
     clicked_object = traitlets.Dict().tag(sync=True)
@@ -219,6 +223,36 @@ class Aladin(anywidget.AnyWidget):
                 "dec": target.icrs.dec.deg,
             }
         )
+
+    @property
+    def wcs(self) -> WCS:
+        """The WCS of the Aladin Lite widget.
+
+        Returns
+        -------
+        WCS
+            An `~astropy.wcs.WCS` object representing the WCS of the widget.
+
+        """
+        if self._wcs == {}:
+            raise ValueError(
+                "You need to call synchronize_wcs first and in "
+                "another Jupyter cell to get the WCS."
+            )
+        wcs = WCS(naxis=self._wcs["NAXIS"])
+        wcs.wcs.cdelt = [self._wcs["CDELT1"], self._wcs["CDELT2"]]
+        wcs.wcs.crpix = [self._wcs["CRPIX1"], self._wcs["CRPIX2"]]
+        wcs.wcs.crval = [self._wcs["CRVAL1"], self._wcs["CRVAL2"]]
+        wcs.wcs.ctype = [self._wcs["CTYPE1"], self._wcs["CTYPE2"]]
+        wcs.wcs.cunit = [self._wcs["CUNIT1"].strip(), self._wcs["CUNIT2"].strip()]
+        wcs.wcs.radesys = self._wcs["RADECSYS"].strip()
+        wcs.array_shape = (self._wcs["NAXIS2"], self._wcs["NAXIS1"])
+        return wcs
+
+    def synchronize_wcs(self) -> None:
+        """Synchronize the WCS of the Aladin Lite widget with the given WCS."""
+        self._wcs = {}
+        self.send({"event_name": "synchronize_wcs"})
 
     def add_catalog_from_URL(
         self, votable_URL: str, votable_options: Optional[dict] = None

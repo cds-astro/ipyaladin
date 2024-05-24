@@ -12,7 +12,7 @@ export default class EventHandler {
     this.aladin = aladin;
     this.aladinDiv = aladinDiv;
     this.model = model;
-    this.messageHandler = new MessageHandler(aladin);
+    this.messageHandler = new MessageHandler(aladin, model);
   }
 
   /**
@@ -171,6 +171,7 @@ export default class EventHandler {
     this.eventHandlers = {
       change_fov: this.messageHandler.handleChangeFoV,
       goto_ra_dec: this.messageHandler.handleGotoRaDec,
+      synchronize_wcs: this.messageHandler.handleSynchronizeWCS,
       add_catalog_from_URL: this.messageHandler.handleAddCatalogFromURL,
       add_MOC_from_URL: this.messageHandler.handleAddMOCFromURL,
       add_MOC_from_dict: this.messageHandler.handleAddMOCFromDict,

@@ -2,8 +2,9 @@ import { convertOptionNamesToCamelCase } from "../utils";
 import A from "../aladin_lite";
 
 export default class MessageHandler {
-  constructor(aladin) {
+  constructor(aladin, model) {
     this.aladin = aladin;
+    this.model = model;
   }
 
   handleChangeFoV(msg) {
@@ -12,6 +13,13 @@ export default class MessageHandler {
 
   handleGotoRaDec(msg) {
     this.aladin.gotoRaDec(msg["ra"], msg["dec"]);
+  }
+
+  handleSynchronizeWCS() {
+    const wcs = this.aladin.getViewWCS();
+    console.log(wcs);
+    this.model.set("_wcs", wcs);
+    this.model.save_changes();
   }
 
   handleAddCatalogFromURL(msg) {
