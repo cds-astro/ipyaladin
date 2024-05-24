@@ -228,6 +228,9 @@ class Aladin(anywidget.AnyWidget):
     def wcs(self) -> WCS:
         """The WCS of the Aladin Lite widget.
 
+        You need to call synchronize_wcs in a previous
+        cell before accessing this attribute.
+
         Returns
         -------
         WCS
@@ -236,8 +239,8 @@ class Aladin(anywidget.AnyWidget):
         """
         if self._wcs == {}:
             raise ValueError(
-                "You need to call synchronize_wcs first and in "
-                "another Jupyter cell to get the WCS."
+                "You need to call synchronize_wcs before accessing the wcs attribute. "
+                "The WCS attribute need to be accessed from the next cell."
             )
         wcs = WCS(naxis=self._wcs["NAXIS"])
         wcs.wcs.cdelt = [self._wcs["CDELT1"], self._wcs["CDELT2"]]

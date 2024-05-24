@@ -33,6 +33,30 @@ aladin = Aladin()
 aladin
 ```
 
+## Widget limitations
+
+Because some limitations of the widget framework, some operations need specific behaviors.
+
+### Aladin Lite values
+
+Some values need to be synchronized in their own cell before being used in a next one, like:
+
+- wcs
+
+#### Example with the wcs value:
+
+First cell:
+
+```python
+aladin.synchronize_wcs()
+```
+
+Second cell:
+
+```python
+print(aladin.wcs)
+```
+
 ## Development installation
 
 First, make sure you have installed jupyter in your python environnement: `pip install jupyter`.
