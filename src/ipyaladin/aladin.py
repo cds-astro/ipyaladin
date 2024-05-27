@@ -242,15 +242,9 @@ class Aladin(anywidget.AnyWidget):
                 "You need to call synchronize_wcs before accessing the wcs attribute. "
                 "The WCS attribute need to be accessed from the next cell."
             )
-        wcs = WCS(naxis=self._wcs["NAXIS"])
-        wcs.wcs.cdelt = [self._wcs["CDELT1"], self._wcs["CDELT2"]]
-        wcs.wcs.crpix = [self._wcs["CRPIX1"], self._wcs["CRPIX2"]]
-        wcs.wcs.crval = [self._wcs["CRVAL1"], self._wcs["CRVAL2"]]
-        wcs.wcs.ctype = [self._wcs["CTYPE1"], self._wcs["CTYPE2"]]
-        wcs.wcs.cunit = [self._wcs["CUNIT1"].strip(), self._wcs["CUNIT2"].strip()]
-        wcs.wcs.radesys = self._wcs["RADECSYS"].strip()
-        wcs.array_shape = (self._wcs["NAXIS2"], self._wcs["NAXIS1"])
-        return wcs
+        if "RADECSYS" in self._wcs:  # RADECSYS keyword is deprecated for astropy.WCS
+            self._wcs["RADESYS"] = self._wcs.pop("RADECSYS")
+        return WCS(self._wcs)
 
     def synchronize_wcs(self) -> None:
         """Synchronize the WCS of the Aladin Lite widget with the given WCS."""
