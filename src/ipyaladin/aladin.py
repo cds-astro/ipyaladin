@@ -122,6 +122,9 @@ class Aladin(anywidget.AnyWidget):
     grid_opacity = Float(0.5).tag(sync=True, init_option=True)
     grid_options = traitlets.Dict().tag(sync=True, init_option=True)
 
+    # Synchronized traitlets
+    _xy_fov = traitlets.Dict().tag(sync=True)
+
     # content of the last click
     clicked_object = traitlets.Dict().tag(sync=True)
     # listener callback is on the python side and contains functions to link to events
@@ -219,6 +222,34 @@ class Aladin(anywidget.AnyWidget):
                 "dec": target.icrs.dec.deg,
             }
         )
+
+    @property
+    def xy_fov(self) -> typing.Tuple[Angle, Angle]:
+        """The field of view of the Aladin Lite widget along the x and y axes.
+
+        You need to call synchronize_xy_fov in a previous
+        cell before accessing this attribute.
+
+        Returns
+        -------
+        tuple
+            A tuple containing two `~astropy.units.Angle` objects representing the
+            field of view along the horizontal and vertical axes.
+
+        """
+        if self._xy_fov == {}:
+            raise ValueError(
+                "You need to call synchronize_xy_fov before accessing the xy_fov "
+                "property. The xy_fov property need to be accessed from the next cell."
+            )
+        return Angle(self._xy_fov["x"], unit="deg"), Angle(
+            self._xy_fov["y"], unit="deg"
+        )
+
+    def synchronize_xy_fov(self) -> None:
+        """Synchronize the xy_fov of Aladin Lite with the given xy_fov property."""
+        self._xy_fov = {}
+        self.send({"event_name": "synchronize_fov"})
 
     def add_catalog_from_URL(
         self, votable_URL: str, votable_options: Optional[dict] = None
