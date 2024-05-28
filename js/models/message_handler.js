@@ -17,7 +17,6 @@ export default class MessageHandler {
 
   handleSynchronizeWCS() {
     const wcs = this.aladin.getViewWCS();
-    console.log(wcs);
     this.model.set("_wcs", wcs);
     this.model.save_changes();
   }
