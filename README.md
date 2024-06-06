@@ -50,10 +50,10 @@ be directly reflected in the notebook editor of your choice (JupyterLab, VSCode,
 
 ## How does it work?
 
-Ipyaladin brings [Aladin-lite](https://github.com/cds-astro/aladin-lite) into notebooks thanks to
+Ipyaladin brings [Aladin Lite](https://github.com/cds-astro/aladin-lite) into notebooks thanks to
 [Anywidget](https://anywidget.dev/).
 
-Correspondence table between ipyaladin versions and Aladin-lite versions:
+Correspondence table between ipyaladin versions and Aladin Lite versions:
 
 | ipyaladin  | Aladin-Lite |
 | ---------- | ----------- |
