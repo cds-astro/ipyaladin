@@ -59,3 +59,11 @@ Correspondence table between ipyaladin versions and Aladin-lite versions:
 | ---------- | ----------- |
 | 0.3.0      | 3.3.3-dev   |
 | unreleased | 3.4.1-beta  |
+
+## Acknowledging ipyaladin
+
+If you use ipyaladin for your work or research, we kindly ask you to cite it with the following acknowledgment:
+
+> This research made use of ipyaladin, developed by CDS, Strasbourg Astronomical Observatory, France.
+> 
+> [2020ASPC..522..117B](https://ui.adsabs.harvard.edu/abs/2020ASPC..522..117B) - ipyaladin: Enabling Aladin Lite in Jupyter Notebooks
