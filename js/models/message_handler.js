@@ -14,6 +14,15 @@ export default class MessageHandler {
     this.aladin.gotoRaDec(msg["ra"], msg["dec"]);
   }
 
+  handleSynchronizeFoV() {
+    const fov = this.aladin.getFoV();
+    this.model.set("_xy_fov", {
+      x: fov[0],
+      y: fov[1],
+    });
+    this.model.save_changes();
+  }
+
   handleAddCatalogFromURL(msg) {
     const options = convertOptionNamesToCamelCase(msg["options"] || {});
     this.aladin.addCatalog(A.catalogFromURL(msg["votable_URL"], options));
