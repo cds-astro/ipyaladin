@@ -19,8 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Support for `astropy.coordinates.SkyCoord` for assigning and reading the `target` property (#80)
-- Support for `astropy.coordinates.Angle` for reading the `fov` property (#83)
+- Support for `astropy.coordinates.Angle` for assigning and reading the `fov` property (#83)
 - Support for `regions.LineSkyRegion`, `regions.CircleSkyRegion`, `regions.EllipseSkyRegion`, `regions.PolygonSkyRegion`, `regions.RectangleSkyRegion`, `regions.Regions` with `add_graphic_overlay_from_region` (#88)
+- Support for `wcs` property as an `astropy.WCS` that can be synchronized using the `synchronize_wcs` method (#89)
 
 ### Fixed
 
