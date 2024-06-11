@@ -14,6 +14,27 @@ export default class MessageHandler {
     this.aladin.gotoRaDec(msg["ra"], msg["dec"]);
   }
 
+  handleAddFits(msg, buffers) {
+    const options = convertOptionNamesToCamelCase(msg["options"] || {});
+    const buffer = buffers[0].buffer;
+    const decoder = new TextDecoder("utf-8");
+    const blob = new Blob([decoder.decode(buffer)]);
+    console.log(blob);
+    const url = URL.createObjectURL(blob);
+    // TODO: Change the name of the overlay to something more meaningful
+    const image = this.aladin.createImageFITS(
+      url,
+      "temp",
+      options,
+      (ra, dec) => {
+        console.log(`FITS located at ra: ${ra}, dec: ${dec}`);
+        URL.revokeObjectURL(url);
+      },
+    );
+    console.log(image);
+    this.aladin.setOverlayImageLayer(image, "temp");
+  }
+
   handleAddCatalogFromURL(msg) {
     const options = convertOptionNamesToCamelCase(msg["options"] || {});
     this.aladin.addCatalog(A.catalogFromURL(msg["votable_URL"], options));
