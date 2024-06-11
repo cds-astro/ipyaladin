@@ -13,9 +13,9 @@ ipyaladin/nbextension/
 ipyaladin/labextension/
 
 # Yarn package json
-package-lock.json
 js/yarn.lock
 js/.yarn
+.yarn/
 
 # OS X
 .DS_Store
@@ -23,3 +23,13 @@ js/.yarn
 # Conda builds
 conda-recipe/distrib
 conda-recipe/ipyaladin
+
+# Playwrigth tests
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+# Python tests
+.pytest_cache/
+.ruff_cache/
