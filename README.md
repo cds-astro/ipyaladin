@@ -10,6 +10,7 @@ With a couple of lines, you can display Aladin Lite, center it on the target of 
   - [Installation](#installation)
   - [Development installation](#development-installation)
   - [How does it work?](#how-does-it-work)
+  - [Acknowledging ipyaladin](#acknowledging-ipyaladin)
 
 ## Examples
 
@@ -65,5 +66,5 @@ Correspondence table between ipyaladin versions and Aladin Lite versions:
 If you use ipyaladin for your work or research, we kindly ask you to cite it with the following acknowledgment:
 
 > This research made use of ipyaladin, developed by CDS, Strasbourg Astronomical Observatory, France (DOI: [10.26093/kpaw-kb74](https://doi.org/10.26093/kpaw-kb74) ).
-> 
+>
 > [2020ASPC..522..117B](https://ui.adsabs.harvard.edu/abs/2020ASPC..522..117B) - ipyaladin: Enabling Aladin Lite in Jupyter Notebooks (Boch T. et al.)
