@@ -2,7 +2,7 @@
 
 import importlib.metadata
 
-from .aladin import Aladin  # noqa: F401
+from .widget import Aladin  # noqa: F401
 
 
 try:
