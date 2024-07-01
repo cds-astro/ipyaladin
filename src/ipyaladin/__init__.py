@@ -1,11 +1,4 @@
 """Top-level package for ipyaladin."""
 
-import importlib.metadata
-
 from .widget import Aladin  # noqa: F401
-
-
-try:
-    __version__ = importlib.metadata.version("ipyaladin")
-except importlib.metadata.PackageNotFoundError:
-    __version__ = "unknown"
+from .__about__ import __version__, __aladin_lite_version__  # noqa: F401
