@@ -103,20 +103,22 @@ export default class EventHandler {
     });
 
     this.aladin.on("objectClicked", (clicked) => {
-      let clickedContent = {
-        ra: clicked["ra"],
-        dec: clicked["dec"],
-      };
-      if (clicked["data"] !== undefined) {
-        clickedContent["data"] = clicked["data"];
+      if (clicked) {
+        let clickedContent = {
+          ra: clicked["ra"],
+          dec: clicked["dec"],
+        };
+        if (clicked["data"] !== undefined) {
+          clickedContent["data"] = clicked["data"];
+        }
+        this.model.set("clicked_object", clickedContent);
+        // send a custom message in case the user wants to define their own callbacks
+        this.model.send({
+          event_type: "object_clicked",
+          content: clickedContent,
+        });
+        this.model.save_changes();
       }
-      this.model.set("clicked", clickedContent);
-      // send a custom message in case the user wants to define their own callbacks
-      this.model.send({
-        event_type: "object_clicked",
-        content: clickedContent,
-      });
-      this.model.save_changes();
     });
 
     this.aladin.on("click", (clickContent) => {
