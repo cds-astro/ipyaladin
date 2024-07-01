@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `clicked_object` was not properly updated after a click
 - Fix asynchronous update for the `target` property (#80)
 
 ### Changed
