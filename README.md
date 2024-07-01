@@ -61,6 +61,18 @@ Correspondence table between ipyaladin versions and Aladin Lite versions:
 | 0.3.0      | 3.3.3-dev   |
 | unreleased | 3.4.1-beta  |
 
+> [!TIP]
+> This can always be read like so
+>
+> ```python
+> from ipyaladin import __version__, __aladin_lite_version__
+> print("version:", __version__, "running aladin lite:", __aladin_lite_version__)
+> ```
+>
+> ```
+> version: unreleased running aladin lite: 3.4.1-beta
+> ```
+
 ## Acknowledging ipyaladin
 
 If you use ipyaladin for your work or research, we kindly ask you to cite it with the following acknowledgment:
