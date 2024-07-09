@@ -3,9 +3,15 @@
     "dev": "pip install -e '.[dev]' && npm run build -- --sourcemap=inline --watch",
     "build": "esbuild js/widget.js --minify --format=esm --bundle --outdir=src/ipyaladin/static",
     "prepare": "husky install",
-    "format": "npx prettier . --write && ruff format"
+    "format": "npx prettier . --write && ruff format",
+    "start-test-server": "python -m jupyter lab --config js/ui-tests/jupyter_server_test_config.py",
+    "python-test": "python -m pytest",
+    "js-test": "npm run start-test-server & npx playwright test",
+    "update-snapshots": "npx playwright test --update-snapshots"
   },
   "devDependencies": {
+    "@jupyterlab/galata": "^5.2.3",
+    "@playwright/test": "^1.44.0",
     "esbuild": "^0.20.0",
     "husky": "^8.0.0",
     "lint-staged": "^15.2.2",
