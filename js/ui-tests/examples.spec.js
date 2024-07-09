@@ -26,6 +26,9 @@ test("1-Getting-Started", async ({ page, request, tmpPath }) => {
   await page.notebook.runCellByCell();
   // Wait for Aladin to pop
   await setTimeout(3000); // 3s
+  // Scroll to the top of the notebook
+  page.notebook.getCellLocator(2);
+  page.mouse.wheel(0, -2000);
   // Save
   await page.notebook.save();
   // And check snapshot (maybe we should clip to div jp-main-dock-panel)
