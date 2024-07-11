@@ -29,6 +29,7 @@ test_is_coordinate_string_values = [
     ("B42.67 25.48", True),
     ('17h 45m 40.0409s -29° 00′ 28.118"', True),  # noqa RUF001
     ("17h 45m 40.0409s -29° 00' 28.118\"", True),
+    ("Galactic Center", False),
 ]
 
 
