@@ -51,5 +51,9 @@ ignore = ["ISC001", "ANN101", "D203", "D213", "D100", "D105"]
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
 
+[tool.ruff.lint.per-file-ignores]
+# D104: Missing docstring in public package
+"__init__.py" = ["D104"]
+
 [tool.ruff.format]
 docstring-code-format = false

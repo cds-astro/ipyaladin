@@ -11,6 +11,8 @@ import pytest
 test_is_coordinate_string_values = [
     ("M 31", False),
     ("sgr a*", False),
+    ("α Centauri", False),  # noqa RUF001
+    ("* 17 Com", False),
     ("1:12:43.2 31:12:43", True),
     ("1:12:43.2 +31:12:43", True),
     ("1:12:43.2 -31:12:43", True),
@@ -24,11 +26,10 @@ test_is_coordinate_string_values = [
     ("42.67 +25.48", True),
     ("42.67 -25.48", True),
     ("0 0", True),
+    ("J12 30 45 +45 30 15", True),
     ("J42.67 25.48", True),
     ("G42.67 25.48", True),
     ("B42.67 25.48", True),
-    ('17h 45m 40.0409s -29° 00′ 28.118"', True),  # noqa RUF001
-    ("17h 45m 40.0409s -29° 00' 28.118\"", True),
     ("Galactic Center", False),
 ]
 

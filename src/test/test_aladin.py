@@ -5,6 +5,8 @@ from typing import Callable
 from ipyaladin import Aladin
 from ipyaladin.coordinate_parser import parse_coordinate_string
 
+from .test_coordinate_parser import test_is_coordinate_string_values
+
 aladin = Aladin()
 
 
@@ -15,35 +17,7 @@ def mock_sesame(monkeypatch: Callable) -> None:
     monkeypatch.setattr(SkyCoord, "from_name", lambda _: SkyCoord(0, 0, unit="deg"))
 
 
-test_aladin_string_target = [
-    "M 31",
-    "sgr a*",
-    "α Centauri",  # noqa RUF001
-    "* 17 Com",
-    "1:12:43.2 31:12:43",
-    "1:12:43.2 +31:12:43",
-    "1:12:43.2 -31:12:43",
-    "1 12 43.2 31 12 43",
-    "1 12 43.2 +31 12 43",
-    "1 12 43.2 -31 12 43",
-    "1h12m43.2s 1d12m43s",
-    "1h12m43.2s +1d12m43s",
-    "1h12m43.2s -1d12m43s",
-    "42.67 25.48",
-    "42.67 +25.48",
-    "42.67 -25.48",
-    "0 0",
-    "J42.67 25.48",
-    "G42.67 25.48",
-    "B42.67 25.48",
-    "J12 30 45 +45 30 15",
-    "J03 15 20 -10 20 30",
-    "G120.5 -45.7",
-    "G90 0",
-    "B60 30",
-    "B120 -45",
-    "Galactic Center",
-]
+test_aladin_string_target, _ = zip(*test_is_coordinate_string_values)
 
 
 @pytest.mark.parametrize("target", test_aladin_string_target)
