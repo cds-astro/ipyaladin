@@ -49,7 +49,7 @@ def _is_coordinate_string(string: str) -> bool:
         True if the string is a coordinate string, False otherwise.
 
     """
-    regex = r"^([JGB].*|[0-9][0-9: hmsd.°′'\"+-]+)$"  # noqa RUF001
+    regex = r"^[JGB]?\d[0-9: hmsd.°′'\"+-]+$"  # noqa RUF001
     return bool(re.match(regex, string))
 
 
