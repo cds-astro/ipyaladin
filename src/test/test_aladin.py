@@ -1,4 +1,5 @@
 from astropy.coordinates import Angle, SkyCoord
+import numpy as np
 import pytest
 from typing import Callable
 
@@ -32,8 +33,8 @@ def test_aladin_string_target_set(target: str, mock_sesame: Callable) -> None:  
     """
     aladin.target = target
     parsed_target = parse_coordinate_string(target)
-    assert aladin.target.icrs.ra.deg == parsed_target.icrs.ra.deg
-    assert aladin.target.icrs.dec.deg == parsed_target.icrs.dec.deg
+    assert np.isclose(aladin.target.icrs.ra.deg, parsed_target.icrs.ra.deg)
+    assert np.isclose(aladin.target.icrs.dec.deg, parsed_target.icrs.dec.deg)
 
 
 @pytest.mark.parametrize("target", test_aladin_string_target)
@@ -48,8 +49,8 @@ def test_aladin_sky_coord_target_set(target: str, mock_sesame: Callable) -> None
     """
     sc_target = parse_coordinate_string(target)
     aladin.target = sc_target
-    assert aladin.target.icrs.ra.deg == sc_target.icrs.ra.deg
-    assert aladin.target.icrs.dec.deg == sc_target.icrs.dec.deg
+    assert np.isclose(aladin.target.icrs.ra.deg, sc_target.icrs.ra.deg)
+    assert np.isclose(aladin.target.icrs.dec.deg, sc_target.icrs.dec.deg)
 
 
 test_aladin_float_fov = [
