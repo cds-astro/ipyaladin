@@ -1,6 +1,8 @@
 import { convertOptionNamesToCamelCase } from "../utils";
 import A from "../aladin_lite";
 
+let imageCount = 0;
+
 export default class MessageHandler {
   constructor(aladin) {
     this.aladin = aladin;
@@ -20,17 +22,12 @@ export default class MessageHandler {
     const decoder = new TextDecoder("utf-8");
     const blob = new Blob([decoder.decode(buffer)]);
     const url = URL.createObjectURL(blob);
-    // TODO: Change the name of the overlay to something more meaningful
-    const image = this.aladin.createImageFITS(
-      url,
-      "temp",
-      options,
-      (ra, dec) => {
-        console.info(`FITS located at ra: ${ra}, dec: ${dec}`);
-        URL.revokeObjectURL(url);
-      },
-    );
-    this.aladin.setOverlayImageLayer(image, "temp");
+    const image = this.aladin.createImageFITS(url, options, (ra, dec) => {
+      this.aladin.gotoRaDec(ra, dec);
+      console.info(`FITS located at ra: ${ra}, dec: ${dec}`);
+      URL.revokeObjectURL(url);
+    });
+    this.aladin.setOverlayImageLayer(image, `image_${++imageCount}`);
   }
 
   handleAddCatalogFromURL(msg) {
