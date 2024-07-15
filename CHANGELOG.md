@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for `astropy.coordinates.SkyCoord` for assigning and reading the `target` property (#80)
 - Support for `astropy.coordinates.Angle` for reading the `fov` property (#83)
 - Support for `regions.LineSkyRegion`, `regions.CircleSkyRegion`, `regions.EllipseSkyRegion`, `regions.PolygonSkyRegion`, `regions.RectangleSkyRegion`, `regions.Regions` with `add_graphic_overlay_from_region` (#88)
+- Support for adding fits with `add_fits` using `astropy.io.fits.HDUList` or path as `pathlib.Path` or `string` (#86)
 
 ### Fixed
 
