@@ -18,6 +18,7 @@ export default class MessageHandler {
 
   handleAddFits(msg, buffers) {
     const options = convertOptionNamesToCamelCase(msg["options"] || {});
+    if (!options.name) options.name = `image_${++imageCount}`;
     const buffer = buffers[0];
     const blob = new Blob([buffer], { type: "application/octet-stream" });
     const url = URL.createObjectURL(blob);
@@ -26,7 +27,7 @@ export default class MessageHandler {
       console.info(`FITS located at ra: ${ra}, dec: ${dec}`);
       URL.revokeObjectURL(url);
     });
-    this.aladin.setOverlayImageLayer(image, `image_${++imageCount}`);
+    this.aladin.setOverlayImageLayer(image, options.name);
   }
 
   handleAddCatalogFromURL(msg) {

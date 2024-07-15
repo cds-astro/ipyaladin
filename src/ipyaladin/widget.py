@@ -245,12 +245,16 @@ class Aladin(anywidget.AnyWidget):
             }
         )
 
-    def add_fits(self, fits: Union[str, Path, HDUList]) -> None:
+    def add_fits(self, fits: Union[str, Path, HDUList], **image_options: any) -> None:
         """Load a FITS file into the widget.
 
         Parameters
         ----------
-        fits: a path as a string or an `~astropy.io.fits.HDUList` object
+        fits: a path as a string or `pathlib.Path`, or an `~astropy.io.fits.HDUList`
+            The FITS file to load into the widget.
+        image_options: dict
+            The options for the image. See the Aladin Lite image options:
+            https://cds-astro.github.io/aladin-lite/global.html#ImageOptions
 
         """
         is_path = isinstance(fits, (Path, str))
@@ -262,7 +266,10 @@ class Aladin(anywidget.AnyWidget):
             fits_bytes = io.BytesIO()
             fits.writeto(fits_bytes)
 
-        self.send({"event_name": "add_fits"}, buffers=[fits_bytes.getvalue()])
+        self.send(
+            {"event_name": "add_fits", "options": image_options},
+            buffers=[fits_bytes.getvalue()],
+        )
 
     # MOCs
 
