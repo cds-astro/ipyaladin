@@ -186,7 +186,7 @@ class Aladin(anywidget.AnyWidget):
 
     @property
     def fov_xy(self) -> Tuple[Angle, Angle]:
-        """The field of view of the Aladin Lite along the two axis.
+        """The field of view of the Aladin Lite along the two axes.
 
         Returns
         -------
