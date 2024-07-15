@@ -180,6 +180,11 @@ class Aladin(anywidget.AnyWidget):
             An astropy WCS object representing the world coordinate system.
 
         """
+        if self._wcs == {}:
+            raise ValueError(
+                "The world coordinate system is not available. "
+                "Please recover it from another cell."
+            )
         if "RADECSYS" in self._wcs:  # RADECSYS keyword is deprecated for astropy.WCS
             self._wcs["RADESYS"] = self._wcs.pop("RADECSYS")
         return WCS(self._wcs)
@@ -194,6 +199,11 @@ class Aladin(anywidget.AnyWidget):
             A tuple of astropy.units.Angle objects representing the field of view.
 
         """
+        if self._fov_xy == {}:
+            raise ValueError(
+                "The field of view along the two axes is not available. "
+                "Please recover it from another cell."
+            )
         return (
             Angle(self._fov_xy["x"], unit="deg"),
             Angle(self._fov_xy["y"], unit="deg"),
@@ -219,6 +229,8 @@ class Aladin(anywidget.AnyWidget):
         if isinstance(fov, Angle):
             fov = fov.deg
         self._fov = fov
+        self._fov_xy = {}
+        self._wcs = {}
         self.send({"event_name": "change_fov", "fov": fov})
 
     @property
@@ -234,6 +246,7 @@ class Aladin(anywidget.AnyWidget):
 
         """
         ra, dec = self._target.split(" ")
+        self._wcs = None
         return SkyCoord(
             ra=ra,
             dec=dec,
