@@ -24,6 +24,15 @@ function initAladinLite(model, el) {
   const raDec = initOptions["target"].split(" ");
   aladin.gotoRaDec(raDec[0], raDec[1]);
 
+  // Set current FoV and WCS
+  const FoV = aladin.getFov();
+  model.set("_fov_xy", {
+    x: FoV[0],
+    y: FoV[1],
+  });
+  model.set("_wcs", aladin.getViewWCS());
+  model.save_changes();
+
   el.appendChild(aladinDiv);
   return { aladin, aladinDiv };
 }

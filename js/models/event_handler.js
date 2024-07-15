@@ -42,6 +42,7 @@ export default class EventHandler {
       }
       jsTargetLock.lock();
       const raDec = [position.ra, position.dec];
+      this.model.set("_wcs", this.aladin.getViewWCS());
       this.model.set("_target", `${raDec[0]} ${raDec[1]}`);
       this.model.save_changes();
     });
@@ -68,7 +69,13 @@ export default class EventHandler {
       }
       jsFovLock.lock();
       // fov MUST be cast into float in order to be sent to the model
+      this.model.set("_wcs", this.aladin.getViewWCS());
       this.model.set("_fov", parseFloat(fov.toFixed(5)));
+      const fov_xy = this.aladin.getFov();
+      this.model.set("_fov_xy", {
+        x: fov_xy[0],
+        y: fov_xy[1],
+      });
       this.model.save_changes();
     });
 

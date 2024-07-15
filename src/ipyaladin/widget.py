@@ -9,7 +9,7 @@ import io
 import pathlib
 from pathlib import Path
 import typing
-from typing import ClassVar, Union, Final, Optional
+from typing import ClassVar, Union, Final, Optional, Tuple
 import warnings
 
 import anywidget
@@ -19,6 +19,7 @@ from astropy.coordinates import SkyCoord, Angle
 from astropy.io import fits as astropy_fits
 from astropy.io.fits import HDUList
 import traitlets
+from astropy.wcs import WCS
 
 try:
     from regions import (
@@ -126,6 +127,10 @@ class Aladin(anywidget.AnyWidget):
     grid_opacity = Float(0.5).tag(sync=True, init_option=True)
     grid_options = traitlets.Dict().tag(sync=True, init_option=True)
 
+    # Values
+    _wcs = traitlets.Dict().tag(sync=True)
+    _fov_xy = traitlets.Dict().tag(sync=True)
+
     # content of the last click
     clicked_object = traitlets.Dict().tag(sync=True)
     # listener callback is on the python side and contains functions to link to events
@@ -164,6 +169,35 @@ class Aladin(anywidget.AnyWidget):
             self.listener_callback["click"](message_content)
         elif event_type == "select" and "select" in self.listener_callback:
             self.listener_callback["select"](message_content)
+
+    @property
+    def wcs(self) -> WCS:
+        """The world coordinate system of the Aladin Lite widget.
+
+        Returns
+        -------
+        WCS
+            An astropy WCS object representing the world coordinate system.
+
+        """
+        if "RADECSYS" in self._wcs:  # RADECSYS keyword is deprecated for astropy.WCS
+            self._wcs["RADESYS"] = self._wcs.pop("RADECSYS")
+        return WCS(self._wcs)
+
+    @property
+    def fov_xy(self) -> Tuple[Angle, Angle]:
+        """The field of view of the Aladin Lite along the two axis.
+
+        Returns
+        -------
+        tuple[Angle, Angle]
+            A tuple of astropy.units.Angle objects representing the field of view.
+
+        """
+        return (
+            Angle(self._fov_xy["x"], unit="deg"),
+            Angle(self._fov_xy["y"], unit="deg"),
+        )
 
     @property
     def fov(self) -> Angle:
