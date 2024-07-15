@@ -18,9 +18,8 @@ export default class MessageHandler {
 
   handleAddFits(msg, buffers) {
     const options = convertOptionNamesToCamelCase(msg["options"] || {});
-    const buffer = buffers[0].buffer;
-    const decoder = new TextDecoder("utf-8");
-    const blob = new Blob([decoder.decode(buffer)]);
+    const buffer = buffers[0];
+    const blob = new Blob([buffer], { type: "application/octet-stream" });
     const url = URL.createObjectURL(blob);
     const image = this.aladin.createImageFITS(url, options, (ra, dec) => {
       this.aladin.gotoRaDec(ra, dec);

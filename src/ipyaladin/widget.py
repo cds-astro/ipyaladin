@@ -5,7 +5,9 @@ This module provides a Python wrapper around the Aladin Lite JavaScript library.
 It allows to display astronomical images and catalogs in an interactive way.
 """
 
+import io
 import pathlib
+from pathlib import Path
 import typing
 from typing import ClassVar, Union, Final, Optional
 import warnings
@@ -14,6 +16,7 @@ import anywidget
 from astropy.table.table import QTable
 from astropy.table import Table
 from astropy.coordinates import SkyCoord, Angle
+from astropy.io import fits as astropy_fits
 from astropy.io.fits import HDUList
 import traitlets
 
@@ -242,7 +245,7 @@ class Aladin(anywidget.AnyWidget):
             }
         )
 
-    def add_fits(self, fits: Union[str, HDUList]) -> None:
+    def add_fits(self, fits: Union[str, Path, HDUList]) -> None:
         """Load a FITS file into the widget.
 
         Parameters
@@ -250,17 +253,15 @@ class Aladin(anywidget.AnyWidget):
         fits: a path as a string or an `~astropy.io.fits.HDUList` object
 
         """
-        is_path = isinstance(fits, str)
+        is_path = isinstance(fits, (Path, str))
         if is_path:
-            from astropy.io import fits as astropy_fits
+            with astropy_fits.open(fits) as fits_file:
+                fits_bytes = io.BytesIO()
+                fits_file.writeto(fits_bytes)
+        else:
+            fits_bytes = io.BytesIO()
+            fits.writeto(fits_bytes)
 
-            fits = astropy_fits.open(fits)
-        import io
-
-        fits_bytes = io.BytesIO()
-        fits.writeto(fits_bytes)
-        if is_path:
-            fits.close()
         self.send({"event_name": "add_fits"}, buffers=[fits_bytes.getvalue()])
 
     # MOCs
@@ -386,8 +387,6 @@ class Aladin(anywidget.AnyWidget):
         And the table should appear in the output of Cell 1!
 
         """
-        import io
-
         table_bytes = io.BytesIO()
         table.write(table_bytes, format="votable")
         self.send(
