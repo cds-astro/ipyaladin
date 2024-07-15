@@ -97,6 +97,11 @@ export default class EventHandler {
 
     /* Aladin callbacks */
 
+    this.aladin.on("cooFrameChanged", () => {
+      this.model.set("_wcs", this.aladin.getViewWCS());
+      this.model.save_changes();
+    });
+
     this.aladin.on("objectHovered", (object) => {
       if (object["data"] !== undefined) {
         this.model.send({
