@@ -246,7 +246,6 @@ class Aladin(anywidget.AnyWidget):
 
         """
         ra, dec = self._target.split(" ")
-        self._wcs = None
         return SkyCoord(
             ra=ra,
             dec=dec,
@@ -263,6 +262,7 @@ class Aladin(anywidget.AnyWidget):
                 "target must be a string or an astropy.coordinates.SkyCoord object"
             )
         self._target = f"{target.icrs.ra.deg} {target.icrs.dec.deg}"
+        self._wcs = {}
         self.send(
             {
                 "event_name": "goto_ra_dec",
