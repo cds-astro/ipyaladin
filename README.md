@@ -56,21 +56,21 @@ Ipyaladin brings [Aladin Lite](https://github.com/cds-astro/aladin-lite) into no
 
 Correspondence table between ipyaladin versions and Aladin Lite versions:
 
-| ipyaladin  | Aladin-Lite |
-| ---------- | ----------- |
-| 0.3.0      | 3.3.3-dev   |
-| unreleased | 3.4.1-beta  |
+| ipyaladin | Aladin-Lite |
+| --------- | ----------- |
+| 0.3.0     | 3.3.3-dev   |
+| 0.4.0     | 3.4.4-beta  |
 
 > [!TIP]
 > This can always be read like so
 >
 > ```python
 > from ipyaladin import __version__, __aladin_lite_version__
-> print("version:", __version__, "running aladin lite:", __aladin_lite_version__)
+> print("version:", __version__, "running Aladin Lite:", __aladin_lite_version__)
 > ```
 >
 > ```
-> version: unreleased running aladin lite: 3.4.1-beta
+> version: 0.4.0 running Aladin Lite: 3.4.4-beta
 > ```
 
 ## Acknowledging ipyaladin

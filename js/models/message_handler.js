@@ -63,8 +63,10 @@ export default class MessageHandler {
           );
           break;
         case "line":
+          // remove default lineWidth when we switch to AL > 3.4.4
+          region.options.lineWidth = region.options.lineWidth || 3;
           overlay.add(
-            A.line(
+            A.vector(
               infos.ra1,
               infos.dec1,
               infos.ra2,

@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0]
+
 ### Added
 
 - attribute `__aladin_lite_version__` added to point to the corresponding Aladin Lite released version
@@ -27,15 +29,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `clicked_object` was not properly updated after a click
 - Fix asynchronous update for the `target` property (#80)
+- some options were not accepted in snake_case anymore in `add_moc` and in `add_catalog_from_url` (#82)
 
 ### Changed
 
 - Change the jslink target trait from `target` to `shared_target` (#80)
 - Change the jslink fov trait from `fov` to `shared_fov` (#83)
-- Deprecate the `add_listener` method for a preferred use of `set_listener` method (#82)
 - Upgrade Aladin Lite version to 3.4.1-beta (#88)
 - Add support for list of strings in `add_overlay_from_stcs` (#88)
+
+### Deprecated
+
 - Deprecate `add_overlay_from_stcs` in favor of `add_graphic_overlay_from_stcs` (#88)
+- Deprecate the `add_listener` method for a preferred use of `set_listener` method (#82)
 
 ## [0.3.0]
 
