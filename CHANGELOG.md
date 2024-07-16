@@ -16,6 +16,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- monochromatic FITS images can be added to the view with `ipyaladin.Aladin.add_fits`.
+  The method accepts `astropy.io.fits.HDUList`, `pathlib.Path`, or `string` representing paths (#86)
+
 ## [0.4.0]
 
 ### Added

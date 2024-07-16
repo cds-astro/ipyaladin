@@ -5,7 +5,9 @@ This module provides a Python wrapper around the Aladin Lite JavaScript library.
 It allows to display astronomical images and catalogs in an interactive way.
 """
 
+import io
 import pathlib
+from pathlib import Path
 import typing
 from typing import ClassVar, Union, Final, Optional
 import warnings
@@ -14,6 +16,8 @@ import anywidget
 from astropy.table.table import QTable
 from astropy.table import Table
 from astropy.coordinates import SkyCoord, Angle
+from astropy.io import fits as astropy_fits
+from astropy.io.fits import HDUList
 import traitlets
 
 try:
@@ -241,6 +245,32 @@ class Aladin(anywidget.AnyWidget):
             }
         )
 
+    def add_fits(self, fits: Union[str, Path, HDUList], **image_options: any) -> None:
+        """Load a FITS file into the widget.
+
+        Parameters
+        ----------
+        fits: a path as a string or `pathlib.Path`, or an `~astropy.io.fits.HDUList`
+            The FITS file to load into the widget.
+        image_options: dict
+            The options for the image. See the Aladin Lite image options:
+            https://cds-astro.github.io/aladin-lite/global.html#ImageOptions
+
+        """
+        is_path = isinstance(fits, (Path, str))
+        if is_path:
+            with astropy_fits.open(fits) as fits_file:
+                fits_bytes = io.BytesIO()
+                fits_file.writeto(fits_bytes)
+        else:
+            fits_bytes = io.BytesIO()
+            fits.writeto(fits_bytes)
+
+        self.send(
+            {"event_name": "add_fits", "options": image_options},
+            buffers=[fits_bytes.getvalue()],
+        )
+
     # MOCs
 
     def add_moc(self, moc: any, **moc_options: any) -> None:
@@ -364,8 +394,6 @@ class Aladin(anywidget.AnyWidget):
         And the table should appear in the output of Cell 1!
 
         """
-        import io
-
         table_bytes = io.BytesIO()
         table.write(table_bytes, format="votable")
         self.send(

@@ -1,6 +1,8 @@
 import { convertOptionNamesToCamelCase } from "../utils";
 import A from "../aladin_lite";
 
+let imageCount = 0;
+
 export default class MessageHandler {
   constructor(aladin) {
     this.aladin = aladin;
@@ -12,6 +14,21 @@ export default class MessageHandler {
 
   handleGotoRaDec(msg) {
     this.aladin.gotoRaDec(msg["ra"], msg["dec"]);
+  }
+
+  handleAddFits(msg, buffers) {
+    const options = convertOptionNamesToCamelCase(msg["options"] || {});
+    if (!options.name)
+      options.name = `image_${String(++imageCount).padStart(3, "0")}`;
+    const buffer = buffers[0];
+    const blob = new Blob([buffer], { type: "application/octet-stream" });
+    const url = URL.createObjectURL(blob);
+    const image = this.aladin.createImageFITS(url, options, (ra, dec) => {
+      this.aladin.gotoRaDec(ra, dec);
+      console.info(`FITS located at ra: ${ra}, dec: ${dec}`);
+      URL.revokeObjectURL(url);
+    });
+    this.aladin.setOverlayImageLayer(image, options.name);
   }
 
   handleAddCatalogFromURL(msg) {

@@ -27,14 +27,14 @@ class Lock {
   locked = false;
 
   /**
-   * Locks the object
+   * Unlocks the object
    */
   unlock() {
     this.locked = false;
   }
 
   /**
-   * Unlocks the object
+   * Locks the object
    */
   lock() {
     this.locked = true;
