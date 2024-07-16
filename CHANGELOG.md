@@ -35,7 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `clicked_object` was not properly updated after a click
 - Fix asynchronous update for the `target` property (#80)
-- Allow WCS and 2 axis FoV recovery from `wcs` and `fov_xy` properties (#96)
+- some options were not accepted in snake_case anymore in `add_moc` and in `add_catalog_from_url` (#82)
 
 ### Changed
 
