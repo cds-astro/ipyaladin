@@ -1,4 +1,4 @@
-import { convertOptionNamesToCamelCase } from "../utils";
+import { convertOptionNamesToCamelCase, padWithZeros } from "../utils";
 import A from "../aladin_lite";
 
 let imageCount = 0;
@@ -18,7 +18,7 @@ export default class MessageHandler {
 
   handleAddFits(msg, buffers) {
     const options = convertOptionNamesToCamelCase(msg["options"] || {});
-    if (!options.name) options.name = `image_${++imageCount}`;
+    if (!options.name) options.name = `image_${padWithZeros(++imageCount, 3)}`;
     const buffer = buffers[0];
     const blob = new Blob([buffer], { type: "application/octet-stream" });
     const url = URL.createObjectURL(blob);
