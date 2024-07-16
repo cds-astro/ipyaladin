@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Allow WCS and 2 axis FoV recovery from `wcs` and `fov_xy` properties (#96)
 - monochromatic FITS images can be added to the view with `ipyaladin.Aladin.add_fits`.
   The method accepts `astropy.io.fits.HDUList`, `pathlib.Path`, or `string` representing paths (#86)
 
@@ -29,13 +30,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for `astropy.coordinates.SkyCoord` for assigning and reading the `target` property (#80)
 - Support for `astropy.coordinates.Angle` for reading the `fov` property (#83)
 - Support for `regions.LineSkyRegion`, `regions.CircleSkyRegion`, `regions.EllipseSkyRegion`, `regions.PolygonSkyRegion`, `regions.RectangleSkyRegion`, `regions.Regions` with `add_graphic_overlay_from_region` (#88)
-- Allow WCS and 2 axis FoV recovery from `wcs` and `fov_xy` properties (#96)
 
 ### Fixed
 
 - `clicked_object` was not properly updated after a click
 - Fix asynchronous update for the `target` property (#80)
-- some options were not accepted in snake_case anymore in `add_moc` and in `add_catalog_from_url` (#82)
+- Allow WCS and 2 axis FoV recovery from `wcs` and `fov_xy` properties (#96)
 
 ### Changed
 
