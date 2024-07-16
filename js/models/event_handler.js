@@ -129,6 +129,13 @@ export default class EventHandler {
       this.aladin.setFoV(fov);
     });
 
+    this.aladin.on("layerChanged", (imageLayer, layerName, state) => {
+      if (layerName !== "base" || state !== "ADDED") return;
+      this.updateWCS();
+      this.model.set("_base_layer_last_view", imageLayer.id);
+      this.model.save_changes();
+    });
+
     /* Div control */
     this.model.on("change:_height", () => {
       let height = this.model.get("_height");
@@ -147,12 +154,6 @@ export default class EventHandler {
     });
 
     this.aladin.on("projectionChanged", () => {
-      this.updateWCS();
-      this.model.save_changes();
-    });
-
-    this.aladin.on("layerChanged", (_, layerName, state) => {
-      if (layerName !== "base" || state !== "ADDED") return;
       this.updateWCS();
       this.model.save_changes();
     });

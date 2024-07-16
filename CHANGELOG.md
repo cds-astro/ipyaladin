@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   The method accepts `astropy.io.fits.HDUList`, `pathlib.Path`, or `string` representing paths (#86)
 - New way to make a selection on the view with `selection` method (#100)
 - Add selected sources export as `astropy.Table` list with property `selected_objects` (#100)
+- Add function `get_view_as_fits` to export the view as a `astropy.io.fits.HDUList` (#86)
 
 ### Deprecated
 

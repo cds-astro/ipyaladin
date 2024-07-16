@@ -8,6 +8,7 @@ It allows to display astronomical images and catalogs in an interactive way.
 from collections.abc import Callable
 import io
 import pathlib
+from json import JSONDecodeError
 from pathlib import Path
 from typing import ClassVar, Dict, Final, List, Optional, Tuple, Union
 import warnings
@@ -205,6 +206,11 @@ class Aladin(anywidget.AnyWidget):
     # overlay survey
     overlay_survey = Unicode("").tag(sync=True, init_option=True)
     overlay_survey_opacity = Float(0.0).tag(sync=True, init_option=True)
+    _base_layer_last_view = Unicode(
+        survey.default_value,
+        help="The last view of the base layer. It is used "
+        "to convert the view to an astropy.HDUList",
+    ).tag(sync=True)
 
     init_options = traitlets.List(trait=Any()).tag(sync=True)
 
@@ -375,6 +381,39 @@ class Aladin(anywidget.AnyWidget):
                 "dec": target.icrs.dec.deg,
             }
         )
+
+    def get_view_as_fits(self) -> HDUList:
+        """Get the base layer of the widget as an astropy HDUList object.
+
+        The output FITS image will have the same shape as the
+        current view of the widget. This uses `astroquery.hips2fits` internally.
+        This method currently only exports the bottom/base layer.
+
+        Returns
+        -------
+        astropy.io.fits.HDUList
+            The FITS object containing the image.
+
+        """
+        try:
+            from astroquery.hips2fits import hips2fits
+        except ImportError as imp:
+            raise ValueError(
+                "To use the 'get_view_as_fits' method, you need to install astroquery "
+                "with 'pip install astroquery -U --pre'."
+            ) from imp
+        try:
+            fits = hips2fits.query_with_wcs(
+                hips=self._base_layer_last_view,
+                wcs=self.wcs,
+            )
+        except JSONDecodeError as e:
+            raise ValueError(
+                "The FITS image could not be retrieved from the view. "
+                "This can happen when the widget is scrolled out of the "
+                "screen."
+            ) from e
+        return fits
 
     def add_catalog_from_URL(
         self, votable_URL: str, votable_options: Optional[dict] = None
