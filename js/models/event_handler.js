@@ -102,6 +102,21 @@ export default class EventHandler {
       this.model.save_changes();
     });
 
+    this.aladin.on("projectionChanged", () => {
+      this.model.set("_wcs", this.aladin.getViewWCS());
+      this.model.save_changes();
+    });
+
+    this.aladin.on("resizeChanged", () => {
+      this.model.set("_wcs", this.aladin.getViewWCS());
+      const fov_xy = this.aladin.getFov();
+      this.model.set("_fov_xy", {
+        x: fov_xy[0],
+        y: fov_xy[1],
+      });
+      this.model.save_changes();
+    });
+
     this.aladin.on("objectHovered", (object) => {
       if (object["data"] !== undefined) {
         this.model.send({
