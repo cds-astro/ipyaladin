@@ -58,8 +58,8 @@ Correspondence table between ipyaladin versions and Aladin Lite versions:
 
 | ipyaladin | Aladin-Lite |
 | --------- | ----------- |
-| 0.3.0     | 3.3.3-dev   |
 | 0.4.0     | 3.4.4-beta  |
+| 0.3.0     | 3.3.3-dev   |
 
 > [!TIP]
 > This can always be read like so
