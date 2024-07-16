@@ -23,22 +23,37 @@ function convertOptionNamesToCamelCase(options) {
   return newOptions;
 }
 
+/**
+ * Pads a number with zeros to a certain number of digits.
+ * @param num The number to pad.
+ * @param digits The number of digits to pad to.
+ * @returns {string} The number padded with zeros.
+ */
+function padWithZeros(num, digits) {
+  return String(num).padStart(digits, "0");
+}
+
 class Lock {
   locked = false;
 
   /**
-   * Locks the object
+   * Unlocks the object
    */
   unlock() {
     this.locked = false;
   }
 
   /**
-   * Unlocks the object
+   * Locks the object
    */
   lock() {
     this.locked = true;
   }
 }
 
-export { snakeCaseToCamelCase, convertOptionNamesToCamelCase, Lock };
+export {
+  snakeCaseToCamelCase,
+  convertOptionNamesToCamelCase,
+  padWithZeros,
+  Lock,
+};
