@@ -23,16 +23,6 @@ function convertOptionNamesToCamelCase(options) {
   return newOptions;
 }
 
-/**
- * Pads a number with zeros to a certain number of digits.
- * @param num The number to pad.
- * @param digits The number of digits to pad to.
- * @returns {string} The number padded with zeros.
- */
-function padWithZeros(num, digits) {
-  return String(num).padStart(digits, "0");
-}
-
 class Lock {
   locked = false;
 
@@ -51,9 +41,4 @@ class Lock {
   }
 }
 
-export {
-  snakeCaseToCamelCase,
-  convertOptionNamesToCamelCase,
-  padWithZeros,
-  Lock,
-};
+export { snakeCaseToCamelCase, convertOptionNamesToCamelCase, Lock };
