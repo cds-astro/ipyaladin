@@ -12,7 +12,7 @@ export default class EventHandler {
     this.aladin = aladin;
     this.aladinDiv = aladinDiv;
     this.model = model;
-    this.messageHandler = new MessageHandler(aladin);
+    this.messageHandler = new MessageHandler(aladin, model);
   }
 
   /**
@@ -90,9 +90,17 @@ export default class EventHandler {
     });
 
     /* Div control */
-    this.model.on("change:height", () => {
-      let height = this.model.get("height");
+    this.model.on("change:_height", () => {
+      let height = this.model.get("_height");
       this.aladinDiv.style.height = `${height}px`;
+      // Update WCS and FoV
+      this.model.set("_wcs", this.aladin.getViewWCS());
+      const twoAxisFoV = this.aladin.getFov();
+      this.model.set("_fov_xy", {
+        x: twoAxisFoV[0],
+        y: twoAxisFoV[1],
+      });
+      this.model.save_changes();
     });
 
     /* Aladin callbacks */
@@ -233,7 +241,7 @@ export default class EventHandler {
   unsubscribeAll() {
     this.model.off("change:_target");
     this.model.off("change:_fov");
-    this.model.off("change:height");
+    this.model.off("change:_height");
     this.model.off("change:coo_frame");
     this.model.off("change:survey");
     this.model.off("change:overlay_survey");

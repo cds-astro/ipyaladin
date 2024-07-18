@@ -80,7 +80,7 @@ class Aladin(anywidget.AnyWidget):
     _css: Final = pathlib.Path(__file__).parent / "static" / "widget.css"
 
     # Options for the view initialization
-    height = Int(400).tag(sync=True, init_option=True)
+    _height = Int(400).tag(sync=True, init_option=True)
     _target = Unicode(
         "0 0",
         help="A private trait that stores the current target of the widget in a string."
@@ -148,6 +148,7 @@ class Aladin(anywidget.AnyWidget):
 
     def __init__(self, *args: any, **kwargs: any) -> None:
         super().__init__(*args, **kwargs)
+        self.height = kwargs.get("height", 400)
         self.target = kwargs.get("target", "0 0")
         self.fov = kwargs.get("fov", 60.0)
         self.on_msg(self._handle_custom_message)
@@ -169,6 +170,26 @@ class Aladin(anywidget.AnyWidget):
             self.listener_callback["click"](message_content)
         elif event_type == "select" and "select" in self.listener_callback:
             self.listener_callback["select"](message_content)
+
+    @property
+    def height(self) -> int:
+        """The height of the Aladin Lite widget.
+
+        Returns
+        -------
+        int
+            The height of the widget in pixels.
+
+        """
+        return self._height
+
+    @height.setter
+    def height(self, height: int) -> None:
+        if self._height == height:
+            return
+        self._wcs = {}
+        self._fov_xy = {}
+        self._height = height
 
     @property
     def wcs(self) -> WCS:
@@ -313,6 +334,7 @@ class Aladin(anywidget.AnyWidget):
             fits_bytes = io.BytesIO()
             fits.writeto(fits_bytes)
 
+        self._wcs = {}
         self.send(
             {"event_name": "add_fits", "options": image_options},
             buffers=[fits_bytes.getvalue()],

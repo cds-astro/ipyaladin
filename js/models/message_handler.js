@@ -4,8 +4,9 @@ import A from "../aladin_lite";
 let imageCount = 0;
 
 export default class MessageHandler {
-  constructor(aladin) {
+  constructor(aladin, model) {
     this.aladin = aladin;
+    this.model = model;
   }
 
   handleChangeFoV(msg) {
@@ -29,6 +30,8 @@ export default class MessageHandler {
       URL.revokeObjectURL(url);
     });
     this.aladin.setOverlayImageLayer(image, options.name);
+    // this.model.set("_wcs", this.aladin.getViewWCS());
+    // this.model.save_changes();
   }
 
   handleAddCatalogFromURL(msg) {
