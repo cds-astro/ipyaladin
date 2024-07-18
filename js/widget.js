@@ -25,10 +25,10 @@ function initAladinLite(model, el) {
   aladin.gotoRaDec(raDec[0], raDec[1]);
 
   // Set current FoV and WCS
-  const FoV = aladin.getFov();
+  const twoAxisFoV = aladin.getFov();
   model.set("_fov_xy", {
-    x: FoV[0],
-    y: FoV[1],
+    x: twoAxisFoV[0],
+    y: twoAxisFoV[1],
   });
   model.set("_wcs", aladin.getViewWCS());
   model.save_changes();

@@ -71,10 +71,10 @@ export default class EventHandler {
       // fov MUST be cast into float in order to be sent to the model
       this.model.set("_wcs", this.aladin.getViewWCS());
       this.model.set("_fov", parseFloat(fov.toFixed(5)));
-      const fov_xy = this.aladin.getFov();
+      const twoAxisFoV = this.aladin.getFov();
       this.model.set("_fov_xy", {
-        x: fov_xy[0],
-        y: fov_xy[1],
+        x: twoAxisFoV[0],
+        y: twoAxisFoV[1],
       });
       this.model.save_changes();
     });
@@ -107,18 +107,18 @@ export default class EventHandler {
       this.model.save_changes();
     });
 
-    this.aladin.on("layerChanged", (_, layer) => {
-      if (layer !== "base") return;
+    this.aladin.on("layerChanged", (_, layerName, state) => {
+      if (layerName !== "base" || state !== "ADDED") return;
       this.model.set("_wcs", this.aladin.getViewWCS());
       this.model.save_changes();
     });
 
     this.aladin.on("resizeChanged", () => {
       this.model.set("_wcs", this.aladin.getViewWCS());
-      const fov_xy = this.aladin.getFov();
+      const twoAxisFoV = this.aladin.getFov();
       this.model.set("_fov_xy", {
-        x: fov_xy[0],
-        y: fov_xy[1],
+        x: twoAxisFoV[0],
+        y: twoAxisFoV[1],
       });
       this.model.save_changes();
     });
