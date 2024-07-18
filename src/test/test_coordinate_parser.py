@@ -1,5 +1,5 @@
 from typing import Tuple
-from ipyaladin.coordinate_parser import (
+from ipyaladin.utils.coordinate_parser import (
     parse_coordinate_string,
     _split_coordinate_string,
     _is_hour_angle_string,

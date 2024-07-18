@@ -21,7 +21,7 @@ from astropy.io.fits import HDUList
 import traitlets
 from astropy.wcs import WCS
 
-from .errors.widget_communication_error import WidgetCommunicationError
+from .utils.exceptions import WidgetCommunicationError
 
 try:
     from regions import (
@@ -50,7 +50,7 @@ from traitlets import (
     default,
 )
 
-from .coordinate_parser import parse_coordinate_string
+from .utils.coordinate_parser import parse_coordinate_string
 
 SupportedRegion = Union[
     typing.List[
@@ -534,7 +534,7 @@ class Aladin(anywidget.AnyWidget):
                     "See the documentation for the supported region types."
                 )
 
-            from .region_converter import RegionInfos
+            from .utils.region_converter import RegionInfos
 
             # Define behavior for each region type
             regions_infos.append(RegionInfos(region_element).to_clean_dict())
