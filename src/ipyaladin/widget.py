@@ -21,6 +21,8 @@ from astropy.io.fits import HDUList
 import traitlets
 from astropy.wcs import WCS
 
+from .errors.widget_communication_error import WidgetCommunicationError
+
 try:
     from regions import (
         CircleSkyRegion,
@@ -202,7 +204,7 @@ class Aladin(anywidget.AnyWidget):
 
         """
         if self._wcs == {}:
-            raise ValueError(
+            raise WidgetCommunicationError(
                 "The world coordinate system is not available. "
                 "Please recover it from another cell."
             )
@@ -221,7 +223,7 @@ class Aladin(anywidget.AnyWidget):
 
         """
         if self._fov_xy == {}:
-            raise ValueError(
+            raise WidgetCommunicationError(
                 "The field of view along the two axes is not available. "
                 "Please recover it from another cell."
             )
