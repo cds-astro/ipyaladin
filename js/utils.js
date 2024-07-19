@@ -41,4 +41,15 @@ class Lock {
   }
 }
 
-export { snakeCaseToCamelCase, convertOptionNamesToCamelCase, Lock };
+let divNumber = -1;
+function setDivNumber(num) {
+  divNumber = num;
+}
+
+export {
+  snakeCaseToCamelCase,
+  convertOptionNamesToCamelCase,
+  Lock,
+  divNumber,
+  setDivNumber,
+};

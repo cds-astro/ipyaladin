@@ -1,11 +1,15 @@
 import "./widget.css";
 import EventHandler from "./models/event_handler";
-import { snakeCaseToCamelCase } from "./utils";
+import {
+  divNumber,
+  getDivNumber,
+  setDivNumber,
+  snakeCaseToCamelCase,
+} from "./utils";
 import A from "./aladin_lite";
 
-let idxView = 0;
-
 function initAladinLite(model, el) {
+  setDivNumber(divNumber + 1);
   let initOptions = {};
   model.get("init_options").forEach((option_name) => {
     initOptions[snakeCaseToCamelCase(option_name)] = model.get(option_name);
@@ -15,9 +19,8 @@ function initAladinLite(model, el) {
   aladinDiv.classList.add("aladin-widget");
   aladinDiv.style.height = `${initOptions["height"]}px`;
 
-  aladinDiv.id = `aladin-lite-div-${idxView}`;
+  aladinDiv.id = `aladin-lite-div-${divNumber}`;
   let aladin = new A.aladin(aladinDiv, initOptions);
-  idxView += 1;
 
   // Set the target again after the initialization to be sure that the target is set
   // from icrs coordinates because of the use of gotoObject in the Aladin Lite API

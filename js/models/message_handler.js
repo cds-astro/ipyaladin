@@ -30,8 +30,6 @@ export default class MessageHandler {
       URL.revokeObjectURL(url);
     });
     this.aladin.setOverlayImageLayer(image, options.name);
-    // this.model.set("_wcs", this.aladin.getViewWCS());
-    // this.model.save_changes();
   }
 
   handleAddCatalogFromURL(msg) {
