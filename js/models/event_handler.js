@@ -1,5 +1,5 @@
 import MessageHandler from "./message_handler";
-import { divNumber, Lock } from "../utils";
+import { divNumber, setDivNumber, Lock } from "../utils";
 
 export default class EventHandler {
   /**
@@ -20,6 +20,10 @@ export default class EventHandler {
    * @returns {boolean}
    */
   isLastDiv() {
+    let currentDivNumber = parseInt(this.aladinDiv.id.split("-").pop());
+    if (currentDivNumber === divNumber) {
+      return true;
+    }
     let maxDiv = divNumber;
     for (let i = maxDiv; i >= 0; i--) {
       const alDiv = document.getElementById(`aladin-lite-div-${i}`);
@@ -29,7 +33,8 @@ export default class EventHandler {
         break;
       }
     }
-    return parseInt(this.aladinDiv.id.split("-").pop()) === maxDiv;
+    setDivNumber(maxDiv);
+    return currentDivNumber === maxDiv;
   }
 
   /**
@@ -190,7 +195,6 @@ export default class EventHandler {
     });
 
     this.aladin.on("click", (clickContent) => {
-      console.log("Click", this.isLastDiv());
       this.model.send({
         event_type: "click",
         content: clickContent,

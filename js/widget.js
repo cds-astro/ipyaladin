@@ -1,11 +1,6 @@
 import "./widget.css";
 import EventHandler from "./models/event_handler";
-import {
-  divNumber,
-  getDivNumber,
-  setDivNumber,
-  snakeCaseToCamelCase,
-} from "./utils";
+import { divNumber, setDivNumber, snakeCaseToCamelCase } from "./utils";
 import A from "./aladin_lite";
 
 function initAladinLite(model, el) {
