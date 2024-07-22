@@ -13,6 +13,7 @@ export default class EventHandler {
     this.aladinDiv = aladinDiv;
     this.model = model;
     this.messageHandler = new MessageHandler(aladin, model);
+    this.currentDivNumber = parseInt(aladinDiv.id.split("-").pop());
   }
 
   /**
@@ -20,8 +21,7 @@ export default class EventHandler {
    * @returns {boolean}
    */
   isLastDiv() {
-    let currentDivNumber = parseInt(this.aladinDiv.id.split("-").pop());
-    if (currentDivNumber === divNumber) {
+    if (this.currentDivNumber === divNumber) {
       return true;
     }
     let maxDiv = divNumber;
@@ -34,7 +34,7 @@ export default class EventHandler {
       }
     }
     setDivNumber(maxDiv);
-    return currentDivNumber === maxDiv;
+    return this.currentDivNumber === maxDiv;
   }
 
   /**
