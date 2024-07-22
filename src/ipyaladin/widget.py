@@ -250,12 +250,12 @@ class Aladin(anywidget.AnyWidget):
     def fov(self, fov: Union[float, Angle]) -> None:
         if isinstance(fov, Angle):
             fov = fov.deg
-        self._fov = fov
         if np.isclose(fov, self._fov):
             return
+        self._fov = fov
+        self.send({"event_name": "change_fov", "fov": fov})
         self._fov_xy = {}
         self._wcs = {}
-        self.send({"event_name": "change_fov", "fov": fov})
 
     @property
     def target(self) -> SkyCoord:
