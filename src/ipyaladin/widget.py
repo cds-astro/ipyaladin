@@ -18,6 +18,7 @@ from astropy.table import Table
 from astropy.io import fits as astropy_fits
 from astropy.io.fits import HDUList
 from astropy.wcs import WCS
+import numpy as np
 import traitlets
 
 from .utils.exceptions import WidgetCommunicationError
@@ -185,7 +186,7 @@ class Aladin(anywidget.AnyWidget):
 
     @height.setter
     def height(self, height: int) -> None:
-        if self._height == height:
+        if np.isclose(self._height, height):
             return
         self._wcs = {}
         self._fov_xy = {}
@@ -250,6 +251,8 @@ class Aladin(anywidget.AnyWidget):
         if isinstance(fov, Angle):
             fov = fov.deg
         self._fov = fov
+        if np.isclose(fov, self._fov):
+            return
         self._fov_xy = {}
         self._wcs = {}
         self.send({"event_name": "change_fov", "fov": fov})
