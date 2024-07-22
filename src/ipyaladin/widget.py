@@ -8,20 +8,20 @@ It allows to display astronomical images and catalogs in an interactive way.
 import io
 import pathlib
 from pathlib import Path
-import typing
-from typing import ClassVar, Union, Final, Optional, Tuple
+from typing import ClassVar, Dict, Final, List, Optional, Tuple, Union
 import warnings
 
 import anywidget
+from astropy.coordinates import SkyCoord, Angle
 from astropy.table.table import QTable
 from astropy.table import Table
-from astropy.coordinates import SkyCoord, Angle
 from astropy.io import fits as astropy_fits
 from astropy.io.fits import HDUList
-import traitlets
 from astropy.wcs import WCS
+import traitlets
 
 from .utils.exceptions import WidgetCommunicationError
+from .utils.coordinate_parser import parse_coordinate_string
 
 try:
     from regions import (
@@ -50,10 +50,8 @@ from traitlets import (
     default,
 )
 
-from .utils.coordinate_parser import parse_coordinate_string
-
 SupportedRegion = Union[
-    typing.List[
+    List[
         Union[
             CircleSkyRegion,
             EllipseSkyRegion,
@@ -136,7 +134,7 @@ class Aladin(anywidget.AnyWidget):
     # content of the last click
     clicked_object = traitlets.Dict().tag(sync=True)
     # listener callback is on the python side and contains functions to link to events
-    listener_callback: ClassVar[typing.Dict[str, callable]] = {}
+    listener_callback: ClassVar[Dict[str, callable]] = {}
 
     # overlay survey
     overlay_survey = Unicode("").tag(sync=True, init_option=True)
@@ -145,7 +143,7 @@ class Aladin(anywidget.AnyWidget):
     init_options = traitlets.List(trait=Any()).tag(sync=True)
 
     @default("init_options")
-    def _init_options(self) -> typing.List[str]:
+    def _init_options(self) -> List[str]:
         return list(self.traits(init_option=True))
 
     def __init__(self, *args: any, **kwargs: any) -> None:
@@ -548,7 +546,7 @@ class Aladin(anywidget.AnyWidget):
         )
 
     def add_overlay_from_stcs(
-        self, stc_string: Union[typing.List[str], str], **overlay_options: any
+        self, stc_string: Union[List[str], str], **overlay_options: any
     ) -> None:
         """Add an overlay layer defined by an STC-S string.
 
@@ -569,7 +567,7 @@ class Aladin(anywidget.AnyWidget):
         self.add_graphic_overlay_from_stcs(stc_string, **overlay_options)
 
     def add_graphic_overlay_from_stcs(
-        self, stc_string: Union[typing.List[str], str], **overlay_options: any
+        self, stc_string: Union[List[str], str], **overlay_options: any
     ) -> None:
         """Add an overlay layer defined by an STC-S string.
 
