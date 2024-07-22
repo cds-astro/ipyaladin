@@ -4,7 +4,7 @@ import pytest
 from typing import Callable
 
 from ipyaladin import Aladin
-from ipyaladin.coordinate_parser import parse_coordinate_string
+from ipyaladin.utils.coordinate_parser import parse_coordinate_string
 
 from .test_coordinate_parser import test_is_coordinate_string_values
 

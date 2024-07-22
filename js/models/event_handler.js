@@ -1,5 +1,5 @@
 import MessageHandler from "./message_handler";
-import { Lock } from "../utils";
+import { divNumber, setDivNumber, Lock } from "../utils";
 
 export default class EventHandler {
   /**
@@ -12,7 +12,51 @@ export default class EventHandler {
     this.aladin = aladin;
     this.aladinDiv = aladinDiv;
     this.model = model;
-    this.messageHandler = new MessageHandler(aladin);
+    this.messageHandler = new MessageHandler(aladin, model);
+    this.currentDivNumber = parseInt(aladinDiv.id.split("-").pop());
+  }
+
+  /**
+   * Checks if the current div is the last active div.
+   * @returns {boolean}
+   */
+  isLastDiv() {
+    if (this.currentDivNumber === divNumber) {
+      return true;
+    }
+    let maxDiv = divNumber;
+    for (let i = maxDiv; i >= 0; i--) {
+      const alDiv = document.getElementById(`aladin-lite-div-${i}`);
+      if (!alDiv) continue;
+      if (alDiv.style.display !== "none") {
+        maxDiv = i;
+        break;
+      }
+    }
+    setDivNumber(maxDiv);
+    return this.currentDivNumber === maxDiv;
+  }
+
+  /**
+   * Updates the WCS coordinates in the model.
+   * WARNING: This method don't call model.save_changes()!
+   */
+  updateWCS() {
+    if (!this.isLastDiv()) return;
+    this.model.set("_wcs", this.aladin.getViewWCS());
+  }
+
+  /**
+   * Updates the 2-axis FoV in the model.
+   * WARNING: This method don't call model.save_changes()!
+   */
+  update2AxisFoV() {
+    if (!this.isLastDiv()) return;
+    const twoAxisFoV = this.aladin.getFov();
+    this.model.set("_fov_xy", {
+      x: twoAxisFoV[0],
+      y: twoAxisFoV[1],
+    });
   }
 
   /**
@@ -42,6 +86,7 @@ export default class EventHandler {
       }
       jsTargetLock.lock();
       const raDec = [position.ra, position.dec];
+      this.updateWCS();
       this.model.set("_target", `${raDec[0]} ${raDec[1]}`);
       this.model.save_changes();
     });
@@ -68,6 +113,8 @@ export default class EventHandler {
       }
       jsFovLock.lock();
       // fov MUST be cast into float in order to be sent to the model
+      this.updateWCS();
+      this.update2AxisFoV();
       this.model.set("_fov", parseFloat(fov.toFixed(5)));
       this.model.save_changes();
     });
@@ -83,12 +130,38 @@ export default class EventHandler {
     });
 
     /* Div control */
-    this.model.on("change:height", () => {
-      let height = this.model.get("height");
+    this.model.on("change:_height", () => {
+      let height = this.model.get("_height");
       this.aladinDiv.style.height = `${height}px`;
+      // Update WCS and FoV only if this is the last div
+      this.updateWCS();
+      this.update2AxisFoV();
+      this.model.save_changes();
     });
 
     /* Aladin callbacks */
+
+    this.aladin.on("cooFrameChanged", () => {
+      this.updateWCS();
+      this.model.save_changes();
+    });
+
+    this.aladin.on("projectionChanged", () => {
+      this.updateWCS();
+      this.model.save_changes();
+    });
+
+    this.aladin.on("layerChanged", (_, layerName, state) => {
+      if (layerName !== "base" || state !== "ADDED") return;
+      this.updateWCS();
+      this.model.save_changes();
+    });
+
+    this.aladin.on("resizeChanged", () => {
+      this.updateWCS();
+      this.update2AxisFoV();
+      this.model.save_changes();
+    });
 
     this.aladin.on("objectHovered", (object) => {
       if (object["data"] !== undefined) {
@@ -200,7 +273,7 @@ export default class EventHandler {
   unsubscribeAll() {
     this.model.off("change:_target");
     this.model.off("change:_fov");
-    this.model.off("change:height");
+    this.model.off("change:_height");
     this.model.off("change:coo_frame");
     this.model.off("change:survey");
     this.model.off("change:overlay_survey");

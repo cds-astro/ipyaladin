@@ -8,17 +8,21 @@ It allows to display astronomical images and catalogs in an interactive way.
 import io
 import pathlib
 from pathlib import Path
-import typing
-from typing import ClassVar, Union, Final, Optional
+from typing import ClassVar, Dict, Final, List, Optional, Tuple, Union
 import warnings
 
 import anywidget
+from astropy.coordinates import SkyCoord, Angle
 from astropy.table.table import QTable
 from astropy.table import Table
-from astropy.coordinates import SkyCoord, Angle
 from astropy.io import fits as astropy_fits
 from astropy.io.fits import HDUList
+from astropy.wcs import WCS
+import numpy as np
 import traitlets
+
+from .utils.exceptions import WidgetCommunicationError
+from .utils.coordinate_parser import parse_coordinate_string
 
 try:
     from regions import (
@@ -47,10 +51,8 @@ from traitlets import (
     default,
 )
 
-from .coordinate_parser import parse_coordinate_string
-
 SupportedRegion = Union[
-    typing.List[
+    List[
         Union[
             CircleSkyRegion,
             EllipseSkyRegion,
@@ -79,7 +81,7 @@ class Aladin(anywidget.AnyWidget):
     _css: Final = pathlib.Path(__file__).parent / "static" / "widget.css"
 
     # Options for the view initialization
-    height = Int(400).tag(sync=True, init_option=True)
+    _height = Int(400).tag(sync=True, init_option=True)
     _target = Unicode(
         "0 0",
         help="A private trait that stores the current target of the widget in a string."
@@ -126,10 +128,14 @@ class Aladin(anywidget.AnyWidget):
     grid_opacity = Float(0.5).tag(sync=True, init_option=True)
     grid_options = traitlets.Dict().tag(sync=True, init_option=True)
 
+    # Values
+    _wcs = traitlets.Dict().tag(sync=True)
+    _fov_xy = traitlets.Dict().tag(sync=True)
+
     # content of the last click
     clicked_object = traitlets.Dict().tag(sync=True)
     # listener callback is on the python side and contains functions to link to events
-    listener_callback: ClassVar[typing.Dict[str, callable]] = {}
+    listener_callback: ClassVar[Dict[str, callable]] = {}
 
     # overlay survey
     overlay_survey = Unicode("").tag(sync=True, init_option=True)
@@ -138,11 +144,12 @@ class Aladin(anywidget.AnyWidget):
     init_options = traitlets.List(trait=Any()).tag(sync=True)
 
     @default("init_options")
-    def _init_options(self) -> typing.List[str]:
+    def _init_options(self) -> List[str]:
         return list(self.traits(init_option=True))
 
     def __init__(self, *args: any, **kwargs: any) -> None:
         super().__init__(*args, **kwargs)
+        self.height = kwargs.get("height", 400)
         self.target = kwargs.get("target", "0 0")
         self.fov = kwargs.get("fov", 60.0)
         self.on_msg(self._handle_custom_message)
@@ -166,6 +173,65 @@ class Aladin(anywidget.AnyWidget):
             self.listener_callback["select"](message_content)
 
     @property
+    def height(self) -> int:
+        """The height of the Aladin Lite widget.
+
+        Returns
+        -------
+        int
+            The height of the widget in pixels.
+
+        """
+        return self._height
+
+    @height.setter
+    def height(self, height: int) -> None:
+        if np.isclose(self._height, height):
+            return
+        self._wcs = {}
+        self._fov_xy = {}
+        self._height = height
+
+    @property
+    def wcs(self) -> WCS:
+        """The world coordinate system of the Aladin Lite widget.
+
+        Returns
+        -------
+        WCS
+            An astropy WCS object representing the world coordinate system.
+
+        """
+        if self._wcs == {}:
+            raise WidgetCommunicationError(
+                "The world coordinate system is not available. "
+                "Please recover it from another cell."
+            )
+        if "RADECSYS" in self._wcs:  # RADECSYS keyword is deprecated for astropy.WCS
+            self._wcs["RADESYS"] = self._wcs.pop("RADECSYS")
+        return WCS(self._wcs)
+
+    @property
+    def fov_xy(self) -> Tuple[Angle, Angle]:
+        """The field of view of the Aladin Lite along the two axes.
+
+        Returns
+        -------
+        tuple[Angle, Angle]
+            A tuple of astropy.units.Angle objects representing the field of view.
+
+        """
+        if self._fov_xy == {}:
+            raise WidgetCommunicationError(
+                "The field of view along the two axes is not available. "
+                "Please recover it from another cell."
+            )
+        return (
+            Angle(self._fov_xy["x"], unit="deg"),
+            Angle(self._fov_xy["y"], unit="deg"),
+        )
+
+    @property
     def fov(self) -> Angle:
         """The field of view of the Aladin Lite widget along the horizontal axis.
 
@@ -185,6 +251,10 @@ class Aladin(anywidget.AnyWidget):
         if isinstance(fov, Angle):
             fov = fov.deg
         self._fov = fov
+        if np.isclose(fov, self._fov):
+            return
+        self._fov_xy = {}
+        self._wcs = {}
         self.send({"event_name": "change_fov", "fov": fov})
 
     @property
@@ -216,6 +286,7 @@ class Aladin(anywidget.AnyWidget):
                 "target must be a string or an astropy.coordinates.SkyCoord object"
             )
         self._target = f"{target.icrs.ra.deg} {target.icrs.dec.deg}"
+        self._wcs = {}
         self.send(
             {
                 "event_name": "goto_ra_dec",
@@ -266,6 +337,7 @@ class Aladin(anywidget.AnyWidget):
             fits_bytes = io.BytesIO()
             fits.writeto(fits_bytes)
 
+        self._wcs = {}
         self.send(
             {"event_name": "add_fits", "options": image_options},
             buffers=[fits_bytes.getvalue()],
@@ -463,7 +535,7 @@ class Aladin(anywidget.AnyWidget):
                     "See the documentation for the supported region types."
                 )
 
-            from .region_converter import RegionInfos
+            from .utils.region_converter import RegionInfos
 
             # Define behavior for each region type
             regions_infos.append(RegionInfos(region_element).to_clean_dict())
@@ -477,7 +549,7 @@ class Aladin(anywidget.AnyWidget):
         )
 
     def add_overlay_from_stcs(
-        self, stc_string: Union[typing.List[str], str], **overlay_options: any
+        self, stc_string: Union[List[str], str], **overlay_options: any
     ) -> None:
         """Add an overlay layer defined by an STC-S string.
 
@@ -498,7 +570,7 @@ class Aladin(anywidget.AnyWidget):
         self.add_graphic_overlay_from_stcs(stc_string, **overlay_options)
 
     def add_graphic_overlay_from_stcs(
-        self, stc_string: Union[typing.List[str], str], **overlay_options: any
+        self, stc_string: Union[List[str], str], **overlay_options: any
     ) -> None:
         """Add an overlay layer defined by an STC-S string.
 

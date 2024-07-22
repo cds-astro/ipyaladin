@@ -18,8 +18,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Allow WCS and 2 axis FoV recovery from `wcs` and `fov_xy` properties (#96)
 - monochromatic FITS images can be added to the view with `ipyaladin.Aladin.add_fits`.
   The method accepts `astropy.io.fits.HDUList`, `pathlib.Path`, or `string` representing paths (#86)
+
+### Changed
+
+- Upgrade Aladin Lite version to 3.4.5-beta (#96)
 
 ## [0.4.0]
 
@@ -40,7 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Change the jslink target trait from `target` to `shared_target` (#80)
 - Change the jslink fov trait from `fov` to `shared_fov` (#83)
-- Upgrade Aladin Lite version to 3.4.1-beta (#88)
+- Upgrade Aladin Lite version to 3.4.4-beta (#88)
 - Add support for list of strings in `add_overlay_from_stcs` (#88)
 
 ### Deprecated

@@ -4,8 +4,9 @@ import A from "../aladin_lite";
 let imageCount = 0;
 
 export default class MessageHandler {
-  constructor(aladin) {
+  constructor(aladin, model) {
     this.aladin = aladin;
+    this.model = model;
   }
 
   handleChangeFoV(msg) {
