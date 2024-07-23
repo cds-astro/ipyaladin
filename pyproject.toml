@@ -14,6 +14,7 @@ requires-python = ">=3.8"
 dev = ["pytest", "watchfiles", "jupyterlab", "ruff"]
 recommended = ["mocpy", "regions"]
 docs = ["autoapi",
+        "jupyterlab",
         "myst-parser",
         "nbsphinx", 
         "numpydoc",
