@@ -23,6 +23,6 @@ jobs:
         run: |
           sudo apt-get install pandoc
           python3 -m pip install --upgrade pip setuptools
-          pip install .[docs,recommended]
+          pip install .[docs,recommended,notebooks]
           cd ./docs
           make html
