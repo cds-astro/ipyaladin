@@ -195,6 +195,10 @@ class Aladin(anywidget.AnyWidget):
 
     # content of the last click
     clicked_object = traitlets.Dict().tag(sync=True)
+    _selected_objects = traitlets.List(
+        trait=traitlets.List(trait=traitlets.Any()),
+        help="A list of catalogs selected by the user.",
+    ).tag(sync=True)
     # listener callback is on the python side and contains functions to link to events
     listener_callback: ClassVar[Dict[str, callable]] = {}
 
@@ -232,6 +236,22 @@ class Aladin(anywidget.AnyWidget):
             self.listener_callback["click"](message_content)
         elif event_type == "select" and "select" in self.listener_callback:
             self.listener_callback["select"](message_content)
+
+    @property
+    def selected_objects(self) -> List[Table]:
+        """The list of catalogs selected by the user.
+
+        Returns
+        -------
+        list[Table]
+            A list of astropy.table.Table objects representing the selected catalogs.
+
+        """
+        catalogs = []
+        for selected_object in self._selected_objects:
+            objects_data = [obj["data"] for obj in selected_object]
+            catalogs.append(Table(objects_data))
+        return catalogs
 
     @property
     def height(self) -> int:
@@ -686,9 +706,34 @@ class Aladin(anywidget.AnyWidget):
         """
         self.send({"event_name": "change_colormap", "colormap": color_map_name})
 
+    def selection(self, selection_type: str = "rectangle") -> None:
+        """Trigger the selection tool.
+
+        Parameters
+        ----------
+        selection_type: str
+            The type of selection tool to trigger. Can be 'circle' or 'rectangle'.
+            Default is 'rect'.
+
+        """
+        # Note: Polygon selection exists but is not supported by Aladin Lite
+        if selection_type not in {"circle", "rectangle"}:
+            raise ValueError("selection_type must be 'circle' or 'rectangle'")
+        self.send({"event_name": "trigger_selection", "selection_type": selection_type})
+
     def rectangular_selection(self) -> None:
-        """Trigger the rectangular selection tool."""
-        self.send({"event_name": "trigger_rectangular_selection"})
+        """Trigger the rectangular selection tool.
+
+        Notes
+        -----
+        This method is deprecated, use selection instead
+        """
+        warnings.warn(
+            "rectangular_selection is deprecated, use selection('rectangle') instead",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        self.selection()
 
     # Adding a listener
 

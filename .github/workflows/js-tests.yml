@@ -19,7 +19,7 @@ jobs:
       - name: Install dependencies
         run: |
           npm install
-          python -m pip install .
+          python -m pip install .[recommended]
           python -m pip install jupyterlab
           npx playwright install
       - name: Install Playwright Browser
