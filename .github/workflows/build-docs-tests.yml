@@ -21,6 +21,7 @@ jobs:
           python-version: 3.12
       - name: "Test doc"
         run: |
+          sudo apt-get install pandoc
           python3 -m pip install --upgrade pip setuptools
           pip install .[docs,recommended]
           cd ./docs
