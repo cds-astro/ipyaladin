@@ -4,8 +4,8 @@
     "build": "esbuild js/widget.js --minify --format=esm --bundle --outdir=src/ipyaladin/static",
     "prepare": "husky install",
     "format": "npx prettier . --write && ruff format",
-    "start-test-server": "python -m jupyter lab --config js/ui-tests/jupyter_server_test_config.py",
-    "python-test": "python -m pytest",
+    "start-test-server": "python3 -m jupyter lab --config js/ui-tests/jupyter_server_test_config.py",
+    "python-test": "python3 -m pytest",
     "js-test": "npm run start-test-server & npx playwright test",
     "update-snapshots": "npx playwright test --update-snapshots"
   },
