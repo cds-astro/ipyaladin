@@ -1,0 +1,195 @@
+{
+ "cells": [
+  {
+   "attachments": {},
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Use of functions on ipyaladin widgets"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from ipyaladin import Aladin"
+   ]
+  },
+  {
+   "attachments": {},
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Home-made functions\n",
+    "\n",
+    "Let's first write our own functions to apply to a generated sky view. We want to print the clicked object coordinates and informations."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "aladin = Aladin(\n",
+    "    survey=\"P/DSS2/red\",\n",
+    "    fov=10,\n",
+    "    target=\"LMC\",\n",
+    "    reticle_color=\"#ff89ff\",\n",
+    "    show_status_bar=True,\n",
+    ")\n",
+    "aladin"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "url = (\n",
+    "    \"https://vizier.unistra.fr/viz-bin/votable?-source=HIP2&-c=LMC&-out.add=_RAJ,_\"\n",
+    "    \"DEJ&-oc.form=dm&-out.meta=DhuL&-out.max=9999&-c.rm=180\"\n",
+    ")\n",
+    "options = {\"source_size\": 12, \"color\": \"#f08080\", \"on_click\": \"showTable\"}\n",
+    "aladin.add_catalog_from_URL(url, options)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "After clicking on a source, you can print its value with:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "aladin.clicked_object"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def get_object_data(data: dict) -> dict:\n",
+    "    \"\"\"Print the clicked object data.\n",
+    "\n",
+    "    Parameters\n",
+    "    ----------\n",
+    "    data : dict\n",
+    "        The data of the clicked object.\n",
+    "    \"\"\"\n",
+    "    print(\"It clicked.\")\n",
+    "    return data\n",
+    "\n",
+    "\n",
+    "def get_object_ra_dec_product(data: dict) -> float:\n",
+    "    \"\"\"Return the product of the ra and dec values of the clicked object.\n",
+    "\n",
+    "    Parameters\n",
+    "    ----------\n",
+    "    data : dict\n",
+    "        The data of the clicked object.\n",
+    "    \"\"\"\n",
+    "    return data[\"ra\"] * data[\"dec\"]\n",
+    "\n",
+    "\n",
+    "# when triggered, the listeners on the js side of the application will send a\n",
+    "# json object whose parameter data will be used by the python functions\n",
+    "# (data is a literal object on the js side, it will be converted as a dictionary\n",
+    "# object on the python side)\n",
+    "aladin.set_listener(\"object_hovered\", get_object_ra_dec_product)\n",
+    "aladin.set_listener(\"object_clicked\", get_object_data)"
+   ]
+  },
+  {
+   "attachments": {},
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Built-in methods\n",
+    "\n",
+    "The `Aladin` object also comes with its built-in methods. Here we illustrate one of them."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "aladin_bis = Aladin(target=\"269.956288 -23.823863\", fov=1)\n",
+    "aladin_bis"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "aladin_bis.set_color_map(\"redtemperature\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "help(aladin_bis.get_JPEG_thumbnail)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "aladin_bis.get_JPEG_thumbnail()"
+   ]
+  },
+  {
+   "attachments": {},
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Check that your browser didn't block the popup window if you don't see the thumbnail. This will not work in VSCode or other notebooks editors that are not working in a browser."
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "base",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.11.8"
+  },
+  "vscode": {
+   "interpreter": {
+    "hash": "85bb43f988bdbdc027a50b6d744a62eda8a76617af1f4f9b115d38242716dbac"
+   }
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}

@@ -1,0 +1,681 @@
+ipyaladin.widget
+================
+
+.. py:module:: ipyaladin.widget
+
+.. autoapi-nested-parse::
+
+   Aladin Lite widget for Jupyter Notebook.
+
+   This module provides a Python wrapper around the Aladin Lite JavaScript library.
+   It allows to display astronomical images and catalogs in an interactive way.
+
+   ..
+       !! processed by numpydoc !!
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   ipyaladin.widget.Aladin
+
+
+Module Contents
+---------------
+
+.. py:class:: Aladin(*args: any, **kwargs: any)
+
+
+
+   
+   Aladin Lite widget.
+
+   This widget is a Python wrapper around the Aladin Lite JavaScript library.
+   It allows to display astronomical images and catalogs in an interactive way.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:property:: height
+      :type: int
+
+      
+      The height of the Aladin Lite widget.
+
+
+
+      :Returns:
+
+          int
+              The height of the widget in pixels.
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:property:: wcs
+      :type: astropy.wcs.WCS
+
+      
+      The world coordinate system of the Aladin Lite widget.
+
+
+
+      :Returns:
+
+          WCS
+              An astropy WCS object representing the world coordinate system.
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:property:: fov_xy
+      :type: Tuple[astropy.coordinates.Angle, astropy.coordinates.Angle]
+
+      
+      The field of view of the Aladin Lite along the two axes.
+
+
+
+      :Returns:
+
+          tuple[Angle, Angle]
+              A tuple of astropy.units.Angle objects representing the field of view.
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:property:: fov
+      :type: astropy.coordinates.Angle
+
+      
+      The field of view of the Aladin Lite widget along the horizontal axis.
+
+      It can be set with either a float number in degrees
+      or an astropy.coordinates.Angle object.
+
+
+      :Returns:
+
+          astropy.coordinates.Angle
+              An astropy.coordinates.Angle object representing the field of view.
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:property:: target
+      :type: astropy.coordinates.SkyCoord
+
+      
+      The target of the Aladin Lite widget.
+
+      It can be set with either a string or an `astropy.coordinates.SkyCoord` object.
+
+
+      :Returns:
+
+          astropy.coordinates.SkyCoord
+              An `astropy.coordinates.SkyCoord` object representing the target.
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: add_catalog_from_URL(votable_URL: str, votable_options: Optional[dict] = None) -> None
+
+      
+      Load a VOTable table from an url and load its data into the widget.
+
+
+      :Parameters:
+
+          **votable_URL** : str
+              ..
+
+          **votable_options** : dict
+              ..
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: add_fits(fits: Union[str, pathlib.Path, astropy.io.fits.HDUList], **image_options: any) -> None
+
+      
+      Load a FITS file into the widget.
+
+
+      :Parameters:
+
+          **fits** : Union[str, Path, HDUList]
+              The FITS image to load in the widget. It can be given as a path (either a
+              string or a `pathlib.Path` object), or as an `astropy.io.fits.HDUList`.
+
+          **image_options** : any
+              The options for the image. See the `Aladin Lite image options
+              <https://cds-astro.github.io/aladin-lite/global.html#ImageOptions>`_
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: add_moc(moc: any, **moc_options: any) -> None
+
+      
+      Add a MOC to the Aladin-Lite widget.
+
+
+      :Parameters:
+
+          **moc** : `~mocpy.MOC` or str or dict
+              The MOC can be provided as a `mocpy.MOC` object, as a string containing an
+              URL where the MOC can be retrieved, or as a dictionary where the keys are
+              the HEALPix orders and the values are the pixel indices
+              (ex: {"1":[1,2,4], "2":[12,13,14,21,23,25]}).
+
+          **moc_options**
+              Keyword arguments. The possible values are documented in `Aladin Lite's MOC
+              options <https://cds-astro.github.io/aladin-lite/global.html#MOCOptions>`_
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: add_moc_from_URL(moc_URL: str, moc_options: Optional[dict] = None) -> None
+
+      
+      Load a MOC from a URL and display it in Aladin Lite widget.
+
+
+      :Parameters:
+
+          **moc_URL: str**
+              An URL to retrieve the MOC from
+
+          **moc_options**
+              Keyword arguments. The possible values are documented in `Aladin Lite's MOC
+              options <https://cds-astro.github.io/aladin-lite/global.html#MOCOptions>`_
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: add_moc_from_dict(moc_dict: dict, moc_options: Optional[dict] = None) -> None
+
+      
+      Load a MOC from a dict object and display it in Aladin Lite widget.
+
+
+      :Parameters:
+
+          **moc_dict: dict**
+              It contains the MOC cells. Key are the HEALPix orders, values are the pixel
+              indexes, eg: {"1":[1,2,4], "2":[12,13,14,21,23,25]}
+
+          **moc_options**
+              Keyword arguments. The possible values are documented in `Aladin Lite's MOC
+              options <https://cds-astro.github.io/aladin-lite/global.html#MOCOptions>`_
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: add_table(table: Union[astropy.table.table.QTable, astropy.table.Table], **table_options: any) -> None
+
+      
+      Load a table into the widget.
+
+
+      :Parameters:
+
+          **table** : astropy.table.table.QTable or astropy.table.table.Table
+              table that must contain coordinates information
+
+          **table_options**
+              Keyword arguments. The possible values are documented in `Aladin Lite's
+              table options
+              <https://cds-astro.github.io/aladin-lite/global.html#CatalogOptions>`_
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: add_graphic_overlay_from_region(region: SupportedRegion, **graphic_options: any) -> None
+
+      
+      Add an overlay graphic layer to the Aladin Lite widget.
+
+
+      :Parameters:
+
+          **region: `~regions.CircleSkyRegion`, `~regions.EllipseSkyRegion`,**
+              ..
+
+          **`~regions.LineSkyRegion`,`~regions.PolygonSkyRegion`,**
+              ..
+
+          **`~regions.RectangleSkyRegion`, `~regions.Regions`, or a list of these.**
+              The region(s) to add in Aladin Lite. It can be given as a supported region
+              or a list of regions from the
+              `regions package <https://astropy-regions.readthedocs.io>`_.
+
+          **graphic_options: keyword arguments**
+              The options for the graphic overlay. Use Region visual for region options.
+              See `Aladin Lite's graphic overlay options
+              <https://cds-astro.github.io/aladin-lite/A.html>`_
+
+
+
+
+
+
+
+
+      .. seealso::
+
+          
+          :obj:`add_graphic_overlay_from_stcs`
+              for shapes described as STC-S strings.
+          
+          
+      .. rubric:: Notes
+
+      The possible `~regions.RegionVisual` options correspond to the
+      Aladin Lite / ipyaladin parameters:
+
+      .. table:: Correspondence between options
+          :widths: auto
+
+          ============== ===================== ======================
+          RegionVisual        AladinLite              ipyaladin
+          ============== ===================== ======================
+          edgecolor      color                 color
+          facecolor      fillColor             fill_color
+          color          color and fillColor   color and fill_color
+          alpha          opacity               opacity
+          linewidth      lineWidth             line_width
+          ============== ===================== ======================
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: add_overlay_from_stcs(stc_string: Union[List[str], str], **overlay_options: any) -> None
+
+      
+      Add an overlay layer defined by an STC-S string.
+
+
+      :Parameters:
+
+          **stc_string** : str, list[str]
+              The STC-S string or a list of STC-S strings.
+
+          **overlay_options** : keyword arguments
+              The overlay options for all the STC-S strings
+              See `Aladin Lite's graphic overlay options
+              <https://cds-astro.github.io/aladin-lite/A.html>`_
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: add_graphic_overlay_from_stcs(stc_string: Union[List[str], str], **overlay_options: any) -> None
+
+      
+      Add an overlay layer defined by an STC-S string.
+
+
+      :Parameters:
+
+          **stc_string** : str, list[str]
+              The STC-S string or a list of STC-S strings.
+
+          **overlay_options** : keyword arguments
+              The overlay options for all the STC-S strings.
+              See `Aladin Lite's graphic overlay options
+              <https://cds-astro.github.io/aladin-lite/A.html>`_
+
+
+
+
+
+
+
+
+      .. seealso::
+
+          
+          :obj:`add_graphic_overlay_from_region`
+              if the shape is in an astropy `~regions`
+          :obj:`object.`
+              ..
+          
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_JPEG_thumbnail() -> None
+
+      
+      Create a popup window with the current Aladin view.
+
+      This method will only work if you are running a notebook in a browser (for
+      example, it won't do anything in VSCode).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_color_map(color_map_name: str) -> None
+
+      
+      Change the color map of the Aladin Lite widget.
+
+
+      :Parameters:
+
+          **color_map_name: str**
+              The name of the color map to use.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: rectangular_selection() -> None
+
+      
+      Trigger the rectangular selection tool.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_listener(listener_type: str, callback: collections.abc.Callable) -> None
+
+      
+      Set a listener for an event to the widget.
+
+
+      :Parameters:
+
+          **listener_type** : str
+              Can either be 'object_hovered', 'object_clicked', 'click' or 'select'
+
+          **callback** : Callable
+              A python function to be called when the event corresponding to the
+              listener_type is detected
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: add_listener(listener_type: str, callback: collections.abc.Callable) -> None
+
+      
+      Add a listener to the widget. Use set_listener instead.
+
+
+      :Parameters:
+
+          **listener_type: str**
+              Can either be 'object_hovered', 'object_clicked', 'click' or 'select'
+
+          **callback: Callable**
+              A python function to be called when the event corresponding to the
+              listener_type is detected
+
+
+
+
+
+
+
+
+
+      .. rubric:: Notes
+
+      This method is deprecated, use set_listener instead
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+

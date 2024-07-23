@@ -1,0 +1,748 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Use of functions on ipyaladin widgets &#8212; ipyaladin 0.4.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=6c02275b"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_collections/notebooks/03_Functions';</script>
+    <link rel="icon" href="../../_static/aladin-logo.svg"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Display tables resulting from an astroquery request" href="04_Importing_Tables.html" />
+    <link rel="prev" title="Aladin commands" href="02_Base_Commands.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/ipyaladin_light.png" class="logo__image only-light" alt=""/>
+    <script>document.write(`<img src="../../_static/ipyaladin_dark.png" class="logo__image only-dark" alt=""/>`);</script>
+  
+  
+    <p class="title logo__title">Ipyaladin documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting_started/getting_started.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../community/community.html">
+    Community
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../user_documentation/user_documentation.html">
+    User Documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../autoapi/index.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://aladin.cds.unistra.fr/aladin.gml">
+    Aladin
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="<https://github.com/cds-astro/ipyaladin/releases>">
+    Changelog
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/cds-astro/ipyaladin" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting_started/getting_started.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../community/community.html">
+    Community
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../user_documentation/user_documentation.html">
+    User Documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../autoapi/index.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://aladin.cds.unistra.fr/aladin.gml">
+    Aladin
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="<https://github.com/cds-astro/ipyaladin/releases>">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/cds-astro/ipyaladin" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="02_Base_Commands.html">Aladin commands</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Use of functions on ipyaladin widgets</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="04_Importing_Tables.html">Display tables resulting from an astroquery request</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_Display_a_MOC.html">Display of a Multi Order Coverage (MOC)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09_Displaying_Shapes.html">Adding shapes / graphic overlays</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="11_Extracting_information_from_the_view.html">Retrieving data from the current widget’s view</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="06_Linked-widgets.html">Linked widgets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_on-click-callback.html">On click callback</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_Rectangular-selection.html">Example of interactive rectangular selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_Advanced-GUI.html">Advanced GUI</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../user_documentation/user_documentation.html" class="nav-link">User Documentation</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">Use of...</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="Use-of-functions-on-ipyaladin-widgets">
+<h1>Use of functions on ipyaladin widgets<a class="headerlink" href="#Use-of-functions-on-ipyaladin-widgets" title="Link to this heading">#</a></h1>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ipyaladin</span> <span class="kn">import</span> <span class="n">Aladin</span>
+</pre></div>
+</div>
+</div>
+<section id="Home-made-functions">
+<h2>Home-made functions<a class="headerlink" href="#Home-made-functions" title="Link to this heading">#</a></h2>
+<p>Let’s first write our own functions to apply to a generated sky view. We want to print the clicked object coordinates and informations.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aladin</span> <span class="o">=</span> <span class="n">Aladin</span><span class="p">(</span>
+    <span class="n">survey</span><span class="o">=</span><span class="s2">&quot;P/DSS2/red&quot;</span><span class="p">,</span>
+    <span class="n">fov</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">target</span><span class="o">=</span><span class="s2">&quot;LMC&quot;</span><span class="p">,</span>
+    <span class="n">reticle_color</span><span class="o">=</span><span class="s2">&quot;#ff89ff&quot;</span><span class="p">,</span>
+    <span class="n">show_status_bar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">aladin</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 1, "model_id": "6ae783a7f14841d99fbae956b432b1d3"}</script></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;https://vizier.unistra.fr/viz-bin/votable?-source=HIP2&amp;-c=LMC&amp;-out.add=_RAJ,_&quot;</span>
+    <span class="s2">&quot;DEJ&amp;-oc.form=dm&amp;-out.meta=DhuL&amp;-out.max=9999&amp;-c.rm=180&quot;</span>
+<span class="p">)</span>
+<span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;source_size&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span> <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;#f08080&quot;</span><span class="p">,</span> <span class="s2">&quot;on_click&quot;</span><span class="p">:</span> <span class="s2">&quot;showTable&quot;</span><span class="p">}</span>
+<span class="n">aladin</span><span class="o">.</span><span class="n">add_catalog_from_URL</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>After clicking on a source, you can print its value with:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aladin</span><span class="o">.</span><span class="n">clicked_object</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{}
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_object_data</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print the clicked object data.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : dict</span>
+<span class="sd">        The data of the clicked object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;It clicked.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span>
+
+
+<span class="k">def</span> <span class="nf">get_object_ra_dec_product</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the product of the ra and dec values of the clicked object.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : dict</span>
+<span class="sd">        The data of the clicked object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;ra&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;dec&quot;</span><span class="p">]</span>
+
+
+<span class="c1"># when triggered, the listeners on the js side of the application will send a</span>
+<span class="c1"># json object whose parameter data will be used by the python functions</span>
+<span class="c1"># (data is a literal object on the js side, it will be converted as a dictionary</span>
+<span class="c1"># object on the python side)</span>
+<span class="n">aladin</span><span class="o">.</span><span class="n">set_listener</span><span class="p">(</span><span class="s2">&quot;object_hovered&quot;</span><span class="p">,</span> <span class="n">get_object_ra_dec_product</span><span class="p">)</span>
+<span class="n">aladin</span><span class="o">.</span><span class="n">set_listener</span><span class="p">(</span><span class="s2">&quot;object_clicked&quot;</span><span class="p">,</span> <span class="n">get_object_data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Built-in-methods">
+<h2>Built-in methods<a class="headerlink" href="#Built-in-methods" title="Link to this heading">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">Aladin</span></code> object also comes with its built-in methods. Here we illustrate one of them.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aladin_bis</span> <span class="o">=</span> <span class="n">Aladin</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s2">&quot;269.956288 -23.823863&quot;</span><span class="p">,</span> <span class="n">fov</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">aladin_bis</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 1, "model_id": "e0d322e4308b458d91d0763955163dbc"}</script></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aladin_bis</span><span class="o">.</span><span class="n">set_color_map</span><span class="p">(</span><span class="s2">&quot;redtemperature&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">help</span><span class="p">(</span><span class="n">aladin_bis</span><span class="o">.</span><span class="n">get_JPEG_thumbnail</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Help on method get_JPEG_thumbnail in module ipyaladin.widget:
+
+get_JPEG_thumbnail() -&gt; None method of ipyaladin.widget.Aladin instance
+    Create a popup window with the current Aladin view.
+
+    This method will only work if you are running a notebook in a browser (for
+    example, it won&#39;t do anything in VSCode).
+
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aladin_bis</span><span class="o">.</span><span class="n">get_JPEG_thumbnail</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<p>Check that your browser didn’t block the popup window if you don’t see the thumbnail. This will not work in VSCode or other notebooks editors that are not working in a browser.</p>
+<script type="application/vnd.jupyter.widget-state+json">
+{"state": {"dfe990b391504c57bf6913bed5a0c2bb": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "6ae783a7f14841d99fbae956b432b1d3": {"model_name": "AnyModel", "model_module": "anywidget", "model_module_version": "~0.9.*", "state": {"_anywidget_id": "ipyaladin.widget.Aladin", "_css": ".cell-output-ipywidget-background{background:transparent}.jp-OutputArea-output,.aladin-widget{background-color:transparent}.aladin-widget .aladin-measurement-div{max-height:100px}\n", "_dom_classes": [], "_esm": "function f(n){n.charAt(0)===\"_\"&&(n=n.slice(1));let e=n.split(\"_\");for(let a=1;a<e.length;a++)e[a]=e[a].charAt(0).toUpperCase()+e[a].slice(1);return e.join(\"\")}function h(n){let e={};for(let a in n)e[f(a)]=n[a];return e}var c=class{locked=!1;unlock(){this.locked=!1}lock(){this.locked=!0}},m=-1;function u(n){m=n}import _ from\"https://esm.sh/aladin-lite@3.4.5-beta\";var l=_;var y=0,g=class{constructor(e,a){this.aladin=e,this.model=a}handleChangeFoV(e){this.aladin.setFoV(e.fov)}handleGotoRaDec(e){this.aladin.gotoRaDec(e.ra,e.dec)}handleAddFits(e,a){let i=h(e.options||{});i.name||(i.name=`image_${String(++y).padStart(3,\"0\")}`);let s=a[0],t=new Blob([s],{type:\"application/octet-stream\"}),o=URL.createObjectURL(t),d=this.aladin.createImageFITS(o,i,(r,v)=>{this.aladin.gotoRaDec(r,v),console.info(`FITS located at ra: ${r}, dec: ${v}`),URL.revokeObjectURL(o)});this.aladin.setOverlayImageLayer(d,i.name)}handleAddCatalogFromURL(e){let a=h(e.options||{});this.aladin.addCatalog(l.catalogFromURL(e.votable_URL,a))}handleAddMOCFromURL(e){let a=h(e.options||{});this.aladin.addMOC(l.MOCFromURL(e.moc_URL,a))}handleAddMOCFromDict(e){let a=h(e.options||{});this.aladin.addMOC(l.MOCFromJSON(e.moc_dict,a))}handleAddOverlay(e){let a=e.regions_infos,i=h(e.graphic_options||{});i.color||(i.color=\"red\");let s=l.graphicOverlay(i);this.aladin.addOverlay(s);for(let t of a){let o=t.infos;switch(t.region_type){case\"stcs\":s.addFootprints(l.footprintsFromSTCS(o.stcs,t.options));break;case\"circle\":s.add(l.circle(o.ra,o.dec,o.radius,t.options));break;case\"ellipse\":s.add(l.ellipse(o.ra,o.dec,o.a,o.b,o.theta,t.options));break;case\"line\":t.options.lineWidth=t.options.lineWidth||3,s.add(l.vector(o.ra1,o.dec1,o.ra2,o.dec2,t.options));break;case\"polygon\":s.add(l.polygon(o.vertices,t.options));break}}}handleChangeColormap(e){this.aladin.getBaseImageLayer().setColormap(e.colormap)}handleGetJPGThumbnail(){this.aladin.exportAsPNG()}handleTriggerRectangularSelection(){this.aladin.select()}handleAddTable(e,a){let i=h(e.options||{}),s=a[0].buffer,t=new TextDecoder(\"utf-8\"),o=new Blob([t.decode(s)]),d=URL.createObjectURL(o);l.catalogFromURL(d,Object.assign(i,{onClick:\"showTable\"}),r=>{this.aladin.addCatalog(r)},!1),URL.revokeObjectURL(d)}};var p=class{constructor(e,a,i){this.aladin=e,this.aladinDiv=a,this.model=i,this.messageHandler=new g(e,i),this.currentDivNumber=parseInt(a.id.split(\"-\").pop())}isLastDiv(){if(this.currentDivNumber===m)return!0;let e=m;for(let a=e;a>=0;a--){let i=document.getElementById(`aladin-lite-div-${a}`);if(i&&i.style.display!==\"none\"){e=a;break}}return u(e),this.currentDivNumber===e}updateWCS(){this.isLastDiv()&&this.model.set(\"_wcs\",this.aladin.getViewWCS())}update2AxisFoV(){if(!this.isLastDiv())return;let e=this.aladin.getFov();this.model.set(\"_fov_xy\",{x:e[0],y:e[1]})}subscribeAll(){let e=new c,a=new c;this.aladin.on(\"positionChanged\",t=>{if(a.locked){a.unlock();return}e.lock();let o=[t.ra,t.dec];this.updateWCS(),this.model.set(\"_target\",`${o[0]} ${o[1]}`),this.model.save_changes()}),this.model.on(\"change:_target\",()=>{if(e.locked){e.unlock();return}a.lock();let t=this.model.get(\"_target\"),[o,d]=t.split(\" \");this.aladin.gotoRaDec(o,d)});let i=new c,s=new c;this.aladin.on(\"zoomChanged\",t=>{if(s.locked){s.unlock();return}i.lock(),this.updateWCS(),this.update2AxisFoV(),this.model.set(\"_fov\",parseFloat(t.toFixed(5))),this.model.save_changes()}),this.model.on(\"change:_fov\",()=>{if(i.locked){i.unlock();return}s.lock();let t=this.model.get(\"_fov\");this.aladin.setFoV(t)}),this.model.on(\"change:_height\",()=>{let t=this.model.get(\"_height\");this.aladinDiv.style.height=`${t}px`,this.updateWCS(),this.update2AxisFoV(),this.model.save_changes()}),this.aladin.on(\"cooFrameChanged\",()=>{this.updateWCS(),this.model.save_changes()}),this.aladin.on(\"projectionChanged\",()=>{this.updateWCS(),this.model.save_changes()}),this.aladin.on(\"layerChanged\",(t,o,d)=>{o!==\"base\"||d!==\"ADDED\"||(this.updateWCS(),this.model.save_changes())}),this.aladin.on(\"resizeChanged\",()=>{this.updateWCS(),this.update2AxisFoV(),this.model.save_changes()}),this.aladin.on(\"objectHovered\",t=>{t.data!==void 0&&this.model.send({event_type:\"object_hovered\",content:{ra:t.ra,dec:t.dec}})}),this.aladin.on(\"objectClicked\",t=>{if(t){let o={ra:t.ra,dec:t.dec};t.data!==void 0&&(o.data=t.data),this.model.set(\"clicked_object\",o),this.model.send({event_type:\"object_clicked\",content:o}),this.model.save_changes()}}),this.aladin.on(\"click\",t=>{this.model.send({event_type:\"click\",content:t})}),this.aladin.on(\"select\",t=>{let o=[];t.forEach(d=>{d.forEach(r=>{o.push({ra:r.ra,dec:r.dec,data:r.data,x:r.x,y:r.y})})}),this.model.send({event_type:\"select\",content:o})}),this.model.on(\"change:coo_frame\",()=>{this.aladin.setFrame(this.model.get(\"coo_frame\"))}),this.model.on(\"change:survey\",()=>{this.aladin.setImageSurvey(this.model.get(\"survey\"))}),this.model.on(\"change:overlay_survey\",()=>{this.aladin.setOverlayImageLayer(this.model.get(\"overlay_survey\"))}),this.model.on(\"change:overlay_survey_opacity\",()=>{this.aladin.getOverlayImageLayer().setAlpha(this.model.get(\"overlay_survey_opacity\"))}),this.eventHandlers={change_fov:this.messageHandler.handleChangeFoV,goto_ra_dec:this.messageHandler.handleGotoRaDec,add_fits:this.messageHandler.handleAddFits,add_catalog_from_URL:this.messageHandler.handleAddCatalogFromURL,add_MOC_from_URL:this.messageHandler.handleAddMOCFromURL,add_MOC_from_dict:this.messageHandler.handleAddMOCFromDict,add_overlay:this.messageHandler.handleAddOverlay,change_colormap:this.messageHandler.handleChangeColormap,get_JPG_thumbnail:this.messageHandler.handleGetJPGThumbnail,trigger_rectangular_selection:this.messageHandler.handleTriggerRectangularSelection,add_table:this.messageHandler.handleAddTable},this.model.on(\"msg:custom\",(t,o)=>{let d=t.event_name,r=this.eventHandlers[d];if(r)r.call(this,t,o);else throw new Error(`Unknown event name: ${d}`)})}unsubscribeAll(){this.model.off(\"change:_target\"),this.model.off(\"change:_fov\"),this.model.off(\"change:_height\"),this.model.off(\"change:coo_frame\"),this.model.off(\"change:survey\"),this.model.off(\"change:overlay_survey\"),this.model.off(\"change:overlay_survey_opacity\"),this.model.off(\"change:trigger_event\"),this.model.off(\"msg:custom\")}};function b(n,e){u(m+1);let a={};n.get(\"init_options\").forEach(d=>{a[f(d)]=n.get(d)});let i=document.createElement(\"div\");i.classList.add(\"aladin-widget\"),i.style.height=`${a.height}px`,i.id=`aladin-lite-div-${m}`;let s=new l.aladin(i,a),t=a.target.split(\" \");s.gotoRaDec(t[0],t[1]);let o=s.getFov();return n.set(\"_fov_xy\",{x:o[0],y:o[1]}),n.set(\"_wcs\",s.getViewWCS()),n.save_changes(),e.appendChild(i),{aladin:s,aladinDiv:i}}async function C({model:n}){await l.init}function k({model:n,el:e}){let{aladin:a,aladinDiv:i}=b(n,e),s=new p(a,i,n);return s.subscribeAll(),()=>{s.unsubscribeAll()}}var j={initialize:C,render:k};export{j as default};\n", "_fov": 10.0, "_fov_xy": {}, "_height": 400, "_model_module": "anywidget", "_model_module_version": "~0.9.*", "_model_name": "AnyModel", "_target": "80.89417 -69.75611", "_view_count": null, "_view_module": "anywidget", "_view_module_version": "~0.9.*", "_view_name": "AnyView", "_wcs": {}, "background_color": "rgb(60, 60, 60)", "clicked_object": {}, "coo_frame": "ICRS", "full_screen": false, "grid_color": "rgb(178, 50, 178)", "grid_opacity": 0.5, "grid_options": {}, "init_options": ["_fov", "_height", "_target", "background_color", "coo_frame", "full_screen", "grid_color", "grid_opacity", "grid_options", "overlay_survey", "overlay_survey_opacity", "projection", "reticle_color", "reticle_size", "samp", "show_catalog", "show_context_menu", "show_coo_grid", "show_coo_grid_control", "show_coo_location", "show_fov", "show_frame", "show_fullscreen_control", "show_layers_control", "show_projection_control", "show_reticle", "show_settings_control", "show_share_control", "show_simbad_pointer_control", "show_status_bar", "show_zoom_control", "survey"], "layout": "IPY_MODEL_dfe990b391504c57bf6913bed5a0c2bb", "overlay_survey": "", "overlay_survey_opacity": 0.0, "projection": "SIN", "reticle_color": "#ff89ff", "reticle_size": 20, "samp": false, "show_catalog": true, "show_context_menu": true, "show_coo_grid": false, "show_coo_grid_control": true, "show_coo_location": true, "show_fov": true, "show_frame": true, "show_fullscreen_control": true, "show_layers_control": true, "show_projection_control": true, "show_reticle": true, "show_settings_control": true, "show_share_control": false, "show_simbad_pointer_control": true, "show_status_bar": true, "show_zoom_control": false, "survey": "P/DSS2/red", "tabbable": null, "tooltip": null}}, "80616bd0f7954104a598f1ca2232b951": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "e0d322e4308b458d91d0763955163dbc": {"model_name": "AnyModel", "model_module": "anywidget", "model_module_version": "~0.9.*", "state": {"_anywidget_id": "ipyaladin.widget.Aladin", "_css": ".cell-output-ipywidget-background{background:transparent}.jp-OutputArea-output,.aladin-widget{background-color:transparent}.aladin-widget .aladin-measurement-div{max-height:100px}\n", "_dom_classes": [], "_esm": "function f(n){n.charAt(0)===\"_\"&&(n=n.slice(1));let e=n.split(\"_\");for(let a=1;a<e.length;a++)e[a]=e[a].charAt(0).toUpperCase()+e[a].slice(1);return e.join(\"\")}function h(n){let e={};for(let a in n)e[f(a)]=n[a];return e}var c=class{locked=!1;unlock(){this.locked=!1}lock(){this.locked=!0}},m=-1;function u(n){m=n}import _ from\"https://esm.sh/aladin-lite@3.4.5-beta\";var l=_;var y=0,g=class{constructor(e,a){this.aladin=e,this.model=a}handleChangeFoV(e){this.aladin.setFoV(e.fov)}handleGotoRaDec(e){this.aladin.gotoRaDec(e.ra,e.dec)}handleAddFits(e,a){let i=h(e.options||{});i.name||(i.name=`image_${String(++y).padStart(3,\"0\")}`);let s=a[0],t=new Blob([s],{type:\"application/octet-stream\"}),o=URL.createObjectURL(t),d=this.aladin.createImageFITS(o,i,(r,v)=>{this.aladin.gotoRaDec(r,v),console.info(`FITS located at ra: ${r}, dec: ${v}`),URL.revokeObjectURL(o)});this.aladin.setOverlayImageLayer(d,i.name)}handleAddCatalogFromURL(e){let a=h(e.options||{});this.aladin.addCatalog(l.catalogFromURL(e.votable_URL,a))}handleAddMOCFromURL(e){let a=h(e.options||{});this.aladin.addMOC(l.MOCFromURL(e.moc_URL,a))}handleAddMOCFromDict(e){let a=h(e.options||{});this.aladin.addMOC(l.MOCFromJSON(e.moc_dict,a))}handleAddOverlay(e){let a=e.regions_infos,i=h(e.graphic_options||{});i.color||(i.color=\"red\");let s=l.graphicOverlay(i);this.aladin.addOverlay(s);for(let t of a){let o=t.infos;switch(t.region_type){case\"stcs\":s.addFootprints(l.footprintsFromSTCS(o.stcs,t.options));break;case\"circle\":s.add(l.circle(o.ra,o.dec,o.radius,t.options));break;case\"ellipse\":s.add(l.ellipse(o.ra,o.dec,o.a,o.b,o.theta,t.options));break;case\"line\":t.options.lineWidth=t.options.lineWidth||3,s.add(l.vector(o.ra1,o.dec1,o.ra2,o.dec2,t.options));break;case\"polygon\":s.add(l.polygon(o.vertices,t.options));break}}}handleChangeColormap(e){this.aladin.getBaseImageLayer().setColormap(e.colormap)}handleGetJPGThumbnail(){this.aladin.exportAsPNG()}handleTriggerRectangularSelection(){this.aladin.select()}handleAddTable(e,a){let i=h(e.options||{}),s=a[0].buffer,t=new TextDecoder(\"utf-8\"),o=new Blob([t.decode(s)]),d=URL.createObjectURL(o);l.catalogFromURL(d,Object.assign(i,{onClick:\"showTable\"}),r=>{this.aladin.addCatalog(r)},!1),URL.revokeObjectURL(d)}};var p=class{constructor(e,a,i){this.aladin=e,this.aladinDiv=a,this.model=i,this.messageHandler=new g(e,i),this.currentDivNumber=parseInt(a.id.split(\"-\").pop())}isLastDiv(){if(this.currentDivNumber===m)return!0;let e=m;for(let a=e;a>=0;a--){let i=document.getElementById(`aladin-lite-div-${a}`);if(i&&i.style.display!==\"none\"){e=a;break}}return u(e),this.currentDivNumber===e}updateWCS(){this.isLastDiv()&&this.model.set(\"_wcs\",this.aladin.getViewWCS())}update2AxisFoV(){if(!this.isLastDiv())return;let e=this.aladin.getFov();this.model.set(\"_fov_xy\",{x:e[0],y:e[1]})}subscribeAll(){let e=new c,a=new c;this.aladin.on(\"positionChanged\",t=>{if(a.locked){a.unlock();return}e.lock();let o=[t.ra,t.dec];this.updateWCS(),this.model.set(\"_target\",`${o[0]} ${o[1]}`),this.model.save_changes()}),this.model.on(\"change:_target\",()=>{if(e.locked){e.unlock();return}a.lock();let t=this.model.get(\"_target\"),[o,d]=t.split(\" \");this.aladin.gotoRaDec(o,d)});let i=new c,s=new c;this.aladin.on(\"zoomChanged\",t=>{if(s.locked){s.unlock();return}i.lock(),this.updateWCS(),this.update2AxisFoV(),this.model.set(\"_fov\",parseFloat(t.toFixed(5))),this.model.save_changes()}),this.model.on(\"change:_fov\",()=>{if(i.locked){i.unlock();return}s.lock();let t=this.model.get(\"_fov\");this.aladin.setFoV(t)}),this.model.on(\"change:_height\",()=>{let t=this.model.get(\"_height\");this.aladinDiv.style.height=`${t}px`,this.updateWCS(),this.update2AxisFoV(),this.model.save_changes()}),this.aladin.on(\"cooFrameChanged\",()=>{this.updateWCS(),this.model.save_changes()}),this.aladin.on(\"projectionChanged\",()=>{this.updateWCS(),this.model.save_changes()}),this.aladin.on(\"layerChanged\",(t,o,d)=>{o!==\"base\"||d!==\"ADDED\"||(this.updateWCS(),this.model.save_changes())}),this.aladin.on(\"resizeChanged\",()=>{this.updateWCS(),this.update2AxisFoV(),this.model.save_changes()}),this.aladin.on(\"objectHovered\",t=>{t.data!==void 0&&this.model.send({event_type:\"object_hovered\",content:{ra:t.ra,dec:t.dec}})}),this.aladin.on(\"objectClicked\",t=>{if(t){let o={ra:t.ra,dec:t.dec};t.data!==void 0&&(o.data=t.data),this.model.set(\"clicked_object\",o),this.model.send({event_type:\"object_clicked\",content:o}),this.model.save_changes()}}),this.aladin.on(\"click\",t=>{this.model.send({event_type:\"click\",content:t})}),this.aladin.on(\"select\",t=>{let o=[];t.forEach(d=>{d.forEach(r=>{o.push({ra:r.ra,dec:r.dec,data:r.data,x:r.x,y:r.y})})}),this.model.send({event_type:\"select\",content:o})}),this.model.on(\"change:coo_frame\",()=>{this.aladin.setFrame(this.model.get(\"coo_frame\"))}),this.model.on(\"change:survey\",()=>{this.aladin.setImageSurvey(this.model.get(\"survey\"))}),this.model.on(\"change:overlay_survey\",()=>{this.aladin.setOverlayImageLayer(this.model.get(\"overlay_survey\"))}),this.model.on(\"change:overlay_survey_opacity\",()=>{this.aladin.getOverlayImageLayer().setAlpha(this.model.get(\"overlay_survey_opacity\"))}),this.eventHandlers={change_fov:this.messageHandler.handleChangeFoV,goto_ra_dec:this.messageHandler.handleGotoRaDec,add_fits:this.messageHandler.handleAddFits,add_catalog_from_URL:this.messageHandler.handleAddCatalogFromURL,add_MOC_from_URL:this.messageHandler.handleAddMOCFromURL,add_MOC_from_dict:this.messageHandler.handleAddMOCFromDict,add_overlay:this.messageHandler.handleAddOverlay,change_colormap:this.messageHandler.handleChangeColormap,get_JPG_thumbnail:this.messageHandler.handleGetJPGThumbnail,trigger_rectangular_selection:this.messageHandler.handleTriggerRectangularSelection,add_table:this.messageHandler.handleAddTable},this.model.on(\"msg:custom\",(t,o)=>{let d=t.event_name,r=this.eventHandlers[d];if(r)r.call(this,t,o);else throw new Error(`Unknown event name: ${d}`)})}unsubscribeAll(){this.model.off(\"change:_target\"),this.model.off(\"change:_fov\"),this.model.off(\"change:_height\"),this.model.off(\"change:coo_frame\"),this.model.off(\"change:survey\"),this.model.off(\"change:overlay_survey\"),this.model.off(\"change:overlay_survey_opacity\"),this.model.off(\"change:trigger_event\"),this.model.off(\"msg:custom\")}};function b(n,e){u(m+1);let a={};n.get(\"init_options\").forEach(d=>{a[f(d)]=n.get(d)});let i=document.createElement(\"div\");i.classList.add(\"aladin-widget\"),i.style.height=`${a.height}px`,i.id=`aladin-lite-div-${m}`;let s=new l.aladin(i,a),t=a.target.split(\" \");s.gotoRaDec(t[0],t[1]);let o=s.getFov();return n.set(\"_fov_xy\",{x:o[0],y:o[1]}),n.set(\"_wcs\",s.getViewWCS()),n.save_changes(),e.appendChild(i),{aladin:s,aladinDiv:i}}async function C({model:n}){await l.init}function k({model:n,el:e}){let{aladin:a,aladinDiv:i}=b(n,e),s=new p(a,i,n);return s.subscribeAll(),()=>{s.unsubscribeAll()}}var j={initialize:C,render:k};export{j as default};\n", "_fov": 1.0, "_fov_xy": {}, "_height": 400, "_model_module": "anywidget", "_model_module_version": "~0.9.*", "_model_name": "AnyModel", "_target": "269.956288 -23.823863", "_view_count": null, "_view_module": "anywidget", "_view_module_version": "~0.9.*", "_view_name": "AnyView", "_wcs": {}, "background_color": "rgb(60, 60, 60)", "clicked_object": {}, "coo_frame": "ICRS", "full_screen": false, "grid_color": "rgb(178, 50, 178)", "grid_opacity": 0.5, "grid_options": {}, "init_options": ["_fov", "_height", "_target", "background_color", "coo_frame", "full_screen", "grid_color", "grid_opacity", "grid_options", "overlay_survey", "overlay_survey_opacity", "projection", "reticle_color", "reticle_size", "samp", "show_catalog", "show_context_menu", "show_coo_grid", "show_coo_grid_control", "show_coo_location", "show_fov", "show_frame", "show_fullscreen_control", "show_layers_control", "show_projection_control", "show_reticle", "show_settings_control", "show_share_control", "show_simbad_pointer_control", "show_status_bar", "show_zoom_control", "survey"], "layout": "IPY_MODEL_80616bd0f7954104a598f1ca2232b951", "overlay_survey": "", "overlay_survey_opacity": 0.0, "projection": "SIN", "reticle_color": "rgb(178, 50, 178)", "reticle_size": 20, "samp": false, "show_catalog": true, "show_context_menu": true, "show_coo_grid": false, "show_coo_grid_control": true, "show_coo_location": true, "show_fov": true, "show_frame": true, "show_fullscreen_control": true, "show_layers_control": true, "show_projection_control": true, "show_reticle": true, "show_settings_control": true, "show_share_control": false, "show_simbad_pointer_control": true, "show_status_bar": true, "show_zoom_control": false, "survey": "https://alaskybis.unistra.fr/DSS/DSSColor", "tabbable": null, "tooltip": null}}}, "version_major": 2, "version_minor": 0}
+</script></section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="02_Base_Commands.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Aladin commands</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="04_Importing_Tables.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Display tables resulting from an astroquery request</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Home-made-functions">Home-made functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Built-in-methods">Built-in methods</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/_collections/notebooks/03_Functions.ipynb.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2024, Strasbourg Astronomical Date Centre (CDS).
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.4.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

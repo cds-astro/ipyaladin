@@ -1,0 +1,38 @@
+ipyaladin
+=========
+
+.. py:module:: ipyaladin
+
+.. autoapi-nested-parse::
+
+   
+   Top-level package for ipyaladin.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/ipyaladin/widget/index
+
+

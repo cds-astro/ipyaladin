@@ -1,0 +1,123 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Example of interactive rectangular selection\n",
+    "\n",
+    "Once all the cells below have been executed, you will be able to press the _Select_ button, drag a rectangle enclosing the sources you wish to select and see their names in the table at the right of the ipyaladin view.\n",
+    "\n",
+    "![ipyaladin example](gifs/demo-select-button.gif)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from ipyaladin import Aladin\n",
+    "from ipywidgets import Layout, Box, widgets\n",
+    "\n",
+    "from astroquery.simbad import Simbad\n",
+    "import astropy.units as u\n",
+    "\n",
+    "aladin = Aladin(\n",
+    "    layout=Layout(width=\"50%\"),\n",
+    "    target=\"M 1\",\n",
+    "    fov=0.2,\n",
+    "    show_projection_control=False,\n",
+    "    show_fullscreen_control=False,\n",
+    ")\n",
+    "button = widgets.Button(description=\"Select\")\n",
+    "\n",
+    "\n",
+    "def on_button_clicked(_: any) -> None:\n",
+    "    \"\"\"Button click event callback.\n",
+    "\n",
+    "    It will trigger the rectangular selection in the Aladin widget.\n",
+    "\n",
+    "    Parameters\n",
+    "    ----------\n",
+    "    _: any\n",
+    "        The button widget that triggered the event.\n",
+    "    \"\"\"\n",
+    "    aladin.rectangular_selection()\n",
+    "\n",
+    "\n",
+    "button.on_click(on_button_clicked)\n",
+    "table_info = widgets.HTML(layout=Layout(height=\"auto\", overflow=\"auto\"))\n",
+    "\n",
+    "box_layout = Layout(\n",
+    "    display=\"flex\",\n",
+    "    flex_flow=\"row\",\n",
+    "    align_items=\"stretch\",\n",
+    "    width=\"100%\",\n",
+    "    position=\"relative\",\n",
+    ")\n",
+    "box = Box(children=[aladin, button, table_info], layout=box_layout)\n",
+    "box"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "table = Simbad.query_region(\"M 1\", radius=0.1 * u.deg)\n",
+    "aladin.add_table(table)\n",
+    "\n",
+    "\n",
+    "def process_result(sources: dict) -> None:\n",
+    "    \"\"\"Process the sources selected in the Aladin widget and display them in the table.\n",
+    "\n",
+    "    Parameters\n",
+    "    ----------\n",
+    "    sources: dict\n",
+    "        The sources selected in the Aladin widget.\n",
+    "    \"\"\"\n",
+    "    s = '<table border=\"1\">'\n",
+    "    s += \"<tr><th>MAIN_ID</th><th>RA</th><th>DEC</th></tr>\"\n",
+    "    for source in sources:\n",
+    "        s += \"<tr><td>%s</td><td>%s</td><td>%s</td></tr>\" % (\n",
+    "            source[\"data\"][\"MAIN_ID\"],\n",
+    "            source[\"data\"][\"RA\"],\n",
+    "            source[\"data\"][\"DEC\"],\n",
+    "        )\n",
+    "    s += \"</table>\"\n",
+    "    table_info.value = s\n",
+    "\n",
+    "\n",
+    "aladin.set_listener(\"select\", process_result)"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "base",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.11.3"
+  },
+  "vscode": {
+   "interpreter": {
+    "hash": "85bb43f988bdbdc027a50b6d744a62eda8a76617af1f4f9b115d38242716dbac"
+   }
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}

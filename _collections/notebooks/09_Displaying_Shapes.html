@@ -1,0 +1,771 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Adding shapes / graphic overlays &#8212; ipyaladin 0.4.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=6c02275b"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_collections/notebooks/09_Displaying_Shapes';</script>
+    <link rel="icon" href="../../_static/aladin-logo.svg"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Retrieving data from the current widget’s view" href="11_Extracting_information_from_the_view.html" />
+    <link rel="prev" title="Display of a Multi Order Coverage (MOC)" href="05_Display_a_MOC.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/ipyaladin_light.png" class="logo__image only-light" alt=""/>
+    <script>document.write(`<img src="../../_static/ipyaladin_dark.png" class="logo__image only-dark" alt=""/>`);</script>
+  
+  
+    <p class="title logo__title">Ipyaladin documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting_started/getting_started.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../community/community.html">
+    Community
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../user_documentation/user_documentation.html">
+    User Documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../autoapi/index.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://aladin.cds.unistra.fr/aladin.gml">
+    Aladin
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="<https://github.com/cds-astro/ipyaladin/releases>">
+    Changelog
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/cds-astro/ipyaladin" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting_started/getting_started.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../community/community.html">
+    Community
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../user_documentation/user_documentation.html">
+    User Documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../autoapi/index.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://aladin.cds.unistra.fr/aladin.gml">
+    Aladin
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="<https://github.com/cds-astro/ipyaladin/releases>">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/cds-astro/ipyaladin" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="02_Base_Commands.html">Aladin commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_Functions.html">Use of functions on ipyaladin widgets</a></li>
+</ul>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="04_Importing_Tables.html">Display tables resulting from an astroquery request</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_Display_a_MOC.html">Display of a Multi Order Coverage (MOC)</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Adding shapes / graphic overlays</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="11_Extracting_information_from_the_view.html">Retrieving data from the current widget’s view</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="06_Linked-widgets.html">Linked widgets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_on-click-callback.html">On click callback</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_Rectangular-selection.html">Example of interactive rectangular selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_Advanced-GUI.html">Advanced GUI</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../user_documentation/user_documentation.html" class="nav-link">User Documentation</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">Adding...</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="Adding-shapes-/-graphic-overlays">
+<h1>Adding shapes / graphic overlays<a class="headerlink" href="#Adding-shapes-/-graphic-overlays" title="Link to this heading">#</a></h1>
+<p>There are two supported representations of exact shapes in <code class="docutils literal notranslate"><span class="pre">ipyaladin</span></code>: - the <a class="reference external" href="https://ivoa.net/documents/STC-S/20130917/index.html">Space Time Coordinates string (STCs)</a> - the <code class="docutils literal notranslate"><span class="pre">astropy-regions</span></code> package objects</p>
+<p>If you’re looking for MOCs, they have their own example in the repository: <code class="docutils literal notranslate"><span class="pre">5-Display_a_MOC.ipynb</span></code>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ipyaladin</span> <span class="kn">import</span> <span class="n">Aladin</span>
+
+<span class="kn">from</span> <span class="nn">astropy.coordinates</span> <span class="kn">import</span> <span class="n">Angle</span><span class="p">,</span> <span class="n">SkyCoord</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">from</span> <span class="nn">astropy.wcs</span> <span class="kn">import</span> <span class="n">WCS</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">regions</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CircleSkyRegion</span><span class="p">,</span>
+    <span class="n">EllipseSkyRegion</span><span class="p">,</span>
+    <span class="n">LineSkyRegion</span><span class="p">,</span>
+    <span class="n">PolygonSkyRegion</span><span class="p">,</span>
+    <span class="n">RectangleSkyRegion</span><span class="p">,</span>
+    <span class="n">RegionVisual</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<section id="Add-shapes-from-Space-Time-Coordinates-(STC)">
+<h2>Add shapes from Space-Time Coordinates (STC)<a class="headerlink" href="#Add-shapes-from-Space-Time-Coordinates-(STC)" title="Link to this heading">#</a></h2>
+<p>For now, <code class="docutils literal notranslate"><span class="pre">ipyaladin</span></code> supports a subset of STCs shapes and frames: the circles and polygons in frames <code class="docutils literal notranslate"><span class="pre">icrs</span></code>, <code class="docutils literal notranslate"><span class="pre">j2000</span></code>, and <code class="docutils literal notranslate"><span class="pre">fk5</span></code>.</p>
+<p>Operations between shapes (union, intersection, …) are not supported, but lists of shapes in a same STC string do work.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aladin</span> <span class="o">=</span> <span class="n">Aladin</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s2">&quot;M 51&quot;</span><span class="p">,</span> <span class="n">fov</span><span class="o">=</span><span class="mf">1.2</span><span class="p">)</span>
+<span class="n">aladin</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 1, "model_id": "972745786f2041a5a56e9f644835e76d"}</script></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aladin</span><span class="o">.</span><span class="n">add_graphic_overlay_from_stcs</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Polygon ICRS 202.63748 47.24951 202.46382 47.32391 202.46379 47.32391 202.45459</span>
+<span class="sd">    47.32391 202.34527 47.20597 202.34527 47.20596 202.34529 47.19710 202.51870</span>
+<span class="sd">    47.12286 202.52789 47.12286 202.52791 47.12286 202.63746 47.24063 202.63749</span>
+<span class="sd">    47.24949\nPolygon J2000 202.74977 47.36958 202.57592 47.44415 202.57585 47.44416</span>
+<span class="sd">    202.56666 47.44416 202.45683 47.32632 202.45683 47.31746 202.63051 47.24302</span>
+<span class="sd">    202.63970 47.24302 202.74978 47.36069 202.74982 47.36955\nPolygon J2000 202.52540</span>
+<span class="sd">    47.12904 202.35192 47.20325 202.34273 47.20325 202.23391 47.08518 202.23395</span>
+<span class="sd">    47.07633 202.23398 47.07630 202.40715 47.00227 202.40721 47.00226 202.41640</span>
+<span class="sd">    47.00226 202.52539 47.12018&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">aladin</span><span class="o">.</span><span class="n">add_graphic_overlay_from_stcs</span><span class="p">(</span>
+    <span class="s2">&quot;Circle ICRS 202.4656816 +47.1999842 0.04&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#4488ee&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Add-shapes-from-astropy-regions-objects">
+<h2>Add shapes from astropy-regions objects<a class="headerlink" href="#Add-shapes-from-astropy-regions-objects" title="Link to this heading">#</a></h2>
+<p>The ipyaladin widget can also represent the following <code class="docutils literal notranslate"><span class="pre">`astropy-regions</span></code> &lt;<a class="reference external" href="https://astropy-regions.readthedocs.io">https://astropy-regions.readthedocs.io</a>&gt;`__ shapes: - <code class="docutils literal notranslate"><span class="pre">CircleSkyRegion</span></code>, - <code class="docutils literal notranslate"><span class="pre">EllipseSkyRegion</span></code>, - <code class="docutils literal notranslate"><span class="pre">LineSkyRegion</span></code>, - <code class="docutils literal notranslate"><span class="pre">PolygonSkyRegion</span></code>, - <code class="docutils literal notranslate"><span class="pre">RectangleSkyRegion</span></code>.</p>
+<p>Let’s create one of each:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">center</span> <span class="o">=</span> <span class="n">SkyCoord</span><span class="o">.</span><span class="n">from_name</span><span class="p">(</span><span class="s2">&quot;M31&quot;</span><span class="p">)</span>
+<span class="n">circle</span> <span class="o">=</span> <span class="n">CircleSkyRegion</span><span class="p">(</span>
+    <span class="n">center</span><span class="o">=</span><span class="n">center</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">Angle</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;deg&quot;</span><span class="p">),</span> <span class="n">visual</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;edgecolor&quot;</span><span class="p">:</span> <span class="s2">&quot;yellow&quot;</span><span class="p">}</span>
+<span class="p">)</span>
+<span class="n">ellipse</span> <span class="o">=</span> <span class="n">EllipseSkyRegion</span><span class="p">(</span>
+    <span class="n">center</span><span class="o">=</span><span class="n">center</span><span class="p">,</span>
+    <span class="n">height</span><span class="o">=</span><span class="n">Angle</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;deg&quot;</span><span class="p">),</span>
+    <span class="n">width</span><span class="o">=</span><span class="n">Angle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;deg&quot;</span><span class="p">),</span>
+    <span class="n">angle</span><span class="o">=</span><span class="n">Angle</span><span class="p">(</span><span class="mi">45</span><span class="p">,</span> <span class="s2">&quot;deg&quot;</span><span class="p">),</span>
+    <span class="n">visual</span><span class="o">=</span><span class="n">RegionVisual</span><span class="p">(</span><span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="n">line</span> <span class="o">=</span> <span class="n">LineSkyRegion</span><span class="p">(</span>
+    <span class="n">start</span><span class="o">=</span><span class="n">center</span><span class="p">,</span>
+    <span class="n">end</span><span class="o">=</span><span class="n">center</span><span class="o">.</span><span class="n">directional_offset_by</span><span class="p">(</span><span class="n">Angle</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;deg&quot;</span><span class="p">),</span> <span class="n">Angle</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;deg&quot;</span><span class="p">)),</span>
+    <span class="n">visual</span><span class="o">=</span><span class="n">RegionVisual</span><span class="p">(</span><span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="n">polygon</span> <span class="o">=</span> <span class="n">PolygonSkyRegion</span><span class="p">(</span>
+    <span class="n">vertices</span><span class="o">=</span><span class="n">SkyCoord</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">center</span><span class="o">.</span><span class="n">directional_offset_by</span><span class="p">(</span><span class="n">Angle</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;deg&quot;</span><span class="p">),</span> <span class="n">Angle</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;deg&quot;</span><span class="p">)),</span>
+            <span class="n">center</span><span class="o">.</span><span class="n">directional_offset_by</span><span class="p">(</span><span class="n">Angle</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span> <span class="s2">&quot;deg&quot;</span><span class="p">),</span> <span class="n">Angle</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;deg&quot;</span><span class="p">)),</span>
+            <span class="n">center</span><span class="o">.</span><span class="n">directional_offset_by</span><span class="p">(</span><span class="n">Angle</span><span class="p">(</span><span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="s2">&quot;deg&quot;</span><span class="p">),</span> <span class="n">Angle</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;deg&quot;</span><span class="p">)),</span>
+        <span class="p">],</span>
+        <span class="n">frame</span><span class="o">=</span><span class="s2">&quot;icrs&quot;</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;deg&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">visual</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;edgecolor&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">},</span>
+<span class="p">)</span>
+<span class="n">rectangle</span> <span class="o">=</span> <span class="n">RectangleSkyRegion</span><span class="p">(</span>
+    <span class="n">center</span><span class="o">=</span><span class="n">center</span><span class="p">,</span>
+    <span class="n">width</span><span class="o">=</span><span class="n">Angle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;deg&quot;</span><span class="p">),</span>
+    <span class="n">height</span><span class="o">=</span><span class="n">Angle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;deg&quot;</span><span class="p">),</span>
+    <span class="n">angle</span><span class="o">=</span><span class="n">Angle</span><span class="p">(</span><span class="mi">45</span><span class="p">,</span> <span class="s2">&quot;deg&quot;</span><span class="p">),</span>
+    <span class="n">visual</span><span class="o">=</span><span class="n">RegionVisual</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;purple&quot;</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>And plot them first with matplotlib</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hdu_list</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;images/m31.fits&quot;</span><span class="p">)</span>
+<span class="n">hdu_list</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+<span class="n">wcs</span> <span class="o">=</span> <span class="n">WCS</span><span class="p">(</span><span class="n">hdu_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">header</span><span class="p">)</span><span class="o">.</span><span class="n">dropaxis</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="n">wcs</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">hdu_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">)</span>
+
+<span class="n">circle</span><span class="o">.</span><span class="n">to_pixel</span><span class="p">(</span><span class="n">wcs</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">())</span>
+<span class="n">ellipse</span><span class="o">.</span><span class="n">to_pixel</span><span class="p">(</span><span class="n">wcs</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">())</span>
+<span class="n">line</span><span class="o">.</span><span class="n">to_pixel</span><span class="p">(</span><span class="n">wcs</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">())</span>
+<span class="n">polygon</span><span class="o">.</span><span class="n">to_pixel</span><span class="p">(</span><span class="n">wcs</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">())</span>
+<span class="n">rectangle</span><span class="o">.</span><span class="n">to_pixel</span><span class="p">(</span><span class="n">wcs</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Filename: images/m31.fits
+No.    Name      Ver    Type      Cards   Dimensions   Format
+  0  PRIMARY       1 PrimaryHDU      25   (1200, 900, 3)   uint8
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.patches.Rectangle at 0x7fcdec100a10&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/_collections_notebooks_09_Displaying_Shapes_8_2.png" src="../../_images/_collections_notebooks_09_Displaying_Shapes_8_2.png" />
+</div>
+</div>
+<p>And now in ipyaladin</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aladin</span> <span class="o">=</span> <span class="n">Aladin</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s2">&quot;m31&quot;</span><span class="p">,</span> <span class="n">fov</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">aladin</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 1, "model_id": "0a4727fc3eb540408a4ed32b577301a9"}</script></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aladin</span><span class="o">.</span><span class="n">add_graphic_overlay_from_region</span><span class="p">([</span><span class="n">circle</span><span class="p">,</span> <span class="n">ellipse</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">polygon</span><span class="p">,</span> <span class="n">rectangle</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<script type="application/vnd.jupyter.widget-state+json">
+{"state": {"1c274ecc1faf462b9cbf75455202eea9": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "972745786f2041a5a56e9f644835e76d": {"model_name": "AnyModel", "model_module": "anywidget", "model_module_version": "~0.9.*", "state": {"_anywidget_id": "ipyaladin.widget.Aladin", "_css": ".cell-output-ipywidget-background{background:transparent}.jp-OutputArea-output,.aladin-widget{background-color:transparent}.aladin-widget .aladin-measurement-div{max-height:100px}\n", "_dom_classes": [], "_esm": "function f(n){n.charAt(0)===\"_\"&&(n=n.slice(1));let e=n.split(\"_\");for(let a=1;a<e.length;a++)e[a]=e[a].charAt(0).toUpperCase()+e[a].slice(1);return e.join(\"\")}function h(n){let e={};for(let a in n)e[f(a)]=n[a];return e}var c=class{locked=!1;unlock(){this.locked=!1}lock(){this.locked=!0}},m=-1;function u(n){m=n}import _ from\"https://esm.sh/aladin-lite@3.4.5-beta\";var l=_;var y=0,g=class{constructor(e,a){this.aladin=e,this.model=a}handleChangeFoV(e){this.aladin.setFoV(e.fov)}handleGotoRaDec(e){this.aladin.gotoRaDec(e.ra,e.dec)}handleAddFits(e,a){let i=h(e.options||{});i.name||(i.name=`image_${String(++y).padStart(3,\"0\")}`);let s=a[0],t=new Blob([s],{type:\"application/octet-stream\"}),o=URL.createObjectURL(t),d=this.aladin.createImageFITS(o,i,(r,v)=>{this.aladin.gotoRaDec(r,v),console.info(`FITS located at ra: ${r}, dec: ${v}`),URL.revokeObjectURL(o)});this.aladin.setOverlayImageLayer(d,i.name)}handleAddCatalogFromURL(e){let a=h(e.options||{});this.aladin.addCatalog(l.catalogFromURL(e.votable_URL,a))}handleAddMOCFromURL(e){let a=h(e.options||{});this.aladin.addMOC(l.MOCFromURL(e.moc_URL,a))}handleAddMOCFromDict(e){let a=h(e.options||{});this.aladin.addMOC(l.MOCFromJSON(e.moc_dict,a))}handleAddOverlay(e){let a=e.regions_infos,i=h(e.graphic_options||{});i.color||(i.color=\"red\");let s=l.graphicOverlay(i);this.aladin.addOverlay(s);for(let t of a){let o=t.infos;switch(t.region_type){case\"stcs\":s.addFootprints(l.footprintsFromSTCS(o.stcs,t.options));break;case\"circle\":s.add(l.circle(o.ra,o.dec,o.radius,t.options));break;case\"ellipse\":s.add(l.ellipse(o.ra,o.dec,o.a,o.b,o.theta,t.options));break;case\"line\":t.options.lineWidth=t.options.lineWidth||3,s.add(l.vector(o.ra1,o.dec1,o.ra2,o.dec2,t.options));break;case\"polygon\":s.add(l.polygon(o.vertices,t.options));break}}}handleChangeColormap(e){this.aladin.getBaseImageLayer().setColormap(e.colormap)}handleGetJPGThumbnail(){this.aladin.exportAsPNG()}handleTriggerRectangularSelection(){this.aladin.select()}handleAddTable(e,a){let i=h(e.options||{}),s=a[0].buffer,t=new TextDecoder(\"utf-8\"),o=new Blob([t.decode(s)]),d=URL.createObjectURL(o);l.catalogFromURL(d,Object.assign(i,{onClick:\"showTable\"}),r=>{this.aladin.addCatalog(r)},!1),URL.revokeObjectURL(d)}};var p=class{constructor(e,a,i){this.aladin=e,this.aladinDiv=a,this.model=i,this.messageHandler=new g(e,i),this.currentDivNumber=parseInt(a.id.split(\"-\").pop())}isLastDiv(){if(this.currentDivNumber===m)return!0;let e=m;for(let a=e;a>=0;a--){let i=document.getElementById(`aladin-lite-div-${a}`);if(i&&i.style.display!==\"none\"){e=a;break}}return u(e),this.currentDivNumber===e}updateWCS(){this.isLastDiv()&&this.model.set(\"_wcs\",this.aladin.getViewWCS())}update2AxisFoV(){if(!this.isLastDiv())return;let e=this.aladin.getFov();this.model.set(\"_fov_xy\",{x:e[0],y:e[1]})}subscribeAll(){let e=new c,a=new c;this.aladin.on(\"positionChanged\",t=>{if(a.locked){a.unlock();return}e.lock();let o=[t.ra,t.dec];this.updateWCS(),this.model.set(\"_target\",`${o[0]} ${o[1]}`),this.model.save_changes()}),this.model.on(\"change:_target\",()=>{if(e.locked){e.unlock();return}a.lock();let t=this.model.get(\"_target\"),[o,d]=t.split(\" \");this.aladin.gotoRaDec(o,d)});let i=new c,s=new c;this.aladin.on(\"zoomChanged\",t=>{if(s.locked){s.unlock();return}i.lock(),this.updateWCS(),this.update2AxisFoV(),this.model.set(\"_fov\",parseFloat(t.toFixed(5))),this.model.save_changes()}),this.model.on(\"change:_fov\",()=>{if(i.locked){i.unlock();return}s.lock();let t=this.model.get(\"_fov\");this.aladin.setFoV(t)}),this.model.on(\"change:_height\",()=>{let t=this.model.get(\"_height\");this.aladinDiv.style.height=`${t}px`,this.updateWCS(),this.update2AxisFoV(),this.model.save_changes()}),this.aladin.on(\"cooFrameChanged\",()=>{this.updateWCS(),this.model.save_changes()}),this.aladin.on(\"projectionChanged\",()=>{this.updateWCS(),this.model.save_changes()}),this.aladin.on(\"layerChanged\",(t,o,d)=>{o!==\"base\"||d!==\"ADDED\"||(this.updateWCS(),this.model.save_changes())}),this.aladin.on(\"resizeChanged\",()=>{this.updateWCS(),this.update2AxisFoV(),this.model.save_changes()}),this.aladin.on(\"objectHovered\",t=>{t.data!==void 0&&this.model.send({event_type:\"object_hovered\",content:{ra:t.ra,dec:t.dec}})}),this.aladin.on(\"objectClicked\",t=>{if(t){let o={ra:t.ra,dec:t.dec};t.data!==void 0&&(o.data=t.data),this.model.set(\"clicked_object\",o),this.model.send({event_type:\"object_clicked\",content:o}),this.model.save_changes()}}),this.aladin.on(\"click\",t=>{this.model.send({event_type:\"click\",content:t})}),this.aladin.on(\"select\",t=>{let o=[];t.forEach(d=>{d.forEach(r=>{o.push({ra:r.ra,dec:r.dec,data:r.data,x:r.x,y:r.y})})}),this.model.send({event_type:\"select\",content:o})}),this.model.on(\"change:coo_frame\",()=>{this.aladin.setFrame(this.model.get(\"coo_frame\"))}),this.model.on(\"change:survey\",()=>{this.aladin.setImageSurvey(this.model.get(\"survey\"))}),this.model.on(\"change:overlay_survey\",()=>{this.aladin.setOverlayImageLayer(this.model.get(\"overlay_survey\"))}),this.model.on(\"change:overlay_survey_opacity\",()=>{this.aladin.getOverlayImageLayer().setAlpha(this.model.get(\"overlay_survey_opacity\"))}),this.eventHandlers={change_fov:this.messageHandler.handleChangeFoV,goto_ra_dec:this.messageHandler.handleGotoRaDec,add_fits:this.messageHandler.handleAddFits,add_catalog_from_URL:this.messageHandler.handleAddCatalogFromURL,add_MOC_from_URL:this.messageHandler.handleAddMOCFromURL,add_MOC_from_dict:this.messageHandler.handleAddMOCFromDict,add_overlay:this.messageHandler.handleAddOverlay,change_colormap:this.messageHandler.handleChangeColormap,get_JPG_thumbnail:this.messageHandler.handleGetJPGThumbnail,trigger_rectangular_selection:this.messageHandler.handleTriggerRectangularSelection,add_table:this.messageHandler.handleAddTable},this.model.on(\"msg:custom\",(t,o)=>{let d=t.event_name,r=this.eventHandlers[d];if(r)r.call(this,t,o);else throw new Error(`Unknown event name: ${d}`)})}unsubscribeAll(){this.model.off(\"change:_target\"),this.model.off(\"change:_fov\"),this.model.off(\"change:_height\"),this.model.off(\"change:coo_frame\"),this.model.off(\"change:survey\"),this.model.off(\"change:overlay_survey\"),this.model.off(\"change:overlay_survey_opacity\"),this.model.off(\"change:trigger_event\"),this.model.off(\"msg:custom\")}};function b(n,e){u(m+1);let a={};n.get(\"init_options\").forEach(d=>{a[f(d)]=n.get(d)});let i=document.createElement(\"div\");i.classList.add(\"aladin-widget\"),i.style.height=`${a.height}px`,i.id=`aladin-lite-div-${m}`;let s=new l.aladin(i,a),t=a.target.split(\" \");s.gotoRaDec(t[0],t[1]);let o=s.getFov();return n.set(\"_fov_xy\",{x:o[0],y:o[1]}),n.set(\"_wcs\",s.getViewWCS()),n.save_changes(),e.appendChild(i),{aladin:s,aladinDiv:i}}async function C({model:n}){await l.init}function k({model:n,el:e}){let{aladin:a,aladinDiv:i}=b(n,e),s=new p(a,i,n);return s.subscribeAll(),()=>{s.unsubscribeAll()}}var j={initialize:C,render:k};export{j as default};\n", "_fov": 1.2, "_fov_xy": {}, "_height": 400, "_model_module": "anywidget", "_model_module_version": "~0.9.*", "_model_name": "AnyModel", "_target": "202.469575 47.1952583", "_view_count": null, "_view_module": "anywidget", "_view_module_version": "~0.9.*", "_view_name": "AnyView", "_wcs": {}, "background_color": "rgb(60, 60, 60)", "clicked_object": {}, "coo_frame": "ICRS", "full_screen": false, "grid_color": "rgb(178, 50, 178)", "grid_opacity": 0.5, "grid_options": {}, "init_options": ["_fov", "_height", "_target", "background_color", "coo_frame", "full_screen", "grid_color", "grid_opacity", "grid_options", "overlay_survey", "overlay_survey_opacity", "projection", "reticle_color", "reticle_size", "samp", "show_catalog", "show_context_menu", "show_coo_grid", "show_coo_grid_control", "show_coo_location", "show_fov", "show_frame", "show_fullscreen_control", "show_layers_control", "show_projection_control", "show_reticle", "show_settings_control", "show_share_control", "show_simbad_pointer_control", "show_status_bar", "show_zoom_control", "survey"], "layout": "IPY_MODEL_1c274ecc1faf462b9cbf75455202eea9", "overlay_survey": "", "overlay_survey_opacity": 0.0, "projection": "SIN", "reticle_color": "rgb(178, 50, 178)", "reticle_size": 20, "samp": false, "show_catalog": true, "show_context_menu": true, "show_coo_grid": false, "show_coo_grid_control": true, "show_coo_location": true, "show_fov": true, "show_frame": true, "show_fullscreen_control": true, "show_layers_control": true, "show_projection_control": true, "show_reticle": true, "show_settings_control": true, "show_share_control": false, "show_simbad_pointer_control": true, "show_status_bar": true, "show_zoom_control": false, "survey": "https://alaskybis.unistra.fr/DSS/DSSColor", "tabbable": null, "tooltip": null}}, "db4a8f2b1774436999f525407c6323a1": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "0a4727fc3eb540408a4ed32b577301a9": {"model_name": "AnyModel", "model_module": "anywidget", "model_module_version": "~0.9.*", "state": {"_anywidget_id": "ipyaladin.widget.Aladin", "_css": ".cell-output-ipywidget-background{background:transparent}.jp-OutputArea-output,.aladin-widget{background-color:transparent}.aladin-widget .aladin-measurement-div{max-height:100px}\n", "_dom_classes": [], "_esm": "function f(n){n.charAt(0)===\"_\"&&(n=n.slice(1));let e=n.split(\"_\");for(let a=1;a<e.length;a++)e[a]=e[a].charAt(0).toUpperCase()+e[a].slice(1);return e.join(\"\")}function h(n){let e={};for(let a in n)e[f(a)]=n[a];return e}var c=class{locked=!1;unlock(){this.locked=!1}lock(){this.locked=!0}},m=-1;function u(n){m=n}import _ from\"https://esm.sh/aladin-lite@3.4.5-beta\";var l=_;var y=0,g=class{constructor(e,a){this.aladin=e,this.model=a}handleChangeFoV(e){this.aladin.setFoV(e.fov)}handleGotoRaDec(e){this.aladin.gotoRaDec(e.ra,e.dec)}handleAddFits(e,a){let i=h(e.options||{});i.name||(i.name=`image_${String(++y).padStart(3,\"0\")}`);let s=a[0],t=new Blob([s],{type:\"application/octet-stream\"}),o=URL.createObjectURL(t),d=this.aladin.createImageFITS(o,i,(r,v)=>{this.aladin.gotoRaDec(r,v),console.info(`FITS located at ra: ${r}, dec: ${v}`),URL.revokeObjectURL(o)});this.aladin.setOverlayImageLayer(d,i.name)}handleAddCatalogFromURL(e){let a=h(e.options||{});this.aladin.addCatalog(l.catalogFromURL(e.votable_URL,a))}handleAddMOCFromURL(e){let a=h(e.options||{});this.aladin.addMOC(l.MOCFromURL(e.moc_URL,a))}handleAddMOCFromDict(e){let a=h(e.options||{});this.aladin.addMOC(l.MOCFromJSON(e.moc_dict,a))}handleAddOverlay(e){let a=e.regions_infos,i=h(e.graphic_options||{});i.color||(i.color=\"red\");let s=l.graphicOverlay(i);this.aladin.addOverlay(s);for(let t of a){let o=t.infos;switch(t.region_type){case\"stcs\":s.addFootprints(l.footprintsFromSTCS(o.stcs,t.options));break;case\"circle\":s.add(l.circle(o.ra,o.dec,o.radius,t.options));break;case\"ellipse\":s.add(l.ellipse(o.ra,o.dec,o.a,o.b,o.theta,t.options));break;case\"line\":t.options.lineWidth=t.options.lineWidth||3,s.add(l.vector(o.ra1,o.dec1,o.ra2,o.dec2,t.options));break;case\"polygon\":s.add(l.polygon(o.vertices,t.options));break}}}handleChangeColormap(e){this.aladin.getBaseImageLayer().setColormap(e.colormap)}handleGetJPGThumbnail(){this.aladin.exportAsPNG()}handleTriggerRectangularSelection(){this.aladin.select()}handleAddTable(e,a){let i=h(e.options||{}),s=a[0].buffer,t=new TextDecoder(\"utf-8\"),o=new Blob([t.decode(s)]),d=URL.createObjectURL(o);l.catalogFromURL(d,Object.assign(i,{onClick:\"showTable\"}),r=>{this.aladin.addCatalog(r)},!1),URL.revokeObjectURL(d)}};var p=class{constructor(e,a,i){this.aladin=e,this.aladinDiv=a,this.model=i,this.messageHandler=new g(e,i),this.currentDivNumber=parseInt(a.id.split(\"-\").pop())}isLastDiv(){if(this.currentDivNumber===m)return!0;let e=m;for(let a=e;a>=0;a--){let i=document.getElementById(`aladin-lite-div-${a}`);if(i&&i.style.display!==\"none\"){e=a;break}}return u(e),this.currentDivNumber===e}updateWCS(){this.isLastDiv()&&this.model.set(\"_wcs\",this.aladin.getViewWCS())}update2AxisFoV(){if(!this.isLastDiv())return;let e=this.aladin.getFov();this.model.set(\"_fov_xy\",{x:e[0],y:e[1]})}subscribeAll(){let e=new c,a=new c;this.aladin.on(\"positionChanged\",t=>{if(a.locked){a.unlock();return}e.lock();let o=[t.ra,t.dec];this.updateWCS(),this.model.set(\"_target\",`${o[0]} ${o[1]}`),this.model.save_changes()}),this.model.on(\"change:_target\",()=>{if(e.locked){e.unlock();return}a.lock();let t=this.model.get(\"_target\"),[o,d]=t.split(\" \");this.aladin.gotoRaDec(o,d)});let i=new c,s=new c;this.aladin.on(\"zoomChanged\",t=>{if(s.locked){s.unlock();return}i.lock(),this.updateWCS(),this.update2AxisFoV(),this.model.set(\"_fov\",parseFloat(t.toFixed(5))),this.model.save_changes()}),this.model.on(\"change:_fov\",()=>{if(i.locked){i.unlock();return}s.lock();let t=this.model.get(\"_fov\");this.aladin.setFoV(t)}),this.model.on(\"change:_height\",()=>{let t=this.model.get(\"_height\");this.aladinDiv.style.height=`${t}px`,this.updateWCS(),this.update2AxisFoV(),this.model.save_changes()}),this.aladin.on(\"cooFrameChanged\",()=>{this.updateWCS(),this.model.save_changes()}),this.aladin.on(\"projectionChanged\",()=>{this.updateWCS(),this.model.save_changes()}),this.aladin.on(\"layerChanged\",(t,o,d)=>{o!==\"base\"||d!==\"ADDED\"||(this.updateWCS(),this.model.save_changes())}),this.aladin.on(\"resizeChanged\",()=>{this.updateWCS(),this.update2AxisFoV(),this.model.save_changes()}),this.aladin.on(\"objectHovered\",t=>{t.data!==void 0&&this.model.send({event_type:\"object_hovered\",content:{ra:t.ra,dec:t.dec}})}),this.aladin.on(\"objectClicked\",t=>{if(t){let o={ra:t.ra,dec:t.dec};t.data!==void 0&&(o.data=t.data),this.model.set(\"clicked_object\",o),this.model.send({event_type:\"object_clicked\",content:o}),this.model.save_changes()}}),this.aladin.on(\"click\",t=>{this.model.send({event_type:\"click\",content:t})}),this.aladin.on(\"select\",t=>{let o=[];t.forEach(d=>{d.forEach(r=>{o.push({ra:r.ra,dec:r.dec,data:r.data,x:r.x,y:r.y})})}),this.model.send({event_type:\"select\",content:o})}),this.model.on(\"change:coo_frame\",()=>{this.aladin.setFrame(this.model.get(\"coo_frame\"))}),this.model.on(\"change:survey\",()=>{this.aladin.setImageSurvey(this.model.get(\"survey\"))}),this.model.on(\"change:overlay_survey\",()=>{this.aladin.setOverlayImageLayer(this.model.get(\"overlay_survey\"))}),this.model.on(\"change:overlay_survey_opacity\",()=>{this.aladin.getOverlayImageLayer().setAlpha(this.model.get(\"overlay_survey_opacity\"))}),this.eventHandlers={change_fov:this.messageHandler.handleChangeFoV,goto_ra_dec:this.messageHandler.handleGotoRaDec,add_fits:this.messageHandler.handleAddFits,add_catalog_from_URL:this.messageHandler.handleAddCatalogFromURL,add_MOC_from_URL:this.messageHandler.handleAddMOCFromURL,add_MOC_from_dict:this.messageHandler.handleAddMOCFromDict,add_overlay:this.messageHandler.handleAddOverlay,change_colormap:this.messageHandler.handleChangeColormap,get_JPG_thumbnail:this.messageHandler.handleGetJPGThumbnail,trigger_rectangular_selection:this.messageHandler.handleTriggerRectangularSelection,add_table:this.messageHandler.handleAddTable},this.model.on(\"msg:custom\",(t,o)=>{let d=t.event_name,r=this.eventHandlers[d];if(r)r.call(this,t,o);else throw new Error(`Unknown event name: ${d}`)})}unsubscribeAll(){this.model.off(\"change:_target\"),this.model.off(\"change:_fov\"),this.model.off(\"change:_height\"),this.model.off(\"change:coo_frame\"),this.model.off(\"change:survey\"),this.model.off(\"change:overlay_survey\"),this.model.off(\"change:overlay_survey_opacity\"),this.model.off(\"change:trigger_event\"),this.model.off(\"msg:custom\")}};function b(n,e){u(m+1);let a={};n.get(\"init_options\").forEach(d=>{a[f(d)]=n.get(d)});let i=document.createElement(\"div\");i.classList.add(\"aladin-widget\"),i.style.height=`${a.height}px`,i.id=`aladin-lite-div-${m}`;let s=new l.aladin(i,a),t=a.target.split(\" \");s.gotoRaDec(t[0],t[1]);let o=s.getFov();return n.set(\"_fov_xy\",{x:o[0],y:o[1]}),n.set(\"_wcs\",s.getViewWCS()),n.save_changes(),e.appendChild(i),{aladin:s,aladinDiv:i}}async function C({model:n}){await l.init}function k({model:n,el:e}){let{aladin:a,aladinDiv:i}=b(n,e),s=new p(a,i,n);return s.subscribeAll(),()=>{s.unsubscribeAll()}}var j={initialize:C,render:k};export{j as default};\n", "_fov": 10.0, "_fov_xy": {}, "_height": 400, "_model_module": "anywidget", "_model_module_version": "~0.9.*", "_model_name": "AnyModel", "_target": "10.6847083 41.26875", "_view_count": null, "_view_module": "anywidget", "_view_module_version": "~0.9.*", "_view_name": "AnyView", "_wcs": {}, "background_color": "rgb(60, 60, 60)", "clicked_object": {}, "coo_frame": "ICRS", "full_screen": false, "grid_color": "rgb(178, 50, 178)", "grid_opacity": 0.5, "grid_options": {}, "init_options": ["_fov", "_height", "_target", "background_color", "coo_frame", "full_screen", "grid_color", "grid_opacity", "grid_options", "overlay_survey", "overlay_survey_opacity", "projection", "reticle_color", "reticle_size", "samp", "show_catalog", "show_context_menu", "show_coo_grid", "show_coo_grid_control", "show_coo_location", "show_fov", "show_frame", "show_fullscreen_control", "show_layers_control", "show_projection_control", "show_reticle", "show_settings_control", "show_share_control", "show_simbad_pointer_control", "show_status_bar", "show_zoom_control", "survey"], "layout": "IPY_MODEL_db4a8f2b1774436999f525407c6323a1", "overlay_survey": "", "overlay_survey_opacity": 0.0, "projection": "SIN", "reticle_color": "rgb(178, 50, 178)", "reticle_size": 20, "samp": false, "show_catalog": true, "show_context_menu": true, "show_coo_grid": false, "show_coo_grid_control": true, "show_coo_location": true, "show_fov": true, "show_frame": true, "show_fullscreen_control": true, "show_layers_control": true, "show_projection_control": true, "show_reticle": true, "show_settings_control": true, "show_share_control": false, "show_simbad_pointer_control": true, "show_status_bar": true, "show_zoom_control": false, "survey": "https://alaskybis.unistra.fr/DSS/DSSColor", "tabbable": null, "tooltip": null}}}, "version_major": 2, "version_minor": 0}
+</script></section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="05_Display_a_MOC.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Display of a Multi Order Coverage (MOC)</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="11_Extracting_information_from_the_view.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Retrieving data from the current widget’s view</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Add-shapes-from-Space-Time-Coordinates-(STC)">Add shapes from Space-Time Coordinates (STC)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Add-shapes-from-astropy-regions-objects">Add shapes from astropy-regions objects</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/_collections/notebooks/09_Displaying_Shapes.ipynb.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2024, Strasbourg Astronomical Date Centre (CDS).
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.4.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
