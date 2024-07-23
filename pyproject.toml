@@ -13,6 +13,17 @@ requires-python = ">=3.8"
 [project.optional-dependencies]
 dev = ["pytest", "watchfiles", "jupyterlab", "ruff"]
 recommended = ["mocpy", "regions"]
+docs = ["autoapi",
+        "myst-parser",
+        "nbsphinx", 
+        "numpydoc",
+        "sphinx",
+        "sphinx-autoapi>=3.0.0",
+        "sphinx-collections", 
+        "sphinx-copybutton",
+        "sphinx-gallery",
+        "pydata-sphinx-theme"
+       ]
 
 # automatically add the dev feature to the default env (e.g., hatch shell)
 [tool.hatch.envs.default]

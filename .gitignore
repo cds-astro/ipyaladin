@@ -33,3 +33,7 @@ conda-recipe/ipyaladin
 # Python tests
 .pytest_cache/
 .ruff_cache/
+
+# Documentation
+docs/_build/
+docs/_collections/

@@ -5,6 +5,7 @@ This module provides a Python wrapper around the Aladin Lite JavaScript library.
 It allows to display astronomical images and catalogs in an interactive way.
 """
 
+from collections.abc import Callable
 import io
 import pathlib
 from pathlib import Path
@@ -22,7 +23,7 @@ import numpy as np
 import traitlets
 
 from .utils.exceptions import WidgetCommunicationError
-from .utils.coordinate_parser import parse_coordinate_string
+from .utils._coordinate_parser import parse_coordinate_string
 
 try:
     from regions import (
@@ -86,47 +87,107 @@ class Aladin(anywidget.AnyWidget):
         "0 0",
         help="A private trait that stores the current target of the widget in a string."
         " Its public version is the 'target' property that returns an "
-        "`~astropy.coordinates.SkyCoord` object",
+        "`astropy.coordinates.SkyCoord` object",
     ).tag(sync=True, init_option=True)
     _fov = Float(
         60.0,
         help="A private trait that stores the current field of view of the widget."
         " Its public version is the 'fov' property that returns an "
-        "`~astropy.units.Angle` object",
+        "`astropy.units.Angle` object",
     ).tag(sync=True, init_option=True)
-    survey = Unicode("https://alaskybis.unistra.fr/DSS/DSSColor").tag(
-        sync=True, init_option=True
+    survey = Unicode(
+        "https://alaskybis.unistra.fr/DSS/DSSColor",
+        help="The lowest HiPS in the stack of HiPS.",
+    ).tag(
+        sync=True,
+        init_option=True,
     )
-    coo_frame = Unicode("J2000").tag(sync=True, init_option=True)
-    projection = Unicode("SIN").tag(sync=True, init_option=True)
-    samp = Bool(False).tag(sync=True, init_option=True)
+    coo_frame = Unicode(
+        "ICRS",
+        help="The frame coordinate. Can be either 'ICRS', 'ICRSd', or 'Galactic'.",
+    ).tag(sync=True, init_option=True)
+    projection = Unicode(
+        "SIN",
+        help=("The projection for the view. The keywords follow the FITS standard."),
+    ).tag(sync=True, init_option=True)
+    samp = Bool(False, help="Wether to allow sending data via the SAMP protocol.").tag(
+        sync=True, init_option=True, only_init=True
+    )
     # Buttons on/off
-    background_color = Unicode("rgb(60, 60, 60)").tag(sync=True, init_option=True)
-    show_zoom_control = Bool(False).tag(sync=True, init_option=True)
-    show_layers_control = Bool(True).tag(sync=True, init_option=True)
-    show_overlay_stack_control = Bool(True).tag(sync=True, init_option=True)
-    show_fullscreen_control = Bool(True).tag(sync=True, init_option=True)
-    show_simbad_pointer_control = Bool(True).tag(sync=True, init_option=True)
-    show_settings_control = Bool(True).tag(sync=True, init_option=True)
-    show_share_control = Bool(False).tag(sync=True, init_option=True)
-    show_status_bar = Bool(True).tag(sync=True, init_option=True)
-    show_frame = Bool(True).tag(sync=True, init_option=True)
-    show_fov = Bool(True).tag(sync=True, init_option=True)
-    show_coo_location = Bool(True).tag(sync=True, init_option=True)
-    show_projection_control = Bool(True).tag(sync=True, init_option=True)
-    show_context_menu = Bool(True).tag(sync=True, init_option=True)
-    show_catalog = Bool(True).tag(sync=True, init_option=True)
-    full_screen = Bool(False).tag(sync=True, init_option=True)
+    background_color = Unicode(
+        "rgb(60, 60, 60)", help="The color behind the surveys in RGB format."
+    ).tag(sync=True, init_option=True, only_init=True)
+    show_zoom_control = Bool(
+        False, help="Whether to show the zoom control toolbar."
+    ).tag(sync=True, init_option=True, only_init=True)
+    show_layers_control = Bool(
+        True, help="Whether to show the layers control button."
+    ).tag(sync=True, init_option=True, only_init=True)
+    show_fullscreen_control = Bool(
+        True, help="Whether to show the fullscreen control toolbar."
+    ).tag(sync=True, init_option=True, only_init=True)
+    show_simbad_pointer_control = Bool(
+        True, help="Whether to show the Simbad pointer control toolbar."
+    ).tag(sync=True, init_option=True, only_init=True)
+    show_settings_control = Bool(
+        True, help="Whether to show the settings control toolbar."
+    ).tag(sync=True, init_option=True, only_init=True)
+    show_share_control = Bool(
+        False, help="Whether to show the share control toolbar."
+    ).tag(sync=True, init_option=True, only_init=True)
+    show_status_bar = Bool(True, help="Whether to show the status bar.").tag(
+        sync=True, init_option=True, only_init=True
+    )
+    show_frame = Bool(True, help="Whether to show the viewport frame.").tag(
+        sync=True, init_option=True, only_init=True
+    )
+    show_fov = Bool(True, help="Whether to show the field of view indicator.").tag(
+        sync=True, init_option=True, only_init=True
+    )
+    show_coo_location = Bool(True, help="Whether to show the coordinates bar.").tag(
+        sync=True, init_option=True, only_init=True
+    )
+    show_projection_control = Bool(
+        True, help="Whether to show the coordinate location indicator."
+    ).tag(sync=True, init_option=True, only_init=True)
+    show_context_menu = Bool(
+        True, help="Whether the right click should start the contextual menu."
+    ).tag(sync=True, init_option=True, only_init=True)
+    show_catalog = Bool(True, help="Whether to show the catalog.").tag(
+        sync=True, init_option=True, only_init=True
+    )
+    full_screen = Bool(False, help="Whether to start in full-screen mode.").tag(
+        sync=True, init_option=True, only_init=True
+    )
     # reticle
-    show_reticle = Bool(True).tag(sync=True, init_option=True)
-    reticle_color = Unicode("rgb(178, 50, 178)").tag(sync=True, init_option=True)
-    reticle_size = Int(20).tag(sync=True, init_option=True)
+    show_reticle = Bool(
+        True, help="Wether to show the reticle in the middle of the view."
+    ).tag(sync=True, init_option=True, only_init=True)
+    reticle_color = Unicode("rgb(178, 50, 178)", help="The color of the reticle.").tag(
+        sync=True, init_option=True, only_init=True
+    )
+    reticle_size = Int(20, help="Whether to show the reticle in the middle.").tag(
+        sync=True, init_option=True, only_init=True
+    )
     # grid
-    show_coo_grid = Bool(False).tag(sync=True, init_option=True)
-    show_coo_grid_control = Bool(True).tag(sync=True, init_option=True)
-    grid_color = Unicode("rgb(178, 50, 178)").tag(sync=True, init_option=True)
-    grid_opacity = Float(0.5).tag(sync=True, init_option=True)
-    grid_options = traitlets.Dict().tag(sync=True, init_option=True)
+    show_coo_grid = Bool(
+        False, help="Whether the coordinates grid should be shown at startup."
+    ).tag(sync=True, init_option=True, only_init=True)
+    show_coo_grid_control = Bool(
+        True, help="Whether to show the coordinate grid control toolbar. "
+    ).tag(sync=True, init_option=True, only_init=True)
+    grid_color = Unicode(
+        "rgb(178, 50, 178)",
+        help="Color of the grid. Can be specified as a named color "
+        "(see html named colors), as rgb (ex: 'rgb(178, 50, 178)'), "
+        "or as a hex color (ex: '#86D6AE').",
+    ).tag(sync=True, init_option=True, only_init=True)
+    grid_opacity = Float(
+        0.5, help="Opacity of the grid and labels. It is comprised between 0 and 1."
+    ).tag(sync=True, init_option=True, only_init=True)
+    grid_options = traitlets.Dict(help="More options for the grid.").tag(
+        sync=True, init_option=True, only_init=True
+    )
 
     # Values
     _wcs = traitlets.Dict().tag(sync=True)
@@ -235,13 +296,13 @@ class Aladin(anywidget.AnyWidget):
     def fov(self) -> Angle:
         """The field of view of the Aladin Lite widget along the horizontal axis.
 
-        It can be set with either a float in degrees
-        or an `~astropy.units.Angle` object.
+        It can be set with either a float number in degrees
+        or an astropy.coordinates.Angle object.
 
         Returns
         -------
-        Angle
-            An astropy.units.Angle object representing the field of view.
+        astropy.coordinates.Angle
+            An astropy.coordinates.Angle object representing the field of view.
 
         """
         return Angle(self._fov, unit="deg")
@@ -261,12 +322,12 @@ class Aladin(anywidget.AnyWidget):
     def target(self) -> SkyCoord:
         """The target of the Aladin Lite widget.
 
-        It can be set with either a string or an `~astropy.coordinates.SkyCoord` object.
+        It can be set with either a string or an `astropy.coordinates.SkyCoord` object.
 
         Returns
         -------
-        SkyCoord
-            An astropy.coordinates.SkyCoord object representing the target.
+        astropy.coordinates.SkyCoord
+            An `astropy.coordinates.SkyCoord` object representing the target.
 
         """
         ra, dec = self._target.split(" ")
@@ -302,8 +363,8 @@ class Aladin(anywidget.AnyWidget):
 
         Parameters
         ----------
-        votable_URL: str
-        votable_options: dict
+        votable_URL : str
+        votable_options : dict
 
         """
         if votable_options is None:
@@ -321,11 +382,12 @@ class Aladin(anywidget.AnyWidget):
 
         Parameters
         ----------
-        fits: a path as a string or `pathlib.Path`, or an `~astropy.io.fits.HDUList`
-            The FITS file to load into the widget.
-        image_options: dict
-            The options for the image. See the Aladin Lite image options:
-            https://cds-astro.github.io/aladin-lite/global.html#ImageOptions
+        fits : Union[str, Path, HDUList]
+            The FITS image to load in the widget. It can be given as a path (either a
+            string or a `pathlib.Path` object), or as an `astropy.io.fits.HDUList`.
+        image_options : any
+            The options for the image. See the `Aladin Lite image options
+            <https://cds-astro.github.io/aladin-lite/global.html#ImageOptions>`_
 
         """
         is_path = isinstance(fits, (Path, str))
@@ -355,6 +417,9 @@ class Aladin(anywidget.AnyWidget):
             URL where the MOC can be retrieved, or as a dictionary where the keys are
             the HEALPix orders and the values are the pixel indices
             (ex: {"1":[1,2,4], "2":[12,13,14,21,23,25]}).
+        moc_options :
+            Keyword arguments. The possible values are documented in `Aladin Lite's MOC
+            options <https://cds-astro.github.io/aladin-lite/global.html#MOCOptions>`_
 
         """
         if isinstance(moc, dict):
@@ -401,7 +466,9 @@ class Aladin(anywidget.AnyWidget):
         ----------
         moc_URL: str
             An URL to retrieve the MOC from
-        moc_options: dict
+        moc_options :
+            Keyword arguments. The possible values are documented in `Aladin Lite's MOC
+            options <https://cds-astro.github.io/aladin-lite/global.html#MOCOptions>`_
 
         """
         warnings.warn(
@@ -424,7 +491,9 @@ class Aladin(anywidget.AnyWidget):
         moc_dict: dict
             It contains the MOC cells. Key are the HEALPix orders, values are the pixel
             indexes, eg: {"1":[1,2,4], "2":[12,13,14,21,23,25]}
-        moc_options: dict
+        moc_options :
+            Keyword arguments. The possible values are documented in `Aladin Lite's MOC
+            options <https://cds-astro.github.io/aladin-lite/global.html#MOCOptions>`_
 
         """
         warnings.warn(
@@ -443,27 +512,11 @@ class Aladin(anywidget.AnyWidget):
         Parameters
         ----------
         table : astropy.table.table.QTable or astropy.table.table.Table
-                table that must contain coordinates information
-
-        Examples
-        --------
-        Cell 1:
-        >>> from ipyaladin import Aladin
-        >>> from astropy.table import QTable
-        >>> aladin = Aladin(fov=2, target='M1')
-        >>> aladin
-        Cell 2:
-        >>> ra = [83.63451584700, 83.61368056017, 83.58780251600]
-        >>> dec = [22.05652591227, 21.97517807639, 21.99277764451]
-        >>> name = ["Gaia EDR3 3403818589184411648",
-                    "Gaia EDR3 3403817661471500416",
-                    "Gaia EDR3 3403817936349408000",
-                   ]
-        >>> table = QTable([ra, dec, name],
-                            names=("ra", "dec", "name"),
-                            meta={"name": "my sample table"})
-        >>> aladin.add_table(table)
-        And the table should appear in the output of Cell 1!
+            table that must contain coordinates information
+        table_options
+            Keyword arguments. The possible values are documented in `Aladin Lite's
+            table options
+            <https://cds-astro.github.io/aladin-lite/global.html#CatalogOptions>`_
 
         """
         table_bytes = io.BytesIO()
@@ -487,11 +540,11 @@ class Aladin(anywidget.AnyWidget):
         `~regions.RectangleSkyRegion`, `~regions.Regions`, or a list of these.
             The region(s) to add in Aladin Lite. It can be given as a supported region
             or a list of regions from the
-            `regions package<https://astropy-regions.readthedocs.io>`_.
+            `regions package <https://astropy-regions.readthedocs.io>`_.
         graphic_options: keyword arguments
             The options for the graphic overlay. Use Region visual for region options.
-            See the Aladin Lite
-            `graphicOverlay options<https://cds-astro.github.io/aladin-lite/A.html>`_
+            See `Aladin Lite's graphic overlay options
+            <https://cds-astro.github.io/aladin-lite/A.html>`_
 
         See Also
         --------
@@ -502,13 +555,18 @@ class Aladin(anywidget.AnyWidget):
         The possible `~regions.RegionVisual` options correspond to the
         Aladin Lite / ipyaladin parameters:
 
-        | RegionVisual |      AladinLite     |        ipyaladin     |
-        |--------------|---------------------|----------------------|
-        | edgecolor    | color               | color                |
-        | facecolor    | fillColor           | fill_color           |
-        | color        | color and fillColor | color and fill_color |
-        | alpha        | opacity             | opacity              |
-        | linewidth    | lineWidth           | line_width           |
+        .. table:: Correspondence between options
+            :widths: auto
+
+            ============== ===================== ======================
+            RegionVisual        AladinLite              ipyaladin
+            ============== ===================== ======================
+            edgecolor      color                 color
+            facecolor      fillColor             fill_color
+            color          color and fillColor   color and fill_color
+            alpha          opacity               opacity
+            linewidth      lineWidth             line_width
+            ============== ===================== ======================
 
         """
         if Region is None:
@@ -535,7 +593,7 @@ class Aladin(anywidget.AnyWidget):
                     "See the documentation for the supported region types."
                 )
 
-            from .utils.region_converter import RegionInfos
+            from .utils._region_converter import RegionInfos
 
             # Define behavior for each region type
             regions_infos.append(RegionInfos(region_element).to_clean_dict())
@@ -555,10 +613,12 @@ class Aladin(anywidget.AnyWidget):
 
         Parameters
         ----------
-        stc_string: str, list[str]
+        stc_string : str, list[str]
             The STC-S string or a list of STC-S strings.
-        overlay_options: keyword arguments
+        overlay_options : keyword arguments
             The overlay options for all the STC-S strings
+            See `Aladin Lite's graphic overlay options
+            <https://cds-astro.github.io/aladin-lite/A.html>`_
 
         """
         warnings.warn(
@@ -576,10 +636,12 @@ class Aladin(anywidget.AnyWidget):
 
         Parameters
         ----------
-        stc_string: str, list[str]
+        stc_string : str, list[str]
             The STC-S string or a list of STC-S strings.
-        overlay_options: keyword arguments
+        overlay_options : keyword arguments
             The overlay options for all the STC-S strings.
+            See `Aladin Lite's graphic overlay options
+            <https://cds-astro.github.io/aladin-lite/A.html>`_
 
         See Also
         --------
@@ -606,7 +668,11 @@ class Aladin(anywidget.AnyWidget):
         )
 
     def get_JPEG_thumbnail(self) -> None:
-        """Create a popup window with the current Aladin view."""
+        """Create a popup window with the current Aladin view.
+
+        This method will only work if you are running a notebook in a browser (for
+        example, it won't do anything in VSCode).
+        """
         self.send({"event_name": "get_JPG_thumbnail"})
 
     def set_color_map(self, color_map_name: str) -> None:
@@ -626,14 +692,14 @@ class Aladin(anywidget.AnyWidget):
 
     # Adding a listener
 
-    def set_listener(self, listener_type: str, callback: callable) -> None:
+    def set_listener(self, listener_type: str, callback: Callable) -> None:
         """Set a listener for an event to the widget.
 
         Parameters
         ----------
-        listener_type: str
+        listener_type : str
             Can either be 'object_hovered', 'object_clicked', 'click' or 'select'
-        callback: callable
+        callback : Callable
             A python function to be called when the event corresponding to the
             listener_type is detected
 
@@ -652,14 +718,14 @@ class Aladin(anywidget.AnyWidget):
                 "'object_clicked', 'click' or 'select'"
             )
 
-    def add_listener(self, listener_type: str, callback: callable) -> None:
+    def add_listener(self, listener_type: str, callback: Callable) -> None:
         """Add a listener to the widget. Use set_listener instead.
 
         Parameters
         ----------
         listener_type: str
             Can either be 'object_hovered', 'object_clicked', 'click' or 'select'
-        callback: callable
+        callback: Callable
             A python function to be called when the event corresponding to the
             listener_type is detected
 

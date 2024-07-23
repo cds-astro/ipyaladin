@@ -1,0 +1,27 @@
+name: test-doc
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  # Allows to run this workflow manually from the Actions tab
+  workflow_dispatch:
+jobs:
+  # checks that the docs build (it executes the notebooks)
+  test-doc:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout branch ${{ github.head_ref }}"
+        uses: actions/checkout@v4
+      - name: "Set up Python on Ubuntu"
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
+      - name: "Test doc"
+        run: |
+          python3 -m pip install --upgrade pip setuptools
+          pip install .[docs,recommended]
+          cd ./docs
+          make html
