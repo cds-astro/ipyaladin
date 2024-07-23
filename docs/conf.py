@@ -108,7 +108,7 @@ language = "en"
 html_static_path = ["_static"]
 
 html_theme = "pydata_sphinx_theme"
-html_favicon = "_static/aladin-logo.svg"
+html_favicon = "_static/ipyaladin.ico"
 
 html_theme_options = {
     "show_nav_level": 2,
