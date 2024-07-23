@@ -58,7 +58,11 @@ npm run js-test
 
 ### Check that the documentation still builds
 
+You'll need `pandoc`, see https://pandoc.org/installing.html
+Then,
+
 ```sh
+pip install .[docs]
 cd docs
 make clean html
 ```
