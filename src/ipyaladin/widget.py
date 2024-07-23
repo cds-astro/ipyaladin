@@ -250,6 +250,10 @@ class Aladin(anywidget.AnyWidget):
     listener_callback: ClassVar[Dict[str, callable]] = {}
 
     # overlay survey
+    _survey_body = Unicode(
+        "",
+        help="The body name of the base layer survey, 'sky' for the sky survey",
+    ).tag(sync=True, init_option=True)
     overlay_survey = Unicode("").tag(sync=True, init_option=True)
     overlay_survey_opacity = Float(0.0).tag(sync=True, init_option=True)
     _base_layer_last_view = Unicode(
@@ -444,7 +448,7 @@ class Aladin(anywidget.AnyWidget):
     @target.setter
     def target(self, target: Union[str, SkyCoord]) -> None:
         if isinstance(target, str):  # If the target is str, parse it
-            target = parse_coordinate_string(target)
+            target = parse_coordinate_string(target, self._survey_body)
         elif not isinstance(target, SkyCoord):  # If the target is not str or SkyCoord
             raise ValueError(
                 "target must be a string or an astropy.coordinates.SkyCoord object"
