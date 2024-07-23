@@ -1,5 +1,7 @@
 # ipyaladin
 
+[![Documentation](https://img.shields.io/badge/Documentation-gray?style=flat&link=https://cds-astro.github.io/ipyaladin/)](https://cds-astro.github.io/ipyaladin/)
+
 A bridge between Jupyter and Aladin Lite, enabling interactive sky visualization in IPython notebooks.
 With a couple of lines, you can display Aladin Lite, center it on the target of your choice, and overlay an Astropy table:
 
