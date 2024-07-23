@@ -1,0 +1,24 @@
+background_color;rgb(60, 60, 60);The color behind the surveys in RGB format.
+full_screen;False;Whether to start in full-screen mode.
+grid_color;rgb(178, 50, 178);Color of the grid. Can be specified as a named color (see html named colors), as rgb (ex: 'rgb(178, 50, 178)'), or as a hex color (ex: '#86D6AE').
+grid_opacity;0.5;Opacity of the grid and labels. It is comprised between 0 and 1.
+grid_options;traitlets.Undefined;More options for the grid.
+reticle_color;rgb(178, 50, 178);The color of the reticle.
+reticle_size;20;Whether to show the reticle in the middle.
+samp;False;Wether to allow sending data via the SAMP protocol.
+show_catalog;True;Whether to show the catalog.
+show_context_menu;True;Whether the right click should start the contextual menu.
+show_coo_grid;False;Whether the coordinates grid should be shown at startup.
+show_coo_grid_control;True;Whether to show the coordinate grid control toolbar. 
+show_coo_location;True;Whether to show the coordinates bar.
+show_fov;True;Whether to show the field of view indicator.
+show_frame;True;Whether to show the viewport frame.
+show_fullscreen_control;True;Whether to show the fullscreen control toolbar.
+show_layers_control;True;Whether to show the layers control button.
+show_projection_control;True;Whether to show the coordinate location indicator.
+show_reticle;True;Wether to show the reticle in the middle of the view.
+show_settings_control;True;Whether to show the settings control toolbar.
+show_share_control;False;Whether to show the share control toolbar.
+show_simbad_pointer_control;True;Whether to show the Simbad pointer control toolbar.
+show_status_bar;True;Whether to show the status bar.
+show_zoom_control;False;Whether to show the zoom control toolbar.
