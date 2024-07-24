@@ -4,6 +4,9 @@ import requests
 from astropy.coordinates import SkyCoord, Angle
 import re
 
+from astropy.coordinates.name_resolve import NameResolveError
+
+from ipyaladin.utils.exceptions import WidgetCommunicationError
 
 OK_STATUS_CODE = 200
 
@@ -27,7 +30,14 @@ def parse_coordinate_string(string: str, body: str = "sky") -> SkyCoord:
     """
     if not _is_coordinate_string(string):
         if body == "sky":
-            return SkyCoord.from_name(string)
+            try:
+                return SkyCoord.from_name(string)
+            except NameResolveError as e:
+                raise WidgetCommunicationError(
+                    f"Either '{string}' is not a valid object name, or "
+                    f"the survey body type is not yet defined so you "
+                    f"need to set the target from another cell."
+                ) from e
         return _from_name_on_planet(string, body)
     coordinates: Tuple[str, str] = _split_coordinate_string(string)
     # Parse ra and dec to astropy Angle objects

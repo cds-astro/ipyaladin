@@ -251,7 +251,7 @@ class Aladin(anywidget.AnyWidget):
 
     # overlay survey
     _survey_body = Unicode(
-        "",
+        "sky",
         help="The body name of the base layer survey, 'sky' for the sky survey",
     ).tag(sync=True, init_option=True)
     overlay_survey = Unicode("").tag(sync=True, init_option=True)
