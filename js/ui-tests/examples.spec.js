@@ -7,10 +7,10 @@ import { setTimeout } from "timers/promises";
 import * as path from "path";
 
 // request and tmpPath are Playwright fixtures
-test("1-Getting-Started", async ({ page, request, tmpPath }) => {
+test("01_Getting_Started", async ({ page, request, tmpPath }) => {
   // Import notebook 1
   const content = galata.newContentsHelper(request);
-  const filename = "1_Getting_Started.ipynb";
+  const filename = "01_Getting_Started.ipynb";
   await content.uploadFile(
     path.resolve(__dirname, `../../examples/${filename}`),
     `${tmpPath}/${filename}`,
@@ -38,10 +38,14 @@ test("1-Getting-Started", async ({ page, request, tmpPath }) => {
   expect(await page.screenshot()).toMatchSnapshot();
 });
 
-test("4_Importing_And_Exporting_Tables", async ({ page, request, tmpPath }) => {
+test("11_Extracting_information_from_the_view", async ({
+  page,
+  request,
+  tmpPath,
+}) => {
   // Import notebook 4
   const content = galata.newContentsHelper(request);
-  const filename = "4_Importing_And_Exporting_Tables.ipynb";
+  const filename = "11_Extracting_information_from_the_view.ipynb";
   await content.uploadFile(
     path.resolve(__dirname, `../../examples/${filename}`),
     `${tmpPath}/${filename}`,
@@ -54,9 +58,8 @@ test("4_Importing_And_Exporting_Tables", async ({ page, request, tmpPath }) => {
     "#jp-main-statusbar >> text=Python 3 (ipykernel) | Idle",
   );
 
-  for (let i = 0; i < 5; i++) await page.notebook.runCell(i);
+  for (let i = 0; i < 15; i++) await page.notebook.runCell(i);
   await page.waitForTimeout(3000);
-  for (let i = 5; i < 11; i++) await page.notebook.runCell(i);
 
   // Click on the Aladin widget to make the selection
   await page
@@ -74,15 +77,15 @@ test("4_Importing_And_Exporting_Tables", async ({ page, request, tmpPath }) => {
     .click({
       position: {
         x: 354,
-        y: 225,
+        y: 300,
       },
     });
 
-  await page.notebook.runCell(12);
+  await page.notebook.runCell(16);
   // Fetch the cell content and check if the table is displayed
-  const targetCellLocator = await page.notebook.getCellLocator(12);
+  const targetCellLocator = await page.notebook.getCellLocator(16);
   // Extract cell result
   const cellResult = await targetCellLocator.textContent();
 
-  expect(cellResult).toContain("[<Table length=36>");
+  expect(cellResult).toContain("[<Table length=5>");
 });
