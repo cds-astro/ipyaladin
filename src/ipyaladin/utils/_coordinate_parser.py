@@ -71,7 +71,7 @@ def _from_name_on_planet(string: str, body: str) -> SkyCoord:
     """
     url = (
         f"https://alasky.cds.unistra.fr/planetary-features/resolve"
-        f"?identifier={string}&body={body}&threshold=0.7&format=json"
+        f"?identifier={string.replace(' ', '+')}&body={body}&threshold=0.7&format=json"
     )
     request = requests.get(url)
     if request.status_code != OK_STATUS_CODE:
