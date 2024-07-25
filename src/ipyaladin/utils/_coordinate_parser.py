@@ -4,8 +4,6 @@ import requests
 from astropy.coordinates import SkyCoord, Angle
 import re
 
-OK_STATUS_CODE = 200
-
 
 def parse_coordinate_string(string: str, body: str = "sky") -> SkyCoord:
     """Parse a string containing coordinates.
@@ -63,7 +61,7 @@ def _from_name_on_planet(string: str, body: str) -> SkyCoord:
         f"?identifier={string.replace(' ', '+')}&body={body}&threshold=0.7&format=json"
     )
     request = requests.get(url)
-    if request.status_code != OK_STATUS_CODE:
+    if request.status_code != requests.codes.ok:
         raise ValueError(f"Invalid coordinate string: {string}")
     data = request.json()
     lat = data["data"][0][5]
