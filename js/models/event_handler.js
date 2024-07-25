@@ -267,8 +267,6 @@ export default class EventHandler {
       add_overlay: this.messageHandler.handleAddOverlay,
       change_colormap: this.messageHandler.handleChangeColormap,
       get_JPG_thumbnail: this.messageHandler.handleGetJPGThumbnail,
-      trigger_rectangular_selection:
-        this.messageHandler.handleTriggerRectangularSelection,
       trigger_selection: this.messageHandler.handleTriggerSelection,
       add_table: this.messageHandler.handleAddTable,
     };

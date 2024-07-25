@@ -3,7 +3,6 @@
  */
 
 import { expect, test, galata } from "@jupyterlab/galata";
-import { setTimeout } from "timers/promises";
 import * as path from "path";
 
 // request and tmpPath are Playwright fixtures
@@ -58,34 +57,12 @@ test("11_Extracting_information_from_the_view", async ({
     "#jp-main-statusbar >> text=Python 3 (ipykernel) | Idle",
   );
 
-  for (let i = 0; i < 15; i++) await page.notebook.runCell(i);
+  let wcsCellIdx = 4;
+
+  for (let i = 0; i <= wcsCellIdx; i++) await page.notebook.runCell(i);
   await page.waitForTimeout(3000);
 
-  // Click on the Aladin widget to make the selection
-  await page
-    .locator("canvas")
-    .nth(1)
-    .click({
-      position: {
-        x: 319,
-        y: 195,
-      },
-    });
-  await page
-    .locator("canvas")
-    .nth(1)
-    .click({
-      position: {
-        x: 354,
-        y: 300,
-      },
-    });
-
-  await page.notebook.runCell(16);
-  // Fetch the cell content and check if the table is displayed
-  const targetCellLocator = await page.notebook.getCellLocator(16);
-  // Extract cell result
-  const cellResult = await targetCellLocator.textContent();
-
-  expect(cellResult).toContain("[<Table length=5>");
+  let wcsCell = await page.notebook.getCellTextOutput(wcsCellIdx);
+  expect(wcsCell[0]).toContain("CTYPE : 'RA---SIN'");
+  expect(wcsCell[0]).toContain("NAXIS : 592  600");
 });
