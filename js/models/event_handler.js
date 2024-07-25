@@ -202,10 +202,24 @@ export default class EventHandler {
     });
 
     this.aladin.on("select", (catalogs) => {
-      let objectsData = [];
+      const selectedObjects = catalogs.map((catalog) => {
+        return catalog.map((object) => {
+          return {
+            ra: object.ra,
+            dec: object.dec,
+            data: object.data,
+            x: object.x,
+            y: object.y,
+          };
+        });
+      });
+      this.model.set("_selected_objects", selectedObjects);
+      this.model.save_changes();
+
       // TODO: this flattens the selection. Each object from different
       // catalogs are entered in the array. To change this, maybe change
       // upstream what is returned upon selection?
+      let objectsData = [];
       catalogs.forEach((catalog) => {
         catalog.forEach((object) => {
           objectsData.push({
@@ -253,8 +267,7 @@ export default class EventHandler {
       add_overlay: this.messageHandler.handleAddOverlay,
       change_colormap: this.messageHandler.handleChangeColormap,
       get_JPG_thumbnail: this.messageHandler.handleGetJPGThumbnail,
-      trigger_rectangular_selection:
-        this.messageHandler.handleTriggerRectangularSelection,
+      trigger_selection: this.messageHandler.handleTriggerSelection,
       add_table: this.messageHandler.handleAddTable,
     };
 

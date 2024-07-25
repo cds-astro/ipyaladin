@@ -21,6 +21,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Allow WCS and 2 axis FoV recovery from `wcs` and `fov_xy` properties (#96)
 - monochromatic FITS images can be added to the view with `ipyaladin.Aladin.add_fits`.
   The method accepts `astropy.io.fits.HDUList`, `pathlib.Path`, or `string` representing paths (#86)
+- New way to make a selection on the view with `selection` method (#100)
+- Add selected sources export as `astropy.Table` list with property `selected_objects` (#100)
+
+### Deprecated
+
+- Deprecate `rectangular_selection` method in favor of `selection` method (#100)
 
 ### Changed
 

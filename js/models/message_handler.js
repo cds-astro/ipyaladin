@@ -108,8 +108,11 @@ export default class MessageHandler {
     this.aladin.exportAsPNG();
   }
 
-  handleTriggerRectangularSelection() {
-    this.aladin.select();
+  handleTriggerSelection(msg) {
+    let selectionType = msg["selection_type"];
+    if (selectionType === "rectangle") selectionType = "rect";
+    else if (selectionType === "polygon") selectionType = "poly";
+    this.aladin.select(selectionType);
   }
 
   handleAddTable(msg, buffers) {
