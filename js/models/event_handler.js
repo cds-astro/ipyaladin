@@ -158,9 +158,12 @@ export default class EventHandler {
       this.model.save_changes();
     });
 
-    this.aladin.on("resizeChanged", () => {
+    this.aladin.on("resizeChanged", (width, height) => {
+      // Skip resize event when the div is hidden
+      if (width === 1 && height === 1) return;
       this.updateWCS();
       this.update2AxisFoV();
+      this.model.set("_height", height);
       this.model.save_changes();
     });
 
