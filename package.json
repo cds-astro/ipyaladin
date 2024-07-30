@@ -24,6 +24,8 @@
       "trailing-whitespaces",
       "ruff format",
       "ruff check --fix"
-    ]
+    ],
+    "*ipynb": 
+    "python3 -m jupyter nbconvert --clear-output --ClearMetadataPreprocessor.enabled=True --ClearMetadataPreprocessor.preserve_cell_metadata_mask='[(\"nbsphinx\")]' --inplace"
   }
 }
