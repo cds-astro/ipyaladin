@@ -53,9 +53,9 @@ autoapi_options = ["members", "show-module-summary"]
 
 
 intersphinx_mapping = {
-    "python": ("https://docs.python.org/", None),
-    "astropy": ("http://docs.astropy.org/en/latest/", None),
-    "matplotlib": ("https://matplotlib.org/", None),
+    "python": ("https://docs.python.org/3/", None),
+    "astropy": ("https://docs.astropy.org/en/latest/", None),
+    "matplotlib": ("https://matplotlib.org/stable/", None),
     "numpy": ("https://numpy.org/doc/stable/", None),
     "regions": ("https://astropy-regions.readthedocs.io/en/stable", None),
 }
