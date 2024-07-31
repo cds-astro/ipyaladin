@@ -431,7 +431,7 @@ class Aladin(anywidget.AnyWidget):
         self._wcs = {}
 
     @property
-    def target(self) -> Union[SkyCoord, BaseBodycentricRepresentation]:
+    def target(self) -> Union[SkyCoord, Tuple[float, float]]:
         """The target of the Aladin Lite widget.
 
         It can be set with either a string or a `~astropy.coordinates.SkyCoord` object.
@@ -450,7 +450,7 @@ class Aladin(anywidget.AnyWidget):
                 frame="icrs",
                 unit="deg",
             )
-        return BaseBodycentricRepresentation(lon, lat)
+        return lon, lat
 
     @target.setter
     def target(self, target: Union[str, SkyCoord]) -> None:
@@ -468,7 +468,11 @@ class Aladin(anywidget.AnyWidget):
             raise ValueError(
                 "target must be a string or an astropy.coordinates.SkyCoord object"
             )
-        self._target = f"{target.icrs.ra.deg} {target.icrs.dec.deg}"
+        if isinstance(target, SkyCoord):
+            self._target = f"{target.icrs.ra.deg} {target.icrs.dec.deg}"
+        elif isinstance(target, BaseBodycentricRepresentation):
+            self._target = f"{target.lon.deg} {target.lat.deg}"
+        print(self._target)
         self._wcs = {}
         self.send(
             {
