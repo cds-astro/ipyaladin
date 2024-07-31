@@ -23,7 +23,7 @@ from astropy.wcs import WCS
 import numpy as np
 import traitlets
 
-from .utils.exceptions import WidgetCommunicationError
+from .utils.exceptions import WidgetCommunicationError, WidgetReducedError
 from .utils._coordinate_parser import parse_coordinate_string
 
 try:
@@ -212,6 +212,13 @@ class Aladin(anywidget.AnyWidget):
         "to convert the view to an astropy.HDUList",
     ).tag(sync=True)
 
+    # Temporary traitlets for widget size problem
+    _is_reduced = Bool(
+        False,
+        help="A private trait that stores if the widget "
+        "is reduced in size when hidden.",
+    ).tag(sync=True)
+
     init_options = traitlets.List(trait=Any()).tag(sync=True)
 
     @default("init_options")
@@ -290,6 +297,10 @@ class Aladin(anywidget.AnyWidget):
             An astropy WCS object representing the world coordinate system.
 
         """
+        if self._is_reduced:
+            raise WidgetReducedError(
+                "WCS might be wrong if the Aladin Lite widget is not visible"
+            )
         if self._wcs == {}:
             raise WidgetCommunicationError(
                 "The world coordinate system is not available. This often happens when "
