@@ -1,8 +1,11 @@
+import warnings
 from typing import Tuple
 
 import requests
 from astropy.coordinates import SkyCoord, Angle
 import re
+
+from ipyaladin.utils.exceptions import NameResolverWarning
 
 
 def parse_coordinate_string(string: str, body: str = "sky") -> SkyCoord:
@@ -64,9 +67,17 @@ def _from_name_on_planet(string: str, body: str) -> SkyCoord:
     if request.status_code != requests.codes.ok:
         raise ValueError(f"Invalid coordinate string: {string}")
     data = request.json()
+    identifier = data["data"][0][1]
     lat = data["data"][0][5]
     lon = data["data"][0][6]
     system = data["data"][0][11]
+    if identifier != string:
+        warnings.warn(
+            f"Nothing found for '{string}', but found close"
+            f" name '{identifier}'. Moving to {identifier}.",
+            NameResolverWarning,
+            stacklevel=2,
+        )
     if "+West" in system:
         lon = 360 - lon
     return SkyCoord(ra=lon, dec=lat, frame="icrs", unit="deg")
