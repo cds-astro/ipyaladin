@@ -225,23 +225,24 @@ class Aladin(anywidget.AnyWidget):
         self.fov = kwargs.get("fov", 60.0)
         self.on_msg(self._handle_custom_message)
 
-    def _handle_custom_message(self, _: any, message: dict, __: any) -> None:
+    def _handle_custom_message(self, _: any, message: dict, buffers: any) -> None:
         event_type = message["event_type"]
-        message_content = message["content"]
         if (
             event_type == "object_clicked"
             and "object_clicked" in self.listener_callback
         ):
-            self.listener_callback["object_clicked"](message_content)
+            self.listener_callback["object_clicked"](message["content"])
         elif (
             event_type == "object_hovered"
             and "object_hovered" in self.listener_callback
         ):
-            self.listener_callback["object_hovered"](message_content)
+            self.listener_callback["object_hovered"](message["content"])
         elif event_type == "click" and "click" in self.listener_callback:
-            self.listener_callback["click"](message_content)
+            self.listener_callback["click"](message["content"])
         elif event_type == "select" and "select" in self.listener_callback:
-            self.listener_callback["select"](message_content)
+            self.listener_callback["select"](message["content"])
+        elif event_type == "export_view_as_image":
+            self._save_file(message["path"], buffers[0])
 
     @property
     def selected_objects(self) -> List[Table]:
@@ -379,6 +380,46 @@ class Aladin(anywidget.AnyWidget):
                 "event_name": "goto_ra_dec",
                 "ra": target.icrs.ra.deg,
                 "dec": target.icrs.dec.deg,
+            }
+        )
+
+    def _save_file(self, path: str, buffer: bytes) -> None:
+        """Save a file from a buffer.
+
+        Parameters
+        ----------
+        path : str
+            The path where the file will be saved.
+        buffer : bytes
+            The buffer containing the file.
+
+        """
+        with Path(path).open("wb") as file:
+            file.write(buffer)
+
+    def export_view_as_image(
+        self, path: Union[str, Path], image_format: str = "png", with_logo: bool = True
+    ) -> None:
+        """Export the current view of the widget as an image.
+
+        Parameters
+        ----------
+        path : Union[str, Path]
+            The path where the image will be saved.
+        image_format : str
+            The format of the image. Can be 'png', 'jpeg' or 'webp'.
+        with_logo : bool
+            Whether to include the Aladin Lite logo in the image.
+
+        """
+        if image_format not in {"png", "jpeg", "webp"}:
+            raise ValueError("image_format must be 'png', 'jpeg' or 'webp")
+        self.send(
+            {
+                "event_name": "export_view_as_image",
+                "path": str(path),
+                "format": image_format,
+                "with_logo": with_logo,
             }
         )
 

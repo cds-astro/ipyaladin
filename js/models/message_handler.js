@@ -17,6 +17,25 @@ export default class MessageHandler {
     this.aladin.gotoRaDec(msg["ra"], msg["dec"]);
   }
 
+  async handleExportViewAsImage(msg) {
+    const path = msg["path"];
+    const format = msg["format"];
+    const withLogo = msg["with_logo"];
+    const buffer = await this.aladin.getViewData(
+      "arraybuffer",
+      `image/${format}`,
+      withLogo,
+    );
+    this.model.send(
+      {
+        event_type: "export_view_as_image",
+        path: path,
+      },
+      null,
+      [buffer],
+    );
+  }
+
   handleAddFits(msg, buffers) {
     const options = convertOptionNamesToCamelCase(msg["options"] || {});
     if (!options.name)
