@@ -15,7 +15,7 @@ from typing import ClassVar, Dict, Final, List, Optional, Tuple, Union
 import warnings
 
 import anywidget
-from astropy.coordinates import SkyCoord, Angle, BaseBodycentricRepresentation
+from astropy.coordinates import SkyCoord, Angle
 from astropy.coordinates.name_resolve import NameResolveError
 from astropy.table.table import QTable
 from astropy.table import Table
@@ -443,6 +443,7 @@ class Aladin(anywidget.AnyWidget):
 
         """
         lon, lat = self._target.split(" ")
+        lon, lat = float(lon), float(lat)
         if self._survey_body == "sky":
             return SkyCoord(
                 ra=lon,
@@ -453,7 +454,7 @@ class Aladin(anywidget.AnyWidget):
         return lon, lat
 
     @target.setter
-    def target(self, target: Union[str, SkyCoord]) -> None:
+    def target(self, target: Union[str, SkyCoord, Tuple[float, float]]) -> None:
         if isinstance(target, str):  # If the target is str, parse it
             try:
                 target = parse_coordinate_string(target, self._survey_body)
@@ -464,23 +465,32 @@ class Aladin(anywidget.AnyWidget):
                         f"the survey body type is not yet defined so you "
                         f"need to set the target from another cell."
                     ) from e
-        elif not isinstance(target, SkyCoord):  # If the target is not str or SkyCoord
+        elif not isinstance(target, SkyCoord) and not isinstance(
+            target, Tuple
+        ):  # If the target is not str or SkyCoord
             raise ValueError(
-                "target must be a string or an astropy.coordinates.SkyCoord object"
+                "target must be a string, an astropy.coordinates.SkyCoord "
+                "object or a tuple of 2 floats"
             )
+        self._wcs = {}
         if isinstance(target, SkyCoord):
             self._target = f"{target.icrs.ra.deg} {target.icrs.dec.deg}"
-        elif isinstance(target, BaseBodycentricRepresentation):
-            self._target = f"{target.lon.deg} {target.lat.deg}"
-        print(self._target)
-        self._wcs = {}
-        self.send(
-            {
-                "event_name": "goto_ra_dec",
-                "ra": target.icrs.ra.deg,
-                "dec": target.icrs.dec.deg,
-            }
-        )
+            self.send(
+                {
+                    "event_name": "goto_ra_dec",
+                    "ra": target.icrs.ra.deg,
+                    "dec": target.icrs.dec.deg,
+                }
+            )
+        elif isinstance(target, Tuple):
+            self._target = f"{target[0]} {target[1]}"
+            self.send(
+                {
+                    "event_name": "goto_ra_dec",
+                    "ra": target[0],
+                    "dec": target[1],
+                }
+            )
 
     def _save_file(self, path: str, buffer: bytes) -> None:
         """Save a file from a buffer.
