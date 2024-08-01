@@ -156,6 +156,7 @@ export default class EventHandler {
         this.model.set("_survey_body", imageLayer.hipsBody || "sky");
       if (layerName !== "base" || state !== "ADDED") return;
       this.updateWCS();
+      this.model.set("_base_layer_last_view", imageLayer.id);
       this.model.save_changes();
     });
 
