@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New way to make a selection on the view with `selection` method (#100)
 - Add selected sources export as `astropy.Table` list with property `selected_objects` (#100)
 - Add function `get_view_as_fits` to export the view as a `astropy.io.fits.HDUList` (#86)
+- Add function `export_view_as_image` to save the view as an image file (#108)
 
 ### Deprecated
 
