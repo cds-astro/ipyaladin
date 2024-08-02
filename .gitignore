@@ -37,3 +37,6 @@ conda-recipe/ipyaladin
 # Documentation
 docs/_build/
 docs/_collections/
+
+# Examples
+examples/*.png
