@@ -538,6 +538,55 @@ class Aladin(anywidget.AnyWidget):
             }
         )
 
+    def add_hips(self, hips: str, layer_name: str, **hips_options: any) -> None:
+        """Add a HiPS to the Aladin Lite widget.
+
+        Parameters
+        ----------
+        hips : str
+            The HiPS to add to the widget.
+        layer_name : str
+            The name of the layer.
+        hips_options : keyword arguments
+            The options for the HiPS. See `Aladin Lite's HiPS options
+            <https://cds-astro.github.io/aladin-lite/global.html#HiPSOptions>`_
+
+        """
+        self.send(
+            {
+                "event_name": "add_hips",
+                "hips": hips,
+                "layer_name": layer_name,
+                "options": hips_options,
+            }
+        )
+
+    def remove_layer(self, layer_name: str) -> None:
+        """Remove a layer from the Aladin Lite widget.
+
+        Parameters
+        ----------
+        layer_name : str
+            The name of the layer to remove.
+
+        """
+        self.send({"event_name": "remove_layer", "layer_name": layer_name})
+
+    def set_opacity(self, layer_name: str, opacity: float) -> None:
+        """Set the opacity of a layer in the Aladin Lite widget.
+
+        Parameters
+        ----------
+        layer_name : str
+            The name of the layer to set the opacity.
+        opacity : float
+            The opacity value to set.
+
+        """
+        self.send(
+            {"event_name": "set_opacity", "layer_name": layer_name, "opacity": opacity}
+        )
+
     def _save_file(self, path: str, buffer: bytes) -> None:
         """Save a file from a buffer.
 
