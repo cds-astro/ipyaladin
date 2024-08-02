@@ -162,7 +162,7 @@ class Aladin(anywidget.AnyWidget):
     )
     # reticle
     show_reticle = Bool(
-        True, help="Wether to show the reticle in the middle of the view."
+        True, help="Whether to show the reticle in the middle of the view."
     ).tag(sync=True, init_option=True, only_init=True)
     reticle_color = Unicode("rgb(178, 50, 178)", help="The color of the reticle.").tag(
         sync=True, init_option=True, only_init=True
@@ -175,7 +175,7 @@ class Aladin(anywidget.AnyWidget):
         False, help="Whether the coordinates grid should be shown at startup."
     ).tag(sync=True, init_option=True, only_init=True)
     show_coo_grid_control = Bool(
-        True, help="Whether to show the coordinate grid control toolbar. "
+        True, help="Whether to show the coordinate grid control toolbar."
     ).tag(sync=True, init_option=True, only_init=True)
     grid_color = Unicode(
         "rgb(178, 50, 178)",
@@ -208,7 +208,7 @@ class Aladin(anywidget.AnyWidget):
     overlay_survey_opacity = Float(0.0).tag(sync=True, init_option=True)
     _base_layer_last_view = Unicode(
         survey.default_value,
-        help="The last view of the base layer. It is used "
+        help="A private trait for the base layer of the last view. It is useful "
         "to convert the view to an astropy.HDUList",
     ).tag(sync=True)
 
@@ -241,7 +241,7 @@ class Aladin(anywidget.AnyWidget):
             self.listener_callback["click"](message["content"])
         elif event_type == "select" and "select" in self.listener_callback:
             self.listener_callback["select"](message["content"])
-        elif event_type == "export_view_as_image":
+        elif event_type == "save_view_as_image":
             self._save_file(message["path"], buffers[0])
 
     @property
@@ -292,7 +292,8 @@ class Aladin(anywidget.AnyWidget):
         """
         if self._wcs == {}:
             raise WidgetCommunicationError(
-                "The world coordinate system is not available. "
+                "The world coordinate system is not available. This often happens when "
+                "the WCS is modified and read in the same cell. "
                 "Please recover it from another cell."
             )
         if "RADECSYS" in self._wcs:  # RADECSYS keyword is deprecated for astropy.WCS
@@ -311,7 +312,8 @@ class Aladin(anywidget.AnyWidget):
         """
         if self._fov_xy == {}:
             raise WidgetCommunicationError(
-                "The field of view along the two axes is not available. "
+                "The field of view along the two axes is not available. This often "
+                "happens when the FOV is modified and read in the same cell. "
                 "Please recover it from another cell."
             )
         return (
@@ -330,6 +332,10 @@ class Aladin(anywidget.AnyWidget):
         -------
         astropy.coordinates.Angle
             An astropy.coordinates.Angle object representing the field of view.
+
+        See Also
+        --------
+        fov_xy
 
         """
         return Angle(self._fov, unit="deg")
@@ -397,10 +403,10 @@ class Aladin(anywidget.AnyWidget):
         with Path(path).open("wb") as file:
             file.write(buffer)
 
-    def export_view_as_image(
+    def save_view_as_image(
         self, path: Union[str, Path], image_format: str = "png", with_logo: bool = True
     ) -> None:
-        """Export the current view of the widget as an image.
+        """Save the current view of the widget as an image file.
 
         Parameters
         ----------
@@ -411,12 +417,16 @@ class Aladin(anywidget.AnyWidget):
         with_logo : bool
             Whether to include the Aladin Lite logo in the image.
 
+        See Also
+        --------
+        get_view_as_fits
+
         """
         if image_format not in {"png", "jpeg", "webp"}:
             raise ValueError("image_format must be 'png', 'jpeg' or 'webp")
         self.send(
             {
-                "event_name": "export_view_as_image",
+                "event_name": "save_view_as_image",
                 "path": str(path),
                 "format": image_format,
                 "with_logo": with_logo,
@@ -434,6 +444,10 @@ class Aladin(anywidget.AnyWidget):
         -------
         astropy.io.fits.HDUList
             The FITS object containing the image.
+
+        See Also
+        --------
+        save_view_as_image
 
         """
         try:
@@ -455,6 +469,19 @@ class Aladin(anywidget.AnyWidget):
                 "screen."
             ) from e
         return fits
+
+    def get_JPEG_thumbnail(self) -> None:
+        """Create a new tab with the current Aladin view.
+
+        This method will only work if you are running a notebook in a browser (for
+        example, it won't do anything in VSCode).
+
+        See Also
+        --------
+        save_view_as_image: will save the image on disk instead
+
+        """
+        self.send({"event_name": "get_JPG_thumbnail"})
 
     def add_catalog_from_URL(
         self, votable_URL: str, votable_options: Optional[dict] = None
@@ -766,14 +793,6 @@ class Aladin(anywidget.AnyWidget):
                 "graphic_options": {},
             }
         )
-
-    def get_JPEG_thumbnail(self) -> None:
-        """Create a popup window with the current Aladin view.
-
-        This method will only work if you are running a notebook in a browser (for
-        example, it won't do anything in VSCode).
-        """
-        self.send({"event_name": "get_JPG_thumbnail"})
 
     def set_color_map(self, color_map_name: str) -> None:
         """Change the color map of the Aladin Lite widget.

@@ -261,7 +261,7 @@ export default class EventHandler {
     this.eventHandlers = {
       change_fov: this.messageHandler.handleChangeFoV,
       goto_ra_dec: this.messageHandler.handleGotoRaDec,
-      export_view_as_image: this.messageHandler.handleExportViewAsImage,
+      save_view_as_image: this.messageHandler.handleSaveViewAsImage,
       add_fits: this.messageHandler.handleAddFits,
       add_catalog_from_URL: this.messageHandler.handleAddCatalogFromURL,
       add_MOC_from_URL: this.messageHandler.handleAddMOCFromURL,

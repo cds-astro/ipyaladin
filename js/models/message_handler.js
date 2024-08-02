@@ -17,7 +17,7 @@ export default class MessageHandler {
     this.aladin.gotoRaDec(msg["ra"], msg["dec"]);
   }
 
-  async handleExportViewAsImage(msg) {
+  async handleSaveViewAsImage(msg) {
     const path = msg["path"];
     const format = msg["format"];
     const withLogo = msg["with_logo"];
@@ -28,7 +28,7 @@ export default class MessageHandler {
     );
     this.model.send(
       {
-        event_type: "export_view_as_image",
+        event_type: "save_view_as_image",
         path: path,
       },
       null,
