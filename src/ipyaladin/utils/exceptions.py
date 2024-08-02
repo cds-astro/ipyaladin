@@ -12,3 +12,11 @@ class WidgetReducedError(ValueError):
     def __init__(self, message: str) -> None:
         self.message = message
         super(WidgetReducedError, self).__init__(message)
+
+
+class WidgetNotReadyError(ValueError):
+    """Error raised when a widget is not ready to be used."""
+
+    def __init__(self, message: str) -> None:
+        self.message = message
+        super(WidgetNotReadyError, self).__init__(message)

@@ -29,6 +29,7 @@ function initAladinLite(model, el) {
     y: twoAxisFoV[1],
   });
   model.set("_wcs", aladin.getViewWCS());
+  model.set("_ready", true);
   model.save_changes();
 
   el.appendChild(aladinDiv);
