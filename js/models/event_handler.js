@@ -129,6 +129,71 @@ export default class EventHandler {
       this.aladin.setFoV(fov);
     });
 
+    /* Survey control */
+    const jsSurveyLock = new Lock();
+    const pySurveyLock = new Lock();
+
+    this.model.on("change:survey", () => {
+      if (jsSurveyLock.locked) {
+        jsSurveyLock.unlock();
+        return;
+      }
+      pySurveyLock.lock();
+      this.aladin.setImageSurvey(this.model.get("survey"));
+    });
+
+    /* Overlay survey control */
+    const jsOverlaySurveyLock = new Lock();
+    const pyOverlaySurveyLock = new Lock();
+
+    this.model.on("change:overlay_survey", () => {
+      if (jsOverlaySurveyLock.locked) {
+        jsOverlaySurveyLock.unlock();
+        return;
+      }
+      pyOverlaySurveyLock.lock();
+      this.aladin.setOverlayImageLayer(this.model.get("overlay_survey"));
+    });
+
+    this.aladin.on("layerChanged", (imageLayer, layerName, state) => {
+      // If the layer is added or removed, update the layers traitlets
+      if (state === "ADDED") {
+        let layers = this.model.get("layers") || {};
+        // If the object is not copied, the model will not detect the change
+        layers = { ...layers };
+        if (imageLayer.url.startsWith("blob:"))
+          layers[layerName] = imageLayer.name;
+        else layers[layerName] = imageLayer.url;
+        this.model.set("layers", layers);
+
+        // If the layer is added, update the WCS, FoV, survey and overlay survey
+        if (layerName === "base") {
+          this.updateWCS();
+          this.model.set("_base_layer_last_view", imageLayer.url);
+          if (pySurveyLock.locked) {
+            pySurveyLock.unlock();
+            return;
+          }
+          jsSurveyLock.lock();
+          this.model.set("survey", imageLayer.url);
+        } else if (layerName === "overlay") {
+          if (pyOverlaySurveyLock.locked) {
+            pyOverlaySurveyLock.unlock();
+            return;
+          }
+          jsOverlaySurveyLock.lock();
+          this.model.set("overlay_survey", imageLayer.url);
+        }
+      } else if (state === "REMOVED") {
+        let layers = this.model.get("layers") || {};
+        // If the object is not copied, the model will not detect the change
+        layers = { ...layers };
+        delete layers[layerName];
+        this.model.set("layers", layers);
+      }
+      this.model.save_changes();
+    });
+
     /* Div control */
     this.model.on("change:_height", () => {
       let height = this.model.get("_height");
@@ -253,14 +318,6 @@ export default class EventHandler {
       this.aladin.setFrame(this.model.get("coo_frame"));
     });
 
-    this.model.on("change:survey", () => {
-      this.aladin.setImageSurvey(this.model.get("survey"));
-    });
-
-    this.model.on("change:overlay_survey", () => {
-      this.aladin.setOverlayImageLayer(this.model.get("overlay_survey"));
-    });
-
     this.model.on("change:overlay_survey_opacity", () => {
       this.aladin
         .getOverlayImageLayer()
@@ -272,6 +329,9 @@ export default class EventHandler {
       change_fov: this.messageHandler.handleChangeFoV,
       goto_ra_dec: this.messageHandler.handleGotoRaDec,
       save_view_as_image: this.messageHandler.handleSaveViewAsImage,
+      add_hips: this.messageHandler.handleAddHips,
+      remove_layer: this.messageHandler.handleRemoveLayer,
+      set_layer_opacity: this.messageHandler.handleSetLayerOpacity,
       add_fits: this.messageHandler.handleAddFits,
       add_catalog_from_URL: this.messageHandler.handleAddCatalogFromURL,
       add_MOC_from_URL: this.messageHandler.handleAddMOCFromURL,
