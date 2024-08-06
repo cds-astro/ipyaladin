@@ -459,12 +459,17 @@ class Aladin(anywidget.AnyWidget):
             try:
                 target = parse_coordinate_string(target, self._survey_body)
             except NameResolveError as e:
+                # If the widget is not ready, we don't know if the base survey is
+                # celestial or planetary so the error can be caused by two factors
                 if not self._ready:
                     raise WidgetCommunicationError(
-                        f"Either '{target}' is not a valid object name, or "
-                        f"the survey body type is not yet defined so you "
-                        f"need to set the target from another cell."
+                        f"Either '{target}' is not a valid celestial object name, "
+                        f"or the survey body type is not yet defined so you "
+                        f"need to wait for the widget to be fully loaded."
                     ) from e
+                # If the widget is ready, the error is caused by the target name
+                # that is not a valid celestial object name
+                raise e
         elif not isinstance(target, SkyCoord) and not isinstance(
             target, Tuple
         ):  # If the target is not str or SkyCoord

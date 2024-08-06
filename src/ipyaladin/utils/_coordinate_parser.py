@@ -80,6 +80,8 @@ def _from_name_on_planet(string: str, body: str) -> SkyCoord:
         )
     if "+West" in system:
         lon = 360 - lon
+    # Currently we use ICRS for all planetary bodies, but this could be changed
+    # in a future Aladin Lite version.
     return SkyCoord(ra=lon, dec=lat, frame="icrs", unit="deg")
 
 
