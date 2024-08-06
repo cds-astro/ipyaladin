@@ -203,7 +203,12 @@ class Aladin(anywidget.AnyWidget):
     # listener callback is on the python side and contains functions to link to events
     listener_callback: ClassVar[Dict[str, callable]] = {}
 
-    # overlay survey
+    # Surveys management
+    layers = traitlets.Dict(
+        {},
+        help="A dictionary of surveys to add to the widget. The keys are the names of "
+        "the surveys and the values are the URLs of the surveys.",
+    ).tag(sync=True)
     overlay_survey = Unicode("").tag(sync=True, init_option=True)
     overlay_survey_opacity = Float(0.0).tag(sync=True, init_option=True)
     _base_layer_last_view = Unicode(
@@ -389,6 +394,59 @@ class Aladin(anywidget.AnyWidget):
             }
         )
 
+    def add_hips(self, hips: str, **options: any) -> None:
+        """Add a HiPS to the Aladin Lite widget.
+
+        Parameters
+        ----------
+        hips : str
+            The HiPS to add to the widget as a URL or a CDS id
+            <https://aladin.cds.unistra.fr/hips/list>`_
+        options : keyword arguments
+            The options for the HiPS. See `Aladin Lite's HiPS options
+            <https://cds-astro.github.io/aladin-lite/global.html#HiPSOptions>`_
+
+        """
+        self.send(
+            {
+                "event_name": "add_hips",
+                "hips": hips,
+                "options": options,
+            }
+        )
+
+    def remove_layer(self, name: str) -> None:
+        """Remove a layer from the Aladin Lite widget.
+
+        Parameters
+        ----------
+        name : str
+            The name of the layer to remove.
+
+        """
+        if name == "base":
+            raise ValueError("The base layer cannot be removed.")
+        self.send({"event_name": "remove_layer", "name": name})
+
+    def set_layer_opacity(self, name: str, opacity: float) -> None:
+        """Set the opacity of a layer in the Aladin Lite widget.
+
+        Parameters
+        ----------
+        name : str
+            The name of the layer to set the opacity.
+        opacity : float
+            The opacity value to set.
+
+        """
+        self.send(
+            {
+                "event_name": "set_layer_opacity",
+                "name": name,
+                "opacity": opacity,
+            }
+        )
+
     def _save_file(self, path: str, buffer: bytes) -> None:
         """Save a file from a buffer.
 
@@ -528,8 +586,13 @@ class Aladin(anywidget.AnyWidget):
 
         self._wcs = {}
         self.send(
-            {"event_name": "add_fits", "options": image_options},
-            buffers=[fits_bytes.getvalue()],
+            {
+                "event_name": "add_fits",
+                "options": image_options,
+            },
+            buffers=[
+                fits_bytes.getvalue(),
+            ],
         )
 
     # MOCs

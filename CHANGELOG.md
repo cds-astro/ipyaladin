@@ -25,6 +25,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add selected sources export as `astropy.Table` list with property `selected_objects` (#100)
 - Add function `get_view_as_fits` to export the view as a `astropy.io.fits.HDUList` (#86)
 - Add function `save_view_as_image` to save the view as an image file (#108)
+- Add function `add_hips` to add HiPS to the view (#84)
+- Add function `remove_layer` to remove a layer from the view (#84)
+- Add function `set_layer_opacity` to set the opacity of a layer (#84)
 
 ### Deprecated
 
