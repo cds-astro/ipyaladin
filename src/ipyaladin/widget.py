@@ -15,6 +15,7 @@ import warnings
 
 import anywidget
 from astropy.coordinates import SkyCoord, Angle
+from astropy.coordinates.name_resolve import NameResolveError
 from astropy.table.table import QTable
 from astropy.table import Table
 from astropy.io import fits as astropy_fits
@@ -191,6 +192,10 @@ class Aladin(anywidget.AnyWidget):
     )
 
     # Values
+    _ready = Bool(
+        False,
+        help="A private trait that stores the readiness of the widget.",
+    ).tag(sync=True)
     _wcs = traitlets.Dict().tag(sync=True)
     _fov_xy = traitlets.Dict().tag(sync=True)
 
@@ -204,6 +209,10 @@ class Aladin(anywidget.AnyWidget):
     listener_callback: ClassVar[Dict[str, callable]] = {}
 
     # overlay survey
+    _survey_body = Unicode(
+        "sky",
+        help="The body name of the base layer survey, 'sky' for the sky survey",
+    ).tag(sync=True, init_option=True)
     overlay_survey = Unicode("").tag(sync=True, init_option=True)
     overlay_survey_opacity = Float(0.0).tag(sync=True, init_option=True)
     _base_layer_last_view = Unicode(
@@ -352,7 +361,7 @@ class Aladin(anywidget.AnyWidget):
         self._wcs = {}
 
     @property
-    def target(self) -> SkyCoord:
+    def target(self) -> Union[SkyCoord, Tuple[float, float]]:
         """The target of the Aladin Lite widget.
 
         It can be set with either a string or an `astropy.coordinates.SkyCoord` object.
@@ -363,31 +372,60 @@ class Aladin(anywidget.AnyWidget):
             An `astropy.coordinates.SkyCoord` object representing the target.
 
         """
-        ra, dec = self._target.split(" ")
-        return SkyCoord(
-            ra=ra,
-            dec=dec,
-            frame="icrs",
-            unit="deg",
-        )
+        lon, lat = self._target.split(" ")
+        lon, lat = float(lon), float(lat)
+        if self._survey_body == "sky":
+            return SkyCoord(
+                ra=lon,
+                dec=lat,
+                frame="icrs",
+                unit="deg",
+            )
+        return lon, lat
 
     @target.setter
-    def target(self, target: Union[str, SkyCoord]) -> None:
+    def target(self, target: Union[str, SkyCoord, Tuple[float, float]]) -> None:
         if isinstance(target, str):  # If the target is str, parse it
-            target = parse_coordinate_string(target)
-        elif not isinstance(target, SkyCoord):  # If the target is not str or SkyCoord
+            try:
+                target = parse_coordinate_string(target, self._survey_body)
+            except NameResolveError as e:
+                # If the widget is not ready, we don't know if the base survey is
+                # celestial or planetary so the error can be caused by two factors
+                if not self._ready:
+                    raise WidgetCommunicationError(
+                        f"Either '{target}' is not a valid celestial object name, "
+                        f"or the survey body type is not yet defined so you "
+                        f"need to wait for the widget to be fully loaded."
+                    ) from e
+                # If the widget is ready, the error is caused by the target name
+                # that is not a valid celestial object name
+                raise e
+        elif not isinstance(target, SkyCoord) and not isinstance(
+            target, Tuple
+        ):  # If the target is not str or SkyCoord
             raise ValueError(
-                "target must be a string or an astropy.coordinates.SkyCoord object"
+                "target must be a string, an astropy.coordinates.SkyCoord "
+                "object or a tuple of 2 floats"
             )
-        self._target = f"{target.icrs.ra.deg} {target.icrs.dec.deg}"
         self._wcs = {}
-        self.send(
-            {
-                "event_name": "goto_ra_dec",
-                "ra": target.icrs.ra.deg,
-                "dec": target.icrs.dec.deg,
-            }
-        )
+        if isinstance(target, SkyCoord):
+            self._target = f"{target.icrs.ra.deg} {target.icrs.dec.deg}"
+            self.send(
+                {
+                    "event_name": "goto_ra_dec",
+                    "ra": target.icrs.ra.deg,
+                    "dec": target.icrs.dec.deg,
+                }
+            )
+        elif isinstance(target, Tuple):
+            self._target = f"{target[0]} {target[1]}"
+            self.send(
+                {
+                    "event_name": "goto_ra_dec",
+                    "ra": target[0],
+                    "dec": target[1],
+                }
+            )
 
     def _save_file(self, path: str, buffer: bytes) -> None:
         """Save a file from a buffer.
