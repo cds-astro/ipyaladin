@@ -6,20 +6,24 @@ It allows to display astronomical images and catalogs in an interactive way.
 """
 
 from collections.abc import Callable, Iterable
-import functools
 from json import JSONDecodeError
+import functools
 import io
 import pathlib
 from pathlib import Path
 import time
 from typing import ClassVar, Dict, Final, List, Optional, Tuple, Union
+
+try:  # drop this clause when we drop python 3.9
+    from typing_extensions import TypeAlias
+except ImportError:
+    from typing import TypeAlias
 import warnings
 
 import anywidget
 from astropy.coordinates import SkyCoord, Angle, Longitude, Latitude
 from astropy.coordinates.name_resolve import NameResolveError
-from astropy.table.table import QTable
-from astropy.table import Table
+from astropy.table.table import QTable, Table
 from astropy.io import fits as astropy_fits
 from astropy.io.fits import HDUList
 from astropy.wcs import WCS
@@ -28,6 +32,11 @@ import traitlets
 
 from .utils.exceptions import WidgetReducedError, WidgetNotReadyError
 from .utils._coordinate_parser import _parse_coordinate_string
+from .elements.error_shape import (
+    CircleError,
+    EllipseError,
+    _error_radius_conversion_factor,
+)
 from .elements.marker import Marker
 
 try:
@@ -56,7 +65,7 @@ from traitlets import (
     Any,
 )
 
-SupportedRegion = Union[
+SupportedRegion: TypeAlias = Union[
     List[
         Union[
             CircleSkyRegion,
@@ -732,23 +741,69 @@ class Aladin(anywidget.AnyWidget):
         self.add_moc(moc_dict, **moc_options)
 
     @widget_should_be_loaded
-    def add_table(self, table: Union[QTable, Table], **table_options: any) -> None:
+    def add_table(
+        self,
+        table: Union[QTable, Table],
+        *,
+        shape: Union[str, CircleError, EllipseError] = "cross",
+        **table_options: any,
+    ) -> None:
         """Load a table into the widget.
+
+        The extra parameters allow to draw either circles which radii correspond to the
+        error estimation, or ellipses which major axis, minor axis, and angles
+        correspond to the coordinates error.
 
         Parameters
         ----------
         table : `~astropy.table.table.QTable` or `~astropy.table.table.Table`
             table that must contain coordinates information
-        table_options
-            Keyword arguments. The possible values are documented in `Aladin Lite's
-            table options
+        shape : str | `~ipyaladin.CircleError` | `~ipyaladin.EllipseError`
+            The shape to draw for each source. It accepts the strings "square",
+            "circle", "plus", "cross", "rhomb", and "triangle" as well as the two
+            specific classes `ipyaladin.CircleError` and `ipyaladin.EllipseError`
+            that adapt the size of the drawn shapes (circles or ellipses) to error
+            columns.
+            See example notebook `04_Importing_Tables`.
+        **table_options
+            Keyword arguments. They mostly give control on the visual aspects of the
+            table. If the coordinates cannot be detected automatically, then you can
+            give the appropriate column names in the 'ra_field' and 'dec_field'
+            arguments.
+            The possible values are documented in `Aladin Lite's table options
             <https://cds-astro.github.io/aladin-lite/global.html#CatalogOptions>`_
 
         See Also
         --------
         add_markers: adds markers with a popup window when clicked
-
         """
+        shape = table_options.get("shape")
+        if isinstance(shape, CircleError):
+            table_options["circle_error"] = {
+                "radius": shape.radius,
+                "conversion_radius": _error_radius_conversion_factor(
+                    table[shape.radius].unit, shape.probability_threshold
+                ),
+            }
+            table_options["shape"] = shape.default_shape
+        elif isinstance(shape, EllipseError):
+            table_options["ellipse_error"] = {
+                "maj_axis": shape.maj_axis,
+                "min_axis": shape.min_axis,
+                "angle": shape.angle,
+                "conversion_angle": _error_radius_conversion_factor(
+                    table[shape.angle].unit
+                ),
+                "conversion_maj_axis": _error_radius_conversion_factor(
+                    table[shape.maj_axis].unit, shape.probability_threshold
+                ),
+                "conversion_min_axis": _error_radius_conversion_factor(
+                    table[shape.min_axis].unit, shape.probability_threshold
+                ),
+            }
+            table_options["shape"] = shape.default_shape
+        else:
+            table_options["shape"] = shape
         table_bytes = io.BytesIO()
         table.write(table_bytes, format="votable")
         self.send(
