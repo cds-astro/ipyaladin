@@ -157,13 +157,53 @@ export default class MessageHandler {
 
   handleAddTable(msg, buffers) {
     const options = convertOptionNamesToCamelCase(msg["options"] || {});
+    const circleOptions = convertOptionNamesToCamelCase(
+      options.circleError || {},
+    );
+    const ellipseOptions = convertOptionNamesToCamelCase(
+      options.ellipseError || {},
+    );
     const buffer = buffers[0].buffer;
     const decoder = new TextDecoder("utf-8");
     const blob = new Blob([decoder.decode(buffer)]);
     const url = URL.createObjectURL(blob);
+    options.onClick = "showTable";
+    if (Object.keys(circleOptions).length != 0) {
+      options.shape = (source) => {
+        if (source.data[circleOptions.radius]) {
+          return A.circle(
+            source.ra,
+            source.dec,
+            source.data[circleOptions.radius] * circleOptions.conversionRadius,
+            options,
+          );
+        }
+        // return string shape (remove comment when aladin lite accepts strings as returns)
+      };
+    }
+    if (Object.keys(ellipseOptions).length != 0) {
+      options.shape = (source) => {
+        if (
+          source.data[ellipseOptions.majAxis] &
+          source.data[ellipseOptions.minAxis]
+        ) {
+          return A.ellipse(
+            source.ra,
+            source.dec,
+            source.data[ellipseOptions.majAxis] *
+              ellipseOptions.conversionMajAxis,
+            source.data[ellipseOptions.minAxis] *
+              ellipseOptions.conversionMinAxis,
+            source.data[ellipseOptions.angle] * ellipseOptions.conversionAngle,
+            options,
+          );
+        }
+        // return string shape (remove comment when aladin lite accepts strings as returns)
+      };
+    }
     A.catalogFromURL(
       url,
-      Object.assign(options, { onClick: "showTable" }),
+      options,
       (catalog) => {
         this.aladin.addCatalog(catalog);
       },
