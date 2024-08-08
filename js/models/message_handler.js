@@ -20,8 +20,8 @@ export default class MessageHandler {
       const position = marker["position"].split(" ");
       markers.push(
         A.marker(parseFloat(position[0]), parseFloat(position[1]), {
-          popupTitle: marker["title"],
-          popupDesc: marker["description"],
+          popupTitle: `<p style="color: black;">${marker["title"]}</p>`,
+          popupDesc: `<p style="color: black;">${marker["description"]}</p>`,
         }),
       );
     }
