@@ -136,13 +136,28 @@ export default class MessageHandler {
 
   handleAddTable(msg, buffers) {
     const options = convertOptionNamesToCamelCase(msg["options"] || {});
+    const errorDict = options.errorDict;
     const buffer = buffers[0].buffer;
     const decoder = new TextDecoder("utf-8");
     const blob = new Blob([decoder.decode(buffer)]);
     const url = URL.createObjectURL(blob);
+    options.onClick = "showTable";
+    if (errorDict)
+      options.shape = (s) => {
+        if (errorDict["pa"] && s.data[errorDict["pa"]["col"]])
+          return A.ellipse(
+            s.ra,
+            s.dec,
+            s.data[errorDict["smaj"]["col"]],
+            s.data[errorDict["smin"]["col"]],
+            s.data[errorDict["pa"]["col"]],
+          );
+        if (errorDict["r"] && s.data[errorDict["r"]["col"]])
+          return A.circle(s.ra, s.dec, s.data[errorDict["r"]["col"]]);
+      };
     A.catalogFromURL(
       url,
-      Object.assign(options, { onClick: "showTable" }),
+      options,
       (catalog) => {
         this.aladin.addCatalog(catalog);
       },
