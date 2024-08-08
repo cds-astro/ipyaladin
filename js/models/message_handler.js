@@ -9,6 +9,25 @@ export default class MessageHandler {
     this.model = model;
   }
 
+  handleAddMarker(msg) {
+    const options = convertOptionNamesToCamelCase(msg["options"] || {});
+    if (!options.name) options.name = "markers";
+    const rawMarkers = msg["markers"];
+    const catalog = A.catalog(options);
+    this.aladin.addCatalog(catalog);
+    const markers = [];
+    for (const marker of rawMarkers) {
+      const position = marker["position"].split(" ");
+      markers.push(
+        A.marker(parseFloat(position[0]), parseFloat(position[1]), {
+          popupTitle: marker["title"],
+          popupDesc: marker["description"],
+        }),
+      );
+    }
+    catalog.addSources(markers);
+  }
+
   handleChangeFoV(msg) {
     this.aladin.setFoV(msg["fov"]);
   }

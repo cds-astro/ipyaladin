@@ -27,6 +27,7 @@ import traitlets
 
 from .utils.exceptions import WidgetReducedError, WidgetNotReadyError
 from .utils._coordinate_parser import _parse_coordinate_string
+from .utils.marker import Marker
 
 try:
     from regions import (
@@ -504,6 +505,30 @@ class Aladin(anywidget.AnyWidget):
                 "event_name": "goto_ra_dec",
                 "ra": lon,
                 "dec": lat,
+            }
+        )
+
+    def add_marker(
+        self, markers: Union[Marker, List[Marker]], **catalog_options: any
+    ) -> None:
+        """Add a marker to the Aladin Lite widget.
+
+        Parameters
+        ----------
+        markers : Marker or list[Marker]
+            The marker(s) to add to the widget. It can be given as a single `Marker`
+            object or as a list of `Marker` objects.
+        catalog_options : any
+            The options for the catalog. See the `Aladin Lite catalog options
+            <https://cds-astro.github.io/aladin-lite/global.html#CatalogOptions>`_
+        """
+        if not isinstance(markers, list):
+            markers = [markers]
+        self.send(
+            {
+                "event_name": "add_marker",
+                "markers": [marker.to_dict() for marker in markers],
+                "options": catalog_options,
             }
         )
 
