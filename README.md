@@ -60,7 +60,7 @@ Correspondence table between ipyaladin versions and Aladin Lite versions:
 
 | ipyaladin  | Aladin-Lite |
 | ---------- | ----------- |
-| Unreleased | 3.4.5       |
+| Unreleased | 3.5.1-alpha |
 | 0.4.0      | 3.4.4-beta  |
 | 0.3.0      | 3.3.3-dev   |
 
