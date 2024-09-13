@@ -10,6 +10,7 @@ import io
 import pathlib
 from json import JSONDecodeError
 from pathlib import Path
+import time
 from typing import ClassVar, Dict, Final, List, Optional, Tuple, Union
 import warnings
 
@@ -23,7 +24,7 @@ from astropy.wcs import WCS
 import numpy as np
 import traitlets
 
-from .utils.exceptions import WidgetCommunicationError
+from .utils.exceptions import WidgetReducedError, WidgetNotReadyError
 from .utils._coordinate_parser import parse_coordinate_string
 
 try:
@@ -72,6 +73,51 @@ SupportedRegion = Union[
 ]
 
 
+def widget_should_be_loaded(func: Callable) -> Callable:
+    """Check if the widget is ready to execute a function.
+
+    Parameters
+    ----------
+    func : Callable
+        The function to decorate.
+
+    Returns
+    -------
+    Callable
+        The decorated function.
+
+    """
+
+    def wrapper(self: Any, *args: Any, **kwargs: Any) -> Any:
+        """Check if the widget is ready to execute a function.
+
+        Parameters
+        ----------
+        self : any
+            The widget object.
+        *args : any
+            The arguments of the function.
+        **kwargs : any
+            The keyword arguments of the function.
+
+        Returns
+        -------
+        any
+            The result of the function if the widget is ready.
+
+        """
+        if not getattr(self, "_is_loaded", False):
+            # this is an arbitrary waiting time
+            # it should correspond to the downloading time of the npm package
+            duration = 0.1
+            time.sleep(duration)
+            # set ready to True to avoid waiting twice
+            self._is_loaded = True
+        return func(self, *args, **kwargs)
+
+    return wrapper
+
+
 class Aladin(anywidget.AnyWidget):
     """Aladin Lite widget.
 
@@ -109,7 +155,7 @@ class Aladin(anywidget.AnyWidget):
     ).tag(sync=True, init_option=True)
     projection = Unicode(
         "SIN",
-        help=("The projection for the view. The keywords follow the FITS standard."),
+        help="The projection for the view. The keywords follow the FITS standard.",
     ).tag(sync=True, init_option=True)
     samp = Bool(False, help="Wether to allow sending data via the SAMP protocol.").tag(
         sync=True, init_option=True, only_init=True
@@ -212,6 +258,20 @@ class Aladin(anywidget.AnyWidget):
         "to convert the view to an astropy.HDUList",
     ).tag(sync=True)
 
+    _is_loaded = Bool(
+        False,
+        help="A private trait that stores whether the widget is loaded.",
+    ).tag(
+        sync=True,
+    )
+
+    # Temporary traitlet for widget size problem
+    _is_reduced = Bool(
+        False,
+        help="A private trait that stores if the widget "
+        "is reduced in size when hidden.",
+    ).tag(sync=True)
+
     init_options = traitlets.List(trait=Any()).tag(sync=True)
 
     @default("init_options")
@@ -282,22 +342,32 @@ class Aladin(anywidget.AnyWidget):
 
     @property
     def wcs(self) -> WCS:
-        """The world coordinate system of the Aladin Lite widget.
+        """The world coordinate system corresponding to the current view of ipyaladin.
 
         Returns
         -------
-        WCS
+        `~astropy.wcs.WCS`
             An astropy WCS object representing the world coordinate system.
 
         """
-        if self._wcs == {}:
-            raise WidgetCommunicationError(
-                "The world coordinate system is not available. This often happens when "
-                "the WCS is modified and read in the same cell. "
-                "Please recover it from another cell."
+        if self._is_reduced:
+            # this is the bug that https://github.com/jupyterlab/jupyterlab/issues/16630
+            # will solve.
+            raise WidgetReducedError(
+                "Jupyter reduces the size of the widget when it is out of the view. "
+                "This leads to wrong WCS. Either scroll up to the widget, and query "
+                "the WCS from there, or use the right click menu 'Create New View for "
+                "Cell Output' to keep the widget in the screen."
             )
-        if "RADECSYS" in self._wcs:  # RADECSYS keyword is deprecated for astropy.WCS
-            self._wcs["RADESYS"] = self._wcs.pop("RADECSYS")
+        if self._wcs == {}:
+            raise WidgetNotReadyError(
+                "The WCS is not available. There are two reasons for that: either the "
+                "widget was not ready, in this case, try running the cell again. Or "
+                "the state of the widget was changed in the same cell than the "
+                "calculation of the WCS. In this second case, please move the "
+                "manipulations of the widget in an other cell (this can be changes of "
+                "target, projection, or fov)."
+            )
         return WCS(self._wcs)
 
     @property
@@ -311,10 +381,10 @@ class Aladin(anywidget.AnyWidget):
 
         """
         if self._fov_xy == {}:
-            raise WidgetCommunicationError(
+            raise WidgetNotReadyError(
                 "The field of view along the two axes is not available. This often "
-                "happens when the FOV is modified and read in the same cell. "
-                "Please recover it from another cell."
+                "happens when the FoV is modified and read in the same cell. "
+                "Please read it from a new cell."
             )
         return (
             Angle(self._fov_xy["x"], unit="deg"),
@@ -355,12 +425,12 @@ class Aladin(anywidget.AnyWidget):
     def target(self) -> SkyCoord:
         """The target of the Aladin Lite widget.
 
-        It can be set with either a string or an `astropy.coordinates.SkyCoord` object.
+        It can be set with either a string or a `~astropy.coordinates.SkyCoord` object.
 
         Returns
         -------
-        astropy.coordinates.SkyCoord
-            An `astropy.coordinates.SkyCoord` object representing the target.
+        `~astropy.coordinates.SkyCoord`
+            A `~astropy.coordinates.SkyCoord` object representing the target.
 
         """
         ra, dec = self._target.split(" ")
@@ -403,10 +473,14 @@ class Aladin(anywidget.AnyWidget):
         with Path(path).open("wb") as file:
             file.write(buffer)
 
+    @widget_should_be_loaded
     def save_view_as_image(
         self, path: Union[str, Path], image_format: str = "png", with_logo: bool = True
     ) -> None:
         """Save the current view of the widget as an image file.
+
+        This should be used as quick previews, or illustrations. For scientific-quality
+        pixels, use 'get_view_as_fits'.
 
         Parameters
         ----------
@@ -419,7 +493,7 @@ class Aladin(anywidget.AnyWidget):
 
         See Also
         --------
-        get_view_as_fits
+        get_view_as_fits: conserves the photometry
 
         """
         if image_format not in {"png", "jpeg", "webp"}:
@@ -433,6 +507,7 @@ class Aladin(anywidget.AnyWidget):
             }
         )
 
+    @widget_should_be_loaded
     def get_view_as_fits(self) -> HDUList:
         """Get the base layer of the widget as an astropy HDUList object.
 
@@ -442,7 +517,7 @@ class Aladin(anywidget.AnyWidget):
 
         Returns
         -------
-        astropy.io.fits.HDUList
+        `~astropy.io.fits.HDUList`
             The FITS object containing the image.
 
         See Also
@@ -454,18 +529,20 @@ class Aladin(anywidget.AnyWidget):
             from astroquery.hips2fits import hips2fits
         except ImportError as imp:
             raise ValueError(
-                "To use the 'get_view_as_fits' method, you need to install astroquery "
-                "with 'pip install astroquery -U --pre'."
+                "To use 'get_view_as_fits', you need astroquery. "
+                "Install it with 'pip install astroquery -U --pre'."
             ) from imp
         try:
             fits = hips2fits.query_with_wcs(
                 hips=self._base_layer_last_view,
                 wcs=self.wcs,
             )
+        # there is a JSONDecodeError when NAXIS=[1,1]. This happens when the widget is
+        # reduced. See more explanation in the wcs property.
         except JSONDecodeError as e:
             raise ValueError(
                 "The FITS image could not be retrieved from the view. "
-                "This can happen when the widget is scrolled out of the "
+                "This happens when the widget is scrolled out of the "
                 "screen."
             ) from e
         return fits
@@ -483,6 +560,7 @@ class Aladin(anywidget.AnyWidget):
         """
         self.send({"event_name": "get_JPG_thumbnail"})
 
+    @widget_should_be_loaded
     def add_catalog_from_URL(
         self, votable_URL: str, votable_options: Optional[dict] = None
     ) -> None:
@@ -504,8 +582,9 @@ class Aladin(anywidget.AnyWidget):
             }
         )
 
+    @widget_should_be_loaded
     def add_fits(self, fits: Union[str, Path, HDUList], **image_options: any) -> None:
-        """Load a FITS file into the widget.
+        """Load a FITS image into the widget.
 
         Parameters
         ----------
@@ -534,6 +613,7 @@ class Aladin(anywidget.AnyWidget):
 
     # MOCs
 
+    @widget_should_be_loaded
     def add_moc(self, moc: any, **moc_options: any) -> None:
         """Add a MOC to the Aladin-Lite widget.
 
@@ -579,11 +659,12 @@ class Aladin(anywidget.AnyWidget):
                     )
             except ImportError as imp:
                 raise ValueError(
-                    "A MOC can be given as an URL, a dictionnary, or a mocpy.MOC "
+                    "A MOC can be given as an URL, a dictionary, or a mocpy.MOC "
                     "object. To read mocpy.MOC objects, you need to install the mocpy "
                     "library with 'pip install mocpy'."
                 ) from imp
 
+    @widget_should_be_loaded
     def add_moc_from_URL(
         self, moc_URL: str, moc_options: Optional[dict] = None
     ) -> None:
@@ -608,6 +689,7 @@ class Aladin(anywidget.AnyWidget):
             moc_options = {}
         self.add_moc(moc_URL, **moc_options)
 
+    @widget_should_be_loaded
     def add_moc_from_dict(
         self, moc_dict: dict, moc_options: Optional[dict] = None
     ) -> None:
@@ -633,12 +715,13 @@ class Aladin(anywidget.AnyWidget):
             moc_options = {}
         self.add_moc(moc_dict, **moc_options)
 
+    @widget_should_be_loaded
     def add_table(self, table: Union[QTable, Table], **table_options: any) -> None:
         """Load a table into the widget.
 
         Parameters
         ----------
-        table : astropy.table.table.QTable or astropy.table.table.Table
+        table : `~astropy.table.table.QTable` or `~astropy.table.table.Table`
             table that must contain coordinates information
         table_options
             Keyword arguments. The possible values are documented in `Aladin Lite's
@@ -653,6 +736,7 @@ class Aladin(anywidget.AnyWidget):
             buffers=[table_bytes.getvalue()],
         )
 
+    @widget_should_be_loaded
     def add_graphic_overlay_from_region(
         self,
         region: SupportedRegion,
@@ -713,7 +797,6 @@ class Aladin(anywidget.AnyWidget):
 
         regions_infos = []
         for region_element in region_list:
-            # Check if the regions library is installed and raise an error if not
             if not isinstance(region_element, Region):
                 raise ValueError(
                     "region must a `~regions` object or a list of `~regions` objects. "
@@ -733,6 +816,7 @@ class Aladin(anywidget.AnyWidget):
             }
         )
 
+    @widget_should_be_loaded
     def add_overlay_from_stcs(
         self, stc_string: Union[List[str], str], **overlay_options: any
     ) -> None:
@@ -756,6 +840,7 @@ class Aladin(anywidget.AnyWidget):
         )
         self.add_graphic_overlay_from_stcs(stc_string, **overlay_options)
 
+    @widget_should_be_loaded
     def add_graphic_overlay_from_stcs(
         self, stc_string: Union[List[str], str], **overlay_options: any
     ) -> None:
@@ -794,6 +879,7 @@ class Aladin(anywidget.AnyWidget):
             }
         )
 
+    @widget_should_be_loaded
     def set_color_map(self, color_map_name: str) -> None:
         """Change the color map of the Aladin Lite widget.
 
@@ -836,6 +922,7 @@ class Aladin(anywidget.AnyWidget):
 
     # Adding a listener
 
+    @widget_should_be_loaded
     def set_listener(self, listener_type: str, callback: Callable) -> None:
         """Set a listener for an event to the widget.
 
@@ -862,6 +949,7 @@ class Aladin(anywidget.AnyWidget):
                 "'object_clicked', 'click' or 'select'"
             )
 
+    @widget_should_be_loaded
     def add_listener(self, listener_type: str, callback: Callable) -> None:
         """Add a listener to the widget. Use set_listener instead.
 

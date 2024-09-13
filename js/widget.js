@@ -16,6 +16,7 @@ function initAladinLite(model, el) {
 
   aladinDiv.id = `aladin-lite-div-${divNumber}`;
   let aladin = new A.aladin(aladinDiv, initOptions);
+  el.appendChild(aladinDiv);
 
   // Set the target again after the initialization to be sure that the target is set
   // from icrs coordinates because of the use of gotoObject in the Aladin Lite API
@@ -29,9 +30,9 @@ function initAladinLite(model, el) {
     y: twoAxisFoV[1],
   });
   model.set("_wcs", aladin.getViewWCS());
+  model.set("_is_loaded", true);
   model.save_changes();
 
-  el.appendChild(aladinDiv);
   return { aladin, aladinDiv };
 }
 

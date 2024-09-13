@@ -41,6 +41,32 @@ Retrieving information from the current widget view
 .. nbgallery::
     ../_collections/notebooks/11_Extracting_information_from_the_view.ipynb
 
+Note about the WCS
+==================
+
+To calculate the WCS, ``ipyaladin`` needs to know its ows size. However, to optimize the
+speed of the rendering of notebooks, Jupyter reduces the size of the output of the cells
+that are outside of the view. This causes ``ipyaladin`` to calculate WCS with the wrong 
+field of view. We raise a ``WidgetReducedError`` in this case. Here are a few
+workarounds for this issue:
+
+1. Detaching the widget from the notebook and keeping it on the side of the notebook
+------------------------------------------------------------------------------------
+
+In Jupyter notebook, you can right click on the cell where ``ipyaladin`` is displayed,
+then chose ``Create new view for cell output`` in the menu. This way, it is never out of
+the view (we also find it very practical) and the returned WCS will correspond to the 
+view on the side.
+
+.. image:: ../_static/gifs/pop_out_widget.gif
+
+2. Disabling the optimization in the notebook parameters
+--------------------------------------------------------
+
+To disable the option that reduces the widget when it is out of the view, you can go to
+``Settings``, ``Settings Editor``, ``Notebook``, and set ``Windowing mode`` to ``none``.
+This can make your notebook slower if you have a lot of cells.
+
 ************
 Advanced use
 ************
@@ -53,4 +79,3 @@ interactive cell outputs.
     ../_collections/notebooks/07_on-click-callback
     ../_collections/notebooks/08_Rectangular-selection
     ../_collections/notebooks/10_Advanced-GUI
-

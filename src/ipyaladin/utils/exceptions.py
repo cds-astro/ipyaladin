@@ -1,6 +1,14 @@
-class WidgetCommunicationError(OSError):
-    """Error raised when there is a communication error with the widget."""
+class WidgetReducedError(ValueError):
+    """Error raised when a widget is reduced to a point when hidden."""
 
     def __init__(self, message: str) -> None:
         self.message = message
-        super(WidgetCommunicationError, self).__init__(message)
+        super(WidgetReducedError, self).__init__(message)
+
+
+class WidgetNotReadyError(OSError):
+    """Error raised when the widget is not ready."""
+
+    def __init__(self, message: str) -> None:
+        self.message = message
+        super(WidgetNotReadyError, self).__init__(message)
