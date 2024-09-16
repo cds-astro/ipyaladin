@@ -11,17 +11,18 @@ export default class MessageHandler {
 
   handleAddMarker(msg) {
     const options = convertOptionNamesToCamelCase(msg["options"] || {});
+    // default name
     if (!options.name) options.name = "markers";
-    const rawMarkers = msg["markers"];
+    // create catalog
     const catalog = A.catalog(options);
     this.aladin.addCatalog(catalog);
+    const pythonMarkers = msg["markers"];
     const markers = [];
-    for (const marker of rawMarkers) {
-      const position = marker["position"].split(" ");
+    for (const marker of pythonMarkers) {
       markers.push(
-        A.marker(parseFloat(position[0]), parseFloat(position[1]), {
-          popupTitle: `<p style="color: black;">${marker["title"]}</p>`,
-          popupDesc: `<p style="color: black;">${marker["description"]}</p>`,
+        A.marker(marker["lon"], marker["lat"], {
+          popupTitle: marker["title"],
+          popupDesc: marker["description"],
         }),
       );
     }
