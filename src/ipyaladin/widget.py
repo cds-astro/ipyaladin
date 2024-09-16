@@ -15,7 +15,7 @@ from typing import ClassVar, Dict, Final, List, Optional, Tuple, Union
 import warnings
 
 import anywidget
-from astropy.coordinates import SkyCoord, Angle
+from astropy.coordinates import SkyCoord, Angle, Longitude, Latitude
 from astropy.coordinates.name_resolve import NameResolveError
 from astropy.table.table import QTable
 from astropy.table import Table
@@ -26,7 +26,7 @@ import numpy as np
 import traitlets
 
 from .utils.exceptions import WidgetReducedError, WidgetNotReadyError
-from .utils._coordinate_parser import parse_coordinate_string
+from .utils._coordinate_parser import _parse_coordinate_string
 
 try:
     from regions import (
@@ -434,12 +434,16 @@ class Aladin(anywidget.AnyWidget):
     def target(self) -> Union[SkyCoord, Tuple[float, float]]:
         """The target of the Aladin Lite widget.
 
-        It can be set with either a string or a `~astropy.coordinates.SkyCoord` object.
+        It can be set with either a string, an `~astropy.coordinates.SkyCoord`, or
+        a tuple of angle-like objects.
 
         Returns
         -------
-        `~astropy.coordinates.SkyCoord`
-            A `~astropy.coordinates.SkyCoord` object representing the target.
+        `~astropy.coordinates.SkyCoord` or Tuple[Longitude, Latitude]
+            If ipyaladin has a sky survey, returns a `~astropy.coordinates.SkyCoord`
+            object. Otherwise, if ipyaladin is currently on a planetary body, returns
+            a tuple with the Longitude and the Latitude of the current position of the
+            widget.
 
         """
         lon, lat = self._target.split(" ")
@@ -451,18 +455,18 @@ class Aladin(anywidget.AnyWidget):
                 frame="icrs",
                 unit="deg",
             )
-        return lon, lat
+        return Longitude(lon, unit="deg"), Latitude(lat, unit="deg")
 
     @target.setter
     def target(self, target: Union[str, SkyCoord, Tuple[float, float]]) -> None:
-        if isinstance(target, str):  # If the target is str, parse it
+        if isinstance(target, str):  # If the target is a string, parse it
             try:
-                target = parse_coordinate_string(target, self._survey_body)
+                lon, lat = _parse_coordinate_string(target, self._survey_body)
             except NameResolveError as e:
                 # If the widget is not ready, we don't know if the base survey is
                 # celestial or planetary so the error can be caused by two factors
                 if not self._ready:
-                    raise WidgetCommunicationError(
+                    raise WidgetNotReadyError(
                         f"Either '{target}' is not a valid celestial object name, "
                         f"or the survey body type is not yet defined so you "
                         f"need to wait for the widget to be fully loaded."
@@ -470,32 +474,25 @@ class Aladin(anywidget.AnyWidget):
                 # If the widget is ready, the error is caused by the target name
                 # that is not a valid celestial object name
                 raise e
-        elif not isinstance(target, SkyCoord) and not isinstance(
-            target, Tuple
-        ):  # If the target is not str or SkyCoord
+        elif not isinstance(target, SkyCoord) and not isinstance(target, Tuple):
             raise ValueError(
                 "target must be a string, an astropy.coordinates.SkyCoord "
-                "object or a tuple of 2 floats"
+                "object or a tuple of two angle-like astropy quantities."
             )
         self._wcs = {}
         if isinstance(target, SkyCoord):
-            self._target = f"{target.icrs.ra.deg} {target.icrs.dec.deg}"
-            self.send(
-                {
-                    "event_name": "goto_ra_dec",
-                    "ra": target.icrs.ra.deg,
-                    "dec": target.icrs.dec.deg,
-                }
-            )
+            lon, lat = target.icrs.ra.deg, target.icrs.dec.deg
         elif isinstance(target, Tuple):
-            self._target = f"{target[0]} {target[1]}"
-            self.send(
-                {
-                    "event_name": "goto_ra_dec",
-                    "ra": target[0],
-                    "dec": target[1],
-                }
-            )
+            lon, lat = target[0].deg, target[1].deg
+
+        self._target = f"{lon} {lat}"
+        self.send(
+            {
+                "event_name": "goto_ra_dec",
+                "ra": lon,
+                "dec": lat,
+            }
+        )
 
     def _save_file(self, path: str, buffer: bytes) -> None:
         """Save a file from a buffer.

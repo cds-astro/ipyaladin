@@ -2,13 +2,15 @@ import warnings
 from typing import Tuple
 
 import requests
-from astropy.coordinates import SkyCoord, Angle
+from astropy.coordinates import SkyCoord, Angle, Longitude, Latitude
 import re
 
 from ipyaladin.utils.exceptions import NameResolverWarning
 
 
-def parse_coordinate_string(string: str, body: str = "sky") -> SkyCoord:
+def _parse_coordinate_string(
+    string: str, body: str = "sky"
+) -> Tuple[Longitude, Latitude]:
     """Parse a string containing coordinates.
 
     Parameters
@@ -26,22 +28,26 @@ def parse_coordinate_string(string: str, body: str = "sky") -> SkyCoord:
 
     """
     if not _is_coordinate_string(string):
-        if body == "sky":
-            return SkyCoord.from_name(string)
+        if body == "sky" or body is None:
+            sesame = SkyCoord.from_name(string)
+            return sesame.icrs.ra.deg, sesame.icrs.dec.deg
         return _from_name_on_planet(string, body)
-    coordinates: Tuple[str, str] = _split_coordinate_string(string)
+    # coordinates should be parsed from the string
+    coordinates = _split_coordinate_string(string)
     # Parse ra and dec to astropy Angle objects
-    dec: Angle = Angle(coordinates[1], unit="deg")
+    lat: Angle = Angle(coordinates[1], unit="deg")
     if _is_hour_angle_string(coordinates[0]):
-        ra = Angle(coordinates[0], unit="hour")
+        lon = Angle(coordinates[0], unit="hour")
     else:
-        ra = Angle(coordinates[0], unit="deg")
+        lon = Angle(coordinates[0], unit="deg")
     # Create SkyCoord object
     if string[0] == "B":
-        return SkyCoord(ra=ra, dec=dec, equinox="B1950", frame="fk4")
-    if string[0] == "G":
-        return SkyCoord(l=ra, b=dec, frame="galactic")
-    return SkyCoord(ra=ra, dec=dec, frame="icrs")
+        coo = SkyCoord(ra=lon, dec=lat, equinox="B1950", frame="fk4")
+    elif string[0] == "G":
+        coo = SkyCoord(l=lon, b=lat, frame="galactic")
+    else:
+        coo = SkyCoord(ra=lon, dec=lat, frame="icrs")
+    return coo.icrs.ra.deg, coo.icrs.dec.deg
 
 
 def _from_name_on_planet(string: str, body: str) -> SkyCoord:
@@ -65,24 +71,28 @@ def _from_name_on_planet(string: str, body: str) -> SkyCoord:
     )
     request = requests.get(url)
     if request.status_code != requests.codes.ok:
-        raise ValueError(f"Invalid coordinate string: {string}")
-    data = request.json()
-    identifier = data["data"][0][1]
-    lat = data["data"][0][5]
-    lon = data["data"][0][6]
-    system = data["data"][0][11]
+        raise ValueError(
+            "No coordinates found for this requested planetary feature: " f"'{string}'"
+        )
+    data = request.json()["data"]
+    # response is different for earth
+    if body == "earth":
+        return data[0][0], data[0][1]
+    # case of every other planetary bodies
+    identifier = data[0][1]
+    lat = data[0][5]  # inverted lon and lat in response
+    lon = data[0][6]
+    system = data[0][11]
     if identifier != string:
         warnings.warn(
-            f"Nothing found for '{string}', but found close"
-            f" name '{identifier}'. Moving to {identifier}.",
+            f"Nothing found for '{string}' on {body}. However, a {identifier} exists. "
+            f"Moving to {identifier}.",
             NameResolverWarning,
             stacklevel=2,
         )
     if "+West" in system:
         lon = 360 - lon
-    # Currently we use ICRS for all planetary bodies, but this could be changed
-    # in a future Aladin Lite version.
-    return SkyCoord(ra=lon, dec=lat, frame="icrs", unit="deg")
+    return lon, lat
 
 
 def _is_coordinate_string(string: str) -> bool:
