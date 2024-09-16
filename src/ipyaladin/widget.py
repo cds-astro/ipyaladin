@@ -6,7 +6,6 @@ It allows to display astronomical images and catalogs in an interactive way.
 """
 
 from collections.abc import Callable
-from dataclasses import asdict
 import io
 import pathlib
 from json import JSONDecodeError
@@ -534,7 +533,7 @@ class Aladin(anywidget.AnyWidget):
         self.send(
             {
                 "event_name": "add_marker",
-                "markers": [asdict(marker) for marker in markers],
+                "markers": [marker.__dict__ for marker in markers],
                 "options": catalog_options,
             }
         )
