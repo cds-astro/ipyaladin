@@ -6,6 +6,7 @@ It allows to display astronomical images and catalogs in an interactive way.
 """
 
 from collections.abc import Callable
+from dataclasses import asdict
 import io
 import pathlib
 from json import JSONDecodeError
@@ -27,6 +28,7 @@ import traitlets
 
 from .utils.exceptions import WidgetReducedError, WidgetNotReadyError
 from .utils._coordinate_parser import _parse_coordinate_string
+from .elements.marker import Marker
 
 try:
     from regions import (
@@ -281,7 +283,7 @@ class Aladin(anywidget.AnyWidget):
         "is reduced in size when hidden.",
     ).tag(sync=True)
 
-    init_options = traitlets.List(trait=Any()).tag(sync=True)
+    init_options = traitlets.List(trait=traitlets.Any()).tag(sync=True)
 
     @default("init_options")
     def _init_options(self) -> List[str]:
@@ -504,6 +506,36 @@ class Aladin(anywidget.AnyWidget):
                 "event_name": "goto_ra_dec",
                 "ra": lon,
                 "dec": lat,
+            }
+        )
+
+    def add_markers(
+        self, markers: Union[Marker, List[Marker]], **catalog_options: any
+    ) -> None:
+        """Add markers to the Aladin Lite widget.
+
+        Markers have a popup window that appear when they're clicked on.
+
+        Parameters
+        ----------
+        markers : Marker or list[Marker]
+            The marker(s) to add to the widget. It can be given as a single `Marker`
+            object or as a list of `Marker` objects.
+        catalog_options : any
+            The options for the catalog. See the `Aladin Lite catalog options
+            <https://cds-astro.github.io/aladin-lite/global.html#CatalogOptions>`_
+
+        See Also
+        --------
+        add_table: also adds points, but without popup window.
+        """
+        if not isinstance(markers, list):
+            markers = [markers]
+        self.send(
+            {
+                "event_name": "add_marker",
+                "markers": [asdict(marker) for marker in markers],
+                "options": catalog_options,
             }
         )
 
@@ -775,6 +807,10 @@ class Aladin(anywidget.AnyWidget):
             Keyword arguments. The possible values are documented in `Aladin Lite's
             table options
             <https://cds-astro.github.io/aladin-lite/global.html#CatalogOptions>`_
+
+        See Also
+        --------
+        add_markers: adds markers with a popup window when clicked
 
         """
         table_bytes = io.BytesIO()

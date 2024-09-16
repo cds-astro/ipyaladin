@@ -9,6 +9,26 @@ export default class MessageHandler {
     this.model = model;
   }
 
+  handleAddMarker(msg) {
+    const options = convertOptionNamesToCamelCase(msg["options"] || {});
+    // default name
+    if (!options.name) options.name = "markers";
+    // create catalog
+    const catalog = A.catalog(options);
+    this.aladin.addCatalog(catalog);
+    const pythonMarkers = msg["markers"];
+    const markers = [];
+    for (const marker of pythonMarkers) {
+      markers.push(
+        A.marker(marker["lon"], marker["lat"], {
+          popupTitle: marker["title"],
+          popupDesc: marker["description"],
+        }),
+      );
+    }
+    catalog.addSources(markers);
+  }
+
   handleChangeFoV(msg) {
     this.aladin.setFoV(msg["fov"]);
   }

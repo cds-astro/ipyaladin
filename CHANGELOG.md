@@ -25,7 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add selected sources export as `astropy.Table` list with property `selected_objects` (#100)
 - Add function `get_view_as_fits` to export the view as a `astropy.io.fits.HDUList` (#98)
 - Add function `save_view_as_image` to save the view as an image file (#108)
-- Support for planetary objects for Aladin Lite target (#103)
+- Support planetary objects for ipyaladin targets (#103)
+- new method `add_marker` to add a marker to the view (#111)
 
 ### Deprecated
 

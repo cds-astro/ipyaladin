@@ -268,6 +268,7 @@ export default class EventHandler {
     });
 
     this.eventHandlers = {
+      add_marker: this.messageHandler.handleAddMarker,
       change_fov: this.messageHandler.handleChangeFoV,
       goto_ra_dec: this.messageHandler.handleGotoRaDec,
       save_view_as_image: this.messageHandler.handleSaveViewAsImage,
