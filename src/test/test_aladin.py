@@ -1,11 +1,12 @@
-import requests
-from astropy.coordinates import Angle, SkyCoord
+from astropy.coordinates import Angle, SkyCoord, Longitude, Latitude
+import astropy.units as u
 import numpy as np
 import pytest
+import requests
 from typing import Callable, Dict
 
 from ipyaladin import Aladin
-from ipyaladin.utils._coordinate_parser import parse_coordinate_string
+from ipyaladin.utils._coordinate_parser import _parse_coordinate_string
 
 from .test_coordinate_parser import test_is_coordinate_string_values
 
@@ -66,10 +67,11 @@ def test_aladin_string_target_set(target: str, mock_sesame: Callable) -> None:  
         The target string.
 
     """
+    aladin._survey_body = "sky"
     aladin.target = target
-    parsed_target = parse_coordinate_string(target)
-    assert np.isclose(aladin.target.icrs.ra.deg, parsed_target.icrs.ra.deg)
-    assert np.isclose(aladin.target.icrs.dec.deg, parsed_target.icrs.dec.deg)
+    parsed_target = _parse_coordinate_string(target)
+    assert np.isclose(aladin.target.icrs.ra.deg, parsed_target[0])
+    assert np.isclose(aladin.target.icrs.dec.deg, parsed_target[1])
 
 
 test_aladin_planetary_string_target = [
@@ -79,6 +81,7 @@ test_aladin_planetary_string_target = [
 ]
 
 
+@pytest.mark.filterwarnings("ignore: Nothing found for")
 @pytest.mark.parametrize("target", test_aladin_planetary_string_target)
 def test_aladin_planetary_string_target_set(
     target: str,
@@ -94,10 +97,7 @@ def test_aladin_planetary_string_target_set(
     """
     aladin._survey_body = "mars"
     aladin.target = target
-    parsed_target = parse_coordinate_string(target, body="mars")
-    parsed_target = (parsed_target.icrs.ra.deg, parsed_target.icrs.dec.deg)
-    print(aladin.target)
-    print(parsed_target)
+    parsed_target = _parse_coordinate_string(target, body="mars")
     assert np.isclose(aladin.target[0], parsed_target[0])
     assert np.isclose(aladin.target[1], parsed_target[1])
 
@@ -113,10 +113,13 @@ def test_aladin_sky_coord_target_set(target: str, mock_sesame: Callable) -> None
 
     """
     aladin._survey_body = "sky"
-    sc_target = parse_coordinate_string(target)
-    aladin.target = sc_target
-    assert np.isclose(aladin.target.icrs.ra.deg, sc_target.icrs.ra.deg)
-    assert np.isclose(aladin.target.icrs.dec.deg, sc_target.icrs.dec.deg)
+    sc_target = _parse_coordinate_string(target)
+    aladin.target = (
+        Longitude(sc_target[0], unit=u.deg),
+        Latitude(sc_target[1], unit=u.deg),
+    )
+    assert np.isclose(aladin.target.icrs.ra.deg, sc_target[0])
+    assert np.isclose(aladin.target.icrs.dec.deg, sc_target[1])
 
 
 test_aladin_float_fov = [

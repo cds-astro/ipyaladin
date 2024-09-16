@@ -1,6 +1,6 @@
 from typing import Tuple
 from ipyaladin.utils._coordinate_parser import (
-    parse_coordinate_string,
+    _parse_coordinate_string,
     _split_coordinate_string,
     _is_hour_angle_string,
     _is_coordinate_string,
@@ -177,8 +177,8 @@ test_parse_coordinate_string_values = [
 ]
 
 
-@pytest.mark.parametrize(("inp", "expected"), test_parse_coordinate_string_values)
-def test_parse_coordinate_string(inp: str, expected: SkyCoord) -> None:
+@pytest.mark.parametrize(("inp", "coordinates"), test_parse_coordinate_string_values)
+def test_parse_coordinate_string(inp: str, coordinates: SkyCoord) -> None:
     """Test the function parse_coordinate_string.
 
     Parameters
@@ -189,4 +189,7 @@ def test_parse_coordinate_string(inp: str, expected: SkyCoord) -> None:
         The expected result as a SkyCoord object.
 
     """
-    assert parse_coordinate_string(inp) == expected
+    assert _parse_coordinate_string(inp) == (
+        coordinates.icrs.ra.deg,
+        coordinates.icrs.dec.deg,
+    )

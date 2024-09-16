@@ -472,7 +472,9 @@ class Aladin(anywidget.AnyWidget):
 
     @target.setter
     def target(self, target: Union[str, SkyCoord, Tuple[float, float]]) -> None:
-        if isinstance(target, str):  # If the target is a string, parse it
+        if isinstance(target, Tuple):
+            lon, lat = target[0].deg, target[1].deg
+        elif isinstance(target, str):  # If the target is a string, parse it
             try:
                 lon, lat = _parse_coordinate_string(target, self._survey_body)
             except NameResolveError as e:
@@ -495,8 +497,6 @@ class Aladin(anywidget.AnyWidget):
         self._wcs = {}
         if isinstance(target, SkyCoord):
             lon, lat = target.icrs.ra.deg, target.icrs.dec.deg
-        elif isinstance(target, Tuple):
-            lon, lat = target[0].deg, target[1].deg
 
         self._target = f"{lon} {lat}"
         self.send(
