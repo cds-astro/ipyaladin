@@ -434,8 +434,21 @@ class Aladin(anywidget.AnyWidget):
     def target(self) -> Union[SkyCoord, Tuple[float, float]]:
         """The target of the Aladin Lite widget.
 
-        It can be set with either a string, an `~astropy.coordinates.SkyCoord`, or
-        a tuple of angle-like objects.
+        The target can be provided as coordinates (either
+        `~astropy.coordinates.SkyCoord` or (`~astropy.coordinates.Longitude`,
+        `~astropy.coordinates.Latitude`)) or as a name (as a string).
+
+        The conversion from a name to coordinates does call different online services
+        depending on the base layer of the widget:
+        - for the sky: it uses CDS's
+        `Sesame <https://vizier.cds.unistra.fr/viz-bin/Sesame>`_  name resolver. This
+        looks first in SIMBAD, then in VizieR, and then in NED for the object's
+        coordinates.
+        - for Earth: it uses `Nominatim
+        <https://nominatim.openstreetmap.org/ui/search.html>`_, OpenStreetMap's
+        search bar
+        - for other solar system bodies: it calls the `Gazetteer of Planetary
+        Nomenclature <https://planetarynames.wr.usgs.gov/Nomenclature>`_
 
         Returns
         -------
