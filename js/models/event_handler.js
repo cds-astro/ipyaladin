@@ -169,6 +169,7 @@ export default class EventHandler {
         // If the layer is added, update the WCS, FoV, survey and overlay survey
         if (layerName === "base") {
           this.updateWCS();
+          this.model.set("_survey_body", imageLayer.hipsBody || "sky");
           this.model.set("_base_layer_last_view", imageLayer.url);
           if (pySurveyLock.locked) {
             pySurveyLock.unlock();
@@ -213,15 +214,6 @@ export default class EventHandler {
 
     this.aladin.on("projectionChanged", () => {
       this.updateWCS();
-      this.model.save_changes();
-    });
-
-    this.aladin.on("layerChanged", (imageLayer, layerName, state) => {
-      if (layerName === "base")
-        this.model.set("_survey_body", imageLayer.hipsBody || "sky");
-      if (layerName !== "base" || state !== "ADDED") return;
-      this.updateWCS();
-      this.model.set("_base_layer_last_view", imageLayer.id);
       this.model.save_changes();
     });
 
