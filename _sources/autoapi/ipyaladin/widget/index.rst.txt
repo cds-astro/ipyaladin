@@ -22,10 +22,49 @@ Classes
    ipyaladin.widget.Aladin
 
 
+Functions
+---------
+
+.. autoapisummary::
+
+   ipyaladin.widget.widget_should_be_loaded
+
+
 Module Contents
 ---------------
 
-.. py:class:: Aladin(*args: any, **kwargs: any)
+.. py:function:: widget_should_be_loaded(func: collections.abc.Callable) -> collections.abc.Callable
+
+   
+   Check if the widget is ready to execute a function.
+
+
+   :Parameters:
+
+       **func** : Callable
+           The function to decorate.
+
+
+
+   :Returns:
+
+       Callable
+           The decorated function.
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: Aladin(*args: any, **init_options: any)
 
 
 
@@ -60,6 +99,8 @@ Module Contents
 
 
 
+
+
       :Returns:
 
           int
@@ -75,55 +116,42 @@ Module Contents
 
 
 
-
-
       ..
           !! processed by numpydoc !!
 
 
-   .. py:property:: wcs
-      :type: astropy.wcs.WCS
+   .. py:property:: target
+      :type: Union[astropy.coordinates.SkyCoord, Tuple[float, float]]
 
       
-      The world coordinate system of the Aladin Lite widget.
+      The target of the Aladin Lite widget.
+
+      The target can be provided as coordinates (either
+      `~astropy.coordinates.SkyCoord` or (`~astropy.coordinates.Longitude`,
+      `~astropy.coordinates.Latitude`)) or as a name (as a string).
+
+      The conversion from a name to coordinates does call different online services
+      depending on the base layer of the widget:
+      - for the sky: it uses CDS's
+      `Sesame <https://vizier.cds.unistra.fr/viz-bin/Sesame>`_  name resolver. This
+      looks first in SIMBAD, then in VizieR, and then in NED for the object's
+      coordinates.
+      - for Earth: it uses `Nominatim
+      <https://nominatim.openstreetmap.org/ui/search.html>`_, OpenStreetMap's
+      search bar
+      - for other solar system bodies: it calls the `Gazetteer of Planetary
+      Nomenclature <https://planetarynames.wr.usgs.gov/Nomenclature>`_
+
 
 
 
       :Returns:
 
-          WCS
-              An astropy WCS object representing the world coordinate system.
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:property:: fov_xy
-      :type: Tuple[astropy.coordinates.Angle, astropy.coordinates.Angle]
-
-      
-      The field of view of the Aladin Lite along the two axes.
-
-
-
-      :Returns:
-
-          tuple[Angle, Angle]
-              A tuple of astropy.units.Angle objects representing the field of view.
-
-
+          `~astropy.coordinates.SkyCoord` or Tuple[Longitude, Latitude]
+              If ipyaladin has a sky survey, returns a `~astropy.coordinates.SkyCoord`
+              object. Otherwise, if ipyaladin is currently on a planetary body, returns
+              a tuple with the Longitude and the Latitude of the current position of the
+              widget.
 
 
 
@@ -149,12 +177,46 @@ Module Contents
       or an astropy.coordinates.Angle object.
 
 
+
+
       :Returns:
 
           astropy.coordinates.Angle
               An astropy.coordinates.Angle object representing the field of view.
 
 
+
+
+
+
+
+      .. seealso::
+
+          
+          :obj:`fov_xy`
+              ..
+          
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:property:: selected_objects
+      :type: List[astropy.table.Table]
+
+      
+      The list of catalogs selected by the user.
+
+
+
+
+
+      :Returns:
+
+          list[Table]
+              A list of astropy.table.Table objects representing the selected catalogs.
 
 
 
@@ -170,19 +232,20 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:property:: target
-      :type: astropy.coordinates.SkyCoord
+   .. py:property:: wcs
+      :type: astropy.wcs.WCS
 
       
-      The target of the Aladin Lite widget.
+      The world coordinate system corresponding to the current view of ipyaladin.
 
-      It can be set with either a string or an `astropy.coordinates.SkyCoord` object.
+
+
 
 
       :Returns:
 
-          astropy.coordinates.SkyCoord
-              An `astropy.coordinates.SkyCoord` object representing the target.
+          `~astropy.wcs.WCS`
+              An astropy WCS object representing the world coordinate system.
 
 
 
@@ -193,6 +256,183 @@ Module Contents
 
 
 
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:property:: fov_xy
+      :type: Tuple[astropy.coordinates.Angle, astropy.coordinates.Angle]
+
+      
+      The field of view of the Aladin Lite along the two axes.
+
+
+
+
+
+      :Returns:
+
+          tuple[Angle, Angle]
+              A tuple of astropy.units.Angle objects representing the field of view.
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: add_markers(markers: Union[ipyaladin.elements.marker.Marker, List[ipyaladin.elements.marker.Marker]], **catalog_options: any) -> None
+
+      
+      Add markers to the Aladin Lite widget.
+
+      Markers have a popup window that appear when they're clicked on.
+
+      :Parameters:
+
+          **markers** : Marker or list[Marker]
+              The marker(s) to add to the widget. It can be given as a single `Marker`
+              object or as a list of `Marker` objects.
+
+          **catalog_options** : any
+              The options for the catalog. See the `Aladin Lite catalog options
+              <https://cds-astro.github.io/aladin-lite/global.html#CatalogOptions>`_
+
+
+
+
+
+
+
+
+
+
+      .. seealso::
+
+          
+          :obj:`add_table`
+              also adds points, but without popup window.
+          
+          
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: save_view_as_image(path: Union[str, pathlib.Path], image_format: str = 'png', with_logo: bool = True) -> None
+
+      
+      Save the current view of the widget as an image file.
+
+      This should be used as quick previews, or illustrations. For scientific-quality
+      pixels, use 'get_view_as_fits'.
+
+      :Parameters:
+
+          **path** : Union[str, Path]
+              The path where the image will be saved.
+
+          **image_format** : str
+              The format of the image. Can be 'png', 'jpeg' or 'webp'.
+
+          **with_logo** : bool
+              Whether to include the Aladin Lite logo in the image.
+
+
+
+
+
+
+
+
+
+
+      .. seealso::
+
+          
+          :obj:`get_view_as_fits`
+              conserves the photometry
+          
+          
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_view_as_fits() -> astropy.io.fits.HDUList
+
+      
+      Get the base layer of the widget as an astropy HDUList object.
+
+      The output FITS image will have the same shape as the
+      current view of the widget. This uses `astroquery.hips2fits` internally.
+      This method currently only exports the bottom/base layer.
+
+
+
+
+      :Returns:
+
+          `~astropy.io.fits.HDUList`
+              The FITS object containing the image.
+
+
+
+
+
+
+
+      .. seealso::
+
+          
+          :obj:`save_view_as_image`
+              ..
+          
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_JPEG_thumbnail() -> None
+
+      
+      Create a new tab with the current Aladin view.
+
+      This method will only work if you are running a notebook in a browser (for
+      example, it won't do anything in VSCode).
+
+
+
+
+
+
+
+
+
+
+
+      .. seealso::
+
+          
+          :obj:`save_view_as_image`
+              will save the image on disk instead
+          
+          
 
 
 
@@ -234,7 +474,7 @@ Module Contents
    .. py:method:: add_fits(fits: Union[str, pathlib.Path, astropy.io.fits.HDUList], **image_options: any) -> None
 
       
-      Load a FITS file into the widget.
+      Load a FITS image into the widget.
 
 
       :Parameters:
@@ -372,7 +612,7 @@ Module Contents
 
       :Parameters:
 
-          **table** : astropy.table.table.QTable or astropy.table.table.Table
+          **table** : `~astropy.table.table.QTable` or `~astropy.table.table.Table`
               table that must contain coordinates information
 
           **table_options**
@@ -389,7 +629,13 @@ Module Contents
 
 
 
+      .. seealso::
 
+          
+          :obj:`add_markers`
+              adds markers with a popup window when clicked
+          
+          
 
 
 
@@ -428,6 +674,8 @@ Module Contents
 
 
 
+
+
       .. seealso::
 
           
@@ -452,8 +700,6 @@ Module Contents
           alpha          opacity               opacity
           linewidth      lineWidth             line_width
           ============== ===================== ======================
-
-
 
 
 
@@ -517,6 +763,8 @@ Module Contents
 
 
 
+
+
       .. seealso::
 
           
@@ -525,34 +773,6 @@ Module Contents
           :obj:`object.`
               ..
           
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: get_JPEG_thumbnail() -> None
-
-      
-      Create a popup window with the current Aladin view.
-
-      This method will only work if you are running a notebook in a browser (for
-      example, it won't do anything in VSCode).
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -588,6 +808,35 @@ Module Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: selection(selection_type: str = 'rectangle') -> None
+
+      
+      Trigger the selection tool.
+
+
+      :Parameters:
+
+          **selection_type: str**
+              The type of selection tool to trigger. Can be 'circle' or 'rectangle'.
+              Default is 'rect'.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:method:: rectangular_selection() -> None
 
       
@@ -605,6 +854,9 @@ Module Contents
 
 
 
+      .. rubric:: Notes
+
+      This method is deprecated, use selection instead
 
 
 
@@ -667,11 +919,11 @@ Module Contents
 
 
 
+
+
       .. rubric:: Notes
 
       This method is deprecated, use set_listener instead
-
-
 
 
 

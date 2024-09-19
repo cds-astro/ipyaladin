@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Aladin commands &#8212; ipyaladin 0.4.0 documentation</title>
+    <title>Aladin commands &#8212; ipyaladin 0.5.0 documentation</title>
   
   
   
@@ -32,14 +32,14 @@
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
-    <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=2aa19091" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../_static/documentation_options.js?v=6c02275b"></script>
+    <script src="../../_static/documentation_options.js?v=1dd76d02"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -391,6 +391,7 @@ document.write(`
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Aladin commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="03_Functions.html">Use of functions on ipyaladin widgets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12_Planetary_surveys.html">Planetary surveys</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="04_Importing_Tables.html">Display tables resulting from an astroquery request</a></li>
@@ -468,31 +469,15 @@ document.write(`
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ipyaladin</span> <span class="kn">import</span> <span class="n">Aladin</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">astropy.coordinates</span> <span class="kn">import</span> <span class="n">Angle</span><span class="p">,</span> <span class="n">SkyCoord</span>
+<span class="kn">from</span> <span class="nn">ipyaladin</span> <span class="kn">import</span> <span class="n">Aladin</span><span class="p">,</span> <span class="n">Marker</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 </pre></div>
 </div>
 </div>
-<p>A list of all available commands can be displayed as such.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ipyaladin</span></code>’s full list of methods can be found in the documentation <a class="reference external" href="https://cds-astro.github.io/ipyaladin/autoapi/ipyaladin/widget/index.html">here</a>. A few of them are illustrated in the next cells. Let’s first, create the widget with a few initial parameters:</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">dir</span><span class="p">(</span><span class="n">Aladin</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-[&#39;__annotations__&#39;, &#39;__class__&#39;, &#39;__copy__&#39;, &#39;__deepcopy__&#39;, &#39;__del__&#39;, &#39;__delattr__&#39;, &#39;__dict__&#39;, &#39;__dir__&#39;, &#39;__doc__&#39;, &#39;__eq__&#39;, &#39;__format__&#39;, &#39;__ge__&#39;, &#39;__getattribute__&#39;, &#39;__getstate__&#39;, &#39;__gt__&#39;, &#39;__hash__&#39;, &#39;__init__&#39;, &#39;__init_subclass__&#39;, &#39;__le__&#39;, &#39;__lt__&#39;, &#39;__module__&#39;, &#39;__ne__&#39;, &#39;__new__&#39;, &#39;__reduce__&#39;, &#39;__reduce_ex__&#39;, &#39;__repr__&#39;, &#39;__setattr__&#39;, &#39;__setstate__&#39;, &#39;__sizeof__&#39;, &#39;__str__&#39;, &#39;__subclasshook__&#39;, &#39;__weakref__&#39;, &#39;_active_widgets&#39;, &#39;_add_notifiers&#39;, &#39;_all_trait_default_generators&#39;, &#39;_anywidget_commands&#39;, &#39;_call_widget_constructed&#39;, &#39;_comm_changed&#39;, &#39;_compare&#39;, &#39;_control_comm&#39;, &#39;_css&#39;, &#39;_default_keys&#39;, &#39;_descriptors&#39;, &#39;_dom_classes&#39;, &#39;_esm&#39;, &#39;_fov&#39;, &#39;_fov_xy&#39;, &#39;_gen_repr_from_keys&#39;, &#39;_get_embed_state&#39;, &#39;_get_trait_default_generator&#39;, &#39;_handle_control_comm_msg&#39;, &#39;_handle_custom_message&#39;, &#39;_handle_custom_msg&#39;, &#39;_handle_msg&#39;, &#39;_height&#39;, &#39;_holding_sync&#39;, &#39;_init_options&#39;, &#39;_instance_inits&#39;, &#39;_is_numpy&#39;, &#39;_lock_property&#39;, &#39;_log_default&#39;, &#39;_model_module&#39;, &#39;_model_module_version&#39;, &#39;_model_name&#39;, &#39;_msg_callbacks&#39;, &#39;_notify_observers&#39;, &#39;_notify_trait&#39;, &#39;_property_lock&#39;, &#39;_register_validator&#39;, &#39;_remove_notifiers&#39;, &#39;_repr_keys&#39;, &#39;_repr_mimebundle_&#39;, &#39;_send&#39;, &#39;_should_send_property&#39;, &#39;_states_to_send&#39;, &#39;_static_immutable_initial_values&#39;, &#39;_target&#39;, &#39;_trait_default_generators&#39;, &#39;_trait_from_json&#39;, &#39;_trait_to_json&#39;, &#39;_traits&#39;, &#39;_view_count&#39;, &#39;_view_module&#39;, &#39;_view_module_version&#39;, &#39;_view_name&#39;, &#39;_wcs&#39;, &#39;_widget_construction_callback&#39;, &#39;_widget_types&#39;, &#39;add_catalog_from_URL&#39;, &#39;add_class&#39;, &#39;add_fits&#39;, &#39;add_graphic_overlay_from_region&#39;, &#39;add_graphic_overlay_from_stcs&#39;, &#39;add_listener&#39;, &#39;add_moc&#39;, &#39;add_moc_from_URL&#39;, &#39;add_moc_from_dict&#39;, &#39;add_overlay_from_stcs&#39;, &#39;add_table&#39;, &#39;add_traits&#39;, &#39;background_color&#39;, &#39;blur&#39;, &#39;class_own_trait_events&#39;, &#39;class_own_traits&#39;, &#39;class_trait_names&#39;, &#39;class_traits&#39;, &#39;clicked_object&#39;, &#39;close&#39;, &#39;close_all&#39;, &#39;comm&#39;, &#39;coo_frame&#39;, &#39;cross_validation_lock&#39;, &#39;focus&#39;, &#39;fov&#39;, &#39;fov_xy&#39;, &#39;full_screen&#39;, &#39;get_JPEG_thumbnail&#39;, &#39;get_manager_state&#39;, &#39;get_state&#39;, &#39;get_view_spec&#39;, &#39;grid_color&#39;, &#39;grid_opacity&#39;, &#39;grid_options&#39;, &#39;handle_comm_opened&#39;, &#39;handle_control_comm_opened&#39;, &#39;has_trait&#39;, &#39;height&#39;, &#39;hold_sync&#39;, &#39;hold_trait_notifications&#39;, &#39;init_options&#39;, &#39;keys&#39;, &#39;layout&#39;, &#39;listener_callback&#39;, &#39;log&#39;, &#39;model_id&#39;, &#39;notify_change&#39;, &#39;observe&#39;, &#39;on_msg&#39;, &#39;on_trait_change&#39;, &#39;on_widget_constructed&#39;, &#39;open&#39;, &#39;overlay_survey&#39;, &#39;overlay_survey_opacity&#39;, &#39;projection&#39;, &#39;rectangular_selection&#39;, &#39;remove_class&#39;, &#39;reticle_color&#39;, &#39;reticle_size&#39;, &#39;samp&#39;, &#39;send&#39;, &#39;send_state&#39;, &#39;set_color_map&#39;, &#39;set_listener&#39;, &#39;set_state&#39;, &#39;set_trait&#39;, &#39;setup_instance&#39;, &#39;show_catalog&#39;, &#39;show_context_menu&#39;, &#39;show_coo_grid&#39;, &#39;show_coo_grid_control&#39;, &#39;show_coo_location&#39;, &#39;show_fov&#39;, &#39;show_frame&#39;, &#39;show_fullscreen_control&#39;, &#39;show_layers_control&#39;, &#39;show_projection_control&#39;, &#39;show_reticle&#39;, &#39;show_settings_control&#39;, &#39;show_share_control&#39;, &#39;show_simbad_pointer_control&#39;, &#39;show_status_bar&#39;, &#39;show_zoom_control&#39;, &#39;survey&#39;, &#39;tabbable&#39;, &#39;target&#39;, &#39;tooltip&#39;, &#39;trait_defaults&#39;, &#39;trait_events&#39;, &#39;trait_has_value&#39;, &#39;trait_metadata&#39;, &#39;trait_names&#39;, &#39;trait_values&#39;, &#39;traits&#39;, &#39;unobserve&#39;, &#39;unobserve_all&#39;, &#39;wcs&#39;, &#39;widget_types&#39;, &#39;widgets&#39;]
-</pre></div></div>
-</div>
-<p>A few of them are illustrated in the next cells. Let’s first, create the widget with a few initial parameters:</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aladin</span> <span class="o">=</span> <span class="n">Aladin</span><span class="p">(</span><span class="n">fov</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">reticle_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">reticle_color</span><span class="o">=</span><span class="s2">&quot;#ff89ff&quot;</span><span class="p">)</span>
@@ -501,15 +486,15 @@ document.write(`
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 1, "model_id": "94501c27f4034091a7c0c3871f7b910a"}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 1, "model_id": "e599c0fb1e524e4f8cffe6d86ea50467"}</script></div>
 </div>
 <p>They can also be modified in the next cells with an interactive effect on the generated view.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aladin</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="s2">&quot;sgr a*&quot;</span>
@@ -517,7 +502,7 @@ document.write(`
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aladin</span><span class="o">.</span><span class="n">target</span>
@@ -525,18 +510,18 @@ document.write(`
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 &lt;SkyCoord (ICRS): (ra, dec) in deg
-    (266.41681663, -29.00782497)&gt;
+    (266.41681662, -29.00782497)&gt;
 </pre></div></div>
 </div>
 <p>The x-axis field of view (fov) can be set</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aladin</span><span class="o">.</span><span class="n">fov</span> <span class="o">=</span> <span class="mi">2</span>
@@ -544,7 +529,7 @@ document.write(`
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aladin</span><span class="o">.</span><span class="n">fov</span>
@@ -552,7 +537,7 @@ document.write(`
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -561,7 +546,7 @@ $2^\circ00{}^\prime00{}^{\prime\prime}$</div></div>
 </div>
 <p>The overlay survey is always on top of the base layer</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aladin</span><span class="o">.</span><span class="n">overlay_survey</span> <span class="o">=</span> <span class="s2">&quot;P/allWISE/color&quot;</span>
@@ -571,7 +556,7 @@ $2^\circ00{}^\prime00{}^{\prime\prime}$</div></div>
 </div>
 <p>We can change the coordinate frame (the choices are <code class="docutils literal notranslate"><span class="pre">ICRS</span></code>, <code class="docutils literal notranslate"><span class="pre">ICRSd</span></code> or <code class="docutils literal notranslate"><span class="pre">Galactic</span></code>).</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aladin</span><span class="o">.</span><span class="n">coo_frame</span> <span class="o">=</span> <span class="s2">&quot;ICRSd&quot;</span>  <span class="c1"># ICRS, and angles expressed in degrees</span>
@@ -579,7 +564,7 @@ $2^\circ00{}^\prime00{}^{\prime\prime}$</div></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aladin</span><span class="o">.</span><span class="n">coo_frame</span>
@@ -587,7 +572,7 @@ $2^\circ00{}^\prime00{}^{\prime\prime}$</div></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -597,15 +582,7 @@ $2^\circ00{}^\prime00{}^{\prime\prime}$</div></div>
 </div>
 <p>The target and field of view can be set with astropy objects</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">astropy.coordinates</span> <span class="kn">import</span> <span class="n">Angle</span><span class="p">,</span> <span class="n">SkyCoord</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aladin</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="n">SkyCoord</span><span class="p">(</span><span class="s2">&quot;12h00m00s&quot;</span><span class="p">,</span> <span class="s2">&quot;-30d00m00s&quot;</span><span class="p">,</span> <span class="n">frame</span><span class="o">=</span><span class="s2">&quot;icrs&quot;</span><span class="p">)</span>
@@ -613,24 +590,50 @@ $2^\circ00{}^\prime00{}^{\prime\prime}$</div></div>
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aladin</span><span class="o">.</span><span class="n">fov</span> <span class="o">=</span> <span class="n">Angle</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;deg&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<p>You can also add a FITS image to the view of the widget, either as a path (string of pathlib.Path object) or as an astropy HDU object.</p>
+<p>You can add a FITS image to the view of the widget, either as a path (string of pathlib.Path object) or as an astropy HDU object.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">aladin</span><span class="o">.</span><span class="n">add_fits</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;images/m31.fits&quot;</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;M31&quot;</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+<p>You can add markers to the view of the widget with custom popup title and description. Here we will add markers for Messier objects M1 to M10.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">markers</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;M</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">markers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="n">Marker</span><span class="p">(</span>
+            <span class="n">position</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="c1"># the title and description can be written as plain text or as html elements</span>
+            <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+                <span class="s1">&#39;&lt;a href=&quot;https://simbad.cds.unistra.fr/simbad/&#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;sim-basic?Ident=</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&amp;submit=SIMBAD+search&quot;&gt; &#39;</span>
+                <span class="s2">&quot;Read more on SIMBAD&lt;/a&gt;&quot;</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+<span class="n">aladin</span><span class="o">.</span><span class="n">add_markers</span><span class="p">(</span><span class="n">markers</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;M1-M10&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;pink&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="s2">&quot;cross&quot;</span><span class="p">,</span> <span class="n">source_size</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">aladin</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="s2">&quot;M1&quot;</span>
+<span class="n">aladin</span><span class="o">.</span><span class="n">fov</span> <span class="o">=</span> <span class="mf">0.2</span>
+</pre></div>
+</div>
+</div>
 <script type="application/vnd.jupyter.widget-state+json">
-{"state": {"a1050e50c89e4d1f98fa1cf6b37a5777": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "94501c27f4034091a7c0c3871f7b910a": {"model_name": "AnyModel", "model_module": "anywidget", "model_module_version": "~0.9.*", "state": {"_anywidget_id": "ipyaladin.widget.Aladin", "_css": ".cell-output-ipywidget-background{background:transparent}.jp-OutputArea-output,.aladin-widget{background-color:transparent}.aladin-widget .aladin-measurement-div{max-height:100px}\n", "_dom_classes": [], "_esm": "function f(n){n.charAt(0)===\"_\"&&(n=n.slice(1));let e=n.split(\"_\");for(let a=1;a<e.length;a++)e[a]=e[a].charAt(0).toUpperCase()+e[a].slice(1);return e.join(\"\")}function h(n){let e={};for(let a in n)e[f(a)]=n[a];return e}var c=class{locked=!1;unlock(){this.locked=!1}lock(){this.locked=!0}},m=-1;function u(n){m=n}import _ from\"https://esm.sh/aladin-lite@3.4.5-beta\";var l=_;var y=0,g=class{constructor(e,a){this.aladin=e,this.model=a}handleChangeFoV(e){this.aladin.setFoV(e.fov)}handleGotoRaDec(e){this.aladin.gotoRaDec(e.ra,e.dec)}handleAddFits(e,a){let i=h(e.options||{});i.name||(i.name=`image_${String(++y).padStart(3,\"0\")}`);let s=a[0],t=new Blob([s],{type:\"application/octet-stream\"}),o=URL.createObjectURL(t),d=this.aladin.createImageFITS(o,i,(r,v)=>{this.aladin.gotoRaDec(r,v),console.info(`FITS located at ra: ${r}, dec: ${v}`),URL.revokeObjectURL(o)});this.aladin.setOverlayImageLayer(d,i.name)}handleAddCatalogFromURL(e){let a=h(e.options||{});this.aladin.addCatalog(l.catalogFromURL(e.votable_URL,a))}handleAddMOCFromURL(e){let a=h(e.options||{});this.aladin.addMOC(l.MOCFromURL(e.moc_URL,a))}handleAddMOCFromDict(e){let a=h(e.options||{});this.aladin.addMOC(l.MOCFromJSON(e.moc_dict,a))}handleAddOverlay(e){let a=e.regions_infos,i=h(e.graphic_options||{});i.color||(i.color=\"red\");let s=l.graphicOverlay(i);this.aladin.addOverlay(s);for(let t of a){let o=t.infos;switch(t.region_type){case\"stcs\":s.addFootprints(l.footprintsFromSTCS(o.stcs,t.options));break;case\"circle\":s.add(l.circle(o.ra,o.dec,o.radius,t.options));break;case\"ellipse\":s.add(l.ellipse(o.ra,o.dec,o.a,o.b,o.theta,t.options));break;case\"line\":t.options.lineWidth=t.options.lineWidth||3,s.add(l.vector(o.ra1,o.dec1,o.ra2,o.dec2,t.options));break;case\"polygon\":s.add(l.polygon(o.vertices,t.options));break}}}handleChangeColormap(e){this.aladin.getBaseImageLayer().setColormap(e.colormap)}handleGetJPGThumbnail(){this.aladin.exportAsPNG()}handleTriggerRectangularSelection(){this.aladin.select()}handleAddTable(e,a){let i=h(e.options||{}),s=a[0].buffer,t=new TextDecoder(\"utf-8\"),o=new Blob([t.decode(s)]),d=URL.createObjectURL(o);l.catalogFromURL(d,Object.assign(i,{onClick:\"showTable\"}),r=>{this.aladin.addCatalog(r)},!1),URL.revokeObjectURL(d)}};var p=class{constructor(e,a,i){this.aladin=e,this.aladinDiv=a,this.model=i,this.messageHandler=new g(e,i),this.currentDivNumber=parseInt(a.id.split(\"-\").pop())}isLastDiv(){if(this.currentDivNumber===m)return!0;let e=m;for(let a=e;a>=0;a--){let i=document.getElementById(`aladin-lite-div-${a}`);if(i&&i.style.display!==\"none\"){e=a;break}}return u(e),this.currentDivNumber===e}updateWCS(){this.isLastDiv()&&this.model.set(\"_wcs\",this.aladin.getViewWCS())}update2AxisFoV(){if(!this.isLastDiv())return;let e=this.aladin.getFov();this.model.set(\"_fov_xy\",{x:e[0],y:e[1]})}subscribeAll(){let e=new c,a=new c;this.aladin.on(\"positionChanged\",t=>{if(a.locked){a.unlock();return}e.lock();let o=[t.ra,t.dec];this.updateWCS(),this.model.set(\"_target\",`${o[0]} ${o[1]}`),this.model.save_changes()}),this.model.on(\"change:_target\",()=>{if(e.locked){e.unlock();return}a.lock();let t=this.model.get(\"_target\"),[o,d]=t.split(\" \");this.aladin.gotoRaDec(o,d)});let i=new c,s=new c;this.aladin.on(\"zoomChanged\",t=>{if(s.locked){s.unlock();return}i.lock(),this.updateWCS(),this.update2AxisFoV(),this.model.set(\"_fov\",parseFloat(t.toFixed(5))),this.model.save_changes()}),this.model.on(\"change:_fov\",()=>{if(i.locked){i.unlock();return}s.lock();let t=this.model.get(\"_fov\");this.aladin.setFoV(t)}),this.model.on(\"change:_height\",()=>{let t=this.model.get(\"_height\");this.aladinDiv.style.height=`${t}px`,this.updateWCS(),this.update2AxisFoV(),this.model.save_changes()}),this.aladin.on(\"cooFrameChanged\",()=>{this.updateWCS(),this.model.save_changes()}),this.aladin.on(\"projectionChanged\",()=>{this.updateWCS(),this.model.save_changes()}),this.aladin.on(\"layerChanged\",(t,o,d)=>{o!==\"base\"||d!==\"ADDED\"||(this.updateWCS(),this.model.save_changes())}),this.aladin.on(\"resizeChanged\",()=>{this.updateWCS(),this.update2AxisFoV(),this.model.save_changes()}),this.aladin.on(\"objectHovered\",t=>{t.data!==void 0&&this.model.send({event_type:\"object_hovered\",content:{ra:t.ra,dec:t.dec}})}),this.aladin.on(\"objectClicked\",t=>{if(t){let o={ra:t.ra,dec:t.dec};t.data!==void 0&&(o.data=t.data),this.model.set(\"clicked_object\",o),this.model.send({event_type:\"object_clicked\",content:o}),this.model.save_changes()}}),this.aladin.on(\"click\",t=>{this.model.send({event_type:\"click\",content:t})}),this.aladin.on(\"select\",t=>{let o=[];t.forEach(d=>{d.forEach(r=>{o.push({ra:r.ra,dec:r.dec,data:r.data,x:r.x,y:r.y})})}),this.model.send({event_type:\"select\",content:o})}),this.model.on(\"change:coo_frame\",()=>{this.aladin.setFrame(this.model.get(\"coo_frame\"))}),this.model.on(\"change:survey\",()=>{this.aladin.setImageSurvey(this.model.get(\"survey\"))}),this.model.on(\"change:overlay_survey\",()=>{this.aladin.setOverlayImageLayer(this.model.get(\"overlay_survey\"))}),this.model.on(\"change:overlay_survey_opacity\",()=>{this.aladin.getOverlayImageLayer().setAlpha(this.model.get(\"overlay_survey_opacity\"))}),this.eventHandlers={change_fov:this.messageHandler.handleChangeFoV,goto_ra_dec:this.messageHandler.handleGotoRaDec,add_fits:this.messageHandler.handleAddFits,add_catalog_from_URL:this.messageHandler.handleAddCatalogFromURL,add_MOC_from_URL:this.messageHandler.handleAddMOCFromURL,add_MOC_from_dict:this.messageHandler.handleAddMOCFromDict,add_overlay:this.messageHandler.handleAddOverlay,change_colormap:this.messageHandler.handleChangeColormap,get_JPG_thumbnail:this.messageHandler.handleGetJPGThumbnail,trigger_rectangular_selection:this.messageHandler.handleTriggerRectangularSelection,add_table:this.messageHandler.handleAddTable},this.model.on(\"msg:custom\",(t,o)=>{let d=t.event_name,r=this.eventHandlers[d];if(r)r.call(this,t,o);else throw new Error(`Unknown event name: ${d}`)})}unsubscribeAll(){this.model.off(\"change:_target\"),this.model.off(\"change:_fov\"),this.model.off(\"change:_height\"),this.model.off(\"change:coo_frame\"),this.model.off(\"change:survey\"),this.model.off(\"change:overlay_survey\"),this.model.off(\"change:overlay_survey_opacity\"),this.model.off(\"change:trigger_event\"),this.model.off(\"msg:custom\")}};function b(n,e){u(m+1);let a={};n.get(\"init_options\").forEach(d=>{a[f(d)]=n.get(d)});let i=document.createElement(\"div\");i.classList.add(\"aladin-widget\"),i.style.height=`${a.height}px`,i.id=`aladin-lite-div-${m}`;let s=new l.aladin(i,a),t=a.target.split(\" \");s.gotoRaDec(t[0],t[1]);let o=s.getFov();return n.set(\"_fov_xy\",{x:o[0],y:o[1]}),n.set(\"_wcs\",s.getViewWCS()),n.save_changes(),e.appendChild(i),{aladin:s,aladinDiv:i}}async function C({model:n}){await l.init}function k({model:n,el:e}){let{aladin:a,aladinDiv:i}=b(n,e),s=new p(a,i,n);return s.subscribeAll(),()=>{s.unsubscribeAll()}}var j={initialize:C,render:k};export{j as default};\n", "_fov": 5.0, "_fov_xy": {}, "_height": 400, "_model_module": "anywidget", "_model_module_version": "~0.9.*", "_model_name": "AnyModel", "_target": "179.99999999999997 -30.0", "_view_count": null, "_view_module": "anywidget", "_view_module_version": "~0.9.*", "_view_name": "AnyView", "_wcs": {}, "background_color": "rgb(60, 60, 60)", "clicked_object": {}, "coo_frame": "ICRSd", "full_screen": false, "grid_color": "rgb(178, 50, 178)", "grid_opacity": 0.5, "grid_options": {}, "init_options": ["_fov", "_height", "_target", "background_color", "coo_frame", "full_screen", "grid_color", "grid_opacity", "grid_options", "overlay_survey", "overlay_survey_opacity", "projection", "reticle_color", "reticle_size", "samp", "show_catalog", "show_context_menu", "show_coo_grid", "show_coo_grid_control", "show_coo_location", "show_fov", "show_frame", "show_fullscreen_control", "show_layers_control", "show_projection_control", "show_reticle", "show_settings_control", "show_share_control", "show_simbad_pointer_control", "show_status_bar", "show_zoom_control", "survey"], "layout": "IPY_MODEL_a1050e50c89e4d1f98fa1cf6b37a5777", "overlay_survey": "P/allWISE/color", "overlay_survey_opacity": 0.5, "projection": "SIN", "reticle_color": "#ff89ff", "reticle_size": 64, "samp": false, "show_catalog": true, "show_context_menu": true, "show_coo_grid": false, "show_coo_grid_control": true, "show_coo_location": true, "show_fov": true, "show_frame": true, "show_fullscreen_control": true, "show_layers_control": true, "show_projection_control": true, "show_reticle": true, "show_settings_control": true, "show_share_control": false, "show_simbad_pointer_control": true, "show_status_bar": true, "show_zoom_control": false, "survey": "https://alaskybis.unistra.fr/DSS/DSSColor", "tabbable": null, "tooltip": null}}}, "version_major": 2, "version_minor": 0}
+{"state": {"34d8700fab9b45a78d4e5dfa061342c8": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "e599c0fb1e524e4f8cffe6d86ea50467": {"model_name": "AnyModel", "model_module": "anywidget", "model_module_version": "~0.9.*", "state": {"_anywidget_id": "ipyaladin.widget.Aladin", "_base_layer_last_view": "https://alaskybis.unistra.fr/DSS/DSSColor", "_css": ".cell-output-ipywidget-background{background:transparent}.jp-OutputArea-output,.aladin-widget{background-color:transparent}.aladin-widget .aladin-measurement-div{max-height:100px}\n", "_dom_classes": [], "_esm": "function _(n){n.charAt(0)===\"_\"&&(n=n.slice(1));let e=n.split(\"_\");for(let a=1;a<e.length;a++)e[a]=e[a].charAt(0).toUpperCase()+e[a].slice(1);return e.join(\"\")}function h(n){let e={};for(let a in n)e[_(a)]=n[a];return e}var m=class{locked=!1;unlock(){this.locked=!1}lock(){this.locked=!0}},g=-1;function f(n){g=n}import v from\"https://esm.sh/aladin-lite@3.5.1-beta\";var r=v;var y=0,p=class{constructor(e,a){this.aladin=e,this.model=a}handleAddMarker(e){let a=h(e.options||{});a.name||(a.name=\"markers\");let s=r.catalog(a);this.aladin.addCatalog(s);let i=e.markers,t=[];for(let o of i)t.push(r.marker(o.lon,o.lat,{popupTitle:o.title,popupDesc:o.description}));s.addSources(t)}handleChangeFoV(e){this.aladin.setFoV(e.fov)}handleGotoRaDec(e){this.aladin.gotoRaDec(e.ra,e.dec)}async handleSaveViewAsImage(e){let a=e.path,s=e.format,i=e.with_logo,t=await this.aladin.getViewData(\"arraybuffer\",`image/${s}`,i);this.model.send({event_type:\"save_view_as_image\",path:a},null,[t])}handleAddFits(e,a){let s=h(e.options||{});s.name||(s.name=`image_${String(++y).padStart(3,\"0\")}`);let i=a[0],t=new Blob([i],{type:\"application/octet-stream\"}),o=URL.createObjectURL(t),d=this.aladin.createImageFITS(o,s,(c,l)=>{this.aladin.gotoRaDec(c,l),console.info(`FITS located at ra: ${c}, dec: ${l}`),URL.revokeObjectURL(o)});this.aladin.setOverlayImageLayer(d,s.name)}handleAddCatalogFromURL(e){let a=h(e.options||{});this.aladin.addCatalog(r.catalogFromURL(e.votable_URL,a))}handleAddMOCFromURL(e){let a=h(e.options||{});this.aladin.addMOC(r.MOCFromURL(e.moc_URL,a))}handleAddMOCFromDict(e){let a=h(e.options||{});this.aladin.addMOC(r.MOCFromJSON(e.moc_dict,a))}handleAddOverlay(e){let a=e.regions_infos,s=h(e.graphic_options||{});s.color||(s.color=\"red\");let i=r.graphicOverlay(s);this.aladin.addOverlay(i);for(let t of a){let o=t.infos;switch(t.region_type){case\"stcs\":i.addFootprints(r.footprintsFromSTCS(o.stcs,t.options));break;case\"circle\":i.add(r.circle(o.ra,o.dec,o.radius,t.options));break;case\"ellipse\":i.add(r.ellipse(o.ra,o.dec,o.a,o.b,o.theta,t.options));break;case\"line\":t.options.lineWidth=t.options.lineWidth||3,i.add(r.vector(o.ra1,o.dec1,o.ra2,o.dec2,t.options));break;case\"polygon\":i.add(r.polygon(o.vertices,t.options));break}}}handleChangeColormap(e){this.aladin.getBaseImageLayer().setColormap(e.colormap)}handleGetJPGThumbnail(){this.aladin.exportAsPNG()}handleTriggerSelection(e){let a=e.selection_type;a===\"rectangle\"?a=\"rect\":a===\"polygon\"&&(a=\"poly\"),this.aladin.select(a)}handleAddTable(e,a){let s=h(e.options||{}),i=a[0].buffer,t=new TextDecoder(\"utf-8\"),o=new Blob([t.decode(i)]),d=URL.createObjectURL(o);r.catalogFromURL(d,Object.assign(s,{onClick:\"showTable\"}),c=>{this.aladin.addCatalog(c)},!1),URL.revokeObjectURL(d)}};var u=class{constructor(e,a,s){this.aladin=e,this.aladinDiv=a,this.model=s,this.messageHandler=new p(e,s),this.currentDivNumber=parseInt(a.id.split(\"-\").pop())}isLastDiv(){if(this.currentDivNumber===g)return!0;let e=g;for(let a=e;a>=0;a--){let s=document.getElementById(`aladin-lite-div-${a}`);if(s&&s.style.display!==\"none\"){e=a;break}}return f(e),this.currentDivNumber===e}updateWCS(){this.isLastDiv()&&this.model.set(\"_wcs\",this.aladin.getViewWCS())}update2AxisFoV(){if(!this.isLastDiv())return;let e=this.aladin.getFov();this.model.set(\"_fov_xy\",{x:e[0],y:e[1]})}subscribeAll(){let e=new m,a=new m;this.aladin.on(\"positionChanged\",t=>{if(a.locked){a.unlock();return}e.lock();let o=[t.ra,t.dec];this.updateWCS(),this.model.set(\"_target\",`${o[0]} ${o[1]}`),this.model.save_changes()}),this.model.on(\"change:_target\",()=>{if(e.locked){e.unlock();return}a.lock();let t=this.model.get(\"_target\"),[o,d]=t.split(\" \");this.aladin.gotoRaDec(o,d)});let s=new m,i=new m;this.aladin.on(\"zoomChanged\",t=>{if(i.locked){i.unlock();return}s.lock(),this.updateWCS(),this.update2AxisFoV(),this.model.set(\"_fov\",parseFloat(t.toFixed(5))),this.model.save_changes()}),this.model.on(\"change:_fov\",()=>{if(s.locked){s.unlock();return}i.lock();let t=this.model.get(\"_fov\");this.aladin.setFoV(t)}),this.model.on(\"change:_height\",()=>{let t=this.model.get(\"_height\");this.aladinDiv.style.height=`${t}px`,this.updateWCS(),this.update2AxisFoV(),this.model.save_changes()}),this.aladin.on(\"cooFrameChanged\",()=>{this.updateWCS(),this.model.save_changes()}),this.aladin.on(\"projectionChanged\",()=>{this.updateWCS(),this.model.save_changes()}),this.aladin.on(\"layerChanged\",(t,o,d)=>{o===\"base\"&&this.model.set(\"_survey_body\",t.hipsBody||\"sky\"),!(o!==\"base\"||d!==\"ADDED\")&&(this.updateWCS(),this.model.set(\"_base_layer_last_view\",t.id),this.model.save_changes())}),this.aladin.on(\"resizeChanged\",(t,o)=>{if(t===1&&o===1){this.model.set(\"_is_reduced\",!0),this.model.save_changes();return}else this.model.set(\"_is_reduced\",!1);this.updateWCS(),this.update2AxisFoV(),this.model.set(\"_height\",o),this.model.save_changes()}),this.aladin.on(\"objectHovered\",t=>{t.data!==void 0&&this.model.send({event_type:\"object_hovered\",content:{ra:t.ra,dec:t.dec}})}),this.aladin.on(\"objectClicked\",t=>{if(t){let o={ra:t.ra,dec:t.dec};t.data!==void 0&&(o.data=t.data),this.model.set(\"clicked_object\",o),this.model.send({event_type:\"object_clicked\",content:o}),this.model.save_changes()}}),this.aladin.on(\"click\",t=>{this.model.send({event_type:\"click\",content:t})}),this.aladin.on(\"select\",t=>{let o=t.map(c=>c.map(l=>({ra:l.ra,dec:l.dec,data:l.data,x:l.x,y:l.y})));this.model.set(\"_selected_objects\",o),this.model.save_changes();let d=[];t.forEach(c=>{c.forEach(l=>{d.push({ra:l.ra,dec:l.dec,data:l.data,x:l.x,y:l.y})})}),this.model.send({event_type:\"select\",content:d})}),this.model.on(\"change:coo_frame\",()=>{this.aladin.setFrame(this.model.get(\"coo_frame\"))}),this.model.on(\"change:survey\",()=>{this.aladin.setImageSurvey(this.model.get(\"survey\"))}),this.model.on(\"change:overlay_survey\",()=>{this.aladin.setOverlayImageLayer(this.model.get(\"overlay_survey\"))}),this.model.on(\"change:overlay_survey_opacity\",()=>{this.aladin.getOverlayImageLayer().setAlpha(this.model.get(\"overlay_survey_opacity\"))}),this.eventHandlers={add_marker:this.messageHandler.handleAddMarker,change_fov:this.messageHandler.handleChangeFoV,goto_ra_dec:this.messageHandler.handleGotoRaDec,save_view_as_image:this.messageHandler.handleSaveViewAsImage,add_fits:this.messageHandler.handleAddFits,add_catalog_from_URL:this.messageHandler.handleAddCatalogFromURL,add_MOC_from_URL:this.messageHandler.handleAddMOCFromURL,add_MOC_from_dict:this.messageHandler.handleAddMOCFromDict,add_overlay:this.messageHandler.handleAddOverlay,change_colormap:this.messageHandler.handleChangeColormap,get_JPG_thumbnail:this.messageHandler.handleGetJPGThumbnail,trigger_selection:this.messageHandler.handleTriggerSelection,add_table:this.messageHandler.handleAddTable},this.model.on(\"msg:custom\",(t,o)=>{let d=t.event_name,c=this.eventHandlers[d];if(c)c.call(this,t,o);else throw new Error(`Unknown event name: ${d}`)})}unsubscribeAll(){this.model.off(\"change:_target\"),this.model.off(\"change:_fov\"),this.model.off(\"change:_height\"),this.model.off(\"change:coo_frame\"),this.model.off(\"change:survey\"),this.model.off(\"change:overlay_survey\"),this.model.off(\"change:overlay_survey_opacity\"),this.model.off(\"change:trigger_event\"),this.model.off(\"msg:custom\")}};function b(n,e){f(g+1);let a=n.get(\"_init_options\"),s={};for(let l in a)s[_(l)]=a[l];let i=document.createElement(\"div\");i.classList.add(\"aladin-widget\"),i.style.height=`${n.get(\"_height\")}px`,i.id=`aladin-lite-div-${g}`;let t=new r.aladin(i,s);e.appendChild(i);let o=n.get(\"_target\").split(\" \");t.gotoRaDec(o[0],o[1]);let d={...t.getFov()};n.set(\"_fov_xy\",{x:d[0],y:d[1]});let c={...t.getViewWCS()};return n.set(\"_wcs\",c),n.set(\"_is_loaded\",!0),n.save_changes(),{aladin:t,aladinDiv:i}}async function C({model:n}){await r.init}function k({model:n,el:e}){let{aladin:a,aladinDiv:s}=b(n,e),i=new u(a,s,n);return i.subscribeAll(),()=>{i.unsubscribeAll()}}var I={initialize:C,render:k};export{I as default};\n", "_fov": 0.2, "_fov_xy": {}, "_height": 400, "_init_options": {"show_simbad_pointer_control": true, "show_coo_grid_control": true, "show_settings_control": true, "show_context_menu": true, "fov": 20, "reticle_size": 64, "reticle_color": "#ff89ff"}, "_is_loaded": true, "_is_reduced": false, "_model_module": "anywidget", "_model_module_version": "~0.9.*", "_model_name": "AnyModel", "_ready": false, "_selected_objects": [], "_survey_body": "sky", "_target": "83.6287 22.0147", "_view_count": null, "_view_module": "anywidget", "_view_module_version": "~0.9.*", "_view_name": "AnyView", "_wcs": {}, "clicked_object": {}, "coo_frame": "ICRSd", "layout": "IPY_MODEL_34d8700fab9b45a78d4e5dfa061342c8", "overlay_survey": "P/allWISE/color", "overlay_survey_opacity": 0.5, "projection": "SIN", "survey": "https://alaskybis.unistra.fr/DSS/DSSColor", "tabbable": null, "tooltip": null}}}, "version_major": 2, "version_minor": 0}
 </script></section>
 
 
@@ -714,7 +717,7 @@ $2^\circ00{}^\prime00{}^{\prime\prime}$</div></div>
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
     <br/>
   </p>
 </div>

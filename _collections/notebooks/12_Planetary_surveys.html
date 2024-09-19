@@ -2,13 +2,13 @@
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="../" >
+<html lang="en" data-content_root="../../" >
 
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Getting Started &#8212; ipyaladin 0.5.0 documentation</title>
+    <title>Planetary surveys &#8212; ipyaladin 0.5.0 documentation</title>
   
   
   
@@ -18,42 +18,42 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
   
-  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=fd3f3429" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
-    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-gallery.css?v=26227f6e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=2aa19091" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../_static/documentation_options.js?v=1dd76d02"></script>
-    <script src="../_static/doctools.js?v=9a2dae69"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
-    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/documentation_options.js?v=1dd76d02"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'getting_started/getting_started';</script>
-    <link rel="icon" href="../_static/ipyaladin.ico"/>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Getting Started" href="../_collections/notebooks/01_Getting_Started.html" />
-    <link rel="prev" title="The ipyaladin jupyter widget" href="../index.html" />
+    <script>DOCUMENTATION_OPTIONS.pagename = '_collections/notebooks/12_Planetary_surveys';</script>
+    <link rel="icon" href="../../_static/ipyaladin.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Display tables resulting from an astroquery request" href="04_Importing_Tables.html" />
+    <link rel="prev" title="Use of functions on ipyaladin widgets" href="03_Functions.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -85,7 +85,7 @@
     <div class="search-button__overlay"></div>
     <div class="search-button__search-container">
 <form class="bd-search d-flex align-items-center"
-      action="../search.html"
+      action="../../search.html"
       method="get">
   <i class="fa-solid fa-magnifying-glass"></i>
   <input type="search"
@@ -122,7 +122,7 @@
     
   
 
-<a class="navbar-brand logo" href="../index.html">
+<a class="navbar-brand logo" href="../../index.html">
   
   
   
@@ -133,8 +133,8 @@
       
     
     
-    <img src="../_static/ipyaladin_light.png" class="logo__image only-light" alt=""/>
-    <script>document.write(`<img src="../_static/ipyaladin_dark.png" class="logo__image only-dark" alt=""/>`);</script>
+    <img src="../../_static/ipyaladin_light.png" class="logo__image only-light" alt=""/>
+    <script>document.write(`<img src="../../_static/ipyaladin_dark.png" class="logo__image only-dark" alt=""/>`);</script>
   
   
     <p class="title logo__title">Ipyaladin documentation</p>
@@ -151,29 +151,29 @@
 <nav>
   <ul class="bd-navbar-elements navbar-nav">
     
-<li class="nav-item current active">
-  <a class="nav-link nav-internal" href="#">
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting_started/getting_started.html">
     Getting Started
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../community/community.html">
+  <a class="nav-link nav-internal" href="../../community/community.html">
     Community
   </a>
 </li>
 
 
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../user_documentation/user_documentation.html">
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../user_documentation/user_documentation.html">
     User Documentation
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../autoapi/index.html">
+  <a class="nav-link nav-internal" href="../../autoapi/index.html">
     API
   </a>
 </li>
@@ -300,29 +300,29 @@ document.write(`
 <nav>
   <ul class="bd-navbar-elements navbar-nav">
     
-<li class="nav-item current active">
-  <a class="nav-link nav-internal" href="#">
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting_started/getting_started.html">
     Getting Started
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../community/community.html">
+  <a class="nav-link nav-internal" href="../../community/community.html">
     Community
   </a>
 </li>
 
 
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../user_documentation/user_documentation.html">
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../user_documentation/user_documentation.html">
     User Documentation
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../autoapi/index.html">
+  <a class="nav-link nav-internal" href="../../autoapi/index.html">
     API
   </a>
 </li>
@@ -388,8 +388,24 @@ document.write(`
 <nav class="bd-docs-nav bd-links"
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
-  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../_collections/notebooks/01_Getting_Started.html">Getting Started</a></li>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="02_Base_Commands.html">Aladin commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_Functions.html">Use of functions on ipyaladin widgets</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Planetary surveys</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="04_Importing_Tables.html">Display tables resulting from an astroquery request</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_Display_a_MOC.html">Display of a Multi Order Coverage (MOC)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09_Displaying_Shapes.html">Adding shapes / graphic overlays</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="11_Extracting_information_from_the_view.html">Retrieving data from the current widget’s view</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="06_Linked-widgets.html">Linked widgets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_on-click-callback.html">On click callback</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_Rectangular-selection.html">Example of interactive rectangular selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_Advanced-GUI.html">Advanced GUI</a></li>
 </ul>
 </div>
 </nav></div>
@@ -423,11 +439,14 @@ document.write(`
   <ul class="bd-breadcrumbs">
     
     <li class="breadcrumb-item breadcrumb-home">
-      <a href="../index.html" class="nav-link" aria-label="Home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page">Getting Started</li>
+    
+    <li class="breadcrumb-item"><a href="../../user_documentation/user_documentation.html" class="nav-link">User Documentation</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">Planetary surveys</li>
   </ul>
 </nav>
 </div>
@@ -444,55 +463,164 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="getting-started">
-<h1>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading">#</a></h1>
-<section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
-<section id="released-versions">
-<h3>Released versions<a class="headerlink" href="#released-versions" title="Link to this heading">#</a></h3>
-<p>To get the latest version of <code class="docutils literal notranslate"><span class="pre">ipyaladin</span></code> you can either use <code class="docutils literal notranslate"><span class="pre">pip</span></code>,</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">ipyaladin</span>
+  <section id="Planetary-surveys">
+<h1>Planetary surveys<a class="headerlink" href="#Planetary-surveys" title="Link to this heading">#</a></h1>
+<p>With <code class="docutils literal notranslate"><span class="pre">ipyaladin</span></code>, you can also display planetary surfaces.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<p>or <code class="docutils literal notranslate"><span class="pre">conda-forge</span></code>,</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">install</span> <span class="n">ipyaladin</span> <span class="o">-</span><span class="n">c</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>from ipyaladin import Aladin
+from astropy.table import Table
 </pre></div>
 </div>
-<p>and you’re all set!</p>
-</section>
-<section id="unreleased-version">
-<h3>Unreleased version<a class="headerlink" href="#unreleased-version" title="Link to this heading">#</a></h3>
-<p>To install the unreleased version, you will need npm, see its webpages for installation
-instructions <a class="reference external" href="https://www.npmjs.com/">https://www.npmjs.com/</a>.</p>
-<p>Then, download the <code class="docutils literal notranslate"><span class="pre">ipyaladin</span></code> github repository. From the root of the repository,
-do</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">npm</span> <span class="n">run</span> <span class="n">dev</span>
+</div>
+<p>First, let’s create an Aladin Lite widget with the Mars Viking MDIM21 survey.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<dl class="simple">
-<dt>You can then close the terminal with <code class="docutils literal notranslate"><span class="pre">ctrl+c</span></code> and the unreleased version of</dt><dd><p><code class="docutils literal notranslate"><span class="pre">ipyaladin</span></code> is installed on your machine.</p>
-</dd>
-</dl>
-</section>
-</section>
-<section id="using-the-widget">
-<h2>Using the widget<a class="headerlink" href="#using-the-widget" title="Link to this heading">#</a></h2>
-<p>You can open a notebook and instantiate an <code class="docutils literal notranslate"><span class="pre">ipyaladin</span></code> widget:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ipyaladin</span> <span class="kn">import</span> <span class="n">Aladin</span>
-<span class="n">Aladin</span><span class="p">()</span>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>mars = Aladin(
+    target=&quot;159.2135528 -58.6241989&quot;,
+    survey=&quot;https://alasky.u-strasbg.fr/Planets/Mars_Viking_MDIM21&quot;,
+    fov=10,
+)
+mars
 </pre></div>
 </div>
-<p>A widget should appear below this cell. See the <code class="docutils literal notranslate"><span class="pre">getting</span> <span class="pre">started</span></code> notebook example
-for a bit mot instantiation options,</p>
-<div class="toctree-wrapper compound">
-<div class="nbsphinx-gallery">
-<a class="reference internal" href="../_collections/notebooks/01_Getting_Started.html">
-  <div><img alt="" src="../_static/notebooks_thumbnails/01.png"></div>
-  <div>Getting Started</div>
-</a>
+</div>
+<p>The target does not return a <code class="docutils literal notranslate"><span class="pre">SkyCoord</span></code> object anymore, since we don’t represent the sky here. It is a couple of <code class="docutils literal notranslate"><span class="pre">Longitude</span></code> and <code class="docutils literal notranslate"><span class="pre">Latitude</span></code>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>mars.target
+</pre></div>
 </div>
 </div>
-<p>for a more detailed tour of <code class="docutils literal notranslate"><span class="pre">ipyaladin</span></code>, have a look at the <code class="docutils literal notranslate"><span class="pre">User</span> <span class="pre">Guide</span></code> section.</p>
+<p>The WCS are also defined on planetary surfaces (in <a class="reference external" href="https://doi.org/10.1029/2018EA000388">Marmo et.al. 2018</a>). This is why you see a CTYPE starting with <code class="docutils literal notranslate"><span class="pre">MA</span></code> for Mars.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>mars.wcs
+</pre></div>
+</div>
+</div>
+<p>Let’s change the center of the view to Olympus Mons.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>mars.target = &quot;Olympus Mons&quot;
+</pre></div>
+</div>
+</div>
+<p>Any name recognized by the <a class="reference external" href="https://planetarynames.wr.usgs.gov/Nomenclature">Gazetter of Planetary Nomenclature</a> will work.</p>
+<p>We can also add tables:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>longitudes = [
+    226.2,
+    70.5,
+    250.4,
+    -59.2,
+    147.21,
+    316.0,
+    32.53,
+    -112.58,
+    298.0,
+    30.0,
+    70.5,
+    280.0,
+    87.0,
+    117.5,
+    350.0,
+]
+latitudes = [
+    18.65,
+    -42.4,
+    40.5,
+    -13.9,
+    25.02,
+    -49.7,
+    70.0,
+    1.57,
+    25.0,
+    19.79,
+    -42.4,
+    45.0,
+    12.9,
+    46.7,
+    -45.0,
+]
+names = [
+    &quot;Olympus Mons&quot;,
+    &quot;Hellas Planitia&quot;,
+    &quot;Alba Mons&quot;,
+    &quot;Valles Marineris&quot;,
+    &quot;Elysium Mons&quot;,
+    &quot;Argyre Basin&quot;,
+    &quot;Vastitas Borealis&quot;,
+    &quot;Tharsis Montes&quot;,
+    &quot;Outflow channels&quot;,
+    &quot;Arabia Terra&quot;,
+    &quot;Hellas Basin&quot;,
+    &quot;Tempe Terra&quot;,
+    &quot;Isidis Basin&quot;,
+    &quot;Utopia Basin&quot;,
+    &quot;Noachis Terra&quot;,
+]
+
+table = Table([longitudes, latitudes, names], names=(&quot;Longitude&quot;, &quot;Latitude&quot;, &quot;Name&quot;))
+mars.add_table(
+    table, color=&quot;#67d38d&quot;, source_size=15, shape=&quot;cross&quot;, name=&quot;Mars_features&quot;
+)
+</pre></div>
+</div>
+</div>
+<p>Unzoom and look for the other points.</p>
+<section id="Surveys-of-Earth">
+<h2>Surveys of Earth<a class="headerlink" href="#Surveys-of-Earth" title="Link to this heading">#</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>earth = Aladin(
+    survey=&quot;CDS/P/Earth/DEM/elevation&quot;,
+    fov=100,
+)
+earth
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>earth.target
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>earth.wcs
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>earth.target = &quot;Strasbourg&quot;  # ipyaladin&#39;s home
+</pre></div>
+</div>
+</div>
+<p>Any name recognized by OpenStreetMaps will work.</p>
 </section>
 </section>
 
@@ -507,20 +635,20 @@ for a bit mot instantiation options,</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../index.html"
+       href="03_Functions.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">The ipyaladin jupyter widget</p>
+        <p class="prev-next-title">Use of functions on ipyaladin widgets</p>
       </div>
     </a>
     <a class="right-next"
-       href="../_collections/notebooks/01_Getting_Started.html"
+       href="04_Importing_Tables.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Getting Started</p>
+        <p class="prev-next-title">Display tables resulting from an astroquery request</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -542,19 +670,14 @@ for a bit mot instantiation options,</p>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#released-versions">Released versions</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unreleased-version">Unreleased version</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-widget">Using the widget</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Surveys-of-Earth">Surveys of Earth</a></li>
 </ul>
   </nav></div>
 
   <div class="sidebar-secondary-item">
 
   <div class="tocsection sourcelink">
-    <a href="../_sources/getting_started/getting_started.rst.txt">
+    <a href="../../_sources/_collections/notebooks/12_Planetary_surveys.ipynb.txt">
       <i class="fa-solid fa-file-lines"></i> Show Source
     </a>
   </div>
@@ -573,8 +696,8 @@ for a bit mot instantiation options,</p>
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">

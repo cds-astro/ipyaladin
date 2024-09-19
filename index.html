@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta content="Top-level documentation for ipyaladin, with links to the rest of the site.. " lang="en" name="description" xml:lang="en" />
 
-    <title>The ipyaladin jupyter widget &#8212; ipyaladin 0.4.0 documentation</title>
+    <title>The ipyaladin jupyter widget &#8212; ipyaladin 0.5.0 documentation</title>
   
   
   
@@ -39,7 +39,7 @@
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="_static/documentation_options.js?v=6c02275b"></script>
+    <script src="_static/documentation_options.js?v=1dd76d02"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -452,11 +452,16 @@ document.write(`
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="user_documentation/user_documentation.html">User Documentation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="user_documentation/user_documentation.html#initialization-options-for-the-widget">Initialization options for the widget</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_documentation/user_documentation.html#initialization-options-for-the-widget">Initialization options for the widget</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_documentation/user_documentation.html#setting-the-view-s-parameters">Setting the view’s parameters</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="_collections/notebooks/02_Base_Commands.html">Aladin commands</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_collections/notebooks/03_Functions.html">Use of functions on ipyaladin widgets</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="_collections/notebooks/03_Functions.html#Home-made-functions">Home-made functions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="_collections/notebooks/03_Functions.html#Built-in-methods">Built-in methods</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="_collections/notebooks/12_Planetary_surveys.html">Planetary surveys</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="_collections/notebooks/12_Planetary_surveys.html#Surveys-of-Earth">Surveys of Earth</a></li>
 </ul>
 </li>
 </ul>
@@ -484,6 +489,14 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="_collections/notebooks/11_Extracting_information_from_the_view.html">Retrieving data from the current widget’s view</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="_collections/notebooks/11_Extracting_information_from_the_view.html#Getting-the-current-WCS">Getting the current WCS</a></li>
 <li class="toctree-l4"><a class="reference internal" href="_collections/notebooks/11_Extracting_information_from_the_view.html#Getting-the-field-of-view">Getting the field of view</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_collections/notebooks/11_Extracting_information_from_the_view.html#Getting-the-selection">Getting the selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_collections/notebooks/11_Extracting_information_from_the_view.html#Getting-the-view-as-a-fits-file">Getting the view as a fits file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_collections/notebooks/11_Extracting_information_from_the_view.html#Saving-the-view-as-an-image-file">Saving the view as an image file</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="user_documentation/user_documentation.html#note-about-the-wcs">Note about the WCS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="user_documentation/user_documentation.html#detaching-the-widget-from-the-notebook-and-keeping-it-on-the-side-of-the-notebook">1. Detaching the widget from the notebook and keeping it on the side of the notebook</a></li>
+<li class="toctree-l4"><a class="reference internal" href="user_documentation/user_documentation.html#disabling-the-optimization-in-the-notebook-parameters">2. Disabling the optimization in the notebook parameters</a></li>
 </ul>
 </li>
 </ul>
@@ -578,7 +591,7 @@ document.write(`
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
     <br/>
   </p>
 </div>

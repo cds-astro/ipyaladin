@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ipyaladin.widget &#8212; ipyaladin 0.4.0 documentation</title>
+    <title>ipyaladin.widget &#8212; ipyaladin 0.5.0 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../_static/documentation_options.js?v=6c02275b"></script>
+    <script src="../../_static/documentation_options.js?v=1dd76d02"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -438,12 +438,15 @@ document.write(`
 <span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Callable</span>
 <span class="kn">import</span> <span class="nn">io</span>
 <span class="kn">import</span> <span class="nn">pathlib</span>
+<span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">JSONDecodeError</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">ClassVar</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Final</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="kn">import</span> <span class="nn">anywidget</span>
-<span class="kn">from</span> <span class="nn">astropy.coordinates</span> <span class="kn">import</span> <span class="n">SkyCoord</span><span class="p">,</span> <span class="n">Angle</span>
+<span class="kn">from</span> <span class="nn">astropy.coordinates</span> <span class="kn">import</span> <span class="n">SkyCoord</span><span class="p">,</span> <span class="n">Angle</span><span class="p">,</span> <span class="n">Longitude</span><span class="p">,</span> <span class="n">Latitude</span>
+<span class="kn">from</span> <span class="nn">astropy.coordinates.name_resolve</span> <span class="kn">import</span> <span class="n">NameResolveError</span>
 <span class="kn">from</span> <span class="nn">astropy.table.table</span> <span class="kn">import</span> <span class="n">QTable</span>
 <span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span>
 <span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span> <span class="k">as</span> <span class="n">astropy_fits</span>
@@ -452,8 +455,9 @@ document.write(`
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">traitlets</span>
 
-<span class="kn">from</span> <span class="nn">.utils.exceptions</span> <span class="kn">import</span> <span class="n">WidgetCommunicationError</span>
-<span class="kn">from</span> <span class="nn">.utils._coordinate_parser</span> <span class="kn">import</span> <span class="n">parse_coordinate_string</span>
+<span class="kn">from</span> <span class="nn">.utils.exceptions</span> <span class="kn">import</span> <span class="n">WidgetReducedError</span><span class="p">,</span> <span class="n">WidgetNotReadyError</span>
+<span class="kn">from</span> <span class="nn">.utils._coordinate_parser</span> <span class="kn">import</span> <span class="n">_parse_coordinate_string</span>
+<span class="kn">from</span> <span class="nn">.elements.marker</span> <span class="kn">import</span> <span class="n">Marker</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">regions</span> <span class="kn">import</span> <span class="p">(</span>
@@ -479,7 +483,6 @@ document.write(`
     <span class="n">Unicode</span><span class="p">,</span>
     <span class="n">Bool</span><span class="p">,</span>
     <span class="n">Any</span><span class="p">,</span>
-    <span class="n">default</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">SupportedRegion</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span>
@@ -501,6 +504,54 @@ document.write(`
 <span class="p">]</span>
 
 
+<div class="viewcode-block" id="widget_should_be_loaded">
+<a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.widget_should_be_loaded">[docs]</a>
+<span class="k">def</span> <span class="nf">widget_should_be_loaded</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the widget is ready to execute a function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    func : Callable</span>
+<span class="sd">        The function to decorate.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Callable</span>
+<span class="sd">        The decorated function.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the widget is ready to execute a function.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        self : any</span>
+<span class="sd">            The widget object.</span>
+<span class="sd">        *args : any</span>
+<span class="sd">            The arguments of the function.</span>
+<span class="sd">        **kwargs : any</span>
+<span class="sd">            The keyword arguments of the function.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        any</span>
+<span class="sd">            The result of the function if the widget is ready.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_is_loaded&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="c1"># this is an arbitrary waiting time</span>
+            <span class="c1"># it should correspond to the downloading time of the npm package</span>
+            <span class="n">duration</span> <span class="o">=</span> <span class="mf">0.1</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">duration</span><span class="p">)</span>
+            <span class="c1"># set ready to True to avoid waiting twice</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_is_loaded</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">wrapper</span></div>
+
+
+
 <div class="viewcode-block" id="Aladin">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin">[docs]</a>
 <span class="k">class</span> <span class="nc">Aladin</span><span class="p">(</span><span class="n">anywidget</span><span class="o">.</span><span class="n">AnyWidget</span><span class="p">):</span>
@@ -514,6 +565,7 @@ document.write(`
     <span class="n">_css</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;static&quot;</span> <span class="o">/</span> <span class="s2">&quot;widget.css&quot;</span>
 
     <span class="c1"># Options for the view initialization</span>
+    <span class="n">_init_options</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Dict</span><span class="p">()</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">_height</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="mi">400</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">_target</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span>
         <span class="s2">&quot;0 0&quot;</span><span class="p">,</span>
@@ -536,145 +588,119 @@ document.write(`
     <span class="p">)</span>
     <span class="n">coo_frame</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span>
         <span class="s2">&quot;ICRS&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The frame coordinate. Can be either &#39;ICRS&#39;, &#39;ICRSd&#39;, or &#39;Galactic&#39;.&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The frame coordinate. Can be either &#39;ICRS&#39;, &#39;ICRSd&#39;, or &#39;galactic&#39;.&quot;</span><span class="p">,</span>
     <span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">projection</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span>
         <span class="s2">&quot;SIN&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;The projection for the view. The keywords follow the FITS standard.&quot;</span><span class="p">),</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The projection for the view. The keywords follow the FITS standard.&quot;</span><span class="p">,</span>
     <span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">samp</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Wether to allow sending data via the SAMP protocol.&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span>
-        <span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">only_init</span><span class="o">=</span><span class="kc">True</span>
-    <span class="p">)</span>
-    <span class="c1"># Buttons on/off</span>
-    <span class="n">background_color</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span>
-        <span class="s2">&quot;rgb(60, 60, 60)&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The color behind the surveys in RGB format.&quot;</span>
-    <span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">only_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">show_zoom_control</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span>
-        <span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Whether to show the zoom control toolbar.&quot;</span>
-    <span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">only_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">show_layers_control</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span>
-        <span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Whether to show the layers control button.&quot;</span>
-    <span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">only_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">show_fullscreen_control</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span>
-        <span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Whether to show the fullscreen control toolbar.&quot;</span>
-    <span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">only_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">show_simbad_pointer_control</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span>
-        <span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Whether to show the Simbad pointer control toolbar.&quot;</span>
-    <span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">only_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">show_settings_control</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span>
-        <span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Whether to show the settings control toolbar.&quot;</span>
-    <span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">only_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">show_share_control</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span>
-        <span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Whether to show the share control toolbar.&quot;</span>
-    <span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">only_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">show_status_bar</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Whether to show the status bar.&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span>
-        <span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">only_init</span><span class="o">=</span><span class="kc">True</span>
-    <span class="p">)</span>
-    <span class="n">show_frame</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Whether to show the viewport frame.&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span>
-        <span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">only_init</span><span class="o">=</span><span class="kc">True</span>
-    <span class="p">)</span>
-    <span class="n">show_fov</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Whether to show the field of view indicator.&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span>
-        <span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">only_init</span><span class="o">=</span><span class="kc">True</span>
-    <span class="p">)</span>
-    <span class="n">show_coo_location</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Whether to show the coordinates bar.&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span>
-        <span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">only_init</span><span class="o">=</span><span class="kc">True</span>
-    <span class="p">)</span>
-    <span class="n">show_projection_control</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span>
-        <span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Whether to show the coordinate location indicator.&quot;</span>
-    <span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">only_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">show_context_menu</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span>
-        <span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Whether the right click should start the contextual menu.&quot;</span>
-    <span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">only_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">show_catalog</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Whether to show the catalog.&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span>
-        <span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">only_init</span><span class="o">=</span><span class="kc">True</span>
-    <span class="p">)</span>
-    <span class="n">full_screen</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Whether to start in full-screen mode.&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span>
-        <span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">only_init</span><span class="o">=</span><span class="kc">True</span>
-    <span class="p">)</span>
-    <span class="c1"># reticle</span>
-    <span class="n">show_reticle</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span>
-        <span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Wether to show the reticle in the middle of the view.&quot;</span>
-    <span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">only_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">reticle_color</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="s2">&quot;rgb(178, 50, 178)&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The color of the reticle.&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span>
-        <span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">only_init</span><span class="o">=</span><span class="kc">True</span>
-    <span class="p">)</span>
-    <span class="n">reticle_size</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Whether to show the reticle in the middle.&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span>
-        <span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">only_init</span><span class="o">=</span><span class="kc">True</span>
-    <span class="p">)</span>
-    <span class="c1"># grid</span>
-    <span class="n">show_coo_grid</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span>
-        <span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Whether the coordinates grid should be shown at startup.&quot;</span>
-    <span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">only_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">show_coo_grid_control</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span>
-        <span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Whether to show the coordinate grid control toolbar. &quot;</span>
-    <span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">only_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">grid_color</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span>
-        <span class="s2">&quot;rgb(178, 50, 178)&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Color of the grid. Can be specified as a named color &quot;</span>
-        <span class="s2">&quot;(see html named colors), as rgb (ex: &#39;rgb(178, 50, 178)&#39;), &quot;</span>
-        <span class="s2">&quot;or as a hex color (ex: &#39;#86D6AE&#39;).&quot;</span><span class="p">,</span>
-    <span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">only_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">grid_opacity</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span>
-        <span class="mf">0.5</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Opacity of the grid and labels. It is comprised between 0 and 1.&quot;</span>
-    <span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">only_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">grid_options</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Dict</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;More options for the grid.&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span>
-        <span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">only_init</span><span class="o">=</span><span class="kc">True</span>
-    <span class="p">)</span>
-
     <span class="c1"># Values</span>
+    <span class="n">_ready</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span>
+        <span class="kc">False</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;A private trait that stores the readiness of the widget.&quot;</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">_wcs</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Dict</span><span class="p">()</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">_fov_xy</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Dict</span><span class="p">()</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># content of the last click</span>
     <span class="n">clicked_object</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Dict</span><span class="p">()</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">_selected_objects</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">List</span><span class="p">(</span>
+        <span class="n">trait</span><span class="o">=</span><span class="n">traitlets</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">trait</span><span class="o">=</span><span class="n">traitlets</span><span class="o">.</span><span class="n">Any</span><span class="p">()),</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;A list of catalogs selected by the user.&quot;</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="c1"># listener callback is on the python side and contains functions to link to events</span>
     <span class="n">listener_callback</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">callable</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="c1"># overlay survey</span>
+    <span class="n">_survey_body</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span>
+        <span class="s2">&quot;sky&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The body name of the base layer survey, &#39;sky&#39; for the sky survey&quot;</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">overlay_survey</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">overlay_survey_opacity</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">_base_layer_last_view</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span>
+        <span class="n">survey</span><span class="o">.</span><span class="n">default_value</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;A private trait for the base layer of the last view. It is useful &quot;</span>
+        <span class="s2">&quot;to convert the view to an astropy.HDUList&quot;</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="n">init_options</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">trait</span><span class="o">=</span><span class="n">Any</span><span class="p">())</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">_is_loaded</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span>
+        <span class="kc">False</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;A private trait that stores whether the widget is loaded.&quot;</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span>
+        <span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
 
-    <span class="nd">@default</span><span class="p">(</span><span class="s2">&quot;init_options&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">_init_options</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">traits</span><span class="p">(</span><span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="c1"># Temporary traitlet for widget size problem</span>
+    <span class="n">_is_reduced</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span>
+        <span class="kc">False</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;A private trait that stores if the widget &quot;</span>
+        <span class="s2">&quot;is reduced in size when hidden.&quot;</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<div class="viewcode-block" id="Aladin.height">
-<a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.height">[docs]</a>
-        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;height&quot;</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Aladin.target">
-<a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.target">[docs]</a>
-        <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;target&quot;</span><span class="p">,</span> <span class="s2">&quot;0 0&quot;</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Aladin.fov">
-<a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.fov">[docs]</a>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fov</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fov&quot;</span><span class="p">,</span> <span class="mf">60.0</span><span class="p">)</span></div>
-
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">any</span><span class="p">,</span> <span class="o">**</span><span class="n">init_options</span><span class="p">:</span> <span class="nb">any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">init_options</span><span class="p">)</span>
+        <span class="c1"># pop init options of ipywidgets.DOMWidget that would choke ipyaladin</span>
+        <span class="c1"># https://github.com/jupyter-widgets/ipywidgets/blob/main/python/ipywidgets/ipywidgets/widgets/domwidget.py</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;layout&quot;</span><span class="p">,</span> <span class="s2">&quot;tabbable&quot;</span><span class="p">,</span> <span class="s2">&quot;tooltip&quot;</span><span class="p">]:</span>
+            <span class="n">init_options</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="c1"># some init options are properties here</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">init_options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;height&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_height</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="n">init_options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;target&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_target</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fov</span> <span class="o">=</span> <span class="n">init_options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fov&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fov</span><span class="p">)</span>
+        <span class="c1"># apply different default options from Aladin-Lite</span>
+        <span class="n">ipyaladin_default</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;show_simbad_pointer_control&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;show_coo_grid_control&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;show_settings_control&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;show_context_menu&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">init_options</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">ipyaladin_default</span><span class="p">,</span> <span class="o">**</span><span class="n">init_options</span><span class="p">}</span>
+        <span class="c1"># set the traitlet</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_options</span> <span class="o">=</span> <span class="n">init_options</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">on_msg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle_custom_message</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_handle_custom_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="nb">any</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">__</span><span class="p">:</span> <span class="nb">any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_handle_custom_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="nb">any</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">buffers</span><span class="p">:</span> <span class="nb">any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">event_type</span> <span class="o">=</span> <span class="n">message</span><span class="p">[</span><span class="s2">&quot;event_type&quot;</span><span class="p">]</span>
-        <span class="n">message_content</span> <span class="o">=</span> <span class="n">message</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="p">(</span>
             <span class="n">event_type</span> <span class="o">==</span> <span class="s2">&quot;object_clicked&quot;</span>
             <span class="ow">and</span> <span class="s2">&quot;object_clicked&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">listener_callback</span>
         <span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">listener_callback</span><span class="p">[</span><span class="s2">&quot;object_clicked&quot;</span><span class="p">](</span><span class="n">message_content</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">listener_callback</span><span class="p">[</span><span class="s2">&quot;object_clicked&quot;</span><span class="p">](</span><span class="n">message</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">])</span>
         <span class="k">elif</span> <span class="p">(</span>
             <span class="n">event_type</span> <span class="o">==</span> <span class="s2">&quot;object_hovered&quot;</span>
             <span class="ow">and</span> <span class="s2">&quot;object_hovered&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">listener_callback</span>
         <span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">listener_callback</span><span class="p">[</span><span class="s2">&quot;object_hovered&quot;</span><span class="p">](</span><span class="n">message_content</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">listener_callback</span><span class="p">[</span><span class="s2">&quot;object_hovered&quot;</span><span class="p">](</span><span class="n">message</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">])</span>
         <span class="k">elif</span> <span class="n">event_type</span> <span class="o">==</span> <span class="s2">&quot;click&quot;</span> <span class="ow">and</span> <span class="s2">&quot;click&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">listener_callback</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">listener_callback</span><span class="p">[</span><span class="s2">&quot;click&quot;</span><span class="p">](</span><span class="n">message_content</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">listener_callback</span><span class="p">[</span><span class="s2">&quot;click&quot;</span><span class="p">](</span><span class="n">message</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">])</span>
         <span class="k">elif</span> <span class="n">event_type</span> <span class="o">==</span> <span class="s2">&quot;select&quot;</span> <span class="ow">and</span> <span class="s2">&quot;select&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">listener_callback</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">listener_callback</span><span class="p">[</span><span class="s2">&quot;select&quot;</span><span class="p">](</span><span class="n">message_content</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">listener_callback</span><span class="p">[</span><span class="s2">&quot;select&quot;</span><span class="p">](</span><span class="n">message</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">event_type</span> <span class="o">==</span> <span class="s2">&quot;save_view_as_image&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_save_file</span><span class="p">(</span><span class="n">message</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">],</span> <span class="n">buffers</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
     <span class="nd">@property</span>
+<div class="viewcode-block" id="Aladin.selected_objects">
+<a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.selected_objects">[docs]</a>
+    <span class="k">def</span> <span class="nf">selected_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Table</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The list of catalogs selected by the user.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list[Table]</span>
+<span class="sd">            A list of astropy.table.Table objects representing the selected catalogs.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">catalogs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">selected_object</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_selected_objects</span><span class="p">:</span>
+            <span class="n">objects_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">obj</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">selected_object</span><span class="p">]</span>
+            <span class="n">catalogs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Table</span><span class="p">(</span><span class="n">objects_data</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">catalogs</span></div>
+
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Aladin.height">
+<a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.height">[docs]</a>
     <span class="k">def</span> <span class="nf">height</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The height of the Aladin Lite widget.</span>
 
@@ -684,7 +710,8 @@ document.write(`
 <span class="sd">            The height of the widget in pixels.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_height</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_height</span></div>
+
 
     <span class="nd">@height</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">height</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -698,21 +725,32 @@ document.write(`
 <div class="viewcode-block" id="Aladin.wcs">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.wcs">[docs]</a>
     <span class="k">def</span> <span class="nf">wcs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WCS</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The world coordinate system of the Aladin Lite widget.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The world coordinate system corresponding to the current view of ipyaladin.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        WCS</span>
+<span class="sd">        `~astropy.wcs.WCS`</span>
 <span class="sd">            An astropy WCS object representing the world coordinate system.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wcs</span> <span class="o">==</span> <span class="p">{}:</span>
-            <span class="k">raise</span> <span class="n">WidgetCommunicationError</span><span class="p">(</span>
-                <span class="s2">&quot;The world coordinate system is not available. &quot;</span>
-                <span class="s2">&quot;Please recover it from another cell.&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_reduced</span><span class="p">:</span>
+            <span class="c1"># this is the bug that https://github.com/jupyterlab/jupyterlab/issues/16630</span>
+            <span class="c1"># will solve.</span>
+            <span class="k">raise</span> <span class="n">WidgetReducedError</span><span class="p">(</span>
+                <span class="s2">&quot;Jupyter reduces the size of the widget when it is out of the view. &quot;</span>
+                <span class="s2">&quot;This leads to wrong WCS. Either scroll up to the widget, and query &quot;</span>
+                <span class="s2">&quot;the WCS from there, or use the right click menu &#39;Create New View for &quot;</span>
+                <span class="s2">&quot;Cell Output&#39; to keep the widget in the screen.&quot;</span>
             <span class="p">)</span>
-        <span class="k">if</span> <span class="s2">&quot;RADECSYS&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wcs</span><span class="p">:</span>  <span class="c1"># RADECSYS keyword is deprecated for astropy.WCS</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_wcs</span><span class="p">[</span><span class="s2">&quot;RADESYS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wcs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;RADECSYS&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wcs</span> <span class="o">==</span> <span class="p">{}:</span>
+            <span class="k">raise</span> <span class="n">WidgetNotReadyError</span><span class="p">(</span>
+                <span class="s2">&quot;The WCS is not available. There are two reasons for that: either the &quot;</span>
+                <span class="s2">&quot;widget was not ready, in this case, try running the cell again. Or &quot;</span>
+                <span class="s2">&quot;the state of the widget was changed in the same cell than the &quot;</span>
+                <span class="s2">&quot;calculation of the WCS. In this second case, please move the &quot;</span>
+                <span class="s2">&quot;manipulations of the widget in an other cell (this can be changes of &quot;</span>
+                <span class="s2">&quot;target, projection, or fov).&quot;</span>
+            <span class="p">)</span>
         <span class="k">return</span> <span class="n">WCS</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_wcs</span><span class="p">)</span></div>
 
 
@@ -729,9 +767,10 @@ document.write(`
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fov_xy</span> <span class="o">==</span> <span class="p">{}:</span>
-            <span class="k">raise</span> <span class="n">WidgetCommunicationError</span><span class="p">(</span>
-                <span class="s2">&quot;The field of view along the two axes is not available. &quot;</span>
-                <span class="s2">&quot;Please recover it from another cell.&quot;</span>
+            <span class="k">raise</span> <span class="n">WidgetNotReadyError</span><span class="p">(</span>
+                <span class="s2">&quot;The field of view along the two axes is not available. This often &quot;</span>
+                <span class="s2">&quot;happens when the FoV is modified and read in the same cell. &quot;</span>
+                <span class="s2">&quot;Please read it from a new cell.&quot;</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span>
             <span class="n">Angle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fov_xy</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;deg&quot;</span><span class="p">),</span>
@@ -740,6 +779,8 @@ document.write(`
 
 
     <span class="nd">@property</span>
+<div class="viewcode-block" id="Aladin.fov">
+<a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.fov">[docs]</a>
     <span class="k">def</span> <span class="nf">fov</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Angle</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The field of view of the Aladin Lite widget along the horizontal axis.</span>
 
@@ -751,8 +792,13 @@ document.write(`
 <span class="sd">        astropy.coordinates.Angle</span>
 <span class="sd">            An astropy.coordinates.Angle object representing the field of view.</span>
 
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        fov_xy</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">Angle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fov</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;deg&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Angle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fov</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;deg&quot;</span><span class="p">)</span></div>
+
 
     <span class="nd">@fov</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">fov</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fov</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Angle</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -766,43 +812,229 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">_wcs</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">target</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SkyCoord</span><span class="p">:</span>
+<div class="viewcode-block" id="Aladin.target">
+<a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.target">[docs]</a>
+    <span class="k">def</span> <span class="nf">target</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">SkyCoord</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The target of the Aladin Lite widget.</span>
 
-<span class="sd">        It can be set with either a string or an `astropy.coordinates.SkyCoord` object.</span>
+<span class="sd">        The target can be provided as coordinates (either</span>
+<span class="sd">        `~astropy.coordinates.SkyCoord` or (`~astropy.coordinates.Longitude`,</span>
+<span class="sd">        `~astropy.coordinates.Latitude`)) or as a name (as a string).</span>
+
+<span class="sd">        The conversion from a name to coordinates does call different online services</span>
+<span class="sd">        depending on the base layer of the widget:</span>
+<span class="sd">        - for the sky: it uses CDS&#39;s</span>
+<span class="sd">        `Sesame &lt;https://vizier.cds.unistra.fr/viz-bin/Sesame&gt;`_  name resolver. This</span>
+<span class="sd">        looks first in SIMBAD, then in VizieR, and then in NED for the object&#39;s</span>
+<span class="sd">        coordinates.</span>
+<span class="sd">        - for Earth: it uses `Nominatim</span>
+<span class="sd">        &lt;https://nominatim.openstreetmap.org/ui/search.html&gt;`_, OpenStreetMap&#39;s</span>
+<span class="sd">        search bar</span>
+<span class="sd">        - for other solar system bodies: it calls the `Gazetteer of Planetary</span>
+<span class="sd">        Nomenclature &lt;https://planetarynames.wr.usgs.gov/Nomenclature&gt;`_</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        astropy.coordinates.SkyCoord</span>
-<span class="sd">            An `astropy.coordinates.SkyCoord` object representing the target.</span>
+<span class="sd">        `~astropy.coordinates.SkyCoord` or Tuple[Longitude, Latitude]</span>
+<span class="sd">            If ipyaladin has a sky survey, returns a `~astropy.coordinates.SkyCoord`</span>
+<span class="sd">            object. Otherwise, if ipyaladin is currently on a planetary body, returns</span>
+<span class="sd">            a tuple with the Longitude and the Latitude of the current position of the</span>
+<span class="sd">            widget.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">ra</span><span class="p">,</span> <span class="n">dec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_target</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">SkyCoord</span><span class="p">(</span>
-            <span class="n">ra</span><span class="o">=</span><span class="n">ra</span><span class="p">,</span>
-            <span class="n">dec</span><span class="o">=</span><span class="n">dec</span><span class="p">,</span>
-            <span class="n">frame</span><span class="o">=</span><span class="s2">&quot;icrs&quot;</span><span class="p">,</span>
-            <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;deg&quot;</span><span class="p">,</span>
-        <span class="p">)</span>
+        <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_target</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+        <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">lon</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_survey_body</span> <span class="o">==</span> <span class="s2">&quot;sky&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">SkyCoord</span><span class="p">(</span>
+                <span class="n">ra</span><span class="o">=</span><span class="n">lon</span><span class="p">,</span>
+                <span class="n">dec</span><span class="o">=</span><span class="n">lat</span><span class="p">,</span>
+                <span class="n">frame</span><span class="o">=</span><span class="s2">&quot;icrs&quot;</span><span class="p">,</span>
+                <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;deg&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">Longitude</span><span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;deg&quot;</span><span class="p">),</span> <span class="n">Latitude</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;deg&quot;</span><span class="p">)</span></div>
+
 
     <span class="nd">@target</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">target</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SkyCoord</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>  <span class="c1"># If the target is str, parse it</span>
-            <span class="n">target</span> <span class="o">=</span> <span class="n">parse_coordinate_string</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">SkyCoord</span><span class="p">):</span>  <span class="c1"># If the target is not str or SkyCoord</span>
+    <span class="k">def</span> <span class="nf">target</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SkyCoord</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">):</span>
+            <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">deg</span><span class="p">,</span> <span class="n">target</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">deg</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>  <span class="c1"># If the target is a string, parse it</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span> <span class="o">=</span> <span class="n">_parse_coordinate_string</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_survey_body</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">NameResolveError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="c1"># If the widget is not ready, we don&#39;t know if the base survey is</span>
+                <span class="c1"># celestial or planetary so the error can be caused by two factors</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ready</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">WidgetNotReadyError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Either &#39;</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&#39; is not a valid celestial object name, &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;or the survey body type is not yet defined so you &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;need to wait for the widget to be fully loaded.&quot;</span>
+                    <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+                <span class="c1"># If the widget is ready, the error is caused by the target name</span>
+                <span class="c1"># that is not a valid celestial object name</span>
+                <span class="k">raise</span> <span class="n">e</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">SkyCoord</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;target must be a string or an astropy.coordinates.SkyCoord object&quot;</span>
+                <span class="s2">&quot;target must be a string, an astropy.coordinates.SkyCoord &quot;</span>
+                <span class="s2">&quot;object or a tuple of two angle-like astropy quantities.&quot;</span>
             <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_target</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">target</span><span class="o">.</span><span class="n">icrs</span><span class="o">.</span><span class="n">ra</span><span class="o">.</span><span class="n">deg</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">target</span><span class="o">.</span><span class="n">icrs</span><span class="o">.</span><span class="n">dec</span><span class="o">.</span><span class="n">deg</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_wcs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">SkyCoord</span><span class="p">):</span>
+            <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">icrs</span><span class="o">.</span><span class="n">ra</span><span class="o">.</span><span class="n">deg</span><span class="p">,</span> <span class="n">target</span><span class="o">.</span><span class="n">icrs</span><span class="o">.</span><span class="n">dec</span><span class="o">.</span><span class="n">deg</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_target</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">lon</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">lat</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span>
             <span class="p">{</span>
                 <span class="s2">&quot;event_name&quot;</span><span class="p">:</span> <span class="s2">&quot;goto_ra_dec&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;ra&quot;</span><span class="p">:</span> <span class="n">target</span><span class="o">.</span><span class="n">icrs</span><span class="o">.</span><span class="n">ra</span><span class="o">.</span><span class="n">deg</span><span class="p">,</span>
-                <span class="s2">&quot;dec&quot;</span><span class="p">:</span> <span class="n">target</span><span class="o">.</span><span class="n">icrs</span><span class="o">.</span><span class="n">dec</span><span class="o">.</span><span class="n">deg</span><span class="p">,</span>
+                <span class="s2">&quot;ra&quot;</span><span class="p">:</span> <span class="n">lon</span><span class="p">,</span>
+                <span class="s2">&quot;dec&quot;</span><span class="p">:</span> <span class="n">lat</span><span class="p">,</span>
             <span class="p">}</span>
         <span class="p">)</span>
 
+<div class="viewcode-block" id="Aladin.add_markers">
+<a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.add_markers">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_markers</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">markers</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Marker</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Marker</span><span class="p">]],</span> <span class="o">**</span><span class="n">catalog_options</span><span class="p">:</span> <span class="nb">any</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add markers to the Aladin Lite widget.</span>
+
+<span class="sd">        Markers have a popup window that appear when they&#39;re clicked on.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        markers : Marker or list[Marker]</span>
+<span class="sd">            The marker(s) to add to the widget. It can be given as a single `Marker`</span>
+<span class="sd">            object or as a list of `Marker` objects.</span>
+<span class="sd">        catalog_options : any</span>
+<span class="sd">            The options for the catalog. See the `Aladin Lite catalog options</span>
+<span class="sd">            &lt;https://cds-astro.github.io/aladin-lite/global.html#CatalogOptions&gt;`_</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        add_table: also adds points, but without popup window.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">markers</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">markers</span> <span class="o">=</span> <span class="p">[</span><span class="n">markers</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;event_name&quot;</span><span class="p">:</span> <span class="s2">&quot;add_marker&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;markers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">marker</span><span class="o">.</span><span class="vm">__dict__</span> <span class="k">for</span> <span class="n">marker</span> <span class="ow">in</span> <span class="n">markers</span><span class="p">],</span>
+                <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="n">catalog_options</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_save_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">buffer</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save a file from a buffer.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        path : str</span>
+<span class="sd">            The path where the file will be saved.</span>
+<span class="sd">        buffer : bytes</span>
+<span class="sd">            The buffer containing the file.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
+
+    <span class="nd">@widget_should_be_loaded</span>
+<div class="viewcode-block" id="Aladin.save_view_as_image">
+<a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.save_view_as_image">[docs]</a>
+    <span class="k">def</span> <span class="nf">save_view_as_image</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="n">image_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;png&quot;</span><span class="p">,</span> <span class="n">with_logo</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save the current view of the widget as an image file.</span>
+
+<span class="sd">        This should be used as quick previews, or illustrations. For scientific-quality</span>
+<span class="sd">        pixels, use &#39;get_view_as_fits&#39;.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        path : Union[str, Path]</span>
+<span class="sd">            The path where the image will be saved.</span>
+<span class="sd">        image_format : str</span>
+<span class="sd">            The format of the image. Can be &#39;png&#39;, &#39;jpeg&#39; or &#39;webp&#39;.</span>
+<span class="sd">        with_logo : bool</span>
+<span class="sd">            Whether to include the Aladin Lite logo in the image.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        get_view_as_fits: conserves the photometry</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">image_format</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;png&quot;</span><span class="p">,</span> <span class="s2">&quot;jpeg&quot;</span><span class="p">,</span> <span class="s2">&quot;webp&quot;</span><span class="p">}:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;image_format must be &#39;png&#39;, &#39;jpeg&#39; or &#39;webp&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;event_name&quot;</span><span class="p">:</span> <span class="s2">&quot;save_view_as_image&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">),</span>
+                <span class="s2">&quot;format&quot;</span><span class="p">:</span> <span class="n">image_format</span><span class="p">,</span>
+                <span class="s2">&quot;with_logo&quot;</span><span class="p">:</span> <span class="n">with_logo</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span></div>
+
+
+    <span class="nd">@widget_should_be_loaded</span>
+<div class="viewcode-block" id="Aladin.get_view_as_fits">
+<a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.get_view_as_fits">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_view_as_fits</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HDUList</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the base layer of the widget as an astropy HDUList object.</span>
+
+<span class="sd">        The output FITS image will have the same shape as the</span>
+<span class="sd">        current view of the widget. This uses `astroquery.hips2fits` internally.</span>
+<span class="sd">        This method currently only exports the bottom/base layer.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        `~astropy.io.fits.HDUList`</span>
+<span class="sd">            The FITS object containing the image.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        save_view_as_image</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">astroquery.hips2fits</span> <span class="kn">import</span> <span class="n">hips2fits</span>
+        <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">imp</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;To use &#39;get_view_as_fits&#39;, you need astroquery. &quot;</span>
+                <span class="s2">&quot;Install it with &#39;pip install astroquery -U --pre&#39;.&quot;</span>
+            <span class="p">)</span> <span class="kn">from</span> <span class="nn">imp</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">fits</span> <span class="o">=</span> <span class="n">hips2fits</span><span class="o">.</span><span class="n">query_with_wcs</span><span class="p">(</span>
+                <span class="n">hips</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_base_layer_last_view</span><span class="p">,</span>
+                <span class="n">wcs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wcs</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="c1"># there is a JSONDecodeError when NAXIS=[1,1]. This happens when the widget is</span>
+        <span class="c1"># reduced. See more explanation in the wcs property.</span>
+        <span class="k">except</span> <span class="n">JSONDecodeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The FITS image could not be retrieved from the view. &quot;</span>
+                <span class="s2">&quot;This happens when the widget is scrolled out of the &quot;</span>
+                <span class="s2">&quot;screen.&quot;</span>
+            <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+        <span class="k">return</span> <span class="n">fits</span></div>
+
+
+<div class="viewcode-block" id="Aladin.get_JPEG_thumbnail">
+<a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.get_JPEG_thumbnail">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_JPEG_thumbnail</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a new tab with the current Aladin view.</span>
+
+<span class="sd">        This method will only work if you are running a notebook in a browser (for</span>
+<span class="sd">        example, it won&#39;t do anything in VSCode).</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        save_view_as_image: will save the image on disk instead</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">({</span><span class="s2">&quot;event_name&quot;</span><span class="p">:</span> <span class="s2">&quot;get_JPG_thumbnail&quot;</span><span class="p">})</span></div>
+
+
+    <span class="nd">@widget_should_be_loaded</span>
 <div class="viewcode-block" id="Aladin.add_catalog_from_URL">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.add_catalog_from_URL">[docs]</a>
     <span class="k">def</span> <span class="nf">add_catalog_from_URL</span><span class="p">(</span>
@@ -827,10 +1059,11 @@ document.write(`
         <span class="p">)</span></div>
 
 
+    <span class="nd">@widget_should_be_loaded</span>
 <div class="viewcode-block" id="Aladin.add_fits">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.add_fits">[docs]</a>
     <span class="k">def</span> <span class="nf">add_fits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fits</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span> <span class="n">HDUList</span><span class="p">],</span> <span class="o">**</span><span class="n">image_options</span><span class="p">:</span> <span class="nb">any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load a FITS file into the widget.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load a FITS image into the widget.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -860,6 +1093,7 @@ document.write(`
 
     <span class="c1"># MOCs</span>
 
+    <span class="nd">@widget_should_be_loaded</span>
 <div class="viewcode-block" id="Aladin.add_moc">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.add_moc">[docs]</a>
     <span class="k">def</span> <span class="nf">add_moc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">moc</span><span class="p">:</span> <span class="nb">any</span><span class="p">,</span> <span class="o">**</span><span class="n">moc_options</span><span class="p">:</span> <span class="nb">any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -907,12 +1141,13 @@ document.write(`
                     <span class="p">)</span>
             <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">imp</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;A MOC can be given as an URL, a dictionnary, or a mocpy.MOC &quot;</span>
+                    <span class="s2">&quot;A MOC can be given as an URL, a dictionary, or a mocpy.MOC &quot;</span>
                     <span class="s2">&quot;object. To read mocpy.MOC objects, you need to install the mocpy &quot;</span>
                     <span class="s2">&quot;library with &#39;pip install mocpy&#39;.&quot;</span>
                 <span class="p">)</span> <span class="kn">from</span> <span class="nn">imp</span></div>
 
 
+    <span class="nd">@widget_should_be_loaded</span>
 <div class="viewcode-block" id="Aladin.add_moc_from_URL">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.add_moc_from_URL">[docs]</a>
     <span class="k">def</span> <span class="nf">add_moc_from_URL</span><span class="p">(</span>
@@ -940,6 +1175,7 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">add_moc</span><span class="p">(</span><span class="n">moc_URL</span><span class="p">,</span> <span class="o">**</span><span class="n">moc_options</span><span class="p">)</span></div>
 
 
+    <span class="nd">@widget_should_be_loaded</span>
 <div class="viewcode-block" id="Aladin.add_moc_from_dict">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.add_moc_from_dict">[docs]</a>
     <span class="k">def</span> <span class="nf">add_moc_from_dict</span><span class="p">(</span>
@@ -968,6 +1204,7 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">add_moc</span><span class="p">(</span><span class="n">moc_dict</span><span class="p">,</span> <span class="o">**</span><span class="n">moc_options</span><span class="p">)</span></div>
 
 
+    <span class="nd">@widget_should_be_loaded</span>
 <div class="viewcode-block" id="Aladin.add_table">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.add_table">[docs]</a>
     <span class="k">def</span> <span class="nf">add_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">QTable</span><span class="p">,</span> <span class="n">Table</span><span class="p">],</span> <span class="o">**</span><span class="n">table_options</span><span class="p">:</span> <span class="nb">any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -975,12 +1212,16 @@ document.write(`
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        table : astropy.table.table.QTable or astropy.table.table.Table</span>
+<span class="sd">        table : `~astropy.table.table.QTable` or `~astropy.table.table.Table`</span>
 <span class="sd">            table that must contain coordinates information</span>
 <span class="sd">        table_options</span>
 <span class="sd">            Keyword arguments. The possible values are documented in `Aladin Lite&#39;s</span>
 <span class="sd">            table options</span>
 <span class="sd">            &lt;https://cds-astro.github.io/aladin-lite/global.html#CatalogOptions&gt;`_</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        add_markers: adds markers with a popup window when clicked</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">table_bytes</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
@@ -991,6 +1232,7 @@ document.write(`
         <span class="p">)</span></div>
 
 
+    <span class="nd">@widget_should_be_loaded</span>
 <div class="viewcode-block" id="Aladin.add_graphic_overlay_from_region">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.add_graphic_overlay_from_region">[docs]</a>
     <span class="k">def</span> <span class="nf">add_graphic_overlay_from_region</span><span class="p">(</span>
@@ -1053,7 +1295,6 @@ document.write(`
 
         <span class="n">regions_infos</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">region_element</span> <span class="ow">in</span> <span class="n">region_list</span><span class="p">:</span>
-            <span class="c1"># Check if the regions library is installed and raise an error if not</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">region_element</span><span class="p">,</span> <span class="n">Region</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="s2">&quot;region must a `~regions` object or a list of `~regions` objects. &quot;</span>
@@ -1074,6 +1315,7 @@ document.write(`
         <span class="p">)</span></div>
 
 
+    <span class="nd">@widget_should_be_loaded</span>
 <div class="viewcode-block" id="Aladin.add_overlay_from_stcs">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.add_overlay_from_stcs">[docs]</a>
     <span class="k">def</span> <span class="nf">add_overlay_from_stcs</span><span class="p">(</span>
@@ -1100,6 +1342,7 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">add_graphic_overlay_from_stcs</span><span class="p">(</span><span class="n">stc_string</span><span class="p">,</span> <span class="o">**</span><span class="n">overlay_options</span><span class="p">)</span></div>
 
 
+    <span class="nd">@widget_should_be_loaded</span>
 <div class="viewcode-block" id="Aladin.add_graphic_overlay_from_stcs">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.add_graphic_overlay_from_stcs">[docs]</a>
     <span class="k">def</span> <span class="nf">add_graphic_overlay_from_stcs</span><span class="p">(</span>
@@ -1141,17 +1384,7 @@ document.write(`
         <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="Aladin.get_JPEG_thumbnail">
-<a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.get_JPEG_thumbnail">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_JPEG_thumbnail</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a popup window with the current Aladin view.</span>
-
-<span class="sd">        This method will only work if you are running a notebook in a browser (for</span>
-<span class="sd">        example, it won&#39;t do anything in VSCode).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">({</span><span class="s2">&quot;event_name&quot;</span><span class="p">:</span> <span class="s2">&quot;get_JPG_thumbnail&quot;</span><span class="p">})</span></div>
-
-
+    <span class="nd">@widget_should_be_loaded</span>
 <div class="viewcode-block" id="Aladin.set_color_map">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.set_color_map">[docs]</a>
     <span class="k">def</span> <span class="nf">set_color_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color_map_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -1166,15 +1399,44 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">({</span><span class="s2">&quot;event_name&quot;</span><span class="p">:</span> <span class="s2">&quot;change_colormap&quot;</span><span class="p">,</span> <span class="s2">&quot;colormap&quot;</span><span class="p">:</span> <span class="n">color_map_name</span><span class="p">})</span></div>
 
 
+<div class="viewcode-block" id="Aladin.selection">
+<a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.selection">[docs]</a>
+    <span class="k">def</span> <span class="nf">selection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selection_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;rectangle&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Trigger the selection tool.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        selection_type: str</span>
+<span class="sd">            The type of selection tool to trigger. Can be &#39;circle&#39; or &#39;rectangle&#39;.</span>
+<span class="sd">            Default is &#39;rect&#39;.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Note: Polygon selection exists but is not supported by Aladin Lite</span>
+        <span class="k">if</span> <span class="n">selection_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;circle&quot;</span><span class="p">,</span> <span class="s2">&quot;rectangle&quot;</span><span class="p">}:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;selection_type must be &#39;circle&#39; or &#39;rectangle&#39;&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">({</span><span class="s2">&quot;event_name&quot;</span><span class="p">:</span> <span class="s2">&quot;trigger_selection&quot;</span><span class="p">,</span> <span class="s2">&quot;selection_type&quot;</span><span class="p">:</span> <span class="n">selection_type</span><span class="p">})</span></div>
+
+
 <div class="viewcode-block" id="Aladin.rectangular_selection">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.rectangular_selection">[docs]</a>
     <span class="k">def</span> <span class="nf">rectangular_selection</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Trigger the rectangular selection tool.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">({</span><span class="s2">&quot;event_name&quot;</span><span class="p">:</span> <span class="s2">&quot;trigger_rectangular_selection&quot;</span><span class="p">})</span></div>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Trigger the rectangular selection tool.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This method is deprecated, use selection instead</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;rectangular_selection is deprecated, use selection(&#39;rectangle&#39;) instead&quot;</span><span class="p">,</span>
+            <span class="ne">DeprecationWarning</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selection</span><span class="p">()</span></div>
 
 
     <span class="c1"># Adding a listener</span>
 
+    <span class="nd">@widget_should_be_loaded</span>
 <div class="viewcode-block" id="Aladin.set_listener">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.set_listener">[docs]</a>
     <span class="k">def</span> <span class="nf">set_listener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listener_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -1204,6 +1466,7 @@ document.write(`
             <span class="p">)</span></div>
 
 
+    <span class="nd">@widget_should_be_loaded</span>
 <div class="viewcode-block" id="Aladin.add_listener">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.add_listener">[docs]</a>
     <span class="k">def</span> <span class="nf">add_listener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listener_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -1280,7 +1543,7 @@ document.write(`
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
     <br/>
   </p>
 </div>
