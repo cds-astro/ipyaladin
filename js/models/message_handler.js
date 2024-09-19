@@ -56,6 +56,30 @@ export default class MessageHandler {
     );
   }
 
+  handleAddHips(msg) {
+    const options = convertOptionNamesToCamelCase(msg["options"] || {});
+    if (!options.name)
+      options.name = `hips_${String(++imageCount).padStart(3, "0")}`;
+    const hipsIdOrUrl = msg["hips"];
+    const imageHips = A.imageHiPS(hipsIdOrUrl, options);
+    this.aladin.setOverlayImageLayer(imageHips, options.name);
+  }
+
+  handleRemoveLayer(msg) {
+    const layerName = msg["name"];
+    this.aladin.removeImageLayer(layerName);
+  }
+
+  handleSetLayerOpacity(msg) {
+    const layerName = msg["name"];
+    const opacity = msg["opacity"];
+    if (layerName === "overlay") {
+      this.model.set("overlay_survey_opacity", opacity);
+      this.model.save_changes();
+    }
+    this.aladin.getOverlayImageLayer(layerName).setAlpha(opacity);
+  }
+
   handleAddFits(msg, buffers) {
     const options = convertOptionNamesToCamelCase(msg["options"] || {});
     if (!options.name)
