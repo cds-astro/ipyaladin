@@ -34,7 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Upgrade Aladin Lite version to 3.5.1-alpha (#96)
+- Upgrade Aladin Lite version to 3.5.1-beta
 
 ## [0.4.0]
 
