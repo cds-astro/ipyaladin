@@ -9,6 +9,7 @@ With a couple of lines, you can display Aladin Lite, center it on the target of 
 
 - [ipyaladin](#ipyaladin)
   - [Examples](#examples)
+    - [A subset of examples](#a-subset-of-examples)
   - [Installation](#installation)
   - [Development installation](#development-installation)
   - [How does it work?](#how-does-it-work)
@@ -17,6 +18,13 @@ With a couple of lines, you can display Aladin Lite, center it on the target of 
 ## Examples
 
 Some example notebooks can be found in the [examples directory](examples).
+
+### A subset of examples
+
+<!-- Examples -->
+<table><tbody>
+<tr><td>basic commands</td><td>importing tables</td><td>display MOCs</td></tr><tr><td><a href="https://cds-astro.github.io/ipyaladin/_collections/notebooks/02_Base_Commands.html"><img height="125" src="https://cds-astro.github.io/ipyaladin/_static/notebooks_thumbnails/02.png"></img></a></td><td><a href="https://cds-astro.github.io/ipyaladin/_collections/notebooks/04_Importing_Tables.html"><img height="125" src="https://cds-astro.github.io/ipyaladin/_static/notebooks_thumbnails/04.png"></img></a></td><td><a href="https://cds-astro.github.io/ipyaladin/_collections/notebooks/05_Display_a_MOC.html"><img height="125" src="https://cds-astro.github.io/ipyaladin/_static/notebooks_thumbnails/05.png"></img></a></td></tr><tr><td>display sky regions</td><td>retrieve data from the widget</td><td>advanced app</td></tr><tr><td><a href="https://cds-astro.github.io/ipyaladin/_collections/notebooks/09_Displaying_Shapes.html"><img height="125" src="https://cds-astro.github.io/ipyaladin/_static/notebooks_thumbnails/09.png"></img></a></td><td><a href="https://cds-astro.github.io/ipyaladin/_collections/notebooks/11_Extracting_information_from_the_view.html"><img height="125" src="https://cds-astro.github.io/ipyaladin/_static/notebooks_thumbnails/11.png"></img></a></td><td><a href="https://cds-astro.github.io/ipyaladin/_collections/notebooks/10_Advanced-GUI.html"><img height="125" src="https://cds-astro.github.io/ipyaladin/_static/notebooks_thumbnails/10.png"></img></a></td></tr></tbody></table>
+<!-- Examples -->
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/cds-astro/ipyaladin/master). You can also try it directly [in mybinder](https://mybinder.org/v2/gh/cds-astro/ipyaladin/master), without installing anything.
 
