@@ -35,6 +35,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Upgrade Aladin Lite version to 3.5.1-beta
+- instantiation options are now directly mirroring those of Aladin-Lite instead of being
+  hand-picked for the widget. Any option in
+  https://cds-astro.github.io/aladin-lite/global.html#AladinOptions will be accepted.
 
 ## [0.4.0]
 

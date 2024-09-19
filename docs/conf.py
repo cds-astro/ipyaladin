@@ -12,7 +12,7 @@ from pathlib import Path
 with Path.open("../pyproject.toml", "rb") as config:
     toml = tomllib.load(config)
 import datetime
-from ipyaladin import __version__, Aladin
+from ipyaladin import __version__
 
 project = toml["project"]["name"]
 author = "Strasbourg Astronomical Date Centre (CDS)"
@@ -90,6 +90,7 @@ nbsphinx_thumbnails = {
 
 # -- Document Init Options ---------------------------------------------------
 
+"""" # commented out since init_options are now given directly to aladin lite
 init_options = Aladin().traits(only_init=True)
 
 with Path.open("user_documentation/init_options.csv", "w"):
@@ -98,7 +99,7 @@ with Path.open("user_documentation/init_options.csv", "w"):
 with Path.open("user_documentation/init_options.csv", "a") as f:
     for k, v in init_options.items():
         f.write(f"{k};{v.default_value};{v.help}\n")
-
+"""
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output

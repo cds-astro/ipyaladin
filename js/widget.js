@@ -5,14 +5,15 @@ import A from "./aladin_lite";
 
 function initAladinLite(model, el) {
   setDivNumber(divNumber + 1);
+  let initFromPython = model.get("_init_options");
   let initOptions = {};
-  model.get("init_options").forEach((option_name) => {
-    initOptions[snakeCaseToCamelCase(option_name)] = model.get(option_name);
-  });
+  for (const key in initFromPython) {
+    initOptions[snakeCaseToCamelCase(key)] = initFromPython[key];
+  }
 
   let aladinDiv = document.createElement("div");
   aladinDiv.classList.add("aladin-widget");
-  aladinDiv.style.height = `${initOptions["height"]}px`;
+  aladinDiv.style.height = `${model.get("_height")}px`;
 
   aladinDiv.id = `aladin-lite-div-${divNumber}`;
   let aladin = new A.aladin(aladinDiv, initOptions);
@@ -20,16 +21,17 @@ function initAladinLite(model, el) {
 
   // Set the target again after the initialization to be sure that the target is set
   // from icrs coordinates because of the use of gotoObject in the Aladin Lite API
-  const raDec = initOptions["target"].split(" ");
+  const raDec = model.get("_target").split(" ");
   aladin.gotoRaDec(raDec[0], raDec[1]);
 
   // Set current FoV and WCS
-  const twoAxisFoV = aladin.getFov();
+  const twoAxisFoV = { ...aladin.getFov() };
   model.set("_fov_xy", {
     x: twoAxisFoV[0],
     y: twoAxisFoV[1],
   });
-  model.set("_wcs", aladin.getViewWCS());
+  const wcs = { ...aladin.getViewWCS() };
+  model.set("_wcs", wcs);
   model.set("_is_loaded", true);
   model.save_changes();
 
