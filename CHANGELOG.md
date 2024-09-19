@@ -16,21 +16,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0]
+
 ### Added
 
-- Allow WCS and 2 axis FoV recovery from `wcs` and `fov_xy` properties (#96)
-- monochromatic FITS images can be added to the view with `ipyaladin.Aladin.add_fits`.
-  The method accepts `astropy.io.fits.HDUList`, `pathlib.Path`, or `string` representing paths (#86)
-- New way to make a selection on the view with `selection` method (#100)
-- Add selected sources export as `astropy.Table` list with property `selected_objects` (#100)
-- Add function `get_view_as_fits` to export the view as a `astropy.io.fits.HDUList` (#98)
-- Add function `save_view_as_image` to save the view as an image file (#108)
+- Reading WCS and FOV from `wcs` and `fov_xy` properties (#96)
+- FITS images can be added to the view with `ipyaladin.Aladin.add_fits`.
+  The method accepts `astropy.io.fits.HDUList`, `pathlib.Path`, or `string` representing
+  paths (#86)
+- New `selection` method replaces `rectangular selection` and also has a circular
+  selection option (#100)
+- Selected sources are exported as an `astropy.Table` list in the property
+  `selected_objects` (#100)
+- new `get_view_as_fits` exports the view as a `astropy.io.fits.HDUList` (#98)
+- new `save_view_as_image` saves the view as an image file (#108)
 - Support planetary objects for ipyaladin targets (#103)
-- new method `add_marker` to add a marker to the view (#111)
+- new method `add_marker` to add marker(s) to the view (#111)
 
 ### Deprecated
 
-- Deprecate `rectangular_selection` method in favor of `selection` method (#100)
+- Deprecated `rectangular_selection` method in favor of `selection` (#100)
 
 ### Changed
 
