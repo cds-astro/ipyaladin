@@ -2,7 +2,7 @@ background_color;rgb(60, 60, 60);The color behind the surveys in RGB format.
 full_screen;False;Whether to start in full-screen mode.
 grid_color;rgb(178, 50, 178);Color of the grid. Can be specified as a named color (see html named colors), as rgb (ex: 'rgb(178, 50, 178)'), or as a hex color (ex: '#86D6AE').
 grid_opacity;0.5;Opacity of the grid and labels. It is comprised between 0 and 1.
-grid_options;traitlets.Undefined;More options for the grid.
+grid_options;{};More options for the grid.
 reticle_color;rgb(178, 50, 178);The color of the reticle.
 reticle_size;20;Whether to show the reticle in the middle.
 samp;False;Wether to allow sending data via the SAMP protocol.
