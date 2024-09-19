@@ -53,7 +53,6 @@ from traitlets import (
     Unicode,
     Bool,
     Any,
-    default,
 )
 
 SupportedRegion = Union[
@@ -131,6 +130,7 @@ class Aladin(anywidget.AnyWidget):
     _css: Final = pathlib.Path(__file__).parent / "static" / "widget.css"
 
     # Options for the view initialization
+    _init_options = traitlets.Dict().tag(sync=True)
     _height = Int(400).tag(sync=True, init_option=True)
     _target = Unicode(
         "0 0",
@@ -153,91 +153,12 @@ class Aladin(anywidget.AnyWidget):
     )
     coo_frame = Unicode(
         "ICRS",
-        help="The frame coordinate. Can be either 'ICRS', 'ICRSd', or 'Galactic'.",
+        help="The frame coordinate. Can be either 'ICRS', 'ICRSd', or 'galactic'.",
     ).tag(sync=True, init_option=True)
     projection = Unicode(
         "SIN",
         help="The projection for the view. The keywords follow the FITS standard.",
     ).tag(sync=True, init_option=True)
-    samp = Bool(False, help="Wether to allow sending data via the SAMP protocol.").tag(
-        sync=True, init_option=True, only_init=True
-    )
-    # Buttons on/off
-    background_color = Unicode(
-        "rgb(60, 60, 60)", help="The color behind the surveys in RGB format."
-    ).tag(sync=True, init_option=True, only_init=True)
-    show_zoom_control = Bool(
-        False, help="Whether to show the zoom control toolbar."
-    ).tag(sync=True, init_option=True, only_init=True)
-    show_layers_control = Bool(
-        True, help="Whether to show the layers control button."
-    ).tag(sync=True, init_option=True, only_init=True)
-    show_fullscreen_control = Bool(
-        True, help="Whether to show the fullscreen control toolbar."
-    ).tag(sync=True, init_option=True, only_init=True)
-    show_simbad_pointer_control = Bool(
-        True, help="Whether to show the Simbad pointer control toolbar."
-    ).tag(sync=True, init_option=True, only_init=True)
-    show_settings_control = Bool(
-        True, help="Whether to show the settings control toolbar."
-    ).tag(sync=True, init_option=True, only_init=True)
-    show_share_control = Bool(
-        False, help="Whether to show the share control toolbar."
-    ).tag(sync=True, init_option=True, only_init=True)
-    show_status_bar = Bool(True, help="Whether to show the status bar.").tag(
-        sync=True, init_option=True, only_init=True
-    )
-    show_frame = Bool(True, help="Whether to show the viewport frame.").tag(
-        sync=True, init_option=True, only_init=True
-    )
-    show_fov = Bool(True, help="Whether to show the field of view indicator.").tag(
-        sync=True, init_option=True, only_init=True
-    )
-    show_coo_location = Bool(True, help="Whether to show the coordinates bar.").tag(
-        sync=True, init_option=True, only_init=True
-    )
-    show_projection_control = Bool(
-        True, help="Whether to show the coordinate location indicator."
-    ).tag(sync=True, init_option=True, only_init=True)
-    show_context_menu = Bool(
-        True, help="Whether the right click should start the contextual menu."
-    ).tag(sync=True, init_option=True, only_init=True)
-    show_catalog = Bool(True, help="Whether to show the catalog.").tag(
-        sync=True, init_option=True, only_init=True
-    )
-    full_screen = Bool(False, help="Whether to start in full-screen mode.").tag(
-        sync=True, init_option=True, only_init=True
-    )
-    # reticle
-    show_reticle = Bool(
-        True, help="Whether to show the reticle in the middle of the view."
-    ).tag(sync=True, init_option=True, only_init=True)
-    reticle_color = Unicode("rgb(178, 50, 178)", help="The color of the reticle.").tag(
-        sync=True, init_option=True, only_init=True
-    )
-    reticle_size = Int(20, help="Whether to show the reticle in the middle.").tag(
-        sync=True, init_option=True, only_init=True
-    )
-    # grid
-    show_coo_grid = Bool(
-        False, help="Whether the coordinates grid should be shown at startup."
-    ).tag(sync=True, init_option=True, only_init=True)
-    show_coo_grid_control = Bool(
-        True, help="Whether to show the coordinate grid control toolbar."
-    ).tag(sync=True, init_option=True, only_init=True)
-    grid_color = Unicode(
-        "rgb(178, 50, 178)",
-        help="Color of the grid. Can be specified as a named color "
-        "(see html named colors), as rgb (ex: 'rgb(178, 50, 178)'), "
-        "or as a hex color (ex: '#86D6AE').",
-    ).tag(sync=True, init_option=True, only_init=True)
-    grid_opacity = Float(
-        0.5, help="Opacity of the grid and labels. It is comprised between 0 and 1."
-    ).tag(sync=True, init_option=True, only_init=True)
-    grid_options = traitlets.Dict(help="More options for the grid.").tag(
-        sync=True, init_option=True, only_init=True
-    )
-
     # Values
     _ready = Bool(
         False,
@@ -282,17 +203,26 @@ class Aladin(anywidget.AnyWidget):
         "is reduced in size when hidden.",
     ).tag(sync=True)
 
-    init_options = traitlets.List(trait=traitlets.Any()).tag(sync=True)
-
-    @default("init_options")
-    def _init_options(self) -> List[str]:
-        return list(self.traits(init_option=True))
-
-    def __init__(self, *args: any, **kwargs: any) -> None:
-        super().__init__(*args, **kwargs)
-        self.height = kwargs.get("height", 400)
-        self.target = kwargs.get("target", "0 0")
-        self.fov = kwargs.get("fov", 60.0)
+    def __init__(self, *args: any, **init_options: any) -> None:
+        super().__init__(*args, **init_options)
+        # pop init options of ipywidgets.DOMWidget that would choke ipyaladin
+        # https://github.com/jupyter-widgets/ipywidgets/blob/main/python/ipywidgets/ipywidgets/widgets/domwidget.py
+        for key in ["layout", "tabbable", "tooltip"]:
+            init_options.pop(key, None)
+        # some init options are properties here
+        self.height = init_options.get("height", self._height)
+        self.target = init_options.get("target", self._target)
+        self.fov = init_options.get("fov", self._fov)
+        # apply different default options from Aladin-Lite
+        ipyaladin_default = {
+            "show_simbad_pointer_control": True,
+            "show_coo_grid_control": True,
+            "show_settings_control": True,
+            "show_context_menu": True,
+        }
+        init_options = {**ipyaladin_default, **init_options}
+        # set the traitlet
+        self._init_options = init_options
         self.on_msg(self._handle_custom_message)
 
     def _handle_custom_message(self, _: any, message: dict, buffers: any) -> None:
