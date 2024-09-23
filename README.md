@@ -85,9 +85,29 @@ Correspondence table between ipyaladin versions and Aladin Lite versions:
 > version: 0.4.0 running Aladin Lite: 3.4.4-beta
 > ```
 
+## Works with
+
+### Actively tested
+
+- [JupyterLab / Jupyter Notebook](https://jupyter.org/)
+- [JupyterLite](https://jupyterlite.readthedocs.io/en/stable/)
+- [VSCode Jupyter](https://github.com/microsoft/vscode-jupyter)
+
+These are tested for each release.
+
+### Not actively tested
+
+- [Marimo](https://marimo.io/)
+- [PyCharm Notebooks](https://www.jetbrains.com/help/pycharm/jupyter-notebook-support.html)
+- [Voilà / Voici](https://github.com/voila-dashboards)
+- [Google Colab](https://colab.research.google.com/)
+- [Panel](https://panel.holoviz.org/)
+
+We know that it works, but we don't track the bugs ourselves. Feel free to open an issue if something is not working anymore. You can also contribute to this list if you know of an other notebook environment where `ipyaladin` works.
+
 ## Acknowledging ipyaladin
 
-If you use ipyaladin for your work or research, we kindly ask you to cite it with the following acknowledgment:
+If you use `ipyaladin` for your work or research, we kindly ask you to cite it with the following acknowledgment:
 
 > This research made use of ipyaladin, developed by CDS, Strasbourg Astronomical Observatory, France (DOI: [10.26093/kpaw-kb74](https://doi.org/10.26093/kpaw-kb74) ).
 >
