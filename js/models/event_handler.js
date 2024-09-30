@@ -1,5 +1,5 @@
 import MessageHandler from "./message_handler";
-import { divNumber, setDivNumber, Lock } from "../utils";
+import { divNumber, setDivNumber, Lock, setDivHeight } from "../utils";
 
 export default class EventHandler {
   /**
@@ -131,8 +131,7 @@ export default class EventHandler {
 
     /* Div control */
     this.model.on("change:_height", () => {
-      let height = this.model.get("_height");
-      this.aladinDiv.style.height = `${height}px`;
+      setDivHeight(this.model.get("_height"), this.aladinDiv);
       // Update WCS and FoV only if this is the last div
       this.updateWCS();
       this.update2AxisFoV();

@@ -46,10 +46,19 @@ function setDivNumber(num) {
   divNumber = num;
 }
 
+function setDivHeight(height, div) {
+  if (height == -1) {
+    div.style.height = "100%";
+  } else {
+    div.style.height = `${height}px`;
+  }
+}
+
 export {
   snakeCaseToCamelCase,
   convertOptionNamesToCamelCase,
   Lock,
   divNumber,
   setDivNumber,
+  setDivHeight,
 };
