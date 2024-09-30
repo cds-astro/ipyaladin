@@ -1,9 +1,11 @@
-import warnings
-from typing import Tuple
-
-import requests
-from astropy.coordinates import SkyCoord, Angle, Longitude, Latitude
+import json
 import re
+from typing import Tuple
+import urllib.parse
+import urllib.request
+import warnings
+
+from astropy.coordinates import SkyCoord, Angle, Longitude, Latitude
 
 from ipyaladin.utils.exceptions import NameResolverWarning
 
@@ -65,24 +67,32 @@ def _from_name_on_planet(string: str, body: str) -> SkyCoord:
     SkyCoord
         An `astropy.coordinates.SkyCoord` object representing the coordinates.
     """
-    url = (
-        f"https://alasky.cds.unistra.fr/planetary-features/resolve"
-        f"?identifier={string.replace(' ', '+')}&body={body}&threshold=0.7&format=json"
-    )
-    request = requests.get(url)
-    if request.status_code != requests.codes.ok:
-        raise ValueError(
-            "No coordinates found for this requested planetary feature: " f"'{string}'"
-        )
-    data = request.json()["data"]
+    url = "https://alasky.cds.unistra.fr/planetary-features/resolve?"
+    values = {
+        "identifier": string.replace(" ", "+"),
+        "body": body,
+        "threshold": 0.7,
+        "format": "json",
+    }
+    data = urllib.parse.urlencode(values)
+    request = urllib.request.Request(url + data)
+
+    try:
+        response = urllib.request.urlopen(request)
+    except urllib.request.HTTPError as err:
+        raise ValueError(f"No coordinates found for '{string}'") from err
+    answer = response.read()
+    response.close()
+
+    data = json.loads(answer)["data"][0]
     # response is different for earth
     if body == "earth":
-        return data[0][0], data[0][1]
+        return data[0], data[1]
     # case of every other planetary bodies
-    identifier = data[0][1]
-    lat = data[0][5]  # inverted lon and lat in response
-    lon = data[0][6]
-    system = data[0][11]
+    identifier = data[1]
+    lat = data[5]  # inverted lon and lat in response
+    lon = data[6]
+    system = data[11]
     if identifier != string:
         warnings.warn(
             f"Nothing found for '{string}' on {body}. However, a {identifier} exists. "
