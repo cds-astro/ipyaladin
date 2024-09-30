@@ -1,6 +1,11 @@
 import "./widget.css";
 import EventHandler from "./models/event_handler";
-import { divNumber, setDivNumber, snakeCaseToCamelCase } from "./utils";
+import {
+  divNumber,
+  setDivHeight,
+  setDivNumber,
+  snakeCaseToCamelCase,
+} from "./utils";
 import A from "./aladin_lite";
 
 function initAladinLite(model, el) {
@@ -13,8 +18,7 @@ function initAladinLite(model, el) {
 
   let aladinDiv = document.createElement("div");
   aladinDiv.classList.add("aladin-widget");
-  aladinDiv.style.height = `${model.get("_height")}px`;
-
+  setDivHeight(model.get("_height"), aladinDiv);
   aladinDiv.id = `aladin-lite-div-${divNumber}`;
   let aladin = new A.aladin(aladinDiv, initOptions);
   el.appendChild(aladinDiv);
