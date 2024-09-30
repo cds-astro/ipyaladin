@@ -95,7 +95,7 @@ Module Contents
       :type: int
 
       
-      The height of the Aladin Lite widget.
+      The height of the widget.
 
 
 
@@ -105,6 +105,10 @@ Module Contents
 
           int
               The height of the widget in pixels.
+              Setting the height to -1 will expand the widget at 100% height of its
+              container. This is generally a bad idea in a notebook but can be usefull
+              for dashbord applications.
+              The default height is 400 pixels.
 
 
 

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ipyaladin.widget &#8212; ipyaladin 0.5.0 documentation</title>
+    <title>ipyaladin.widget &#8212; ipyaladin 0.5.1 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../_static/documentation_options.js?v=1dd76d02"></script>
+    <script src="../../_static/documentation_options.js?v=b9afe91b"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -702,13 +702,16 @@ document.write(`
 <div class="viewcode-block" id="Aladin.height">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.height">[docs]</a>
     <span class="k">def</span> <span class="nf">height</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The height of the Aladin Lite widget.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The height of the widget.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        int</span>
 <span class="sd">            The height of the widget in pixels.</span>
-
+<span class="sd">            Setting the height to -1 will expand the widget at 100% height of its</span>
+<span class="sd">            container. This is generally a bad idea in a notebook but can be usefull</span>
+<span class="sd">            for dashbord applications.</span>
+<span class="sd">            The default height is 400 pixels.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_height</span></div>
 
@@ -1166,7 +1169,8 @@ document.write(`
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
             <span class="s2">&quot;add_moc_from_URL is replaced by add_moc that detects automatically&quot;</span>
-            <span class="s2">&quot;that the MOC was given as an URL.&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;that the MOC was given as an URL.&quot;</span>
+            <span class="s2">&quot;This will be removed in version 1.0.0 (coming afer 0.5.1).&quot;</span><span class="p">,</span>
             <span class="ne">DeprecationWarning</span><span class="p">,</span>
             <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
         <span class="p">)</span>
@@ -1195,7 +1199,8 @@ document.write(`
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
             <span class="s2">&quot;add_moc_from_dict is replaced by add_moc that detects automatically&quot;</span>
-            <span class="s2">&quot;that the MOC was given as a dictionary.&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;that the MOC was given as a dictionary.&quot;</span>
+            <span class="s2">&quot;This will be removed in version 1.0.0 (coming afer 0.5.1).&quot;</span><span class="p">,</span>
             <span class="ne">DeprecationWarning</span><span class="p">,</span>
             <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
         <span class="p">)</span>
@@ -1335,7 +1340,8 @@ document.write(`
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
             <span class="s2">&quot;&#39;add_overlay_from_stcs&#39; is deprecated, &quot;</span>
-            <span class="s2">&quot;use &#39;add_graphic_overlay_from_stcs&#39; instead&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;use &#39;add_graphic_overlay_from_stcs&#39; instead. &quot;</span>
+            <span class="s2">&quot;This will be removed in version 1.0.0 (coming afer 0.5.1).&quot;</span><span class="p">,</span>
             <span class="ne">DeprecationWarning</span><span class="p">,</span>
             <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
         <span class="p">)</span>
@@ -1427,7 +1433,8 @@ document.write(`
 <span class="sd">        This method is deprecated, use selection instead</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="s2">&quot;rectangular_selection is deprecated, use selection(&#39;rectangle&#39;) instead&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;rectangular_selection is deprecated, use selection(&#39;rectangle&#39;) instead&quot;</span>
+            <span class="s2">&quot;This will be removed in version 1.0.0 (coming afer 0.5.1).&quot;</span><span class="p">,</span>
             <span class="ne">DeprecationWarning</span><span class="p">,</span>
             <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
         <span class="p">)</span>
@@ -1486,7 +1493,8 @@ document.write(`
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="s2">&quot;add_listener is deprecated, use set_listener instead&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;add_listener is deprecated, use set_listener instead&quot;</span>
+            <span class="s2">&quot;This will be removed in version 1.0.0 (coming afer 0.5.1).&quot;</span><span class="p">,</span>
             <span class="ne">DeprecationWarning</span><span class="p">,</span>
             <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
         <span class="p">)</span>
