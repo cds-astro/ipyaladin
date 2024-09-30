@@ -13,6 +13,9 @@ With a couple of lines, you can display Aladin Lite, center it on the target of 
   - [Installation](#installation)
   - [Development installation](#development-installation)
   - [How does it work?](#how-does-it-work)
+  - [Works with](#works-with)
+    - [Actively tested](#actively-tested)
+    - [Not actively tested](#not-actively-tested)
   - [Acknowledging ipyaladin](#acknowledging-ipyaladin)
 
 ## Examples
@@ -88,6 +91,7 @@ Correspondence table between ipyaladin versions and Aladin Lite versions:
 | ipyaladin  | Aladin-Lite |
 | ---------- | ----------- |
 | Unreleased | 3.5.1-beta  |
+| 0.5.1      | 3.5.1-beta  |
 | 0.5.0      | 3.5.1-beta  |
 | 0.4.0      | 3.4.4-beta  |
 | 0.3.0      | 3.3.3-dev   |
