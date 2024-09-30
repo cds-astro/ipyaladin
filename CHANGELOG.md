@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- DeprecationWarning messages now clearly say that the methods won't exist in v1.0.0
+
 ### Added
 
 - it is now possible to extend the widget's height to 100% of its container. To do so,
