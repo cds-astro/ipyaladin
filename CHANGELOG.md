@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- it is now possible to extend the widget's height to 100% of its container. To do so,
+  do `Aladin(height=-1)`. This is implemented to support use in dashboard
+  applications, this cannot work in a notebook.
+
 ### Fixed
 
 - remove `requests` from mandatory dependencies (accident in version 0.5.0)

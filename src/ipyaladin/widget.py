@@ -262,13 +262,16 @@ class Aladin(anywidget.AnyWidget):
 
     @property
     def height(self) -> int:
-        """The height of the Aladin Lite widget.
+        """The height of the widget.
 
         Returns
         -------
         int
             The height of the widget in pixels.
-
+            Setting the height to -1 will expand the widget at 100% height of its
+            container. This is generally a bad idea in a notebook but can be usefull
+            for dashbord applications.
+            The default height is 400 pixels.
         """
         return self._height
 
