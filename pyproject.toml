@@ -67,6 +67,7 @@ convention = "numpy"
 [tool.ruff.lint.per-file-ignores]
 # D104: Missing docstring in public package
 "__init__.py" = ["D104"]
+"src/tests/*" = ["D103"]
 
 [tool.ruff.format]
 docstring-code-format = false

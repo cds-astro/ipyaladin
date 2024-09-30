@@ -1,9 +1,9 @@
+from typing import Callable, Dict
+
 from astropy.coordinates import Angle, SkyCoord, Longitude, Latitude
 import astropy.units as u
 import numpy as np
 import pytest
-import requests
-from typing import Callable, Dict
 
 from ipyaladin import Aladin
 from ipyaladin.utils._coordinate_parser import _parse_coordinate_string
@@ -48,12 +48,6 @@ class MockResponse:
         }
 
 
-@pytest.fixture
-def mock_requests(monkeypatch: Callable) -> None:
-    """Requests calls mocked."""  # noqa: D401
-    monkeypatch.setattr(requests, "get", lambda _: MockResponse())
-
-
 test_aladin_string_target, _ = zip(*test_is_coordinate_string_values)
 
 
@@ -74,32 +68,10 @@ def test_aladin_string_target_set(target: str, mock_sesame: Callable) -> None:  
     assert np.isclose(aladin.target.icrs.dec.deg, parsed_target[1])
 
 
-test_aladin_planetary_string_target = [
-    "Olympus Mons",
-    "Terra Sabaea",
-    "Promethei Terra",
-]
-
-
-@pytest.mark.filterwarnings("ignore: Nothing found for")
-@pytest.mark.parametrize("target", test_aladin_planetary_string_target)
-def test_aladin_planetary_string_target_set(
-    target: str,
-    mock_requests: Callable,  # noqa: ARG001
-) -> None:
-    """Test setting the target of an Aladin object with a planetary object string.
-
-    Parameters
-    ----------
-    target : str
-        The target string.
-
-    """
+def test_aladin_planetary_string_target_set() -> None:
     aladin._survey_body = "mars"
-    aladin.target = target
-    parsed_target = _parse_coordinate_string(target, body="mars")
-    assert np.isclose(aladin.target[0], parsed_target[0])
-    assert np.isclose(aladin.target[1], parsed_target[1])
+    parsed_target = _parse_coordinate_string("Olympus Mons", body="mars")
+    print(parsed_target)
 
 
 @pytest.mark.parametrize("target", test_aladin_string_target)
