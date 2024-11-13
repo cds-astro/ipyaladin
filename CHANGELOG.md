@@ -16,6 +16,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix wrapper `widget_should_be_loaded` that was over-writing the methods documentation
+  [#130]
+
 ## [0.5.1]
 
 ### Changed
