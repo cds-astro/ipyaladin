@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.2]
+
 ### Fixed
 
 - in `add_marker`, markers don't use the default icon anymore. Do

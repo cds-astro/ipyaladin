@@ -696,7 +696,7 @@ class Aladin(anywidget.AnyWidget):
         warnings.warn(
             "add_moc_from_URL is replaced by add_moc that detects automatically"
             "that the MOC was given as an URL."
-            "This will be removed in version 1.0.0 (coming afer 0.5.1).",
+            "This will be removed in version 1.0.0 (coming after 0.5).",
             DeprecationWarning,
             stacklevel=2,
         )
@@ -723,7 +723,7 @@ class Aladin(anywidget.AnyWidget):
         warnings.warn(
             "add_moc_from_dict is replaced by add_moc that detects automatically"
             "that the MOC was given as a dictionary."
-            "This will be removed in version 1.0.0 (coming afer 0.5.1).",
+            "This will be removed in version 1.0.0 (coming after 0.5).",
             DeprecationWarning,
             stacklevel=2,
         )
@@ -855,7 +855,7 @@ class Aladin(anywidget.AnyWidget):
         warnings.warn(
             "'add_overlay_from_stcs' is deprecated, "
             "use 'add_graphic_overlay_from_stcs' instead. "
-            "This will be removed in version 1.0.0 (coming afer 0.5.1).",
+            "This will be removed in version 1.0.0 (coming after 0.5).",
             DeprecationWarning,
             stacklevel=2,
         )
@@ -936,7 +936,7 @@ class Aladin(anywidget.AnyWidget):
         """
         warnings.warn(
             "rectangular_selection is deprecated, use selection('rectangle') instead"
-            "This will be removed in version 1.0.0 (coming afer 0.5.1).",
+            "This will be removed in version 1.0.0 (coming after 0.5).",
             DeprecationWarning,
             stacklevel=2,
         )
@@ -990,7 +990,7 @@ class Aladin(anywidget.AnyWidget):
         """
         warnings.warn(
             "add_listener is deprecated, use set_listener instead"
-            "This will be removed in version 1.0.0 (coming afer 0.5.1).",
+            "This will be removed in version 1.0.0 (coming after 0.5).",
             DeprecationWarning,
             stacklevel=2,
         )
