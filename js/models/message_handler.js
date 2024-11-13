@@ -21,6 +21,7 @@ export default class MessageHandler {
     for (const marker of pythonMarkers) {
       markers.push(
         A.marker(marker["lon"], marker["lat"], {
+          useMarkerDefaultIcon: options["useMarkerDefaultIcon"] | false,
           popupTitle: marker["title"],
           popupDesc: marker["description"],
         }),

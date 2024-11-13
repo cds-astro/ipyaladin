@@ -18,6 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- in `add_marker`, markers don't use the default icon anymore. Do
+  `use_marker_default_icon = True` in `add_marker` to recover the previous
+  behavior [#129]
 - Fix wrapper `widget_should_be_loaded` that was over-writing the methods documentation
   [#130]
 
