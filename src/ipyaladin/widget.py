@@ -6,9 +6,10 @@ It allows to display astronomical images and catalogs in an interactive way.
 """
 
 from collections.abc import Callable
+import functools
+from json import JSONDecodeError
 import io
 import pathlib
-from json import JSONDecodeError
 from pathlib import Path
 import time
 from typing import ClassVar, Dict, Final, List, Optional, Tuple, Union
@@ -74,12 +75,12 @@ SupportedRegion = Union[
 ]
 
 
-def widget_should_be_loaded(func: Callable) -> Callable:
+def widget_should_be_loaded(function: Callable) -> Callable:
     """Check if the widget is ready to execute a function.
 
     Parameters
     ----------
-    func : Callable
+    function : Callable
         The function to decorate.
 
     Returns
@@ -89,6 +90,7 @@ def widget_should_be_loaded(func: Callable) -> Callable:
 
     """
 
+    @functools.wraps(function)
     def wrapper(self: Any, *args: Any, **kwargs: Any) -> Any:
         """Check if the widget is ready to execute a function.
 
@@ -114,7 +116,7 @@ def widget_should_be_loaded(func: Callable) -> Callable:
             time.sleep(duration)
             # set ready to True to avoid waiting twice
             self._is_loaded = True
-        return func(self, *args, **kwargs)
+        return function(self, *args, **kwargs)
 
     return wrapper
 
