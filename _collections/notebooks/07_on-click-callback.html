@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>On click callback &#8212; ipyaladin 0.5.1 documentation</title>
+    <title>On click callback &#8212; ipyaladin 0.5.2 documentation</title>
   
   
   
@@ -16,31 +16,34 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-
-  
-  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=2aa19091" />
   
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
 
-    <script src="../../_static/documentation_options.js?v=b9afe91b"></script>
-    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/documentation_options.js?v=8e576371"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
@@ -56,6 +59,7 @@
     <link rel="prev" title="Linked widgets" href="06_Linked-widgets.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -71,19 +75,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="../../search.html"
       method="get">
@@ -91,7 +84,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search the docs ..."
          aria-label="Search the docs ..."
          autocomplete="off"
@@ -99,8 +91,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -134,7 +126,7 @@
     
     
     <img src="../../_static/ipyaladin_light.png" class="logo__image only-light" alt=""/>
-    <script>document.write(`<img src="../../_static/ipyaladin_dark.png" class="logo__image only-dark" alt=""/>`);</script>
+    <img src="../../_static/ipyaladin_dark.png" class="logo__image only-dark pst-js-only" alt=""/>
   
   
     <p class="title logo__title">Ipyaladin documentation</p>
@@ -211,29 +203,21 @@
         <div class="navbar-item navbar-persistent--container">
           
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
         </div>
       
       
         <div class="navbar-item">
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script></div>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
       
         <div class="navbar-item"><ul class="navbar-icon-links"
     aria-label="Icon Links">
@@ -258,15 +242,11 @@ document.write(`
   
     <div class="navbar-persistent--mobile">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
     </div>
   
 
@@ -285,7 +265,8 @@ document.write(`
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -353,15 +334,11 @@ document.write(`
         
           <div class="navbar-item">
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script></div>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
         
           <div class="navbar-item"><ul class="navbar-icon-links"
     aria-label="Icon Links">
@@ -433,8 +410,6 @@ document.write(`
       
         <div class="header-article-item">
 
-
-
 <nav aria-label="Breadcrumb" class="d-print-none">
   <ul class="bd-breadcrumbs">
     
@@ -446,7 +421,7 @@ document.write(`
     
     <li class="breadcrumb-item"><a href="../../user_documentation/user_documentation.html" class="nav-link">User Documentation</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page">On click callback</li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">On click callback</span></li>
   </ul>
 </nav>
 </div>
@@ -491,7 +466,7 @@ document.write(`
 </pre></div>
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "43162d16772a4120815cebf3d90fb27c"}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "81fcd68bd53b4f79a7546ace20feb51c"}</script></div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
@@ -558,7 +533,7 @@ document.write(`
 </div>
 </div>
 <script type="application/vnd.jupyter.widget-state+json">
-{"state": {"7d1c48aa54dd4837b6ead7436eef830a": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": "70%"}}, "cb9dace497bf404f80f7269b72cb1f0a": {"model_name": "AnyModel", "model_module": "anywidget", "model_module_version": "~0.9.*", "state": {"_anywidget_id": "ipyaladin.widget.Aladin", "_base_layer_last_view": "https://alaskybis.unistra.fr/DSS/DSSColor", "_css": ".cell-output-ipywidget-background{background:transparent}.jp-OutputArea-output,.aladin-widget{background-color:transparent}.aladin-widget .aladin-measurement-div{max-height:100px}\n", "_dom_classes": [], "_esm": "function v(n){n.charAt(0)===\"_\"&&(n=n.slice(1));let e=n.split(\"_\");for(let a=1;a<e.length;a++)e[a]=e[a].charAt(0).toUpperCase()+e[a].slice(1);return e.join(\"\")}function h(n){let e={};for(let a in n)e[v(a)]=n[a];return e}var m=class{locked=!1;unlock(){this.locked=!1}lock(){this.locked=!0}},g=-1;function f(n){g=n}function _(n,e){n==-1?e.style.height=\"100%\":e.style.height=`${n}px`}import y from\"https://esm.sh/aladin-lite@3.5.1-beta\";var r=y;var b=0,p=class{constructor(e,a){this.aladin=e,this.model=a}handleAddMarker(e){let a=h(e.options||{});a.name||(a.name=\"markers\");let s=r.catalog(a);this.aladin.addCatalog(s);let i=e.markers,t=[];for(let o of i)t.push(r.marker(o.lon,o.lat,{popupTitle:o.title,popupDesc:o.description}));s.addSources(t)}handleChangeFoV(e){this.aladin.setFoV(e.fov)}handleGotoRaDec(e){this.aladin.gotoRaDec(e.ra,e.dec)}async handleSaveViewAsImage(e){let a=e.path,s=e.format,i=e.with_logo,t=await this.aladin.getViewData(\"arraybuffer\",`image/${s}`,i);this.model.send({event_type:\"save_view_as_image\",path:a},null,[t])}handleAddFits(e,a){let s=h(e.options||{});s.name||(s.name=`image_${String(++b).padStart(3,\"0\")}`);let i=a[0],t=new Blob([i],{type:\"application/octet-stream\"}),o=URL.createObjectURL(t),d=this.aladin.createImageFITS(o,s,(c,l)=>{this.aladin.gotoRaDec(c,l),console.info(`FITS located at ra: ${c}, dec: ${l}`),URL.revokeObjectURL(o)});this.aladin.setOverlayImageLayer(d,s.name)}handleAddCatalogFromURL(e){let a=h(e.options||{});this.aladin.addCatalog(r.catalogFromURL(e.votable_URL,a))}handleAddMOCFromURL(e){let a=h(e.options||{});this.aladin.addMOC(r.MOCFromURL(e.moc_URL,a))}handleAddMOCFromDict(e){let a=h(e.options||{});this.aladin.addMOC(r.MOCFromJSON(e.moc_dict,a))}handleAddOverlay(e){let a=e.regions_infos,s=h(e.graphic_options||{});s.color||(s.color=\"red\");let i=r.graphicOverlay(s);this.aladin.addOverlay(i);for(let t of a){let o=t.infos;switch(t.region_type){case\"stcs\":i.addFootprints(r.footprintsFromSTCS(o.stcs,t.options));break;case\"circle\":i.add(r.circle(o.ra,o.dec,o.radius,t.options));break;case\"ellipse\":i.add(r.ellipse(o.ra,o.dec,o.a,o.b,o.theta,t.options));break;case\"line\":t.options.lineWidth=t.options.lineWidth||3,i.add(r.vector(o.ra1,o.dec1,o.ra2,o.dec2,t.options));break;case\"polygon\":i.add(r.polygon(o.vertices,t.options));break}}}handleChangeColormap(e){this.aladin.getBaseImageLayer().setColormap(e.colormap)}handleGetJPGThumbnail(){this.aladin.exportAsPNG()}handleTriggerSelection(e){let a=e.selection_type;a===\"rectangle\"?a=\"rect\":a===\"polygon\"&&(a=\"poly\"),this.aladin.select(a)}handleAddTable(e,a){let s=h(e.options||{}),i=a[0].buffer,t=new TextDecoder(\"utf-8\"),o=new Blob([t.decode(i)]),d=URL.createObjectURL(o);r.catalogFromURL(d,Object.assign(s,{onClick:\"showTable\"}),c=>{this.aladin.addCatalog(c)},!1),URL.revokeObjectURL(d)}};var u=class{constructor(e,a,s){this.aladin=e,this.aladinDiv=a,this.model=s,this.messageHandler=new p(e,s),this.currentDivNumber=parseInt(a.id.split(\"-\").pop())}isLastDiv(){if(this.currentDivNumber===g)return!0;let e=g;for(let a=e;a>=0;a--){let s=document.getElementById(`aladin-lite-div-${a}`);if(s&&s.style.display!==\"none\"){e=a;break}}return f(e),this.currentDivNumber===e}updateWCS(){this.isLastDiv()&&this.model.set(\"_wcs\",this.aladin.getViewWCS())}update2AxisFoV(){if(!this.isLastDiv())return;let e=this.aladin.getFov();this.model.set(\"_fov_xy\",{x:e[0],y:e[1]})}subscribeAll(){let e=new m,a=new m;this.aladin.on(\"positionChanged\",t=>{if(a.locked){a.unlock();return}e.lock();let o=[t.ra,t.dec];this.updateWCS(),this.model.set(\"_target\",`${o[0]} ${o[1]}`),this.model.save_changes()}),this.model.on(\"change:_target\",()=>{if(e.locked){e.unlock();return}a.lock();let t=this.model.get(\"_target\"),[o,d]=t.split(\" \");this.aladin.gotoRaDec(o,d)});let s=new m,i=new m;this.aladin.on(\"zoomChanged\",t=>{if(i.locked){i.unlock();return}s.lock(),this.updateWCS(),this.update2AxisFoV(),this.model.set(\"_fov\",parseFloat(t.toFixed(5))),this.model.save_changes()}),this.model.on(\"change:_fov\",()=>{if(s.locked){s.unlock();return}i.lock();let t=this.model.get(\"_fov\");this.aladin.setFoV(t)}),this.model.on(\"change:_height\",()=>{_(this.model.get(\"_height\"),this.aladinDiv),this.updateWCS(),this.update2AxisFoV(),this.model.save_changes()}),this.aladin.on(\"cooFrameChanged\",()=>{this.updateWCS(),this.model.save_changes()}),this.aladin.on(\"projectionChanged\",()=>{this.updateWCS(),this.model.save_changes()}),this.aladin.on(\"layerChanged\",(t,o,d)=>{o===\"base\"&&this.model.set(\"_survey_body\",t.hipsBody||\"sky\"),!(o!==\"base\"||d!==\"ADDED\")&&(this.updateWCS(),this.model.set(\"_base_layer_last_view\",t.id),this.model.save_changes())}),this.aladin.on(\"resizeChanged\",(t,o)=>{if(t===1&&o===1){this.model.set(\"_is_reduced\",!0),this.model.save_changes();return}else this.model.set(\"_is_reduced\",!1);this.updateWCS(),this.update2AxisFoV(),this.model.set(\"_height\",o),this.model.save_changes()}),this.aladin.on(\"objectHovered\",t=>{t.data!==void 0&&this.model.send({event_type:\"object_hovered\",content:{ra:t.ra,dec:t.dec}})}),this.aladin.on(\"objectClicked\",t=>{if(t){let o={ra:t.ra,dec:t.dec};t.data!==void 0&&(o.data=t.data),this.model.set(\"clicked_object\",o),this.model.send({event_type:\"object_clicked\",content:o}),this.model.save_changes()}}),this.aladin.on(\"click\",t=>{this.model.send({event_type:\"click\",content:t})}),this.aladin.on(\"select\",t=>{let o=t.map(c=>c.map(l=>({ra:l.ra,dec:l.dec,data:l.data,x:l.x,y:l.y})));this.model.set(\"_selected_objects\",o),this.model.save_changes();let d=[];t.forEach(c=>{c.forEach(l=>{d.push({ra:l.ra,dec:l.dec,data:l.data,x:l.x,y:l.y})})}),this.model.send({event_type:\"select\",content:d})}),this.model.on(\"change:coo_frame\",()=>{this.aladin.setFrame(this.model.get(\"coo_frame\"))}),this.model.on(\"change:survey\",()=>{this.aladin.setImageSurvey(this.model.get(\"survey\"))}),this.model.on(\"change:overlay_survey\",()=>{this.aladin.setOverlayImageLayer(this.model.get(\"overlay_survey\"))}),this.model.on(\"change:overlay_survey_opacity\",()=>{this.aladin.getOverlayImageLayer().setAlpha(this.model.get(\"overlay_survey_opacity\"))}),this.eventHandlers={add_marker:this.messageHandler.handleAddMarker,change_fov:this.messageHandler.handleChangeFoV,goto_ra_dec:this.messageHandler.handleGotoRaDec,save_view_as_image:this.messageHandler.handleSaveViewAsImage,add_fits:this.messageHandler.handleAddFits,add_catalog_from_URL:this.messageHandler.handleAddCatalogFromURL,add_MOC_from_URL:this.messageHandler.handleAddMOCFromURL,add_MOC_from_dict:this.messageHandler.handleAddMOCFromDict,add_overlay:this.messageHandler.handleAddOverlay,change_colormap:this.messageHandler.handleChangeColormap,get_JPG_thumbnail:this.messageHandler.handleGetJPGThumbnail,trigger_selection:this.messageHandler.handleTriggerSelection,add_table:this.messageHandler.handleAddTable},this.model.on(\"msg:custom\",(t,o)=>{let d=t.event_name,c=this.eventHandlers[d];if(c)c.call(this,t,o);else throw new Error(`Unknown event name: ${d}`)})}unsubscribeAll(){this.model.off(\"change:_target\"),this.model.off(\"change:_fov\"),this.model.off(\"change:_height\"),this.model.off(\"change:coo_frame\"),this.model.off(\"change:survey\"),this.model.off(\"change:overlay_survey\"),this.model.off(\"change:overlay_survey_opacity\"),this.model.off(\"change:trigger_event\"),this.model.off(\"msg:custom\")}};function C(n,e){f(g+1);let a=n.get(\"_init_options\"),s={};for(let l in a)s[v(l)]=a[l];let i=document.createElement(\"div\");i.classList.add(\"aladin-widget\"),_(n.get(\"_height\"),i),i.id=`aladin-lite-div-${g}`;let t=new r.aladin(i,s);e.appendChild(i);let o=n.get(\"_target\").split(\" \");t.gotoRaDec(o[0],o[1]);let d={...t.getFov()};n.set(\"_fov_xy\",{x:d[0],y:d[1]});let c={...t.getViewWCS()};return n.set(\"_wcs\",c),n.set(\"_is_loaded\",!0),n.save_changes(),{aladin:t,aladinDiv:i}}async function k({model:n}){await r.init}function w({model:n,el:e}){let{aladin:a,aladinDiv:s}=C(n,e),i=new u(a,s,n);return i.subscribeAll(),()=>{i.unsubscribeAll()}}var W={initialize:k,render:w};export{W as default};\n", "_fov": 0.3, "_fov_xy": {}, "_height": 400, "_init_options": {"show_simbad_pointer_control": true, "show_coo_grid_control": true, "show_settings_control": true, "show_context_menu": true, "target": "M 36", "fov": 0.3}, "_is_loaded": true, "_is_reduced": false, "_model_module": "anywidget", "_model_module_version": "~0.9.*", "_model_name": "AnyModel", "_ready": false, "_selected_objects": [], "_survey_body": "sky", "_target": "84.084 34.135", "_view_count": null, "_view_module": "anywidget", "_view_module_version": "~0.9.*", "_view_name": "AnyView", "_wcs": {}, "clicked_object": {}, "coo_frame": "ICRS", "layout": "IPY_MODEL_7d1c48aa54dd4837b6ead7436eef830a", "overlay_survey": "", "overlay_survey_opacity": 0.0, "projection": "SIN", "survey": "https://alaskybis.unistra.fr/DSS/DSSColor", "tabbable": null, "tooltip": null}}, "e423d9f9d0f647779ee11584b57ba740": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "6b28dbe19b9b402a825081312fd5973d": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "13db7828a4f743a29d42157dce9159c7": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_e423d9f9d0f647779ee11584b57ba740", "placeholder": "\u200b", "style": "IPY_MODEL_6b28dbe19b9b402a825081312fd5973d", "tabbable": null, "tooltip": null, "value": ""}}, "758f70587383467a9808219edaf56d70": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": "stretch", "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": "flex", "flex": null, "flex_flow": "row", "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": "100%"}}, "43162d16772a4120815cebf3d90fb27c": {"model_name": "BoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "BoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "BoxView", "box_style": "", "children": ["IPY_MODEL_cb9dace497bf404f80f7269b72cb1f0a", "IPY_MODEL_13db7828a4f743a29d42157dce9159c7"], "layout": "IPY_MODEL_758f70587383467a9808219edaf56d70", "tabbable": null, "tooltip": null}}}, "version_major": 2, "version_minor": 0}
+{"state": {"54fb772a33314868a73407842dc17bde": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": "70%"}}, "c97f96d5d60c41bfbb7a4498a2472ab4": {"model_name": "AnyModel", "model_module": "anywidget", "model_module_version": "~0.9.*", "state": {"_anywidget_id": "ipyaladin.widget.Aladin", "_base_layer_last_view": "https://alaskybis.unistra.fr/DSS/DSSColor", "_css": ".cell-output-ipywidget-background{background:transparent}.jp-OutputArea-output,.aladin-widget{background-color:transparent}.aladin-widget .aladin-measurement-div{max-height:100px}\n", "_dom_classes": [], "_esm": "function v(n){n.charAt(0)===\"_\"&&(n=n.slice(1));let e=n.split(\"_\");for(let a=1;a<e.length;a++)e[a]=e[a].charAt(0).toUpperCase()+e[a].slice(1);return e.join(\"\")}function h(n){let e={};for(let a in n)e[v(a)]=n[a];return e}var m=class{locked=!1;unlock(){this.locked=!1}lock(){this.locked=!0}},g=-1;function f(n){g=n}function _(n,e){n==-1?e.style.height=\"100%\":e.style.height=`${n}px`}import y from\"https://esm.sh/aladin-lite@3.5.1-beta\";var r=y;var b=0,p=class{constructor(e,a){this.aladin=e,this.model=a}handleAddMarker(e){let a=h(e.options||{});a.name||(a.name=\"markers\");let s=r.catalog(a);this.aladin.addCatalog(s);let i=e.markers,t=[];for(let o of i)t.push(r.marker(o.lon,o.lat,{useMarkerDefaultIcon:a.useMarkerDefaultIcon|!1,popupTitle:o.title,popupDesc:o.description}));s.addSources(t)}handleChangeFoV(e){this.aladin.setFoV(e.fov)}handleGotoRaDec(e){this.aladin.gotoRaDec(e.ra,e.dec)}async handleSaveViewAsImage(e){let a=e.path,s=e.format,i=e.with_logo,t=await this.aladin.getViewData(\"arraybuffer\",`image/${s}`,i);this.model.send({event_type:\"save_view_as_image\",path:a},null,[t])}handleAddFits(e,a){let s=h(e.options||{});s.name||(s.name=`image_${String(++b).padStart(3,\"0\")}`);let i=a[0],t=new Blob([i],{type:\"application/octet-stream\"}),o=URL.createObjectURL(t),d=this.aladin.createImageFITS(o,s,(c,l)=>{this.aladin.gotoRaDec(c,l),console.info(`FITS located at ra: ${c}, dec: ${l}`),URL.revokeObjectURL(o)});this.aladin.setOverlayImageLayer(d,s.name)}handleAddCatalogFromURL(e){let a=h(e.options||{});this.aladin.addCatalog(r.catalogFromURL(e.votable_URL,a))}handleAddMOCFromURL(e){let a=h(e.options||{});this.aladin.addMOC(r.MOCFromURL(e.moc_URL,a))}handleAddMOCFromDict(e){let a=h(e.options||{});this.aladin.addMOC(r.MOCFromJSON(e.moc_dict,a))}handleAddOverlay(e){let a=e.regions_infos,s=h(e.graphic_options||{});s.color||(s.color=\"red\");let i=r.graphicOverlay(s);this.aladin.addOverlay(i);for(let t of a){let o=t.infos;switch(t.region_type){case\"stcs\":i.addFootprints(r.footprintsFromSTCS(o.stcs,t.options));break;case\"circle\":i.add(r.circle(o.ra,o.dec,o.radius,t.options));break;case\"ellipse\":i.add(r.ellipse(o.ra,o.dec,o.a,o.b,o.theta,t.options));break;case\"line\":t.options.lineWidth=t.options.lineWidth||3,i.add(r.vector(o.ra1,o.dec1,o.ra2,o.dec2,t.options));break;case\"polygon\":i.add(r.polygon(o.vertices,t.options));break}}}handleChangeColormap(e){this.aladin.getBaseImageLayer().setColormap(e.colormap)}handleGetJPGThumbnail(){this.aladin.exportAsPNG()}handleTriggerSelection(e){let a=e.selection_type;a===\"rectangle\"?a=\"rect\":a===\"polygon\"&&(a=\"poly\"),this.aladin.select(a)}handleAddTable(e,a){let s=h(e.options||{}),i=a[0].buffer,t=new TextDecoder(\"utf-8\"),o=new Blob([t.decode(i)]),d=URL.createObjectURL(o);r.catalogFromURL(d,Object.assign(s,{onClick:\"showTable\"}),c=>{this.aladin.addCatalog(c)},!1),URL.revokeObjectURL(d)}};var u=class{constructor(e,a,s){this.aladin=e,this.aladinDiv=a,this.model=s,this.messageHandler=new p(e,s),this.currentDivNumber=parseInt(a.id.split(\"-\").pop())}isLastDiv(){if(this.currentDivNumber===g)return!0;let e=g;for(let a=e;a>=0;a--){let s=document.getElementById(`aladin-lite-div-${a}`);if(s&&s.style.display!==\"none\"){e=a;break}}return f(e),this.currentDivNumber===e}updateWCS(){this.isLastDiv()&&this.model.set(\"_wcs\",this.aladin.getViewWCS())}update2AxisFoV(){if(!this.isLastDiv())return;let e=this.aladin.getFov();this.model.set(\"_fov_xy\",{x:e[0],y:e[1]})}subscribeAll(){let e=new m,a=new m;this.aladin.on(\"positionChanged\",t=>{if(a.locked){a.unlock();return}e.lock();let o=[t.ra,t.dec];this.updateWCS(),this.model.set(\"_target\",`${o[0]} ${o[1]}`),this.model.save_changes()}),this.model.on(\"change:_target\",()=>{if(e.locked){e.unlock();return}a.lock();let t=this.model.get(\"_target\"),[o,d]=t.split(\" \");this.aladin.gotoRaDec(o,d)});let s=new m,i=new m;this.aladin.on(\"zoomChanged\",t=>{if(i.locked){i.unlock();return}s.lock(),this.updateWCS(),this.update2AxisFoV(),this.model.set(\"_fov\",parseFloat(t.toFixed(5))),this.model.save_changes()}),this.model.on(\"change:_fov\",()=>{if(s.locked){s.unlock();return}i.lock();let t=this.model.get(\"_fov\");this.aladin.setFoV(t)}),this.model.on(\"change:_height\",()=>{_(this.model.get(\"_height\"),this.aladinDiv),this.updateWCS(),this.update2AxisFoV(),this.model.save_changes()}),this.aladin.on(\"cooFrameChanged\",()=>{this.updateWCS(),this.model.save_changes()}),this.aladin.on(\"projectionChanged\",()=>{this.updateWCS(),this.model.save_changes()}),this.aladin.on(\"layerChanged\",(t,o,d)=>{o===\"base\"&&this.model.set(\"_survey_body\",t.hipsBody||\"sky\"),!(o!==\"base\"||d!==\"ADDED\")&&(this.updateWCS(),this.model.set(\"_base_layer_last_view\",t.id),this.model.save_changes())}),this.aladin.on(\"resizeChanged\",(t,o)=>{if(t===1&&o===1){this.model.set(\"_is_reduced\",!0),this.model.save_changes();return}else this.model.set(\"_is_reduced\",!1);this.updateWCS(),this.update2AxisFoV(),this.model.set(\"_height\",o),this.model.save_changes()}),this.aladin.on(\"objectHovered\",t=>{t.data!==void 0&&this.model.send({event_type:\"object_hovered\",content:{ra:t.ra,dec:t.dec}})}),this.aladin.on(\"objectClicked\",t=>{if(t){let o={ra:t.ra,dec:t.dec};t.data!==void 0&&(o.data=t.data),this.model.set(\"clicked_object\",o),this.model.send({event_type:\"object_clicked\",content:o}),this.model.save_changes()}}),this.aladin.on(\"click\",t=>{this.model.send({event_type:\"click\",content:t})}),this.aladin.on(\"select\",t=>{let o=t.map(c=>c.map(l=>({ra:l.ra,dec:l.dec,data:l.data,x:l.x,y:l.y})));this.model.set(\"_selected_objects\",o),this.model.save_changes();let d=[];t.forEach(c=>{c.forEach(l=>{d.push({ra:l.ra,dec:l.dec,data:l.data,x:l.x,y:l.y})})}),this.model.send({event_type:\"select\",content:d})}),this.model.on(\"change:coo_frame\",()=>{this.aladin.setFrame(this.model.get(\"coo_frame\"))}),this.model.on(\"change:survey\",()=>{this.aladin.setImageSurvey(this.model.get(\"survey\"))}),this.model.on(\"change:overlay_survey\",()=>{this.aladin.setOverlayImageLayer(this.model.get(\"overlay_survey\"))}),this.model.on(\"change:overlay_survey_opacity\",()=>{this.aladin.getOverlayImageLayer().setAlpha(this.model.get(\"overlay_survey_opacity\"))}),this.eventHandlers={add_marker:this.messageHandler.handleAddMarker,change_fov:this.messageHandler.handleChangeFoV,goto_ra_dec:this.messageHandler.handleGotoRaDec,save_view_as_image:this.messageHandler.handleSaveViewAsImage,add_fits:this.messageHandler.handleAddFits,add_catalog_from_URL:this.messageHandler.handleAddCatalogFromURL,add_MOC_from_URL:this.messageHandler.handleAddMOCFromURL,add_MOC_from_dict:this.messageHandler.handleAddMOCFromDict,add_overlay:this.messageHandler.handleAddOverlay,change_colormap:this.messageHandler.handleChangeColormap,get_JPG_thumbnail:this.messageHandler.handleGetJPGThumbnail,trigger_selection:this.messageHandler.handleTriggerSelection,add_table:this.messageHandler.handleAddTable},this.model.on(\"msg:custom\",(t,o)=>{let d=t.event_name,c=this.eventHandlers[d];if(c)c.call(this,t,o);else throw new Error(`Unknown event name: ${d}`)})}unsubscribeAll(){this.model.off(\"change:_target\"),this.model.off(\"change:_fov\"),this.model.off(\"change:_height\"),this.model.off(\"change:coo_frame\"),this.model.off(\"change:survey\"),this.model.off(\"change:overlay_survey\"),this.model.off(\"change:overlay_survey_opacity\"),this.model.off(\"change:trigger_event\"),this.model.off(\"msg:custom\")}};function C(n,e){f(g+1);let a=n.get(\"_init_options\"),s={};for(let l in a)s[v(l)]=a[l];let i=document.createElement(\"div\");i.classList.add(\"aladin-widget\"),_(n.get(\"_height\"),i),i.id=`aladin-lite-div-${g}`;let t=new r.aladin(i,s);e.appendChild(i);let o=n.get(\"_target\").split(\" \");t.gotoRaDec(o[0],o[1]);let d={...t.getFov()};n.set(\"_fov_xy\",{x:d[0],y:d[1]});let c={...t.getViewWCS()};return n.set(\"_wcs\",c),n.set(\"_is_loaded\",!0),n.save_changes(),{aladin:t,aladinDiv:i}}async function k({model:n}){await r.init}function w({model:n,el:e}){let{aladin:a,aladinDiv:s}=C(n,e),i=new u(a,s,n);return i.subscribeAll(),()=>{i.unsubscribeAll()}}var W={initialize:k,render:w};export{W as default};\n", "_fov": 0.3, "_fov_xy": {}, "_height": 400, "_init_options": {"show_simbad_pointer_control": true, "show_coo_grid_control": true, "show_settings_control": true, "show_context_menu": true, "target": "M 36", "fov": 0.3}, "_is_loaded": true, "_is_reduced": false, "_model_module": "anywidget", "_model_module_version": "~0.9.*", "_model_name": "AnyModel", "_ready": false, "_selected_objects": [], "_survey_body": "sky", "_target": "84.084 34.135", "_view_count": null, "_view_module": "anywidget", "_view_module_version": "~0.9.*", "_view_name": "AnyView", "_wcs": {}, "clicked_object": {}, "coo_frame": "ICRS", "layout": "IPY_MODEL_54fb772a33314868a73407842dc17bde", "overlay_survey": "", "overlay_survey_opacity": 0.0, "projection": "SIN", "survey": "https://alaskybis.unistra.fr/DSS/DSSColor", "tabbable": null, "tooltip": null}}, "51ea25e066b9465283d288eb7ee51460": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "399210c016b24f11be14e612d69ed9de": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "28823568c172432f925cebdd18488bcd": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_51ea25e066b9465283d288eb7ee51460", "placeholder": "\u200b", "style": "IPY_MODEL_399210c016b24f11be14e612d69ed9de", "tabbable": null, "tooltip": null, "value": ""}}, "1dd84341e045414390e1071dd2a3bc85": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": "stretch", "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": "flex", "flex": null, "flex_flow": "row", "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": "100%"}}, "81fcd68bd53b4f79a7546ace20feb51c": {"model_name": "BoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "BoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "BoxView", "box_style": "", "children": ["IPY_MODEL_c97f96d5d60c41bfbb7a4498a2472ab4", "IPY_MODEL_28823568c172432f925cebdd18488bcd"], "layout": "IPY_MODEL_1dd84341e045414390e1071dd2a3bc85", "tabbable": null, "tooltip": null}}}, "version_major": 2, "version_minor": 0}
 </script></section>
 
 
@@ -596,7 +571,8 @@ document.write(`
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -621,8 +597,8 @@ document.write(`
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -642,7 +618,7 @@ document.write(`
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     <br/>
   </p>
 </div>
@@ -655,7 +631,7 @@ document.write(`
       
         <div class="footer-item">
 <p class="theme-version">
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.4.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
 </p></div>
       
     </div>

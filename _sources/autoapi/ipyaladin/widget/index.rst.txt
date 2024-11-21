@@ -33,7 +33,7 @@ Functions
 Module Contents
 ---------------
 
-.. py:function:: widget_should_be_loaded(func: collections.abc.Callable) -> collections.abc.Callable
+.. py:function:: widget_should_be_loaded(function: collections.abc.Callable) -> collections.abc.Callable
 
    
    Check if the widget is ready to execute a function.
@@ -41,7 +41,7 @@ Module Contents
 
    :Parameters:
 
-       **func** : Callable
+       **function** : Callable
            The function to decorate.
 
 
@@ -94,6 +94,7 @@ Module Contents
    .. py:property:: height
       :type: int
 
+
       
       The height of the widget.
 
@@ -126,6 +127,7 @@ Module Contents
 
    .. py:property:: target
       :type: Union[astropy.coordinates.SkyCoord, Tuple[float, float]]
+
 
       
       The target of the Aladin Lite widget.
@@ -174,6 +176,7 @@ Module Contents
    .. py:property:: fov
       :type: astropy.coordinates.Angle
 
+
       
       The field of view of the Aladin Lite widget along the horizontal axis.
 
@@ -210,6 +213,7 @@ Module Contents
    .. py:property:: selected_objects
       :type: List[astropy.table.Table]
 
+
       
       The list of catalogs selected by the user.
 
@@ -239,6 +243,7 @@ Module Contents
    .. py:property:: wcs
       :type: astropy.wcs.WCS
 
+
       
       The world coordinate system corresponding to the current view of ipyaladin.
 
@@ -267,6 +272,7 @@ Module Contents
 
    .. py:property:: fov_xy
       :type: Tuple[astropy.coordinates.Angle, astropy.coordinates.Angle]
+
 
       
       The field of view of the Aladin Lite along the two axes.

@@ -30,6 +30,9 @@ We use pre-commit with `Ruff` for formatting the python files, and `husky` with
 see if any change is needed. If it is the case, apply the requested changes, `git add`
 the files again, and attempt to commit until all the checks pass.
 
+The development happens in the branch `dev` and are merged in `master` only at release
+time.
+
 ## Running the tests
 
 There are different tests in the module.
