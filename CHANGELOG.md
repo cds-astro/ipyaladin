@@ -16,6 +16,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## Fixed
+
+- footprints will now appear immediately after adding them, without requiring an other
+  event (fixed in https://github.com/cds-astro/aladin-lite/pull/218)
+
 ## [0.5.2]
 
 ### Fixed
