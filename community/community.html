@@ -16,8 +16,8 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
-  <!-- 
-    this give us a css class that will be invisible only if js is disabled 
+  <!--
+    this give us a css class that will be invisible only if js is disabled
   -->
   <noscript>
     <style>
@@ -27,19 +27,19 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
   
   <!-- So that users can add custom icons -->
-  <script src="../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../_static/documentation_options.js?v=8e576371"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
@@ -175,7 +175,9 @@
 </li>
 
             <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
                     More
                 </button>
                 <ul id="pst-nav-more-links" class="dropdown-menu">
@@ -368,9 +370,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -429,20 +436,27 @@ research, please consider <a class="reference external" href="https://aladin.cds
 <section id="development-installation">
 <h2>Development installation<a class="headerlink" href="#development-installation" title="Link to this heading">#</a></h2>
 <p>To start developing <code class="docutils literal notranslate"><span class="pre">ipyaladin</span></code>, clone the repository and do</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pre-commit
-pre-commit<span class="w"> </span>install
-npm<span class="w"> </span>run<span class="w"> </span>dev
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>npm<span class="w"> </span>run<span class="w"> </span>dev
 </pre></div>
 </div>
-<p>This will listen to any changes made in the python and javascript sides of the widget.
-You can live-develop in a notebook application and your changes will be affected on
-kernel restarts.</p>
-<p>We use pre-commit with <code class="docutils literal notranslate"><span class="pre">Ruff</span></code> for formatting the python files, and <code class="docutils literal notranslate"><span class="pre">husky</span></code> with
-<code class="docutils literal notranslate"><span class="pre">prettier</span></code> for the other files. This means than before accepting you commits, you’ll
-see if any change is needed. If it is the case, apply the requested changes, <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">add</span></code>
-the files again, and attempt to commit until all the checks pass.</p>
+<p>As long as the terminal is open, this will listen to any changes made in the python and
+javascript sides of the widget. You can live-develop and test in a notebook. Your
+changes will be applied on kernel restarts.</p>
+</section>
+<section id="git-hooks">
+<h2>Git hooks<a class="headerlink" href="#git-hooks" title="Link to this heading">#</a></h2>
+<p>We use <code class="docutils literal notranslate"><span class="pre">Ruff</span></code> for formatting the python files, and <code class="docutils literal notranslate"><span class="pre">husky</span></code> with <code class="docutils literal notranslate"><span class="pre">prettier</span></code> for the other
+files. These linters are installed as git hooks that will be run at the pre-commit
+stage. It means that your commits will not pass with violations to <code class="docutils literal notranslate"><span class="pre">Ruff</span></code> or <code class="docutils literal notranslate"><span class="pre">prettier</span></code>
+rules. If one of your commits is rejected, simply apply the requested changes, <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">add</span></code>
+the files again, and attempt to commit again until all the checks pass.</p>
+</section>
+<section id="development-branch">
+<h2>Development branch<a class="headerlink" href="#development-branch" title="Link to this heading">#</a></h2>
 <p>The development happens in the branch <code class="docutils literal notranslate"><span class="pre">dev</span></code> and are merged in <code class="docutils literal notranslate"><span class="pre">master</span></code> only at release
-time.</p>
+time.
+If your modifications only affect the documentation and are related to the latest stable
+version of <code class="docutils literal notranslate"><span class="pre">iPyAladin</span></code>, your can use <code class="docutils literal notranslate"><span class="pre">master</span></code> as the base branch.</p>
 </section>
 <section id="running-the-tests">
 <h2>Running the tests<a class="headerlink" href="#running-the-tests" title="Link to this heading">#</a></h2>
@@ -464,6 +478,15 @@ time.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>npm<span class="w"> </span>run<span class="w"> </span>js-test
 </pre></div>
 </div>
+<p>The UI tests do not run in the github CI. It is up to you to run them locally to make
+sure that the new changes did not affect the behavior of the widget.
+The snapshots can give false negative depending on the installed fonts on your machine,
+on the version of your browser… The idea is to check visually if something is
+blatantly wrong.</p>
+<p>The snapshots can be regenerated with</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>npm<span class="w"> </span>run<span class="w"> </span>update-snapshots
+</pre></div>
+</div>
 </section>
 <section id="check-that-the-documentation-still-builds">
 <h3>Check that the documentation still builds<a class="headerlink" href="#check-that-the-documentation-still-builds" title="Link to this heading">#</a></h3>
@@ -474,6 +497,12 @@ Then,</p>
 make<span class="w"> </span>clean<span class="w"> </span>html
 </pre></div>
 </div>
+</section>
+<section id="adding-a-changelog-entry">
+<h3>Adding a changelog entry<a class="headerlink" href="#adding-a-changelog-entry" title="Link to this heading">#</a></h3>
+<p>The changelog is a single file <code class="docutils literal notranslate"><span class="pre">CHANGELOG.md</span></code>. If your changes affect the users,
+write a short description in the [unreleased] section. It is nice to add either a
+PR or issue number.</p>
 </section>
 </section>
 <section id="how-does-it-work">
@@ -538,10 +567,13 @@ information between the python and javascript sides)</p></li>
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributions">Contributions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#development-installation">Development installation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#git-hooks">Git hooks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#development-branch">Development branch</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-tests">Running the tests</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#python-tests">Python tests</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#javascript-tests">Javascript tests</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#check-that-the-documentation-still-builds">Check that the documentation still builds</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-a-changelog-entry">Adding a changelog entry</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-does-it-work">How does it work</a></li>
@@ -549,13 +581,13 @@ information between the python and javascript sides)</p></li>
   </nav></div>
 
   <div class="sidebar-secondary-item">
-
-  <div class="tocsection sourcelink">
-    <a href="../_sources/community/community.md.txt">
-      <i class="fa-solid fa-file-lines"></i> Show Source
-    </a>
-  </div>
-</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/community/community.md.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
 
 </div></div>
               
@@ -570,8 +602,8 @@ information between the python and javascript sides)</p></li>
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
-<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -582,7 +614,7 @@ information between the python and javascript sides)</p></li>
 
   <p class="copyright">
     
-      © Copyright 2024, Strasbourg Astronomical Date Centre (CDS).
+      © Copyright 2025, Strasbourg Astronomical Date Centre (CDS).
       <br/>
     
   </p>
@@ -604,7 +636,8 @@ information between the python and javascript sides)</p></li>
       
         <div class="footer-item">
 <p class="theme-version">
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
 </p></div>
       
     </div>

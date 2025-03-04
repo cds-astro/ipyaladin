@@ -15,8 +15,8 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
-  <!-- 
-    this give us a css class that will be invisible only if js is disabled 
+  <!--
+    this give us a css class that will be invisible only if js is disabled
   -->
   <noscript>
     <style>
@@ -26,19 +26,19 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
   
   <!-- So that users can add custom icons -->
-  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../../_static/documentation_options.js?v=8e576371"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
@@ -172,7 +172,9 @@
 </li>
 
             <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
                     More
                 </button>
                 <ul id="pst-nav-more-links" class="dropdown-menu">
@@ -354,9 +356,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -410,33 +417,33 @@
 <span class="sd">It allows to display astronomical images and catalogs in an interactive way.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Callable</span>
-<span class="kn">import</span> <span class="nn">functools</span>
-<span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">JSONDecodeError</span>
-<span class="kn">import</span> <span class="nn">io</span>
-<span class="kn">import</span> <span class="nn">pathlib</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">ClassVar</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Final</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">functools</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">json</span><span class="w"> </span><span class="kn">import</span> <span class="n">JSONDecodeError</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pathlib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClassVar</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Final</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
-<span class="kn">import</span> <span class="nn">anywidget</span>
-<span class="kn">from</span> <span class="nn">astropy.coordinates</span> <span class="kn">import</span> <span class="n">SkyCoord</span><span class="p">,</span> <span class="n">Angle</span><span class="p">,</span> <span class="n">Longitude</span><span class="p">,</span> <span class="n">Latitude</span>
-<span class="kn">from</span> <span class="nn">astropy.coordinates.name_resolve</span> <span class="kn">import</span> <span class="n">NameResolveError</span>
-<span class="kn">from</span> <span class="nn">astropy.table.table</span> <span class="kn">import</span> <span class="n">QTable</span>
-<span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span>
-<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span> <span class="k">as</span> <span class="n">astropy_fits</span>
-<span class="kn">from</span> <span class="nn">astropy.io.fits</span> <span class="kn">import</span> <span class="n">HDUList</span>
-<span class="kn">from</span> <span class="nn">astropy.wcs</span> <span class="kn">import</span> <span class="n">WCS</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">traitlets</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">anywidget</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.coordinates</span><span class="w"> </span><span class="kn">import</span> <span class="n">SkyCoord</span><span class="p">,</span> <span class="n">Angle</span><span class="p">,</span> <span class="n">Longitude</span><span class="p">,</span> <span class="n">Latitude</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.coordinates.name_resolve</span><span class="w"> </span><span class="kn">import</span> <span class="n">NameResolveError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.table.table</span><span class="w"> </span><span class="kn">import</span> <span class="n">QTable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.table</span><span class="w"> </span><span class="kn">import</span> <span class="n">Table</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">fits</span> <span class="k">as</span> <span class="n">astropy_fits</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.io.fits</span><span class="w"> </span><span class="kn">import</span> <span class="n">HDUList</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.wcs</span><span class="w"> </span><span class="kn">import</span> <span class="n">WCS</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">traitlets</span>
 
-<span class="kn">from</span> <span class="nn">.utils.exceptions</span> <span class="kn">import</span> <span class="n">WidgetReducedError</span><span class="p">,</span> <span class="n">WidgetNotReadyError</span>
-<span class="kn">from</span> <span class="nn">.utils._coordinate_parser</span> <span class="kn">import</span> <span class="n">_parse_coordinate_string</span>
-<span class="kn">from</span> <span class="nn">.elements.marker</span> <span class="kn">import</span> <span class="n">Marker</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utils.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">WidgetReducedError</span><span class="p">,</span> <span class="n">WidgetNotReadyError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utils._coordinate_parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">_parse_coordinate_string</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.elements.marker</span><span class="w"> </span><span class="kn">import</span> <span class="n">Marker</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">regions</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">regions</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
         <span class="n">CircleSkyRegion</span><span class="p">,</span>
         <span class="n">EllipseSkyRegion</span><span class="p">,</span>
         <span class="n">LineSkyRegion</span><span class="p">,</span>
@@ -453,7 +460,7 @@
     <span class="n">RectangleSkyRegion</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">Region</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">Regions</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="kn">from</span> <span class="nn">traitlets</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">traitlets</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">Float</span><span class="p">,</span>
     <span class="n">Int</span><span class="p">,</span>
     <span class="n">Unicode</span><span class="p">,</span>
@@ -482,7 +489,7 @@
 
 <div class="viewcode-block" id="widget_should_be_loaded">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.widget_should_be_loaded">[docs]</a>
-<span class="k">def</span> <span class="nf">widget_should_be_loaded</span><span class="p">(</span><span class="n">function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">widget_should_be_loaded</span><span class="p">(</span><span class="n">function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the widget is ready to execute a function.</span>
 
 <span class="sd">    Parameters</span>
@@ -498,7 +505,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the widget is ready to execute a function.</span>
 
 <span class="sd">        Parameters</span>
@@ -531,7 +538,7 @@
 
 <div class="viewcode-block" id="Aladin">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin">[docs]</a>
-<span class="k">class</span> <span class="nc">Aladin</span><span class="p">(</span><span class="n">anywidget</span><span class="o">.</span><span class="n">AnyWidget</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Aladin</span><span class="p">(</span><span class="n">anywidget</span><span class="o">.</span><span class="n">AnyWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Aladin Lite widget.</span>
 
 <span class="sd">    This widget is a Python wrapper around the Aladin Lite JavaScript library.</span>
@@ -615,7 +622,7 @@
         <span class="s2">&quot;is reduced in size when hidden.&quot;</span><span class="p">,</span>
     <span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">any</span><span class="p">,</span> <span class="o">**</span><span class="n">init_options</span><span class="p">:</span> <span class="nb">any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">any</span><span class="p">,</span> <span class="o">**</span><span class="n">init_options</span><span class="p">:</span> <span class="nb">any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">init_options</span><span class="p">)</span>
         <span class="c1"># pop init options of ipywidgets.DOMWidget that would choke ipyaladin</span>
         <span class="c1"># https://github.com/jupyter-widgets/ipywidgets/blob/main/python/ipywidgets/ipywidgets/widgets/domwidget.py</span>
@@ -637,7 +644,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_init_options</span> <span class="o">=</span> <span class="n">init_options</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">on_msg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle_custom_message</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_handle_custom_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="nb">any</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">buffers</span><span class="p">:</span> <span class="nb">any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_handle_custom_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="nb">any</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">buffers</span><span class="p">:</span> <span class="nb">any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">event_type</span> <span class="o">=</span> <span class="n">message</span><span class="p">[</span><span class="s2">&quot;event_type&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="p">(</span>
             <span class="n">event_type</span> <span class="o">==</span> <span class="s2">&quot;object_clicked&quot;</span>
@@ -659,7 +666,7 @@
     <span class="nd">@property</span>
 <div class="viewcode-block" id="Aladin.selected_objects">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.selected_objects">[docs]</a>
-    <span class="k">def</span> <span class="nf">selected_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Table</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">selected_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Table</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The list of catalogs selected by the user.</span>
 
 <span class="sd">        Returns</span>
@@ -678,7 +685,7 @@
     <span class="nd">@property</span>
 <div class="viewcode-block" id="Aladin.height">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.height">[docs]</a>
-    <span class="k">def</span> <span class="nf">height</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">height</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The height of the widget.</span>
 
 <span class="sd">        Returns</span>
@@ -694,7 +701,7 @@
 
 
     <span class="nd">@height</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">height</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">height</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_height</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
             <span class="k">return</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_wcs</span> <span class="o">=</span> <span class="p">{}</span>
@@ -704,7 +711,7 @@
     <span class="nd">@property</span>
 <div class="viewcode-block" id="Aladin.wcs">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.wcs">[docs]</a>
-    <span class="k">def</span> <span class="nf">wcs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WCS</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">wcs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WCS</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The world coordinate system corresponding to the current view of ipyaladin.</span>
 
 <span class="sd">        Returns</span>
@@ -737,7 +744,7 @@
     <span class="nd">@property</span>
 <div class="viewcode-block" id="Aladin.fov_xy">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.fov_xy">[docs]</a>
-    <span class="k">def</span> <span class="nf">fov_xy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Angle</span><span class="p">,</span> <span class="n">Angle</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fov_xy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Angle</span><span class="p">,</span> <span class="n">Angle</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The field of view of the Aladin Lite along the two axes.</span>
 
 <span class="sd">        Returns</span>
@@ -761,7 +768,7 @@
     <span class="nd">@property</span>
 <div class="viewcode-block" id="Aladin.fov">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.fov">[docs]</a>
-    <span class="k">def</span> <span class="nf">fov</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Angle</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fov</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Angle</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The field of view of the Aladin Lite widget along the horizontal axis.</span>
 
 <span class="sd">        It can be set with either a float number in degrees</span>
@@ -781,7 +788,7 @@
 
 
     <span class="nd">@fov</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">fov</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fov</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Angle</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fov</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fov</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Angle</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">Angle</span><span class="p">):</span>
             <span class="n">fov</span> <span class="o">=</span> <span class="n">fov</span><span class="o">.</span><span class="n">deg</span>
         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fov</span><span class="p">):</span>
@@ -794,7 +801,7 @@
     <span class="nd">@property</span>
 <div class="viewcode-block" id="Aladin.target">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.target">[docs]</a>
-    <span class="k">def</span> <span class="nf">target</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">SkyCoord</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">target</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">SkyCoord</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The target of the Aladin Lite widget.</span>
 
 <span class="sd">        The target can be provided as coordinates (either</span>
@@ -835,7 +842,7 @@
 
 
     <span class="nd">@target</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">target</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SkyCoord</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">target</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SkyCoord</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">):</span>
             <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">deg</span><span class="p">,</span> <span class="n">target</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">deg</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>  <span class="c1"># If the target is a string, parse it</span>
@@ -849,7 +856,7 @@
                         <span class="sa">f</span><span class="s2">&quot;Either &#39;</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&#39; is not a valid celestial object name, &quot;</span>
                         <span class="sa">f</span><span class="s2">&quot;or the survey body type is not yet defined so you &quot;</span>
                         <span class="sa">f</span><span class="s2">&quot;need to wait for the widget to be fully loaded.&quot;</span>
-                    <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+                    <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
                 <span class="c1"># If the widget is ready, the error is caused by the target name</span>
                 <span class="c1"># that is not a valid celestial object name</span>
                 <span class="k">raise</span> <span class="n">e</span>
@@ -873,7 +880,7 @@
 
 <div class="viewcode-block" id="Aladin.add_markers">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.add_markers">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_markers</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_markers</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">markers</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Marker</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Marker</span><span class="p">]],</span> <span class="o">**</span><span class="n">catalog_options</span><span class="p">:</span> <span class="nb">any</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add markers to the Aladin Lite widget.</span>
@@ -904,7 +911,7 @@
         <span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_save_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">buffer</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_save_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">buffer</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Save a file from a buffer.</span>
 
 <span class="sd">        Parameters</span>
@@ -921,7 +928,7 @@
     <span class="nd">@widget_should_be_loaded</span>
 <div class="viewcode-block" id="Aladin.save_view_as_image">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.save_view_as_image">[docs]</a>
-    <span class="k">def</span> <span class="nf">save_view_as_image</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_view_as_image</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="n">image_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;png&quot;</span><span class="p">,</span> <span class="n">with_logo</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Save the current view of the widget as an image file.</span>
@@ -958,7 +965,7 @@
     <span class="nd">@widget_should_be_loaded</span>
 <div class="viewcode-block" id="Aladin.get_view_as_fits">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.get_view_as_fits">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_view_as_fits</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HDUList</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_view_as_fits</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HDUList</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the base layer of the widget as an astropy HDUList object.</span>
 
 <span class="sd">        The output FITS image will have the same shape as the</span>
@@ -976,12 +983,12 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">astroquery.hips2fits</span> <span class="kn">import</span> <span class="n">hips2fits</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">astroquery.hips2fits</span><span class="w"> </span><span class="kn">import</span> <span class="n">hips2fits</span>
         <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">imp</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;To use &#39;get_view_as_fits&#39;, you need astroquery. &quot;</span>
                 <span class="s2">&quot;Install it with &#39;pip install astroquery -U --pre&#39;.&quot;</span>
-            <span class="p">)</span> <span class="kn">from</span> <span class="nn">imp</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">imp</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">fits</span> <span class="o">=</span> <span class="n">hips2fits</span><span class="o">.</span><span class="n">query_with_wcs</span><span class="p">(</span>
                 <span class="n">hips</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_base_layer_last_view</span><span class="p">,</span>
@@ -994,13 +1001,13 @@
                 <span class="s2">&quot;The FITS image could not be retrieved from the view. &quot;</span>
                 <span class="s2">&quot;This happens when the widget is scrolled out of the &quot;</span>
                 <span class="s2">&quot;screen.&quot;</span>
-            <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
         <span class="k">return</span> <span class="n">fits</span></div>
 
 
 <div class="viewcode-block" id="Aladin.get_JPEG_thumbnail">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.get_JPEG_thumbnail">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_JPEG_thumbnail</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_JPEG_thumbnail</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a new tab with the current Aladin view.</span>
 
 <span class="sd">        This method will only work if you are running a notebook in a browser (for</span>
@@ -1017,7 +1024,7 @@
     <span class="nd">@widget_should_be_loaded</span>
 <div class="viewcode-block" id="Aladin.add_catalog_from_URL">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.add_catalog_from_URL">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_catalog_from_URL</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_catalog_from_URL</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">votable_URL</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">votable_options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Load a VOTable table from an url and load its data into the widget.</span>
@@ -1042,7 +1049,7 @@
     <span class="nd">@widget_should_be_loaded</span>
 <div class="viewcode-block" id="Aladin.add_fits">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.add_fits">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_fits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fits</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span> <span class="n">HDUList</span><span class="p">],</span> <span class="o">**</span><span class="n">image_options</span><span class="p">:</span> <span class="nb">any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_fits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fits</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span> <span class="n">HDUList</span><span class="p">],</span> <span class="o">**</span><span class="n">image_options</span><span class="p">:</span> <span class="nb">any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Load a FITS image into the widget.</span>
 
 <span class="sd">        Parameters</span>
@@ -1076,7 +1083,7 @@
     <span class="nd">@widget_should_be_loaded</span>
 <div class="viewcode-block" id="Aladin.add_moc">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.add_moc">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_moc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">moc</span><span class="p">:</span> <span class="nb">any</span><span class="p">,</span> <span class="o">**</span><span class="n">moc_options</span><span class="p">:</span> <span class="nb">any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_moc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">moc</span><span class="p">:</span> <span class="nb">any</span><span class="p">,</span> <span class="o">**</span><span class="n">moc_options</span><span class="p">:</span> <span class="nb">any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a MOC to the Aladin-Lite widget.</span>
 
 <span class="sd">        Parameters</span>
@@ -1109,7 +1116,7 @@
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="kn">from</span> <span class="nn">mocpy</span> <span class="kn">import</span> <span class="n">MOC</span>
+                <span class="kn">from</span><span class="w"> </span><span class="nn">mocpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">MOC</span>
 
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">moc</span><span class="p">,</span> <span class="n">MOC</span><span class="p">):</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span>
@@ -1124,13 +1131,13 @@
                     <span class="s2">&quot;A MOC can be given as an URL, a dictionary, or a mocpy.MOC &quot;</span>
                     <span class="s2">&quot;object. To read mocpy.MOC objects, you need to install the mocpy &quot;</span>
                     <span class="s2">&quot;library with &#39;pip install mocpy&#39;.&quot;</span>
-                <span class="p">)</span> <span class="kn">from</span> <span class="nn">imp</span></div>
+                <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">imp</span></div>
 
 
     <span class="nd">@widget_should_be_loaded</span>
 <div class="viewcode-block" id="Aladin.add_moc_from_URL">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.add_moc_from_URL">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_moc_from_URL</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_moc_from_URL</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">moc_URL</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">moc_options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Load a MOC from a URL and display it in Aladin Lite widget.</span>
@@ -1159,7 +1166,7 @@
     <span class="nd">@widget_should_be_loaded</span>
 <div class="viewcode-block" id="Aladin.add_moc_from_dict">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.add_moc_from_dict">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_moc_from_dict</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_moc_from_dict</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">moc_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">moc_options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Load a MOC from a dict object and display it in Aladin Lite widget.</span>
@@ -1189,7 +1196,7 @@
     <span class="nd">@widget_should_be_loaded</span>
 <div class="viewcode-block" id="Aladin.add_table">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.add_table">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">QTable</span><span class="p">,</span> <span class="n">Table</span><span class="p">],</span> <span class="o">**</span><span class="n">table_options</span><span class="p">:</span> <span class="nb">any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">QTable</span><span class="p">,</span> <span class="n">Table</span><span class="p">],</span> <span class="o">**</span><span class="n">table_options</span><span class="p">:</span> <span class="nb">any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Load a table into the widget.</span>
 
 <span class="sd">        Parameters</span>
@@ -1217,7 +1224,7 @@
     <span class="nd">@widget_should_be_loaded</span>
 <div class="viewcode-block" id="Aladin.add_graphic_overlay_from_region">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.add_graphic_overlay_from_region">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_graphic_overlay_from_region</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_graphic_overlay_from_region</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">region</span><span class="p">:</span> <span class="n">SupportedRegion</span><span class="p">,</span>
         <span class="o">**</span><span class="n">graphic_options</span><span class="p">:</span> <span class="nb">any</span><span class="p">,</span>
@@ -1283,7 +1290,7 @@
                     <span class="s2">&quot;See the documentation for the supported region types.&quot;</span>
                 <span class="p">)</span>
 
-            <span class="kn">from</span> <span class="nn">.utils._region_converter</span> <span class="kn">import</span> <span class="n">RegionInfos</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">.utils._region_converter</span><span class="w"> </span><span class="kn">import</span> <span class="n">RegionInfos</span>
 
             <span class="c1"># Define behavior for each region type</span>
             <span class="n">regions_infos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">RegionInfos</span><span class="p">(</span><span class="n">region_element</span><span class="p">)</span><span class="o">.</span><span class="n">to_clean_dict</span><span class="p">())</span>
@@ -1300,7 +1307,7 @@
     <span class="nd">@widget_should_be_loaded</span>
 <div class="viewcode-block" id="Aladin.add_overlay_from_stcs">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.add_overlay_from_stcs">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_overlay_from_stcs</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_overlay_from_stcs</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">stc_string</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span> <span class="o">**</span><span class="n">overlay_options</span><span class="p">:</span> <span class="nb">any</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add an overlay layer defined by an STC-S string.</span>
@@ -1328,7 +1335,7 @@
     <span class="nd">@widget_should_be_loaded</span>
 <div class="viewcode-block" id="Aladin.add_graphic_overlay_from_stcs">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.add_graphic_overlay_from_stcs">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_graphic_overlay_from_stcs</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_graphic_overlay_from_stcs</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">stc_string</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span> <span class="o">**</span><span class="n">overlay_options</span><span class="p">:</span> <span class="nb">any</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add an overlay layer defined by an STC-S string.</span>
@@ -1370,7 +1377,7 @@
     <span class="nd">@widget_should_be_loaded</span>
 <div class="viewcode-block" id="Aladin.set_color_map">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.set_color_map">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_color_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color_map_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_color_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color_map_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Change the color map of the Aladin Lite widget.</span>
 
 <span class="sd">        Parameters</span>
@@ -1384,7 +1391,7 @@
 
 <div class="viewcode-block" id="Aladin.selection">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.selection">[docs]</a>
-    <span class="k">def</span> <span class="nf">selection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selection_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;rectangle&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">selection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selection_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;rectangle&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Trigger the selection tool.</span>
 
 <span class="sd">        Parameters</span>
@@ -1402,7 +1409,7 @@
 
 <div class="viewcode-block" id="Aladin.rectangular_selection">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.rectangular_selection">[docs]</a>
-    <span class="k">def</span> <span class="nf">rectangular_selection</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rectangular_selection</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Trigger the rectangular selection tool.</span>
 
 <span class="sd">        Notes</span>
@@ -1423,7 +1430,7 @@
     <span class="nd">@widget_should_be_loaded</span>
 <div class="viewcode-block" id="Aladin.set_listener">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.set_listener">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_listener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listener_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_listener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listener_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set a listener for an event to the widget.</span>
 
 <span class="sd">        Parameters</span>
@@ -1453,7 +1460,7 @@
     <span class="nd">@widget_should_be_loaded</span>
 <div class="viewcode-block" id="Aladin.add_listener">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.add_listener">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_listener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listener_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_listener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listener_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a listener to the widget. Use set_listener instead.</span>
 
 <span class="sd">        Parameters</span>
@@ -1507,8 +1514,8 @@
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
-<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -1519,7 +1526,7 @@
 
   <p class="copyright">
     
-      © Copyright 2024, Strasbourg Astronomical Date Centre (CDS).
+      © Copyright 2025, Strasbourg Astronomical Date Centre (CDS).
       <br/>
     
   </p>
@@ -1541,7 +1548,8 @@
       
         <div class="footer-item">
 <p class="theme-version">
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
 </p></div>
       
     </div>
