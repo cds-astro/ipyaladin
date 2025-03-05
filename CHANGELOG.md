@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## Changed
+
+- supported python versions are now 3.9 - 3.13 [#141]
+
 ## Fixed
 
 - footprints will now appear immediately after adding them, without requiring an other
