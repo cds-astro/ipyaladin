@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - supported python versions are now 3.9 - 3.13 [#141]
 - aladin-lite version is now 3.6.1-beta [#141]
+- `add_graphic_overlay_from_stcs` accepts iterables besides lists [#140]
 
 ## Fixed
 
