@@ -1,7 +1,8 @@
-from typing import Callable, Dict
+from typing import Callable, Dict, Iterable, Union
 
 from astropy.coordinates import Angle, SkyCoord, Longitude, Latitude
 import astropy.units as u
+from astropy.table import Column
 import numpy as np
 import pytest
 
@@ -130,3 +131,67 @@ def test_aladin_angle_fov_set(angle: float) -> None:
     angle_fov = Angle(angle, unit="deg")
     aladin.fov = angle_fov
     assert aladin.fov.deg == angle_fov.deg
+
+
+test_stcs_iterables = [
+    "CIRCLE ICRS 258.93205686 43.13632863 0.625",
+    [
+        "POLYGON 257 38 261.005016 50.011125 278.305761 46.00127 257 38",
+        "CIRCLE ICRS 259.29230291 42.63394602 0.625",
+    ],
+    "POLYGON 259.254026 43.196761 259 43 259.202134 43.118653 259.254026 43.196761",
+    (
+        "POLYGON 257 38 261.005016 50.011125 278.305761 46.00127 257 38",
+        "CIRCLE ICRS 259.29230291 42.63394602 0.625",
+    ),
+    Column(
+        name="s_regions",
+        data=[
+            "CIRCLE ICRS 259.29230291 42.63394602 0.625",
+            "CIRCLE ICRS 259.22668619 42.76082126 0.625",
+            "CIRCLE ICRS 258.93205686 43.13632863 0.625",
+        ],
+    ),
+]
+
+
+@pytest.mark.parametrize("stcs_strings", test_stcs_iterables)
+def test_generate_stcs_regions_infos_iterables(
+    stcs_strings: Union[Iterable[str], str],
+) -> None:
+    """Test generating region overlay info from iterable STC-S string(s).
+
+    Parameters
+    ----------
+    stcs_strings : Union[Iterable[str], str]
+        The stcs strings to create region overlay info from.
+
+    """
+    regions_info = aladin._generate_stcs_regions_infos(stcs_strings)
+    assert isinstance(regions_info, list)
+    assert regions_info[0]["infos"]["stcs"] in stcs_strings
+
+
+test_stcs_noniterables = [
+    0,
+    1000,
+    -100,
+    np.nan,
+]
+
+
+@pytest.mark.parametrize("stcs_strings", test_stcs_noniterables)
+def test_generate_stcs_regions_infos_noniterables(
+    stcs_strings: Union[Iterable[str], str],
+) -> None:
+    """Test generating region overlay info from iterable STC-S string(s).
+
+    Parameters
+    ----------
+    stcs_strings : non-Iterables
+        The stcs strings to create region overlay info from.
+
+    """
+    with pytest.raises(TypeError) as info:
+        aladin._generate_stcs_regions_infos(stcs_strings)
+    assert info.type is TypeError
