@@ -187,7 +187,6 @@ test_stcs_noniterables = [
 
 @pytest.mark.parametrize("stcs_strings", test_stcs_noniterables)
 def test_add_graphic_overlay_from_stcs_noniterables(
-    monkeypatch: Callable,
     stcs_strings: Union[Iterable[str], str],
 ) -> None:
     """Test generating region overlay info from iterable STC-S string(s).
@@ -198,8 +197,6 @@ def test_add_graphic_overlay_from_stcs_noniterables(
         The stcs strings to create region overlay info from.
 
     """
-    mock_send = Mock()
-    monkeypatch.setattr(Aladin, "send", mock_send)
     with pytest.raises(TypeError) as info:
         aladin.add_graphic_overlay_from_stcs(stcs_strings)
     assert info.type is TypeError
