@@ -882,7 +882,16 @@ class Aladin(anywidget.AnyWidget):
         object.
 
         """
-        regions_infos = self._generate_stcs_regions_infos(stc_string, **overlay_options)
+        region_list = [stc_string] if isinstance(stc_string, str) else stc_string
+
+        regions_infos = [
+            {
+                "region_type": "stcs",
+                "infos": {"stcs": region_element},
+                "options": overlay_options,
+            }
+            for region_element in region_list
+        ]
 
         self.send(
             {
@@ -891,32 +900,6 @@ class Aladin(anywidget.AnyWidget):
                 "graphic_options": {},
             }
         )
-
-    def _generate_stcs_regions_infos(
-        self, stc_string: Union[Iterable[str], str], **overlay_options: any
-    ) -> None:
-        """Parse STC-S string(s) into regions infos used to add overlay.
-
-        Parameters
-        ----------
-        stc_string : str, Iterable[str]
-            The STC-S string or an iterable of STC-S strings.
-        overlay_options : keyword arguments
-            The overlay options for all the STC-S strings.
-            See `Aladin Lite's graphic overlay options
-            <https://cds-astro.github.io/aladin-lite/A.html>`_
-
-        """
-        region_list = [stc_string] if isinstance(stc_string, str) else stc_string
-
-        return [
-            {
-                "region_type": "stcs",
-                "infos": {"stcs": region_element},
-                "options": overlay_options,
-            }
-            for region_element in region_list
-        ]
 
     @widget_should_be_loaded
     def set_color_map(self, color_map_name: str) -> None:

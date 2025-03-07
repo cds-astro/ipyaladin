@@ -5,6 +5,7 @@ import astropy.units as u
 from astropy.table import Column
 import numpy as np
 import pytest
+from unittest.mock import Mock
 
 from ipyaladin import Aladin
 from ipyaladin.utils._coordinate_parser import _parse_coordinate_string
@@ -156,7 +157,8 @@ test_stcs_iterables = [
 
 
 @pytest.mark.parametrize("stcs_strings", test_stcs_iterables)
-def test_generate_stcs_regions_infos_iterables(
+def test_add_graphic_overlay_from_stcs_iterables(
+    monkeypatch: Callable,
     stcs_strings: Union[Iterable[str], str],
 ) -> None:
     """Test generating region overlay info from iterable STC-S string(s).
@@ -167,7 +169,10 @@ def test_generate_stcs_regions_infos_iterables(
         The stcs strings to create region overlay info from.
 
     """
-    regions_info = aladin._generate_stcs_regions_infos(stcs_strings)
+    mock_send = Mock()
+    monkeypatch.setattr(Aladin, "send", mock_send)
+    aladin.add_graphic_overlay_from_stcs(stcs_strings)
+    regions_info = mock_send.call_args[0][0]["regions_infos"]
     assert isinstance(regions_info, list)
     assert regions_info[0]["infos"]["stcs"] in stcs_strings
 
@@ -181,7 +186,8 @@ test_stcs_noniterables = [
 
 
 @pytest.mark.parametrize("stcs_strings", test_stcs_noniterables)
-def test_generate_stcs_regions_infos_noniterables(
+def test_add_graphic_overlay_from_stcs_noniterables(
+    monkeypatch: Callable,
     stcs_strings: Union[Iterable[str], str],
 ) -> None:
     """Test generating region overlay info from iterable STC-S string(s).
@@ -192,6 +198,8 @@ def test_generate_stcs_regions_infos_noniterables(
         The stcs strings to create region overlay info from.
 
     """
+    mock_send = Mock()
+    monkeypatch.setattr(Aladin, "send", mock_send)
     with pytest.raises(TypeError) as info:
-        aladin._generate_stcs_regions_infos(stcs_strings)
+        aladin.add_graphic_overlay_from_stcs(stcs_strings)
     assert info.type is TypeError
