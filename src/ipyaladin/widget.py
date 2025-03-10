@@ -5,7 +5,7 @@ This module provides a Python wrapper around the Aladin Lite JavaScript library.
 It allows to display astronomical images and catalogs in an interactive way.
 """
 
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 import functools
 from json import JSONDecodeError
 import io
@@ -838,14 +838,14 @@ class Aladin(anywidget.AnyWidget):
 
     @widget_should_be_loaded
     def add_overlay_from_stcs(
-        self, stc_string: Union[List[str], str], **overlay_options: any
+        self, stc_string: Union[Iterable[str], str], **overlay_options: any
     ) -> None:
         """Add an overlay layer defined by an STC-S string.
 
         Parameters
         ----------
-        stc_string : str, list[str]
-            The STC-S string or a list of STC-S strings.
+        stc_string : str, Iterable[str]
+            The STC-S string or an iterable of STC-S strings.
         overlay_options : keyword arguments
             The overlay options for all the STC-S strings
             See `Aladin Lite's graphic overlay options
@@ -863,14 +863,14 @@ class Aladin(anywidget.AnyWidget):
 
     @widget_should_be_loaded
     def add_graphic_overlay_from_stcs(
-        self, stc_string: Union[List[str], str], **overlay_options: any
+        self, stc_string: Union[Iterable[str], str], **overlay_options: any
     ) -> None:
         """Add an overlay layer defined by an STC-S string.
 
         Parameters
         ----------
-        stc_string : str, list[str]
-            The STC-S string or a list of STC-S strings.
+        stc_string : str, Iterable[str]
+            The STC-S string or an iterable of STC-S strings.
         overlay_options : keyword arguments
             The overlay options for all the STC-S strings.
             See `Aladin Lite's graphic overlay options
@@ -882,7 +882,7 @@ class Aladin(anywidget.AnyWidget):
         object.
 
         """
-        region_list = [stc_string] if not isinstance(stc_string, list) else stc_string
+        region_list = [stc_string] if isinstance(stc_string, str) else stc_string
 
         regions_infos = [
             {
@@ -892,6 +892,7 @@ class Aladin(anywidget.AnyWidget):
             }
             for region_element in region_list
         ]
+
         self.send(
             {
                 "event_name": "add_overlay",
