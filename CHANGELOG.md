@@ -26,6 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - footprints will now appear immediately after adding them, without requiring an other
   event (fixed in https://github.com/cds-astro/aladin-lite/pull/218)
+- when Aladin is initialized with `Aladin(height=-1)` it correctly occupy 100% of its
+  `<div>` container [#142]
 
 ## [0.5.2]
 

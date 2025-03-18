@@ -9,6 +9,9 @@ import {
 import A from "./aladin_lite";
 
 function initAladinLite(model, el) {
+  // Add 'aladin-lite-lm-container' class to the div container to apply the CSS styles in widget.css
+  el.classList.add("aladin-lite-lm-container");
+
   setDivNumber(divNumber + 1);
   let initFromPython = model.get("_init_options");
   let initOptions = {};

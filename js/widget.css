@@ -10,3 +10,11 @@
 .aladin-widget .aladin-measurement-div {
   max-height: 100px;
 }
+
+.lm-Widget.aladin-lite-lm-container {
+  /* Style fix for the aladin widget container.
+     The aladin widget is not being able to render to 100% height when initialized with
+     height=-1 in the constructor
+     see widget.js:13 */
+  height: 100%;
+}
