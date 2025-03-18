@@ -270,21 +270,15 @@ class Aladin(anywidget.AnyWidget):
         -------
         int
             The height of the widget in pixels.
+            Setting the height to -1 will expand the widget at 100% height of its
+            container. This is generally a bad idea in a notebook but can be usefull
+            for dashbord applications.
+            The default height is 400 pixels.
         """
         return self._height
 
     @height.setter
     def height(self, height: int) -> None:
-        """Set the height of the widget.
-
-        Parameters
-        ----------
-        height : int
-            The height of the widget in pixels.
-            Setting the height to -1 will expand the widget at 100% height of its
-            container. This is generally a bad idea in a notebook but can be usefull
-            for dashbord applications.
-        """
         if np.isclose(self._height, height):
             return
         self._wcs = {}
