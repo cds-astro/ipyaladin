@@ -15,7 +15,7 @@
     "esbuild": "^0.25.0",
     "husky": "^8.0.0",
     "lint-staged": "^15.2.2",
-    "prettier": "3.2.5",
+    "prettier": "^3.2.5",
     "trailing-whitespaces": "^1.0.8"
   },
   "lint-staged": {
@@ -25,7 +25,6 @@
       "ruff format",
       "ruff check --fix"
     ],
-    "*ipynb": 
-    "python3 -m jupyter nbconvert --clear-output --ClearMetadataPreprocessor.enabled=True --ClearMetadataPreprocessor.preserve_nb_metadata_mask=nbsphinx --inplace"
+    "*ipynb": "python3 -m jupyter nbconvert --clear-output --ClearMetadataPreprocessor.enabled=True --ClearMetadataPreprocessor.preserve_nb_metadata_mask=nbsphinx --inplace"
   }
 }
