@@ -2,12 +2,13 @@ from typing import Callable, Dict, Iterable, Union
 
 from astropy.coordinates import Angle, SkyCoord, Longitude, Latitude
 import astropy.units as u
-from astropy.table import Column
+from astropy.table import Column, Table
 import numpy as np
 import pytest
 from unittest.mock import Mock
 
 from ipyaladin import Aladin
+from ipyaladin.elements.error_shape import EllipseError, CircleError
 from ipyaladin.utils._coordinate_parser import _parse_coordinate_string
 
 from .test_coordinate_parser import test_is_coordinate_string_values
@@ -68,12 +69,6 @@ def test_aladin_string_target_set(target: str, mock_sesame: Callable) -> None:  
     parsed_target = _parse_coordinate_string(target)
     assert np.isclose(aladin.target.icrs.ra.deg, parsed_target[0])
     assert np.isclose(aladin.target.icrs.dec.deg, parsed_target[1])
-
-
-def test_aladin_planetary_string_target_set() -> None:
-    aladin._survey_body = "mars"
-    parsed_target = _parse_coordinate_string("Olympus Mons", body="mars")
-    print(parsed_target)
 
 
 @pytest.mark.parametrize("target", test_aladin_string_target)
@@ -200,3 +195,47 @@ def test_add_graphic_overlay_from_stcs_noniterables(
     with pytest.raises(TypeError) as info:
         aladin.add_graphic_overlay_from_stcs(stcs_strings)
     assert info.type is TypeError
+
+
+def test_add_table(monkeypatch: Callable) -> None:
+    """Test generating region overlay info from iterable STC-S string(s).
+
+    Parameters
+    ----------
+    stcs_strings : Union[Iterable[str], str]
+        The stcs strings to create region overlay info from.
+
+    """
+    table = Table({"a": [1, 2, 3]})
+    table["a"].unit = "deg"
+    mock_send = Mock()
+    monkeypatch.setattr(Aladin, "send", mock_send)
+
+    # normal table call
+    aladin.add_table(table)
+    table_sent_message = mock_send.call_args[0][0]
+    assert table_sent_message["event_name"] == "add_table"
+
+    # circle error
+    aladin.add_table(
+        table, shape=CircleError(radius="a", default_shape="cross"), color="pink"
+    )
+    table_sent_message = mock_send.call_args[0][0]
+    assert table_sent_message["options"]["circle_error"] == {
+        "radius": "a",
+        "conversion_radius": 1,
+    }
+    assert table_sent_message["options"]["shape"] == "cross"
+
+    # ellipse error
+    aladin.add_table(table, shape=EllipseError(maj_axis="a", min_axis="a", angle="a"))
+    table_sent_message = mock_send.call_args[0][0]
+    ellipse_options = {
+        "maj_axis": "a",
+        "min_axis": "a",
+        "angle": "a",
+        "conversion_angle": 1,
+        "conversion_min_axis": 1,
+        "conversion_maj_axis": 1,
+    }
+    assert table_sent_message["options"]["ellipse_error"] == ellipse_options
