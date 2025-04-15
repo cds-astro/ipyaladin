@@ -187,11 +187,15 @@ export default class EventHandler {
     this.aladin.on("objectClicked", (clicked) => {
       if (clicked) {
         let clickedContent = {
-          ra: clicked["ra"],
-          dec: clicked["dec"],
+          // the coordinates are in 'source' for footprints
+          ra: clicked["ra"] || clicked["source"]["ra"],
+          dec: clicked["dec"] || clicked["source"]["dec"],
         };
         if (clicked["data"] !== undefined) {
           clickedContent["data"] = clicked["data"];
+        }
+        if (clicked["source"] !== undefined) {
+          clickedContent["data"] = clicked["source"]["data"];
         }
         this.model.set("clicked_object", clickedContent);
         // send a custom message in case the user wants to define their own callbacks
