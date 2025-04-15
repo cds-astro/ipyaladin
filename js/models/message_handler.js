@@ -168,6 +168,7 @@ export default class MessageHandler {
     const blob = new Blob([decoder.decode(buffer)]);
     const url = URL.createObjectURL(blob);
     options.onClick = "showTable";
+    const shape = options.shape || "cross";
     if (Object.keys(circleOptions).length != 0) {
       options.shape = (source) => {
         if (source.data[circleOptions.radius]) {
@@ -175,10 +176,10 @@ export default class MessageHandler {
             source.ra,
             source.dec,
             source.data[circleOptions.radius] * circleOptions.conversionRadius,
-            options,
           );
+        } else {
+          return shape;
         }
-        // return string shape (remove comment when aladin lite accepts strings as returns)
       };
     }
     if (Object.keys(ellipseOptions).length != 0) {
@@ -195,10 +196,10 @@ export default class MessageHandler {
             source.data[ellipseOptions.minAxis] *
               ellipseOptions.conversionMinAxis,
             source.data[ellipseOptions.angle] * ellipseOptions.conversionAngle,
-            options,
           );
+        } else {
+          return shape;
         }
-        // return string shape (remove comment when aladin lite accepts strings as returns)
       };
     }
     A.catalogFromURL(

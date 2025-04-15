@@ -777,7 +777,6 @@ class Aladin(anywidget.AnyWidget):
         --------
         add_markers: adds markers with a popup window when clicked
         """
-        shape = table_options.get("shape")
         if isinstance(shape, CircleError):
             table_options["circle_error"] = {
                 "radius": shape.radius,
