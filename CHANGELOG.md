@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0]
+
 ## Added
 
 - when adding tables to `ipyaladin` with `add_table`, the shape argument now accepts
