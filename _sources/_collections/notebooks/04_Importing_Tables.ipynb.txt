@@ -1,15 +1,12 @@
 {
  "cells": [
   {
-   "attachments": {},
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "# Display tables resulting from an astroquery request\n",
+    "# Adding tables to the view\n",
     "\n",
-    "This example implements the addition of two tables :\n",
-    "- one resulting from an astroquery request on the [Simbad](https://simbad.cds.unistra.fr/simbad/ \"https://simbad.cds.unistra.fr/simbad/\") database\n",
-    "- the other is a table created locally"
+    "In this notebook, we add tables to the `ipyaladin` view."
    ]
   },
   {
@@ -18,7 +15,7 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "from ipyaladin import Aladin\n",
+    "from ipyaladin import Aladin, CircleError, EllipseError\n",
     "from astropy.table import QTable\n",
     "import astropy.units as u\n",
     "from astroquery.simbad import Simbad"
@@ -29,7 +26,9 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "## From a query"
+    "## Table from a database\n",
+    "\n",
+    "Let's query the [SIMBAD](https://simbad.cds.unistra.fr/simbad/ \"https://simbad.cds.unistra.fr/simbad/\") database around the Crab nebula."
    ]
   },
   {
@@ -43,6 +42,13 @@
    ]
   },
   {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Now we instantiate an `ipyaladin` view around the nebula."
+   ]
+  },
+  {
    "cell_type": "code",
    "execution_count": null,
    "metadata": {},
@@ -53,20 +59,54 @@
    ]
   },
   {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "In `add_table`, the shape argument can take the values \"square\", \"circle\", \"plus\", \"cross\", \"rhomb\", or \"triangle\" for the simple shapes. \n",
+    "\n",
+    "The two specific classes of error shapes `EllipseError` and `CircleError` adapt the shapes drawn to the values of the errors around the coordinates.\n",
+    "\n",
+    "SIMBAD gives errors as ellipses, so let's use an `EllipseError` shape:"
+   ]
+  },
+  {
    "cell_type": "code",
    "execution_count": null,
    "metadata": {},
    "outputs": [],
    "source": [
-    "aladin.add_table(table, shape=\"rhomb\", color=\"lightskyblue\", source_size=20)\n",
-    "# This line also works with camelCase instead of snake_case: sourceSize=20"
+    "aladin.add_table(\n",
+    "    table,\n",
+    "    shape=EllipseError(\n",
+    "        maj_axis=\"coo_err_maj\",\n",
+    "        min_axis=\"coo_err_min\",\n",
+    "        angle=\"coo_err_angle\",\n",
+    "        default_shape=\"cross\",\n",
+    "    ),\n",
+    "    color=\"lightskyblue\",\n",
+    "    # source_size will only affect the sources which fallback to the default shape,\n",
+    "    # or the ones too small to be drawn\n",
+    "    source_size=20,\n",
+    "    name=\"SIMBAD query\",\n",
+    ")"
    ]
   },
   {
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "## Display Astropy table created from scratch"
+    "If you zoom in the view, you'll remark that the sources which had error information appear as ellipses. If if there is no information in the error columns, then the sources appear with the fallback shape `default_shape`. `default_shape` should be one of the strings allowed in `shape`.\n",
+    "\n",
+    "If the ellipse would be too small to be drawn in the widget, then it appears as a square, see the source `2MASS J05343561+2200372` located in `83.64842925852 +22.01034559457`. If you zoom in close to this square, you'll see the square turning into an ellipse when it is big enough to be drawn."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Displaying a QTable\n",
+    "\n",
+    "Let's create a table from scratch and add it to the view. We will draw `CircleError` shapes this time."
    ]
   },
   {
@@ -75,29 +115,37 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "ra = [83.63451584700, 83.61368056017, 83.58780251600]\n",
-    "dec = [22.05652591227, 21.97517807639, 21.99277764451]\n",
-    "name = [\n",
-    "    \"Gaia EDR3 3403818589184411648\",\n",
-    "    \"Gaia EDR3 3403817661471500416\",\n",
-    "    \"Gaia EDR3 3403817936349408000\",\n",
-    "]\n",
-    "parallax = [1.7703, 0.5112, 0.3735] * u.mas\n",
-    "\n",
     "t = QTable(\n",
-    "    [ra, dec, name, parallax],\n",
-    "    names=(\"ra\", \"dec\", \"name\", \"parallax\"),\n",
+    "    {\n",
+    "        \"error\": [0.005, 0.002, 0.003] * u.deg,\n",
+    "        \"coo1\": [83.63451584700, 83.61368056017, 83.58780251600] * u.deg,\n",
+    "        \"coo2\": [22.05652591227, 21.97517807639, 21.99277764451] * u.deg,\n",
+    "        \"name\": [\"Source 1\", \"Source 2\", \"Source 3\"],\n",
+    "        \"parallax\": [1.7703, 0.5112, 0.3735] * u.mas,\n",
+    "    },\n",
     "    meta={\"name\": \"my_sample_table\"},\n",
+    ")\n",
+    "\n",
+    "aladin.add_table(\n",
+    "    t,\n",
+    "    name=t.meta[\"name\"],\n",
+    "    shape=CircleError(\n",
+    "        radius=\"error\",\n",
+    "        probability_threshold=0.989,  # roughly 3 sigma\n",
+    "    ),\n",
+    "    color=\"pink\",\n",
+    "    ra_field=\"coo1\",\n",
+    "    dec_field=\"coo2\",\n",
     ")"
    ]
   },
   {
-   "cell_type": "code",
-   "execution_count": null,
+   "cell_type": "markdown",
    "metadata": {},
-   "outputs": [],
    "source": [
-    "aladin.add_table(t)"
+    "Note that we used unconventional column names for the coordinates fields here. In this case, we can specify the column names where Aladin Lite should read the coordinates via `ra_field` and `dec_field`.\n",
+    "\n",
+    "We used a very high probability threshold. This corresponds to roughly 3 sigma in the drawn circle."
    ]
   }
  ],

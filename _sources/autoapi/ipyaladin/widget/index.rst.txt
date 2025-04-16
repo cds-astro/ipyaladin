@@ -211,7 +211,7 @@ Module Contents
 
 
    .. py:property:: selected_objects
-      :type: List[astropy.table.Table]
+      :type: List[astropy.table.table.Table]
 
 
       
@@ -614,20 +614,34 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: add_table(table: Union[astropy.table.table.QTable, astropy.table.Table], **table_options: any) -> None
+   .. py:method:: add_table(table: Union[astropy.table.table.QTable, astropy.table.table.Table], *, shape: Union[str, ipyaladin.elements.error_shape.CircleError, ipyaladin.elements.error_shape.EllipseError] = 'cross', **table_options: any) -> None
 
       
       Load a table into the widget.
 
+      The extra parameters allow to draw either circles which radii correspond to the
+      error estimation, or ellipses which major axis, minor axis, and angles
+      correspond to the coordinates error.
 
       :Parameters:
 
           **table** : `~astropy.table.table.QTable` or `~astropy.table.table.Table`
               table that must contain coordinates information
 
-          **table_options**
-              Keyword arguments. The possible values are documented in `Aladin Lite's
-              table options
+          **shape** : str | `~ipyaladin.CircleError` | `~ipyaladin.EllipseError`
+              The shape to draw for each source. It accepts the strings "square",
+              "circle", "plus", "cross", "rhomb", and "triangle" as well as the two
+              specific classes `ipyaladin.CircleError` and `ipyaladin.EllipseError`
+              that adapt the size of the drawn shapes (circles or ellipses) to error
+              columns.
+              See example notebook `04_Importing_Tables`.
+
+          **\*\*table_options**
+              Keyword arguments. They mostly give control on the visual aspects of the
+              table. If the coordinates cannot be detected automatically, then you can
+              give the appropriate column names in the 'ra_field' and 'dec_field'
+              arguments.
+              The possible values are documented in `Aladin Lite's table options
               <https://cds-astro.github.io/aladin-lite/global.html#CatalogOptions>`_
 
 
@@ -717,7 +731,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: add_overlay_from_stcs(stc_string: Union[List[str], str], **overlay_options: any) -> None
+   .. py:method:: add_overlay_from_stcs(stc_string: Union[collections.abc.Iterable[str], str], **overlay_options: any) -> None
 
       
       Add an overlay layer defined by an STC-S string.
@@ -725,8 +739,8 @@ Module Contents
 
       :Parameters:
 
-          **stc_string** : str, list[str]
-              The STC-S string or a list of STC-S strings.
+          **stc_string** : str, Iterable[str]
+              The STC-S string or an iterable of STC-S strings.
 
           **overlay_options** : keyword arguments
               The overlay options for all the STC-S strings
@@ -750,7 +764,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: add_graphic_overlay_from_stcs(stc_string: Union[List[str], str], **overlay_options: any) -> None
+   .. py:method:: add_graphic_overlay_from_stcs(stc_string: Union[collections.abc.Iterable[str], str], **overlay_options: any) -> None
 
       
       Add an overlay layer defined by an STC-S string.
@@ -758,8 +772,8 @@ Module Contents
 
       :Parameters:
 
-          **stc_string** : str, list[str]
-              The STC-S string or a list of STC-S strings.
+          **stc_string** : str, Iterable[str]
+              The STC-S string or an iterable of STC-S strings.
 
           **overlay_options** : keyword arguments
               The overlay options for all the STC-S strings.

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ipyaladin.widget &#8212; ipyaladin 0.5.2 documentation</title>
+    <title>ipyaladin.widget &#8212; ipyaladin 0.6.0 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=8e576371"></script>
+    <script src="../../_static/documentation_options.js?v=8fa8b3e9"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -417,21 +417,25 @@
 <span class="sd">It allows to display astronomical images and catalogs in an interactive way.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">functools</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterable</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">json</span><span class="w"> </span><span class="kn">import</span> <span class="n">JSONDecodeError</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">functools</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pathlib</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClassVar</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Final</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="k">try</span><span class="p">:</span>  <span class="c1"># drop this clause when we drop python 3.9</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">typing_extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeAlias</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeAlias</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">anywidget</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">astropy.coordinates</span><span class="w"> </span><span class="kn">import</span> <span class="n">SkyCoord</span><span class="p">,</span> <span class="n">Angle</span><span class="p">,</span> <span class="n">Longitude</span><span class="p">,</span> <span class="n">Latitude</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">astropy.coordinates.name_resolve</span><span class="w"> </span><span class="kn">import</span> <span class="n">NameResolveError</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.table.table</span><span class="w"> </span><span class="kn">import</span> <span class="n">QTable</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.table</span><span class="w"> </span><span class="kn">import</span> <span class="n">Table</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.table.table</span><span class="w"> </span><span class="kn">import</span> <span class="n">QTable</span><span class="p">,</span> <span class="n">Table</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">astropy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">fits</span> <span class="k">as</span> <span class="n">astropy_fits</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">astropy.io.fits</span><span class="w"> </span><span class="kn">import</span> <span class="n">HDUList</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">astropy.wcs</span><span class="w"> </span><span class="kn">import</span> <span class="n">WCS</span>
@@ -440,6 +444,11 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.utils.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">WidgetReducedError</span><span class="p">,</span> <span class="n">WidgetNotReadyError</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.utils._coordinate_parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">_parse_coordinate_string</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.elements.error_shape</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CircleError</span><span class="p">,</span>
+    <span class="n">EllipseError</span><span class="p">,</span>
+    <span class="n">_error_radius_conversion_factor</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.elements.marker</span><span class="w"> </span><span class="kn">import</span> <span class="n">Marker</span>
 
 <span class="k">try</span><span class="p">:</span>
@@ -468,7 +477,7 @@
     <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="n">SupportedRegion</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span>
+<span class="n">SupportedRegion</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span>
     <span class="n">List</span><span class="p">[</span>
         <span class="n">Union</span><span class="p">[</span>
             <span class="n">CircleSkyRegion</span><span class="p">,</span>
@@ -1196,23 +1205,68 @@
     <span class="nd">@widget_should_be_loaded</span>
 <div class="viewcode-block" id="Aladin.add_table">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.add_table">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">QTable</span><span class="p">,</span> <span class="n">Table</span><span class="p">],</span> <span class="o">**</span><span class="n">table_options</span><span class="p">:</span> <span class="nb">any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_table</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">table</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">QTable</span><span class="p">,</span> <span class="n">Table</span><span class="p">],</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">shape</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">CircleError</span><span class="p">,</span> <span class="n">EllipseError</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;cross&quot;</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">table_options</span><span class="p">:</span> <span class="nb">any</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Load a table into the widget.</span>
+
+<span class="sd">        The extra parameters allow to draw either circles which radii correspond to the</span>
+<span class="sd">        error estimation, or ellipses which major axis, minor axis, and angles</span>
+<span class="sd">        correspond to the coordinates error.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        table : `~astropy.table.table.QTable` or `~astropy.table.table.Table`</span>
 <span class="sd">            table that must contain coordinates information</span>
-<span class="sd">        table_options</span>
-<span class="sd">            Keyword arguments. The possible values are documented in `Aladin Lite&#39;s</span>
-<span class="sd">            table options</span>
+<span class="sd">        shape : str | `~ipyaladin.CircleError` | `~ipyaladin.EllipseError`</span>
+<span class="sd">            The shape to draw for each source. It accepts the strings &quot;square&quot;,</span>
+<span class="sd">            &quot;circle&quot;, &quot;plus&quot;, &quot;cross&quot;, &quot;rhomb&quot;, and &quot;triangle&quot; as well as the two</span>
+<span class="sd">            specific classes `ipyaladin.CircleError` and `ipyaladin.EllipseError`</span>
+<span class="sd">            that adapt the size of the drawn shapes (circles or ellipses) to error</span>
+<span class="sd">            columns.</span>
+<span class="sd">            See example notebook `04_Importing_Tables`.</span>
+<span class="sd">        **table_options</span>
+<span class="sd">            Keyword arguments. They mostly give control on the visual aspects of the</span>
+<span class="sd">            table. If the coordinates cannot be detected automatically, then you can</span>
+<span class="sd">            give the appropriate column names in the &#39;ra_field&#39; and &#39;dec_field&#39;</span>
+<span class="sd">            arguments.</span>
+<span class="sd">            The possible values are documented in `Aladin Lite&#39;s table options</span>
 <span class="sd">            &lt;https://cds-astro.github.io/aladin-lite/global.html#CatalogOptions&gt;`_</span>
 
 <span class="sd">        See Also</span>
 <span class="sd">        --------</span>
 <span class="sd">        add_markers: adds markers with a popup window when clicked</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">CircleError</span><span class="p">):</span>
+            <span class="n">table_options</span><span class="p">[</span><span class="s2">&quot;circle_error&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;radius&quot;</span><span class="p">:</span> <span class="n">shape</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span>
+                <span class="s2">&quot;conversion_radius&quot;</span><span class="p">:</span> <span class="n">_error_radius_conversion_factor</span><span class="p">(</span>
+                    <span class="n">table</span><span class="p">[</span><span class="n">shape</span><span class="o">.</span><span class="n">radius</span><span class="p">]</span><span class="o">.</span><span class="n">unit</span><span class="p">,</span> <span class="n">shape</span><span class="o">.</span><span class="n">probability_threshold</span>
+                <span class="p">),</span>
+            <span class="p">}</span>
+            <span class="n">table_options</span><span class="p">[</span><span class="s2">&quot;shape&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">shape</span><span class="o">.</span><span class="n">default_shape</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">EllipseError</span><span class="p">):</span>
+            <span class="n">table_options</span><span class="p">[</span><span class="s2">&quot;ellipse_error&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;maj_axis&quot;</span><span class="p">:</span> <span class="n">shape</span><span class="o">.</span><span class="n">maj_axis</span><span class="p">,</span>
+                <span class="s2">&quot;min_axis&quot;</span><span class="p">:</span> <span class="n">shape</span><span class="o">.</span><span class="n">min_axis</span><span class="p">,</span>
+                <span class="s2">&quot;angle&quot;</span><span class="p">:</span> <span class="n">shape</span><span class="o">.</span><span class="n">angle</span><span class="p">,</span>
+                <span class="s2">&quot;conversion_angle&quot;</span><span class="p">:</span> <span class="n">_error_radius_conversion_factor</span><span class="p">(</span>
+                    <span class="n">table</span><span class="p">[</span><span class="n">shape</span><span class="o">.</span><span class="n">angle</span><span class="p">]</span><span class="o">.</span><span class="n">unit</span>
+                <span class="p">),</span>
+                <span class="s2">&quot;conversion_maj_axis&quot;</span><span class="p">:</span> <span class="n">_error_radius_conversion_factor</span><span class="p">(</span>
+                    <span class="n">table</span><span class="p">[</span><span class="n">shape</span><span class="o">.</span><span class="n">maj_axis</span><span class="p">]</span><span class="o">.</span><span class="n">unit</span><span class="p">,</span> <span class="n">shape</span><span class="o">.</span><span class="n">probability_threshold</span>
+                <span class="p">),</span>
+                <span class="s2">&quot;conversion_min_axis&quot;</span><span class="p">:</span> <span class="n">_error_radius_conversion_factor</span><span class="p">(</span>
+                    <span class="n">table</span><span class="p">[</span><span class="n">shape</span><span class="o">.</span><span class="n">min_axis</span><span class="p">]</span><span class="o">.</span><span class="n">unit</span><span class="p">,</span> <span class="n">shape</span><span class="o">.</span><span class="n">probability_threshold</span>
+                <span class="p">),</span>
+            <span class="p">}</span>
+            <span class="n">table_options</span><span class="p">[</span><span class="s2">&quot;shape&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">shape</span><span class="o">.</span><span class="n">default_shape</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">table_options</span><span class="p">[</span><span class="s2">&quot;shape&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">shape</span>
         <span class="n">table_bytes</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
         <span class="n">table</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">table_bytes</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;votable&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span>
@@ -1308,14 +1362,14 @@
 <div class="viewcode-block" id="Aladin.add_overlay_from_stcs">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.add_overlay_from_stcs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_overlay_from_stcs</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">stc_string</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span> <span class="o">**</span><span class="n">overlay_options</span><span class="p">:</span> <span class="nb">any</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">stc_string</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span> <span class="o">**</span><span class="n">overlay_options</span><span class="p">:</span> <span class="nb">any</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add an overlay layer defined by an STC-S string.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        stc_string : str, list[str]</span>
-<span class="sd">            The STC-S string or a list of STC-S strings.</span>
+<span class="sd">        stc_string : str, Iterable[str]</span>
+<span class="sd">            The STC-S string or an iterable of STC-S strings.</span>
 <span class="sd">        overlay_options : keyword arguments</span>
 <span class="sd">            The overlay options for all the STC-S strings</span>
 <span class="sd">            See `Aladin Lite&#39;s graphic overlay options</span>
@@ -1336,14 +1390,14 @@
 <div class="viewcode-block" id="Aladin.add_graphic_overlay_from_stcs">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.add_graphic_overlay_from_stcs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_graphic_overlay_from_stcs</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">stc_string</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span> <span class="o">**</span><span class="n">overlay_options</span><span class="p">:</span> <span class="nb">any</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">stc_string</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span> <span class="o">**</span><span class="n">overlay_options</span><span class="p">:</span> <span class="nb">any</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add an overlay layer defined by an STC-S string.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        stc_string : str, list[str]</span>
-<span class="sd">            The STC-S string or a list of STC-S strings.</span>
+<span class="sd">        stc_string : str, Iterable[str]</span>
+<span class="sd">            The STC-S string or an iterable of STC-S strings.</span>
 <span class="sd">        overlay_options : keyword arguments</span>
 <span class="sd">            The overlay options for all the STC-S strings.</span>
 <span class="sd">            See `Aladin Lite&#39;s graphic overlay options</span>
@@ -1355,7 +1409,7 @@
 <span class="sd">        object.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">region_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">stc_string</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stc_string</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="n">stc_string</span>
+        <span class="n">region_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">stc_string</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stc_string</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">stc_string</span>
 
         <span class="n">regions_infos</span> <span class="o">=</span> <span class="p">[</span>
             <span class="p">{</span>
@@ -1365,6 +1419,7 @@
             <span class="p">}</span>
             <span class="k">for</span> <span class="n">region_element</span> <span class="ow">in</span> <span class="n">region_list</span>
         <span class="p">]</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span>
             <span class="p">{</span>
                 <span class="s2">&quot;event_name&quot;</span><span class="p">:</span> <span class="s2">&quot;add_overlay&quot;</span><span class="p">,</span>
