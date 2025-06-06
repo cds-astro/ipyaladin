@@ -31,7 +31,7 @@ function initAladinLite(model, el) {
   const raDec = model.get("_target").split(" ");
   aladin.gotoRaDec(raDec[0], raDec[1]);
 
-  // Set current FoV and WCS
+  // Set current FoV, WCS, and rotation
   const twoAxisFoV = { ...aladin.getFov() };
   model.set("_fov_xy", {
     x: twoAxisFoV[0],
@@ -39,6 +39,8 @@ function initAladinLite(model, el) {
   });
   const wcs = { ...aladin.getViewWCS() };
   model.set("_wcs", wcs);
+  const rotation = { ...aladin.getRotation() };
+  model.set("_rotation", rotation);
   model.set("_is_loaded", true);
   model.save_changes();
 
