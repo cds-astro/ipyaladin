@@ -38,6 +38,10 @@ export default class MessageHandler {
     this.aladin.gotoRaDec(msg["ra"], msg["dec"]);
   }
 
+  handleChangeRotation(msg) {
+    this.aladin.setRotation(msg["rotation"]);
+  }
+
   async handleSaveViewAsImage(msg) {
     const path = msg["path"];
     const format = msg["format"];
