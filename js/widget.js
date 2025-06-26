@@ -39,7 +39,7 @@ function initAladinLite(model, el) {
   });
   const wcs = { ...aladin.getViewWCS() };
   model.set("_wcs", wcs);
-  const rotation = aladin.getRotation();
+  const rotation = { ...aladin.getRotation() };
   model.set("_rotation", rotation);
 
   model.set("_is_loaded", true);
