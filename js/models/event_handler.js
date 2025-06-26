@@ -48,7 +48,7 @@ export default class EventHandler {
 
   /**
    * Updates the view center rotation in the model.
-   * WARNING: This method don't call model.save_changes()!
+   * WARNING: This method doesn't call model.save_changes()!
    */
   updateRotation() {
     if (!this.isLastDiv()) return;
