@@ -202,6 +202,17 @@ export default class EventHandler {
       }
     });
 
+    this.aladin.on("rotationChanged", (object) => {
+      if (object["data"] !== undefined) {
+        this.model.send({
+          event_type: "rotation_changed",
+          content: {
+            rotation: object["rotation"],
+          },
+        });
+      }
+    });
+
     this.aladin.on("objectClicked", (clicked) => {
       if (clicked) {
         let clickedContent = {
