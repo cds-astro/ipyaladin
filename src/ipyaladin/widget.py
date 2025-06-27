@@ -309,16 +309,22 @@ class Aladin(anywidget.AnyWidget):
         Positive angles rotates the view in the counter clockwise
         order (or towards the east).
 
+        It can be set with either a float number in degrees
+        or an astropy.coordinates.Angle object.
+
         Returns
         -------
-        float
-            The center rotation of the widget in degrees.
-            The default rotation is 0 degrees.
+        astropy.coordinates.Angle
+            An astropy.coordinates.Angle object representing the center
+            rotation of the widget in degrees. The default rotation is
+            0 degrees.
         """
-        return self._rotation
+        return Angle(self._rotation, unit="deg")
 
     @rotation.setter
-    def rotation(self, rotation: float) -> None:
+    def rotation(self, rotation: Union[float, Angle]) -> None:
+        if isinstance(rotation, Angle):
+            rotation = rotation.deg
         if np.isclose(self._rotation, rotation):
             return
         self._wcs = {}
