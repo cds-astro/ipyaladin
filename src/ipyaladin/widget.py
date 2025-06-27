@@ -221,6 +221,10 @@ class Aladin(anywidget.AnyWidget):
         # https://github.com/jupyter-widgets/ipywidgets/blob/main/python/ipywidgets/ipywidgets/widgets/domwidget.py
         for key in ["layout", "tabbable", "tooltip"]:
             init_options.pop(key, None)
+        if "north_pole_orientation" not in init_options:
+            init_options["north_pole_orientation"] = init_options.get("rotation", 0)
+        else:
+            init_options["rotation"] = init_options["north_pole_orientation"]
         # some init options are properties here
         self.height = init_options.get("height", self._height)
         self.rotation = init_options.get("rotation", self._rotation)
