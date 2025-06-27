@@ -129,6 +129,44 @@ def test_aladin_angle_fov_set(angle: float) -> None:
     assert aladin.fov.deg == angle_fov.deg
 
 
+test_aladin_float_rotation = [
+    0,
+    360,
+    180,
+    -180,
+    720,
+]
+
+
+@pytest.mark.parametrize("angle", test_aladin_float_rotation)
+def test_aladin_float_rotation_set(angle: float) -> None:
+    """Test setting the rotation of an Aladin object with a float.
+
+    Parameters
+    ----------
+    angle : float
+        The angle to set.
+
+    """
+    aladin.rotation = angle
+    assert aladin.rotation.deg == angle
+
+
+@pytest.mark.parametrize("angle", test_aladin_float_fov)
+def test_aladin_angle_rotation_set(angle: float) -> None:
+    """Test setting the rotation of an Aladin object with an Angle object.
+
+    Parameters
+    ----------
+    angle : float
+        The angle to set.
+
+    """
+    angle_rotation = Angle(angle, unit="deg")
+    aladin.rotation = angle_rotation
+    assert aladin.rotation.deg == angle_rotation.deg
+
+
 test_stcs_iterables = [
     "CIRCLE ICRS 258.93205686 43.13632863 0.625",
     [
