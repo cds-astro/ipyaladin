@@ -152,7 +152,7 @@ def test_aladin_float_rotation_set(angle: float) -> None:
     assert aladin.rotation.deg == angle
 
 
-@pytest.mark.parametrize("angle", test_aladin_float_fov)
+@pytest.mark.parametrize("angle", test_aladin_float_rotation)
 def test_aladin_angle_rotation_set(angle: float) -> None:
     """Test setting the rotation of an Aladin object with an Angle object.
 
@@ -165,6 +165,51 @@ def test_aladin_angle_rotation_set(angle: float) -> None:
     angle_rotation = Angle(angle, unit="deg")
     aladin.rotation = angle_rotation
     assert aladin.rotation.deg == angle_rotation.deg
+
+
+@pytest.mark.parametrize("angle", test_aladin_float_rotation)
+def test_aladin_init_rotation(angle: float) -> None:
+    """Test initializing an Aladin object with rotation set.
+
+    Parameters
+    ----------
+    angle : float
+        The angle to set.
+
+    """
+    test_aladin = Aladin(rotation=angle)
+    assert test_aladin.rotation.deg == angle
+
+
+@pytest.mark.parametrize("angle", test_aladin_float_rotation)
+def test_aladin_init_north_pole_orientation(angle: float) -> None:
+    """Test initializing Aladin object with north_pole_orientation set.
+
+    Parameters
+    ----------
+    angle : float
+        The angle to set.
+
+    """
+    test_aladin = Aladin(north_pole_orientation=angle)
+    assert test_aladin.rotation.deg == angle
+
+
+@pytest.mark.parametrize("angle", test_aladin_float_rotation)
+def test_aladin_init_north_pole_orientation_overrides_rotation(angle: float) -> None:
+    """
+    Test init Aladin object with north_pole_orientation and rotation set.
+
+    north_pole_orientation should override rotation.
+
+    Parameters
+    ----------
+    angle : float
+        The angle to set.
+
+    """
+    test_aladin = Aladin(north_pole_orientation=angle, rotation=180)
+    assert test_aladin.rotation.deg == angle
 
 
 test_stcs_iterables = [
