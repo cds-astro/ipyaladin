@@ -293,6 +293,7 @@ class Aladin(anywidget.AnyWidget):
 
     @height.setter
     def height(self, height: int) -> None:
+        """Height can be set with integer representing number of pixels."""
         if np.isclose(self._height, height):
             return
         self._wcs = {}
@@ -308,9 +309,6 @@ class Aladin(anywidget.AnyWidget):
         Positive angles rotates the view in the counter clockwise
         order (or towards the east).
 
-        It can be set with either a float number in degrees
-        or an astropy.coordinates.Angle object.
-
         Returns
         -------
         astropy.coordinates.Angle
@@ -322,6 +320,12 @@ class Aladin(anywidget.AnyWidget):
 
     @rotation.setter
     def rotation(self, rotation: Union[float, Angle]) -> None:
+        """
+        Rotation can be set with view center to north pole angle in degrees.
+
+        Rotation can either a float number in degrees
+        or an `~astropy.coordinates.Angle` object.
+        """
         if isinstance(rotation, Angle):
             rotation = rotation.deg
         if np.isclose(self._rotation, rotation):
@@ -383,9 +387,6 @@ class Aladin(anywidget.AnyWidget):
     def fov(self) -> Angle:
         """The field of view of the Aladin Lite widget along the horizontal axis.
 
-        It can be set with either a float number in degrees
-        or an astropy.coordinates.Angle object.
-
         Returns
         -------
         astropy.coordinates.Angle
@@ -400,6 +401,12 @@ class Aladin(anywidget.AnyWidget):
 
     @fov.setter
     def fov(self, fov: Union[float, Angle]) -> None:
+        """
+        FoV can be set with angle representing horizontal axis.
+
+        FoV can be set with either a float number in degrees
+        or an `~astropy.coordinates.Angle` object.
+        """
         if isinstance(fov, Angle):
             fov = fov.deg
         if np.isclose(fov, self._fov):
@@ -412,10 +419,6 @@ class Aladin(anywidget.AnyWidget):
     @property
     def target(self) -> Union[SkyCoord, Tuple[float, float]]:
         """The target of the Aladin Lite widget.
-
-        The target can be provided as coordinates (either
-        `~astropy.coordinates.SkyCoord` or (`~astropy.coordinates.Longitude`,
-        `~astropy.coordinates.Latitude`)) or as a name (as a string).
 
         The conversion from a name to coordinates does call different online services
         depending on the base layer of the widget:
@@ -451,6 +454,13 @@ class Aladin(anywidget.AnyWidget):
 
     @target.setter
     def target(self, target: Union[str, SkyCoord, Tuple[float, float]]) -> None:
+        """
+        Target can be set using coordinates or name.
+
+        Target can be provided as coordinates (either
+        `~astropy.coordinates.SkyCoord` or (`~astropy.coordinates.Longitude`,
+        `~astropy.coordinates.Latitude`)) or as a name (as a string).
+        """
         if isinstance(target, Tuple):
             lon, lat = target[0].deg, target[1].deg
         elif isinstance(target, str):  # If the target is a string, parse it
