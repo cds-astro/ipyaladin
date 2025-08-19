@@ -51,8 +51,8 @@ export default class EventHandler {
    * WARNING: This method doesn't call model.save_changes()!
    */
   updateRotation() {
-    if (!this.isLastDiv()) return;
-    this.model.set("_rotation", this.aladin.getRotation());
+    let rotation = this.model.get("_rotation");
+    this.aladin.setRotation(rotation);
   }
 
   /**
@@ -144,6 +144,7 @@ export default class EventHandler {
       // Update WCS and FoV only if this is the last div
       this.updateWCS();
       this.update2AxisFoV();
+      if (!this.isLastDiv()) return;
       this.model.save_changes();
     });
 
@@ -203,14 +204,9 @@ export default class EventHandler {
     });
 
     this.aladin.on("rotationChanged", (object) => {
-      if (object["data"] !== undefined) {
-        this.model.send({
-          event_type: "rotation_changed",
-          content: {
-            rotation: object["rotation"],
-          },
-        });
-      }
+      this.updateRotation();
+      if (!this.isLastDiv()) return;
+      this.model.save_changes();
     });
 
     this.aladin.on("objectClicked", (clicked) => {
@@ -302,7 +298,6 @@ export default class EventHandler {
     this.eventHandlers = {
       add_marker: this.messageHandler.handleAddMarker,
       change_fov: this.messageHandler.handleChangeFoV,
-      change_rotation: this.messageHandler.handleChangeRotation,
       goto_ra_dec: this.messageHandler.handleGotoRaDec,
       save_view_as_image: this.messageHandler.handleSaveViewAsImage,
       add_fits: this.messageHandler.handleAddFits,
