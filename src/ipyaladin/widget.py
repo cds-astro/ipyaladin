@@ -11,7 +11,6 @@ import functools
 import io
 import pathlib
 from pathlib import Path
-import time
 from typing import ClassVar, Dict, Final, List, Optional, Tuple, Union
 
 try:  # drop this clause when we drop python 3.9
@@ -32,6 +31,7 @@ import traitlets
 
 from .utils.exceptions import WidgetReducedError, WidgetNotReadyError
 from .utils._coordinate_parser import _parse_coordinate_string
+from .utils.call_store import CallStore
 from .elements.error_shape import (
     CircleError,
     EllipseError,
@@ -87,6 +87,8 @@ SupportedRegion: TypeAlias = Union[
 def widget_should_be_loaded(function: Callable) -> Callable:
     """Check if the widget is ready to execute a function.
 
+    Store the call for a later execution.
+
     Parameters
     ----------
     function : Callable
@@ -102,6 +104,9 @@ def widget_should_be_loaded(function: Callable) -> Callable:
     @functools.wraps(function)
     def wrapper(self: Any, *args: Any, **kwargs: Any) -> Any:
         """Check if the widget is ready to execute a function.
+
+        If not, do not exit the call and store it so that it is
+        called later when the widget is ready.
 
         Parameters
         ----------
@@ -119,12 +124,9 @@ def widget_should_be_loaded(function: Callable) -> Callable:
 
         """
         if not getattr(self, "_is_loaded", False):
-            # this is an arbitrary waiting time
-            # it should correspond to the downloading time of the npm package
-            duration = 0.1
-            time.sleep(duration)
-            # set ready to True to avoid waiting twice
-            self._is_loaded = True
+            self._call_store.add(function, self, *args, **kwargs)
+            return None
+
         return function(self, *args, **kwargs)
 
     return wrapper
@@ -139,6 +141,8 @@ class Aladin(anywidget.AnyWidget):
 
     _esm: Final = pathlib.Path(__file__).parent / "static" / "widget.js"
     _css: Final = pathlib.Path(__file__).parent / "static" / "widget.css"
+
+    _call_store = CallStore()
 
     # Options for the view initialization
     _init_options = traitlets.Dict().tag(sync=True)
@@ -240,6 +244,17 @@ class Aladin(anywidget.AnyWidget):
         # set the traitlet
         self._init_options = init_options
         self.on_msg(self._handle_custom_message)
+
+        def on_load_change(change: traitlets.Dict) -> None:
+            if change["new"]:
+                self._call_store.run_all()
+
+        # There can be a race condition if the JS is already load
+        # leading to _is_loaded = True before observing it.
+        # If this is the case there should not be any problem because no python commands
+        # are expected to be called on an object before the object itself
+        # is instanciated.
+        self.observe(on_load_change, names="_is_loaded")
 
     def _handle_custom_message(self, _: any, message: dict, buffers: any) -> None:
         event_type = message["event_type"]
