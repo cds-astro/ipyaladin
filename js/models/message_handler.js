@@ -30,14 +30,6 @@ export default class MessageHandler {
     catalog.addSources(markers);
   }
 
-  handleChangeFoV(msg) {
-    this.aladin.setFoV(msg["fov"]);
-  }
-
-  handleGotoRaDec(msg) {
-    this.aladin.gotoRaDec(msg["ra"], msg["dec"]);
-  }
-
   async handleSaveViewAsImage(msg) {
     const path = msg["path"];
     const format = msg["format"];

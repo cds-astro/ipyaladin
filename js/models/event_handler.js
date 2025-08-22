@@ -76,21 +76,15 @@ export default class EventHandler {
    * Subscribes to all the events needed for the Aladin Lite widget.
    */
   subscribeAll() {
-    /* ------------------- */
-    /* Listeners --------- */
-    /* ------------------- */
-
     /* Position Control */
     // there are two ways of changing the target, one from the javascript side, and
     // one from the python side. We have to instantiate two listeners for these, but
     // the gotoObject call should only happen once. The two booleans prevent the two
-    // listeners from triggering each other and creating a buggy loop. The same trick
-    // is also necessary for the field of view.
+    // listeners from triggering each other and creating a buggy loop.
 
-    /* Target control */
-    const jsTargetLock = new Lock();
-    const pyTargetLock = new Lock();
-
+    /* ----------------------- */
+    /* Aladin events listeners */
+    /* ----------------------- */
     // Event triggered when the user moves the map in Aladin Lite
     this.aladin.on("positionChanged", (position) => {
       if (pyTargetLock.locked) {
@@ -98,6 +92,7 @@ export default class EventHandler {
         return;
       }
       jsTargetLock.lock();
+
       const raDec = [position.ra, position.dec];
       this.updateWCS();
       // When dragging the view, north to east position angle might changes because
@@ -107,77 +102,16 @@ export default class EventHandler {
       this.model.save_changes();
     });
 
-    this.model.on("change:_target", () => {
-      if (jsTargetLock.locked) {
-        jsTargetLock.unlock();
-        return;
-      }
-      pyTargetLock.lock();
-      let target = this.model.get("_target");
-      const [ra, dec] = target.split(" ");
-      this.aladin.gotoRaDec(ra, dec);
-    });
-
     /* Field of View control */
-    const jsFovLock = new Lock();
-    const pyFovLock = new Lock();
-
     this.aladin.on("zoomChanged", (fov) => {
-      if (pyFovLock.locked) {
-        pyFovLock.unlock();
-        return;
-      }
-      jsFovLock.lock();
       // fov MUST be cast into float in order to be sent to the model
-      this.updateWCS();
-      this.update2AxisFoV();
       this.model.set("_fov", parseFloat(fov.toFixed(5)));
-      this.model.save_changes();
-    });
 
-    // A better way would be to listen to a "dblclick" event through aladin.on
-    this.aladin.view.catalogCanvas.addEventListener("dblclick", (e) => {
-      this.updateRotation();
-      this.model.save_changes();
-    });
-
-    this.model.on("change:_fov", () => {
-      if (jsFovLock.locked) {
-        jsFovLock.unlock();
-        return;
-      }
-      pyFovLock.lock();
-      let fov = this.model.get("_fov");
-      this.aladin.setFoV(fov);
-    });
-
-    /* Div control */
-    this.model.on("change:_height", () => {
-      setDivHeight(this.model.get("_height"), this.aladinDiv);
-      // Update WCS and FoV only if this is the last div
       this.updateWCS();
       this.update2AxisFoV();
       if (!this.isLastDiv()) return;
       this.model.save_changes();
     });
-
-    /* Rotation control */
-    this.model.on("change:_rotation", () => {
-      // Get the rotation value from the python
-      let rotation = this.model.get("_rotation");
-      if (rotation === this.aladin.getRotation()) {
-        return;
-      }
-      // And propagate it to Aladin Lite
-      this.aladin.setRotation(rotation);
-
-      // Update WCS and FoV only if this is the last div
-      this.updateWCS();
-      this.update2AxisFoV();
-      this.model.save_changes();
-    });
-
-    /* Aladin callbacks */
 
     this.aladin.on("cooFrameChanged", () => {
       this.updateWCS();
@@ -224,6 +158,7 @@ export default class EventHandler {
     });
 
     this.aladin.on("rotationChanged", (_) => {
+      console.log("rotation changed");
       this.updateRotation();
       if (!this.isLastDiv()) return;
       this.model.save_changes();
@@ -295,30 +230,93 @@ export default class EventHandler {
       });
     });
 
+    // A better way would be to listen to a "dblclick" event through aladin.on
+    this.aladin.view.catalogCanvas.addEventListener("dblclick", (e) => {
+      this.updateRotation();
+      this.model.save_changes();
+    });
+
+    /* ----------------------- */
+    /* Traits listeners        */
+    /* ----------------------- */
+    const jsTargetLock = new Lock();
+    const pyTargetLock = new Lock();
+
+    // This dictionary stores the handlers executed
+    // when a trait has changed on the python side.
+    // key is the name of the trait
+    // value is the callback executed on change, it takes
+    // the new value of the trait as single input param
+    this.traitHandlers = {
+      /* Target control */
+      _target: (target) => {
+        if (jsTargetLock.locked) {
+          jsTargetLock.unlock();
+          return;
+        }
+        pyTargetLock.lock();
+
+        const raDec = target.split(" ");
+        this.aladin.gotoRaDec(raDec[0], raDec[1]);
+      },
+      _fov: (fov) => {
+        // zoomChanged is not triggered if the zoom does not change
+        // from aladin inner state. This prevents having an infinite loop
+        this.aladin.setFoV(fov);
+
+        // Update WCS and FoV only if this is the last div
+        this.updateWCS();
+        this.update2AxisFoV();
+        this.model.save_changes();
+      },
+      /* Rotation control */
+      _rotation: (rotation) => {
+        console.log(rotation, "rot");
+        // And propagate it to Aladin Lite
+        this.aladin.setRotation(rotation);
+
+        // Update WCS and FoV only if this is the last div
+        this.updateWCS();
+        this.update2AxisFoV();
+        this.model.save_changes();
+      },
+      /* Div control */
+      _height: (height) => {
+        setDivHeight(height, this.aladinDiv);
+        // Update WCS and FoV only if this is the last div
+        this.updateWCS();
+        this.update2AxisFoV();
+        this.model.save_changes();
+      },
+      coo_frame: (frame) => {
+        this.aladin.setFrame(frame);
+      },
+      survey: (survey) => {
+        this.aladin.setImageSurvey(survey);
+      },
+      overlay_survey: (survey) => {
+        if (survey !== "") {
+          this.aladin.setOverlayImageLayer(survey);
+        }
+      },
+      overlay_survey_opacity: (opacity) => {
+        let overlay = this.aladin.getOverlayImageLayer();
+
+        if (overlay) {
+          overlay.setAlpha(opacity);
+        }
+      },
+    };
+
+    for (var trait in this.traitHandlers) {
+      let handler = this.traitHandlers[trait];
+      this.model.on("change:" + trait, (_, value) => handler(value));
+    }
+
     /* Aladin functionalities */
-
-    this.model.on("change:coo_frame", () => {
-      this.aladin.setFrame(this.model.get("coo_frame"));
-    });
-
-    this.model.on("change:survey", () => {
-      this.aladin.setImageSurvey(this.model.get("survey"));
-    });
-
-    this.model.on("change:overlay_survey", () => {
-      this.aladin.setOverlayImageLayer(this.model.get("overlay_survey"));
-    });
-
-    this.model.on("change:overlay_survey_opacity", () => {
-      this.aladin
-        .getOverlayImageLayer()
-        .setAlpha(this.model.get("overlay_survey_opacity"));
-    });
-
+    // custom events handlers
     this.eventHandlers = {
       add_marker: this.messageHandler.handleAddMarker,
-      change_fov: this.messageHandler.handleChangeFoV,
-      goto_ra_dec: this.messageHandler.handleGotoRaDec,
       save_view_as_image: this.messageHandler.handleSaveViewAsImage,
       add_fits: this.messageHandler.handleAddFits,
       add_catalog_from_URL: this.messageHandler.handleAddCatalogFromURL,
@@ -344,15 +342,9 @@ export default class EventHandler {
    * There is no need to unsubscribe from the Aladin Lite events.
    */
   unsubscribeAll() {
-    this.model.off("change:_target");
-    this.model.off("change:_fov");
-    this.model.off("change:_height");
-    this.model.off("change:_rotation");
-    this.model.off("change:coo_frame");
-    this.model.off("change:survey");
-    this.model.off("change:overlay_survey");
-    this.model.off("change:overlay_survey_opacity");
-    this.model.off("change:trigger_event");
+    for (var trait in this.traitHandlers) {
+      this.model.off("change:" + trait);
+    }
     this.model.off("msg:custom");
   }
 }

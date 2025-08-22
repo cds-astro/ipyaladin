@@ -221,7 +221,7 @@ class Aladin(anywidget.AnyWidget):
         "is reduced in size when hidden.",
     ).tag(sync=True)
 
-    def __init__(self, *args: any, **init_options: any) -> None:
+    def __init__(self, *args: object, **init_options: object) -> None:
         super().__init__(*args, **init_options)
         # pop init options of ipywidgets.DOMWidget that would choke ipyaladin
         # https://github.com/jupyter-widgets/ipywidgets/blob/main/python/ipywidgets/ipywidgets/widgets/domwidget.py
@@ -435,10 +435,8 @@ class Aladin(anywidget.AnyWidget):
             fov = fov.to_value(u.deg)
         if np.isclose(fov, self._fov):
             return
+
         self._fov = fov
-        self.send({"event_name": "change_fov", "fov": fov})
-        self._fov_xy = {}
-        self._wcs = {}
 
     @property
     def target(self) -> Union[SkyCoord, Tuple[float, float]]:
@@ -509,13 +507,6 @@ class Aladin(anywidget.AnyWidget):
             lon, lat = target.icrs.ra.deg, target.icrs.dec.deg
 
         self._target = f"{lon} {lat}"
-        self.send(
-            {
-                "event_name": "goto_ra_dec",
-                "ra": lon,
-                "dec": lat,
-            }
-        )
 
     def add_markers(
         self, markers: Union[Marker, List[Marker]], **catalog_options: any
