@@ -26,25 +26,6 @@ function initAladinLite(model, el) {
   let aladin = new A.aladin(aladinDiv, initOptions);
   el.appendChild(aladinDiv);
 
-  // Set the target again after the initialization to be sure that the target is set
-  // from icrs coordinates because of the use of gotoObject in the Aladin Lite API
-  const raDec = model.get("_target").split(" ");
-  aladin.gotoRaDec(raDec[0], raDec[1]);
-
-  // Set current FoV, WCS, and rotation
-  const twoAxisFoV = { ...aladin.getFov() };
-  model.set("_fov_xy", {
-    x: twoAxisFoV[0],
-    y: twoAxisFoV[1],
-  });
-  const wcs = { ...aladin.getViewWCS() };
-  model.set("_wcs", wcs);
-  const rotation = aladin.getRotation();
-  model.set("_rotation", rotation);
-
-  model.set("_is_loaded", true);
-  model.save_changes();
-
   return { aladin, aladinDiv };
 }
 
@@ -61,6 +42,30 @@ function render({ model, el }) {
 
   const eventHandler = new EventHandler(aladin, aladinDiv, model);
   eventHandler.subscribeAll();
+
+  // Traitlets have maybe been set on the python side, so we propagate them to aladin
+  // Set the target again after the initialization to be sure that the target is set
+  // from icrs coordinates because of the use of gotoObject in the Aladin Lite API
+  let traitHandlers = eventHandler.traitHandlers;
+  for (const trait in traitHandlers) {
+    let value = model.get(trait);
+    if (value !== null) {
+      traitHandlers[trait](value);
+    }
+  }
+
+  // Send fovXY and WCS traitlets to python
+  const twoAxisFoV = { ...aladin.getFov() };
+  model.set("_fov_xy", {
+    x: twoAxisFoV[0],
+    y: twoAxisFoV[1],
+  });
+  const wcs = { ...aladin.getViewWCS() };
+  model.set("_wcs", wcs);
+
+  // Tell the widget is loaded so that all stored calls waiting can be executed
+  model.set("_is_loaded", true);
+  model.save_changes();
 
   return () => {
     // Need to unsubscribe the listeners
