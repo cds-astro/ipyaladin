@@ -49,11 +49,11 @@ export default class MessageHandler {
     );
   }
 
-  handleAddFits(msg, buffers) {
-    const options = convertOptionNamesToCamelCase(msg["options"] || {});
+  handleAddFitsImage(overlay) {
+    const options = convertOptionNamesToCamelCase(overlay["options"] || {});
     if (!options.name)
       options.name = `image_${String(++imageCount).padStart(3, "0")}`;
-    const buffer = buffers[0];
+    const buffer = overlay.data.buffer;
     const blob = new Blob([buffer], { type: "application/octet-stream" });
     const url = URL.createObjectURL(blob);
     const image = this.aladin.createImageFITS(url, options, (ra, dec) => {
@@ -64,25 +64,25 @@ export default class MessageHandler {
     this.aladin.setOverlayImageLayer(image, options.name);
   }
 
-  handleAddCatalogFromURL(msg) {
-    const options = convertOptionNamesToCamelCase(msg["options"] || {});
-    this.aladin.addCatalog(A.catalogFromURL(msg["votable_URL"], options));
+  handleAddCatalogFromURL(catalog) {
+    const options = convertOptionNamesToCamelCase(catalog["options"] || {});
+    this.aladin.addCatalog(A.catalogFromURL(catalog["data"], options));
   }
 
-  handleAddMOCFromURL(msg) {
-    const options = convertOptionNamesToCamelCase(msg["options"] || {});
-    this.aladin.addMOC(A.MOCFromURL(msg["moc_URL"], options));
+  handleAddMOCFromURL(moc) {
+    const options = convertOptionNamesToCamelCase(moc["options"] || {});
+    this.aladin.addMOC(A.MOCFromURL(moc["data"], options));
   }
 
-  handleAddMOCFromDict(msg) {
-    const options = convertOptionNamesToCamelCase(msg["options"] || {});
-    this.aladin.addMOC(A.MOCFromJSON(msg["moc_dict"], options));
+  handleAddMOCFromDict(moc) {
+    const options = convertOptionNamesToCamelCase(moc["options"] || {});
+    this.aladin.addMOC(A.MOCFromJSON(moc["data"], options));
   }
 
-  handleAddOverlay(msg) {
-    const regions = msg["regions_infos"];
+  handleAddGraphicOverlay(graphicOverlay) {
+    const regions = graphicOverlay["data"];
     const graphic_options = convertOptionNamesToCamelCase(
-      msg["graphic_options"] || {},
+      graphicOverlay["options"] || {},
     );
     if (!graphic_options["color"]) graphic_options["color"] = "red";
     const overlay = A.graphicOverlay(graphic_options);
@@ -132,10 +132,6 @@ export default class MessageHandler {
     }
   }
 
-  handleChangeColormap(msg) {
-    this.aladin.getBaseImageLayer().setColormap(msg["colormap"]);
-  }
-
   handleGetJPGThumbnail() {
     this.aladin.exportAsPNG();
   }
@@ -147,15 +143,15 @@ export default class MessageHandler {
     this.aladin.select(selectionType);
   }
 
-  handleAddTable(msg, buffers) {
-    const options = convertOptionNamesToCamelCase(msg["options"] || {});
+  handleAddTable(table) {
+    const options = convertOptionNamesToCamelCase(table["options"] || {});
     const circleOptions = convertOptionNamesToCamelCase(
       options.circleError || {},
     );
     const ellipseOptions = convertOptionNamesToCamelCase(
       options.ellipseError || {},
     );
-    const buffer = buffers[0].buffer;
+    const buffer = table.data.buffer;
     const decoder = new TextDecoder("utf-8");
     const blob = new Blob([decoder.decode(buffer)]);
     const url = URL.createObjectURL(blob);

@@ -1,5 +1,11 @@
 import MessageHandler from "./message_handler";
-import { divNumber, setDivNumber, Lock, setDivHeight } from "../utils";
+import {
+  divNumber,
+  setDivNumber,
+  Lock,
+  setDivHeight,
+  isLiveSession,
+} from "../utils";
 
 export default class EventHandler {
   /**
@@ -118,8 +124,12 @@ export default class EventHandler {
       this.model.save_changes();
     });
 
-    this.aladin.on("projectionChanged", () => {
+    this.aladin.on("projectionChanged", (projection) => {
+      this.model.set("projection", projection);
+
       this.updateWCS();
+      this.update2AxisFoV();
+
       this.model.save_changes();
     });
 
@@ -235,6 +245,9 @@ export default class EventHandler {
       this.model.save_changes();
     });
 
+    // Detect environment
+    const isLive = isLiveSession(this.model);
+
     /* ----------------------- */
     /* Traits listeners        */
     /* ----------------------- */
@@ -304,7 +317,64 @@ export default class EventHandler {
           overlay.setAlpha(opacity);
         }
       },
+      colormap: (colormap) => {
+        this.aladin.getBaseImageLayer().setColormap(colormap);
+      },
+      projection: (projection) => {
+        this.aladin.setProjection(projection);
+
+        this.updateWCS();
+        this.update2AxisFoV();
+        this.model.save_changes();
+      },
     };
+
+    // Overlays traitlet listening
+    const handleOverlay = (overlay) => {
+      if (overlay.action === "add") {
+        switch (overlay.type) {
+          case "table":
+            // A table is transcripted to an ArrayBuffer (thanks to widget_serialization)
+            this.messageHandler.handleAddTable(overlay);
+            break;
+          case "catalog_from_url":
+            this.messageHandler.handleAddCatalogFromURL(overlay);
+            break;
+          case "MOC_from_url":
+            this.messageHandler.handleAddMOCFromURL(overlay);
+            break;
+          case "MOC_from_dict":
+            this.messageHandler.handleAddMOCFromDict(overlay);
+            break;
+          case "regions_stcs":
+            this.messageHandler.handleAddGraphicOverlay(overlay);
+            break;
+          case "regions":
+            this.messageHandler.handleAddGraphicOverlay(overlay);
+            break;
+          case "fits-image":
+            this.messageHandler.handleAddFitsImage(overlay);
+            break;
+          default:
+            break;
+        }
+      } else {
+        // TODO: remove overlay
+      }
+    };
+
+    if (isLive) {
+      // Default behavior: do not listen for overlays but _overlay_patch when ipyaladin
+      // is connected to a jupyter/jupyterlab session (i.e. not exported to HTML)
+      this.traitHandlers["_overlay_patch"] = handleOverlay;
+    } else {
+      // static HTML file export (i.e. example HTML documentation files or HTML export of a notebook)
+      this.traitHandlers["overlays"] = (overlays) => {
+        for (const overlay of overlays) {
+          handleOverlay(overlay);
+        }
+      };
+    }
 
     for (var trait in this.traitHandlers) {
       let handler = this.traitHandlers[trait];
@@ -316,15 +386,15 @@ export default class EventHandler {
     this.eventHandlers = {
       add_marker: this.messageHandler.handleAddMarker,
       save_view_as_image: this.messageHandler.handleSaveViewAsImage,
-      add_fits: this.messageHandler.handleAddFits,
-      add_catalog_from_URL: this.messageHandler.handleAddCatalogFromURL,
-      add_MOC_from_URL: this.messageHandler.handleAddMOCFromURL,
-      add_MOC_from_dict: this.messageHandler.handleAddMOCFromDict,
-      add_overlay: this.messageHandler.handleAddOverlay,
-      change_colormap: this.messageHandler.handleChangeColormap,
       get_JPG_thumbnail: this.messageHandler.handleGetJPGThumbnail,
       trigger_selection: this.messageHandler.handleTriggerSelection,
-      add_table: this.messageHandler.handleAddTable,
+      //add_fits: this.messageHandler.handleAddFits,
+      //add_catalog_from_URL: this.messageHandler.handleAddCatalogFromURL,
+      //add_MOC_from_URL: this.messageHandler.handleAddMOCFromURL,
+      //add_MOC_from_dict: this.messageHandler.handleAddMOCFromDict,
+      //add_overlay: this.messageHandler.handleAddGraphicOverlay,
+      //add_table: this.messageHandler.handleAddTable,
+      //change_colormap: this.messageHandler.handleChangeColormap,
     };
 
     this.model.on("msg:custom", (msg, buffers) => {

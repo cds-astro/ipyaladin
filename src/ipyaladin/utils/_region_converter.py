@@ -4,6 +4,8 @@ from astropy.coordinates import SkyCoord, CartesianRepresentation, Angle
 from astropy.coordinates.matrix_utilities import rotation_matrix
 from astropy.units import Quantity
 
+import traitlets
+
 try:
     from regions import (
         RectangleSkyRegion,
@@ -89,7 +91,7 @@ def rectangle_to_polygon_region(region: RectangleSkyRegion) -> PolygonSkyRegion:
     )
 
 
-class RegionInfos:
+class RegionInfos(traitlets.TraitType):
     """Extract information from a region.
 
     Attributes
@@ -112,6 +114,27 @@ class RegionInfos:
         }
         self.options = {}
         self.from_region(region)
+
+    # inherited from traitlets.TraitType
+    def validate(self, obj: any, value: dict) -> dict:
+        if not isinstance(value, dict):
+            self.error(obj, value)
+
+        required_keys = {"region_type", "infos", "options"}
+        missing = required_keys - value.keys()
+        if missing:
+            raise traitlets.TraitError(f"Missing keys: {missing}")
+
+        if not isinstance(value["options"], dict):
+            self.error(obj, value)
+
+        if not isinstance(value["region_type"], str):
+            self.error(obj, value)
+
+        if not isinstance(value["infos"], dict):
+            self.error(obj, value)
+
+        return value
 
     def from_region(self, region: Union[str, Region]) -> None:
         """Parse a region to extract its information.
