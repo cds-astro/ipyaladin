@@ -5,7 +5,6 @@ import astropy.units as u
 from astropy.table import Column, Table
 import numpy as np
 import pytest
-from unittest.mock import Mock
 
 from ipyaladin import Aladin
 from ipyaladin.elements.error_shape import EllipseError, CircleError
@@ -26,6 +25,23 @@ aladin._is_loaded = True
 def mock_sesame(monkeypatch: Callable) -> None:
     """Sesame calls mocked."""
     monkeypatch.setattr(SkyCoord, "from_name", lambda _: SkyCoord(0, 0, unit="deg"))
+
+
+# Fixture to record trailet change on aladin
+@pytest.fixture
+def trait_recorder() -> Callable[[str], list]:
+    """Fixture to record traitlet changes on a widget instance."""
+
+    def _attach(trait_name: str) -> list:
+        events = []
+
+        def _recorder(change: any) -> None:
+            events.append(change)
+
+        aladin.observe(_recorder, trait_name)
+        return events
+
+    return _attach
 
 
 class MockResponse:
@@ -232,7 +248,7 @@ test_stcs_iterables = [
 
 @pytest.mark.parametrize("stcs_strings", test_stcs_iterables)
 def test_add_graphic_overlay_from_stcs_iterables(
-    monkeypatch: Callable,
+    trait_recorder: Callable[[str], list],
     stcs_strings: Union[Iterable[str], str],
 ) -> None:
     """Test generating region overlay info from iterable STC-S string(s).
@@ -243,10 +259,11 @@ def test_add_graphic_overlay_from_stcs_iterables(
         The stcs strings to create region overlay info from.
 
     """
-    mock_send = Mock()
-    monkeypatch.setattr(Aladin, "send", mock_send)
+    events = trait_recorder("_overlay_patch")
+
     aladin.add_graphic_overlay_from_stcs(stcs_strings)
-    regions_info = mock_send.call_args[0][0]["regions_infos"]
+
+    regions_info = events[0].new["data"]
     assert isinstance(regions_info, list)
     assert regions_info[0]["infos"]["stcs"] in stcs_strings
 
@@ -263,7 +280,7 @@ test_stcs_noniterables = [
 def test_add_graphic_overlay_from_stcs_noniterables(
     stcs_strings: Union[Iterable[str], str],
 ) -> None:
-    """Test generating region overlay info from iterable STC-S string(s).
+    """Error check when a non iterable input of STC-S string(s) is given.
 
     Parameters
     ----------
@@ -276,39 +293,35 @@ def test_add_graphic_overlay_from_stcs_noniterables(
     assert info.type is TypeError
 
 
-def test_add_table(monkeypatch: Callable) -> None:
-    """Test generating region overlay info from iterable STC-S string(s).
+def test_add_table(trait_recorder: Callable[[str], list]) -> None:
+    """Test sending an astropy table to ipyaladin.
 
-    Parameters
-    ----------
-    stcs_strings : Union[Iterable[str], str]
-        The stcs strings to create region overlay info from.
-
+    This test checks that the overlay traitlet is correctly synced
     """
+    events = trait_recorder("_overlay_patch")
+
     table = Table({"a": [1, 2, 3]})
     table["a"].unit = "deg"
-    mock_send = Mock()
-    monkeypatch.setattr(Aladin, "send", mock_send)
 
     # normal table call
     aladin.add_table(table)
-    table_sent_message = mock_send.call_args[0][0]
-    assert table_sent_message["event_name"] == "add_table"
+    table_sent = events[0].new
+    assert table_sent["type"] == "table" and table_sent["action"] == "add"
 
     # circle error
     aladin.add_table(
         table, shape=CircleError(radius="a", default_shape="cross"), color="pink"
     )
-    table_sent_message = mock_send.call_args[0][0]
-    assert table_sent_message["options"]["circle_error"] == {
+    table_sent = events[1].new
+    assert table_sent["options"]["circle_error"] == {
         "radius": "a",
         "conversion_radius": 1,
     }
-    assert table_sent_message["options"]["shape"] == "cross"
+    assert table_sent["options"]["shape"] == "cross"
 
     # ellipse error
     aladin.add_table(table, shape=EllipseError(maj_axis="a", min_axis="a", angle="a"))
-    table_sent_message = mock_send.call_args[0][0]
+    table_sent = events[2].new
     ellipse_options = {
         "maj_axis": "a",
         "min_axis": "a",
@@ -317,4 +330,4 @@ def test_add_table(monkeypatch: Callable) -> None:
         "conversion_min_axis": 1,
         "conversion_maj_axis": 1,
     }
-    assert table_sent_message["options"]["ellipse_error"] == ellipse_options
+    assert table_sent["options"]["ellipse_error"] == ellipse_options

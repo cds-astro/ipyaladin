@@ -217,7 +217,7 @@ class Aladin(anywidget.AnyWidget):
 
     overlays = traitlets.List(
         traitlets.Dict(
-            traits={
+            per_key_traits={
                 "action": traitlets.Enum(["add", "remove"]).tag(sync=True),
                 "options": traitlets.Dict().tag(sync=True),
                 "data": traitlets.Union(
@@ -252,7 +252,7 @@ class Aladin(anywidget.AnyWidget):
     ).tag(sync=True)
 
     _overlay_patch = traitlets.Dict(
-        traits={
+        per_key_traits={
             "action": traitlets.Enum(["add", "remove"]).tag(sync=True),
             "options": traitlets.Dict().tag(sync=True),
             "data": traitlets.Union(
