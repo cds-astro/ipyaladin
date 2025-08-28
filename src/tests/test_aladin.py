@@ -15,6 +15,11 @@ from .test_coordinate_parser import test_is_coordinate_string_values
 
 aladin = Aladin()
 
+# Tell python that the JS part is loaded
+# so that adding overlay requests are sent
+# through the events/traitlets system.
+aladin._is_loaded = True
+
 
 # monkeypatched sesame call to avoid remote access during tests
 @pytest.fixture
