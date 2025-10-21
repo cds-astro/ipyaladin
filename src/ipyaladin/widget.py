@@ -231,7 +231,7 @@ class Aladin(anywidget.AnyWidget):
         # some init options are properties here
         self.height = init_options.get("height", self._height)
         self.rotation = init_options.get("north_pole_orientation", self._rotation)
-        self.target = init_options.get("target", self._target)
+        self.target = init_options.pop("target", self._target)
         self.fov = init_options.get("fov", self._fov)
         # apply different default options from Aladin-Lite
         ipyaladin_default = {
