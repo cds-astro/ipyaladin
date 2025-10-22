@@ -225,14 +225,38 @@ class Aladin(anywidget.AnyWidget):
         # https://github.com/jupyter-widgets/ipywidgets/blob/main/python/ipywidgets/ipywidgets/widgets/domwidget.py
         for key in ["layout", "tabbable", "tooltip"]:
             init_options.pop(key, None)
-        init_options["north_pole_orientation"] = init_options.get(
-            "north_pole_orientation", init_options.get("rotation", 0)
-        )
+
         # some init options are properties here
         self.height = init_options.get("height", self._height)
-        self.rotation = init_options.get("north_pole_orientation", self._rotation)
+
+        if "north_pole_orientation" in init_options:
+            warnings.warn(
+                "The keyword argument `north_pole_orientation` has been deprecated "
+                "in favor of `rotation`, and has the same behavior. "
+                "This will be removed in version 1.0.0.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            init_options["rotation"] = init_options.pop("north_pole_orientation", None)
+
+        # make these attrs json serializable before adding to _init_options traitlet
+        rotation = init_options.pop("rotation", self._rotation)
+        fov = init_options.pop("fov", self._fov)
+
+        if hasattr(rotation, "unit"):
+            rotation = rotation.to_value("deg")
+
+        if hasattr(fov, "unit"):
+            fov = fov.to_value("deg")
+
+        self.rotation = rotation
+        self.fov = init_options["fov"] = fov
+        self.rotation = init_options["rotation"] = rotation
         self.target = init_options.pop("target", self._target)
-        self.fov = init_options.get("fov", self._fov)
+
+        if isinstance(self.target, SkyCoord):
+            init_options["target"] = self._target
+
         # apply different default options from Aladin-Lite
         ipyaladin_default = {
             "show_simbad_pointer_control": True,
@@ -753,8 +777,8 @@ class Aladin(anywidget.AnyWidget):
         """
         warnings.warn(
             "add_moc_from_URL is replaced by add_moc that detects automatically"
-            "that the MOC was given as an URL."
-            "This will be removed in version 1.0.0 (coming after 0.5).",
+            "that the MOC was given as an URL. "
+            "This will be removed in version 1.0.0.",
             DeprecationWarning,
             stacklevel=2,
         )
@@ -780,8 +804,8 @@ class Aladin(anywidget.AnyWidget):
         """
         warnings.warn(
             "add_moc_from_dict is replaced by add_moc that detects automatically"
-            "that the MOC was given as a dictionary."
-            "This will be removed in version 1.0.0 (coming after 0.5).",
+            "that the MOC was given as a dictionary. "
+            "This will be removed in version 1.0.0.",
             DeprecationWarning,
             stacklevel=2,
         )
@@ -958,7 +982,7 @@ class Aladin(anywidget.AnyWidget):
         warnings.warn(
             "'add_overlay_from_stcs' is deprecated, "
             "use 'add_graphic_overlay_from_stcs' instead. "
-            "This will be removed in version 1.0.0 (coming after 0.5).",
+            "This will be removed in version 1.0.0.",
             DeprecationWarning,
             stacklevel=2,
         )
@@ -1039,8 +1063,8 @@ class Aladin(anywidget.AnyWidget):
         This method is deprecated, use selection instead
         """
         warnings.warn(
-            "rectangular_selection is deprecated, use selection('rectangle') instead"
-            "This will be removed in version 1.0.0 (coming after 0.5).",
+            "rectangular_selection is deprecated, use selection('rectangle') instead "
+            "This will be removed in version 1.0.0.",
             DeprecationWarning,
             stacklevel=2,
         )
@@ -1093,8 +1117,8 @@ class Aladin(anywidget.AnyWidget):
 
         """
         warnings.warn(
-            "add_listener is deprecated, use set_listener instead"
-            "This will be removed in version 1.0.0 (coming after 0.5).",
+            "add_listener is deprecated, use set_listener instead. "
+            "This will be removed in version 1.0.0.",
             DeprecationWarning,
             stacklevel=2,
         )
