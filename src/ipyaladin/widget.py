@@ -25,6 +25,8 @@ from astropy.coordinates.name_resolve import NameResolveError
 from astropy.table.table import QTable, Table
 from astropy.io import fits as astropy_fits
 from astropy.io.fits import HDUList
+from astropy import units as u
+from astropy.units import Quantity
 from astropy.wcs import WCS
 import numpy as np
 import traitlets
@@ -229,16 +231,6 @@ class Aladin(anywidget.AnyWidget):
         # some init options are properties here
         self.height = init_options.get("height", self._height)
 
-        if "north_pole_orientation" in init_options:
-            warnings.warn(
-                "The keyword argument `north_pole_orientation` has been deprecated "
-                "in favor of `rotation`, and has the same behavior. "
-                "This will be removed in version 1.0.0.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
-            init_options["rotation"] = init_options.pop("north_pole_orientation", None)
-
         # make these attrs json serializable before adding to _init_options traitlet
         rotation = init_options.pop("rotation", self._rotation)
         fov = init_options.pop("fov", self._fov)
@@ -360,9 +352,9 @@ class Aladin(anywidget.AnyWidget):
         return Angle(self._rotation, unit="deg")
 
     @rotation.setter
-    def rotation(self, rotation: Union[float, Angle]) -> None:
-        if isinstance(rotation, Angle):
-            rotation = rotation.deg
+    def rotation(self, rotation: Union[float, Angle, Quantity]) -> None:
+        if isinstance(rotation, u.Quantity):
+            rotation = rotation.to_value(u.deg)
         if np.isclose(self._rotation, rotation):
             return
         self._rotation = rotation
@@ -438,9 +430,9 @@ class Aladin(anywidget.AnyWidget):
         return Angle(self._fov, unit="deg")
 
     @fov.setter
-    def fov(self, fov: Union[float, Angle]) -> None:
-        if isinstance(fov, Angle):
-            fov = fov.deg
+    def fov(self, fov: Union[float, Angle, Quantity]) -> None:
+        if isinstance(fov, Quantity):
+            fov = fov.to_value(u.deg)
         if np.isclose(fov, self._fov):
             return
         self._fov = fov
