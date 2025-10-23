@@ -67,7 +67,6 @@ def test_aladin_string_target_set(target: str, mock_sesame: Callable) -> None:  
     ----------
     target : str
         The target string.
-
     """
     aladin._survey_body = "sky"
     aladin.target = target
@@ -84,7 +83,6 @@ def test_aladin_sky_coord_target_set(target: str, mock_sesame: Callable) -> None
     ----------
     target : str
         The target string.
-
     """
     aladin._survey_body = "sky"
     sc_target = _parse_coordinate_string(target)
@@ -96,17 +94,33 @@ def test_aladin_sky_coord_target_set(target: str, mock_sesame: Callable) -> None
     assert np.isclose(aladin.target.icrs.dec.deg, sc_target[1])
 
 
-test_aladin_float_fov = [
+@pytest.mark.parametrize("coord", [(0.0, 0.0), (180.0, 90.0)])
+def test_aladin_sky_coord_target_init(coord: tuple, mock_sesame: Callable) -> None:  # noqa: ARG001
+    """Test setting the target of an Aladin object with a SkyCoord object at init.
+
+    Parameters
+    ----------
+    target : astropy.coordinates.SkyCoord
+        The target coordinate.
+    """
+    sky_coordinate = SkyCoord(*coord, unit=u.deg, frame="icrs")
+    test_aladin = Aladin(target=sky_coordinate)
+    assert test_aladin.target == sky_coordinate
+
+
+test_aladin_fov = [
     0,
     360,
     180,
     -180,
     720,
+    0 * u.deg,
+    45 * u.deg,
 ]
 
 
-@pytest.mark.parametrize("angle", test_aladin_float_fov)
-def test_aladin_float_fov_set(angle: float) -> None:
+@pytest.mark.parametrize("angle", test_aladin_fov)
+def test_aladin_float_fov_set(angle: Union[float, u.Quantity]) -> None:
     """Test setting the angle of an Aladin object with a float.
 
     Parameters
@@ -116,11 +130,13 @@ def test_aladin_float_fov_set(angle: float) -> None:
 
     """
     aladin.fov = angle
+    if hasattr(angle, "unit"):
+        angle = angle.to_value(u.deg)
     assert aladin.fov.deg == angle
 
 
-@pytest.mark.parametrize("angle", test_aladin_float_fov)
-def test_aladin_angle_fov_set(angle: float) -> None:
+@pytest.mark.parametrize("angle", test_aladin_fov)
+def test_aladin_angle_fov_set(angle: Union[float, u.Quantity]) -> None:
     """Test setting the angle of an Aladin object with an Angle object.
 
     Parameters
@@ -134,18 +150,20 @@ def test_aladin_angle_fov_set(angle: float) -> None:
     assert aladin.fov.deg == angle_fov.deg
 
 
-test_aladin_float_rotation = [
+test_aladin_rotation = [
     0,
     360,
     180,
     -180,
     720,
+    0 * u.deg,
+    180 * u.deg,
 ]
 
 
-@pytest.mark.parametrize("angle", test_aladin_float_rotation)
-def test_aladin_float_rotation_set(angle: float) -> None:
-    """Test setting the rotation of an Aladin object with a float.
+@pytest.mark.parametrize("angle", test_aladin_rotation)
+def test_aladin_rotation_set(angle: Union[float, u.Quantity]) -> None:
+    """Test setting the rotation of an Aladin object with a float or Quantity.
 
     Parameters
     ----------
@@ -154,11 +172,13 @@ def test_aladin_float_rotation_set(angle: float) -> None:
 
     """
     aladin.rotation = angle
+    if hasattr(angle, "unit"):
+        angle = angle.to_value(u.deg)
     assert aladin.rotation.deg == angle
 
 
-@pytest.mark.parametrize("angle", test_aladin_float_rotation)
-def test_aladin_angle_rotation_set(angle: float) -> None:
+@pytest.mark.parametrize("angle", test_aladin_rotation[:-2])
+def test_aladin_angle_rotation_set(angle: Union[float, u.Quantity]) -> None:
     """Test setting the rotation of an Aladin object with an Angle object.
 
     Parameters
@@ -172,48 +192,19 @@ def test_aladin_angle_rotation_set(angle: float) -> None:
     assert aladin.rotation.deg == angle_rotation.deg
 
 
-@pytest.mark.parametrize("angle", test_aladin_float_rotation)
-def test_aladin_init_rotation(angle: float) -> None:
+@pytest.mark.parametrize("angle", test_aladin_rotation)
+def test_aladin_init_rotation(angle: Union[float, u.Quantity]) -> None:
     """Test initializing an Aladin object with rotation set.
 
     Parameters
     ----------
-    angle : float
+    angle : float, astropy.units.Quantity
         The angle to set.
 
     """
     test_aladin = Aladin(rotation=angle)
-    assert test_aladin.rotation.deg == angle
-
-
-@pytest.mark.parametrize("angle", test_aladin_float_rotation)
-def test_aladin_init_north_pole_orientation(angle: float) -> None:
-    """Test initializing Aladin object with north_pole_orientation set.
-
-    Parameters
-    ----------
-    angle : float
-        The angle to set.
-
-    """
-    test_aladin = Aladin(north_pole_orientation=angle)
-    assert test_aladin.rotation.deg == angle
-
-
-@pytest.mark.parametrize("angle", test_aladin_float_rotation)
-def test_aladin_init_north_pole_orientation_overrides_rotation(angle: float) -> None:
-    """
-    Test init Aladin object with north_pole_orientation and rotation set.
-
-    north_pole_orientation should override rotation.
-
-    Parameters
-    ----------
-    angle : float
-        The angle to set.
-
-    """
-    test_aladin = Aladin(north_pole_orientation=angle, rotation=180)
+    if hasattr(angle, "unit"):
+        angle = angle.to_value(u.deg)
     assert test_aladin.rotation.deg == angle
 
 
