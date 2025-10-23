@@ -232,20 +232,20 @@ class Aladin(anywidget.AnyWidget):
         self.height = init_options.get("height", self._height)
 
         # make these attrs json serializable before adding to _init_options traitlet
+        # rotation
         rotation = init_options.pop("rotation", self._rotation)
-        fov = init_options.pop("fov", self._fov)
-
         if hasattr(rotation, "unit"):
             rotation = rotation.to_value("deg")
+        self.rotation = init_options["rotation"] = rotation
 
+        # fov
+        fov = init_options.pop("fov", self._fov)
         if hasattr(fov, "unit"):
             fov = fov.to_value("deg")
-
-        self.rotation = rotation
         self.fov = init_options["fov"] = fov
-        self.rotation = init_options["rotation"] = rotation
-        self.target = init_options.pop("target", self._target)
 
+        # target
+        self.target = init_options.pop("target", self._target)
         if isinstance(self.target, SkyCoord):
             init_options["target"] = self._target
 
@@ -269,7 +269,7 @@ class Aladin(anywidget.AnyWidget):
         # leading to _is_loaded = True before observing it.
         # If this is the case there should not be any problem because no python commands
         # are expected to be called on an object before the object itself
-        # is instanciated.
+        # is instantiated.
         self.observe(on_load_change, names="_is_loaded")
 
     def _handle_custom_message(self, _: any, message: dict, buffers: any) -> None:
