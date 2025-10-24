@@ -283,9 +283,11 @@ export default class EventHandler {
       },
       /* Rotation control */
       _rotation: (rotation) => {
+        if (rotation === this.aladin.getRotation()) {
+          return;
+        }
         // And propagate it to Aladin Lite
         this.aladin.setRotation(rotation);
-
         // Update WCS and FoV only if this is the last div
         this.updateWCS();
         this.update2AxisFoV();
