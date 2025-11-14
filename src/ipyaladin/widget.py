@@ -221,33 +221,39 @@ class Aladin(anywidget.AnyWidget):
         "is reduced in size when hidden.",
     ).tag(sync=True)
 
-    def __init__(self, *args: object, **init_options: object) -> None:
-        super().__init__(*args, **init_options)
-        # pop init options of ipywidgets.DOMWidget that would choke ipyaladin
+    def __init__(self, **init_options: object) -> None:
+        # get traits with init_option True, map the names/traits
+        trait_names = self.traits(init_option=True).keys()
+        properties = ["target", "rotation", "height", "fov"]
+        init_trait_map = {x: x for x in trait_names}
+        init_trait_map.update({x: "_" + x for x in properties})
+
+        widget_kwargs = {}
+        ipywidget_kwargs = {}
+        aladin_kwargs = {}
+
+        # handle special cases, sort and update widget/aladin kwargs,
+        # separate init options of ipywidgets.DOMWidget that would choke ipyaladin
         # https://github.com/jupyter-widgets/ipywidgets/blob/main/python/ipywidgets/ipywidgets/widgets/domwidget.py
-        for key in ["layout", "tabbable", "tooltip"]:
-            init_options.pop(key, None)
+        coord_len = 2
+        for key, val in list(init_options.items()):
+            widget_val = val
 
-        # some init options are properties here
-        self.height = init_options.get("height", self._height)
+            if key == "target":
+                if isinstance(val, (tuple, list)) and len(val) == coord_len:
+                    widget_val = f"{val[0]} {val[1]}"
+                elif isinstance(val, SkyCoord):
+                    widget_val = f"{val.ra.deg} {val.dec.deg}"
 
-        # make these attrs json serializable before adding to _init_options traitlet
-        # rotation
-        rotation = init_options.pop("rotation", self._rotation)
-        if hasattr(rotation, "unit"):
-            rotation = rotation.to_value("deg")
-        self.rotation = init_options["rotation"] = rotation
+            if key in ["rotation", "fov"] and hasattr(val, "unit"):
+                widget_val = val.to_value("deg")
 
-        # fov
-        fov = init_options.pop("fov", self._fov)
-        if hasattr(fov, "unit"):
-            fov = fov.to_value("deg")
-        self.fov = init_options["fov"] = fov
-
-        # target
-        self.target = init_options.pop("target", self._target)
-        if isinstance(self.target, SkyCoord):
-            init_options["target"] = self._target
+            if key in init_trait_map:
+                widget_kwargs[init_trait_map[key]] = widget_val
+            elif key in ["layout", "tabbable", "tooltip"]:
+                ipywidget_kwargs[key] = widget_val
+            else:
+                aladin_kwargs[key] = widget_val
 
         # apply different default options from Aladin-Lite
         ipyaladin_default = {
@@ -256,9 +262,17 @@ class Aladin(anywidget.AnyWidget):
             "show_settings_control": True,
             "show_context_menu": True,
         }
-        init_options = {**ipyaladin_default, **init_options}
+
         # set the traitlet
-        self._init_options = init_options
+        self._init_options = {**ipyaladin_default, **widget_kwargs, **aladin_kwargs}
+
+        # Initialize only with kwargs that are traits and for ipywidget
+        super().__init__(**widget_kwargs, **ipywidget_kwargs)
+
+        # and set the properties
+        for prop in properties:
+            setattr(self, prop, getattr(self, f"_{prop}"))
+
         self.on_msg(self._handle_custom_message)
 
         def on_load_change(change: traitlets.Dict) -> None:
