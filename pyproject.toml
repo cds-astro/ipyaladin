@@ -13,9 +13,10 @@ requires-python = ">=3.9"
 [project.optional-dependencies]
 dev = ["pytest", "watchfiles", "jupyterlab", "ruff", "nbconvert"]
 recommended = ["mocpy", "regions", "astroquery>=0.4.8"]
-notebooks = ["requests"]
+notebooks = ["requests", "matplotlib"]
 docs = ["autoapi",
     "jupyterlab",
+    "matplotlib",
     "myst-parser",
     "nbsphinx",
     "numpydoc",
@@ -59,7 +60,7 @@ extend-select = ["E", "W", "YTT", "ASYNC", "BLE", "B", "A",
                  "PTH", "TD", "ERA", "PL", "PERF", "RUF", "ARG",
                  "ANN", "D"
                 ]
-ignore = ["ISC001", "D203", "D213", "D100", "D105"]
+ignore = ["ISC001", "D203", "D213", "D100", "D105", "PLC0415"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
