@@ -13,9 +13,10 @@ requires-python = ">=3.9"
 [project.optional-dependencies]
 dev = ["pytest", "watchfiles", "jupyterlab", "ruff", "nbconvert"]
 recommended = ["mocpy", "regions", "astroquery>=0.4.8"]
-notebooks = ["requests"]
+notebooks = ["requests", "matplotlib"]
 docs = ["autoapi",
     "jupyterlab",
+    "matplotlib",
     "myst-parser",
     "nbsphinx",
     "numpydoc",
