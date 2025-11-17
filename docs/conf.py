@@ -36,7 +36,7 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.viewcode",
-    "sphinxcontrib.collections",
+    "sphinx_collections",
     # To support Numpy docstrings, we use this extension:
     "numpydoc",
     "nbsphinx",
