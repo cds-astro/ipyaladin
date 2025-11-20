@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - observe `_is_loaded` trait to call the Aladin API when the javascript is loaded [#149]
 - `target`, `rotation`, and `fov` can be set with astropy objects at Aladin
   initialization [#154]
+- fix deprecation warning `Passing unrecognized arguments to super(Aladin).__init__` [#155]
 
 ## [0.6.0]
 
