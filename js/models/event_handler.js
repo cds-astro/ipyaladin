@@ -158,7 +158,6 @@ export default class EventHandler {
     });
 
     this.aladin.on("rotationChanged", (_) => {
-      console.log("rotation changed");
       this.updateRotation();
       if (!this.isLastDiv()) return;
       this.model.save_changes();
@@ -271,7 +270,6 @@ export default class EventHandler {
       },
       /* Rotation control */
       _rotation: (rotation) => {
-        console.log(rotation, "rot");
         // And propagate it to Aladin Lite
         this.aladin.setRotation(rotation);
 
