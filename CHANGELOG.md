@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0]
+
 ## Added
 
 - `rotation` parameter can now be called to rotate the ipyaladin viewer [#146]
