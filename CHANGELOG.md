@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Changed
 
-- supported python versions are now 3.9 - 3.14 [#156]
+- supported python versions are now 3.9 - 3.14 [#159]
 
 ## Fixed
 
@@ -30,6 +30,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `target`, `rotation`, and `fov` can be set with astropy objects at Aladin
   initialization [#154]
 - fix deprecation warning `Passing unrecognized arguments to super(Aladin).__init__` [#155]
+- fix `selected_objects` was failing when a shape overlay was selected instead of
+  catalogs [#160]
 
 ## [0.6.0]
 
