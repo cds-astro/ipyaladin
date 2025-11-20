@@ -317,7 +317,7 @@ class Aladin(anywidget.AnyWidget):
         """
         catalogs = []
         for selected_object in self._selected_objects:
-            objects_data = [obj["data"] for obj in selected_object]
+            objects_data = [obj["data"] for obj in selected_object if "data" in obj]
             catalogs.append(Table(objects_data))
         return catalogs
 
