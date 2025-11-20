@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Retrieving data from the current widget’s view &#8212; ipyaladin 0.6.0 documentation</title>
+    <title>Retrieving data from the current widget’s view &#8212; ipyaladin 0.7.0 documentation</title>
   
   
   
@@ -42,7 +42,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=8fa8b3e9"></script>
+    <script src="../../_static/documentation_options.js?v=fe7df9b0"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -498,6 +498,7 @@ aladin.survey = &quot;CDS/P/PLANCK/R2/HFI/color&quot;
 aladin.target = &quot;LMC&quot;
 aladin.frame = &quot;Galactic&quot;
 aladin.fov = 50
+aladin.rotation = 90
 </pre></div>
 </div>
 </div>
@@ -520,6 +521,18 @@ aladin.fov = 50
 </pre></div>
 </div>
 <div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>aladin.fov_xy  # Recover the current field of view for the x and y axis
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Getting-the-rotation">
+<h2>Getting the rotation<a class="headerlink" href="#Getting-the-rotation" title="Link to this heading">#</a></h2>
+<p>The rotation of the view (view center to north pole angle in degrees) can be found with:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre><span></span>aladin.rotation  # Recover the current rotation of the view
 </pre></div>
 </div>
 </div>
@@ -689,6 +702,7 @@ plt.imshow(np.flipud(img))
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Getting-the-current-WCS">Getting the current WCS</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Getting-the-field-of-view">Getting the field of view</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Getting-the-rotation">Getting the rotation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Getting-the-selection">Getting the selection</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Getting-the-view-as-a-fits-file">Getting the view as a fits file</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Saving-the-view-as-an-image-file">Saving the view as an image file</a></li>

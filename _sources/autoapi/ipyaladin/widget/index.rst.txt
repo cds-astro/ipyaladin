@@ -38,6 +38,7 @@ Module Contents
    
    Check if the widget is ready to execute a function.
 
+   Store the call for a later execution.
 
    :Parameters:
 
@@ -64,7 +65,7 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: Aladin(*args: any, **init_options: any)
+.. py:class:: Aladin(**init_options: object)
 
 
 
@@ -90,6 +91,36 @@ Module Contents
 
    ..
        !! processed by numpydoc !!
+
+   .. py:property:: selected_objects
+      :type: List[astropy.table.table.Table]
+
+
+      
+      The list of catalogs selected by the user.
+
+
+
+
+
+      :Returns:
+
+          list[Table]
+              A list of astropy.table.Table objects representing the selected catalogs.
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
 
    .. py:property:: height
       :type: int
@@ -125,60 +156,17 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:property:: target
-      :type: Union[astropy.coordinates.SkyCoord, Tuple[float, float]]
+   .. py:property:: rotation
+      :type: float
 
 
       
-      The target of the Aladin Lite widget.
+      The center rotation of the widget.
 
-      The target can be provided as coordinates (either
-      `~astropy.coordinates.SkyCoord` or (`~astropy.coordinates.Longitude`,
-      `~astropy.coordinates.Latitude`)) or as a name (as a string).
-
-      The conversion from a name to coordinates does call different online services
-      depending on the base layer of the widget:
-      - for the sky: it uses CDS's
-      `Sesame <https://vizier.cds.unistra.fr/viz-bin/Sesame>`_  name resolver. This
-      looks first in SIMBAD, then in VizieR, and then in NED for the object's
-      coordinates.
-      - for Earth: it uses `Nominatim
-      <https://nominatim.openstreetmap.org/ui/search.html>`_, OpenStreetMap's
-      search bar
-      - for other solar system bodies: it calls the `Gazetteer of Planetary
-      Nomenclature <https://planetarynames.wr.usgs.gov/Nomenclature>`_
-
-
-
-
-      :Returns:
-
-          `~astropy.coordinates.SkyCoord` or Tuple[Longitude, Latitude]
-              If ipyaladin has a sky survey, returns a `~astropy.coordinates.SkyCoord`
-              object. Otherwise, if ipyaladin is currently on a planetary body, returns
-              a tuple with the Longitude and the Latitude of the current position of the
-              widget.
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:property:: fov
-      :type: astropy.coordinates.Angle
-
-
-      
-      The field of view of the Aladin Lite widget along the horizontal axis.
+      This is the view center to north pole angle in degrees.
+      This is equivalent to getting the 3rd Euler angle.
+      Positive angles rotates the view in the counter clockwise
+      order (or towards the east).
 
       It can be set with either a float number in degrees
       or an astropy.coordinates.Angle object.
@@ -189,42 +177,9 @@ Module Contents
       :Returns:
 
           astropy.coordinates.Angle
-              An astropy.coordinates.Angle object representing the field of view.
-
-
-
-
-
-
-
-      .. seealso::
-
-          
-          :obj:`fov_xy`
-              ..
-          
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:property:: selected_objects
-      :type: List[astropy.table.table.Table]
-
-
-      
-      The list of catalogs selected by the user.
-
-
-
-
-
-      :Returns:
-
-          list[Table]
-              A list of astropy.table.Table objects representing the selected catalogs.
+              An astropy.coordinates.Angle object representing the center
+              rotation of the widget in degrees. The default rotation is
+              0 degrees.
 
 
 
@@ -285,6 +240,91 @@ Module Contents
 
           tuple[Angle, Angle]
               A tuple of astropy.units.Angle objects representing the field of view.
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:property:: fov
+      :type: astropy.coordinates.Angle
+
+
+      
+      The field of view of the Aladin Lite widget along the horizontal axis.
+
+      It can be set with either a float number in degrees
+      or an astropy.coordinates.Angle object.
+
+
+
+
+      :Returns:
+
+          astropy.coordinates.Angle
+              An astropy.coordinates.Angle object representing the field of view.
+
+
+
+
+
+
+
+      .. seealso::
+
+          
+          :obj:`fov_xy`
+              ..
+          
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:property:: target
+      :type: Union[astropy.coordinates.SkyCoord, Tuple[float, float]]
+
+
+      
+      The target of the Aladin Lite widget.
+
+      The target can be provided as coordinates (either
+      `~astropy.coordinates.SkyCoord` or (`~astropy.coordinates.Longitude`,
+      `~astropy.coordinates.Latitude`)) or as a name (as a string).
+
+      The conversion from a name to coordinates does call different online services
+      depending on the base layer of the widget:
+      - for the sky: it uses CDS's
+      `Sesame <https://vizier.cds.unistra.fr/viz-bin/Sesame>`_  name resolver. This
+      looks first in SIMBAD, then in VizieR, and then in NED for the object's
+      coordinates.
+      - for Earth: it uses `Nominatim
+      <https://nominatim.openstreetmap.org/ui/search.html>`_, OpenStreetMap's
+      search bar
+      - for other solar system bodies: it calls the `Gazetteer of Planetary
+      Nomenclature <https://planetarynames.wr.usgs.gov/Nomenclature>`_
+
+
+
+
+      :Returns:
+
+          `~astropy.coordinates.SkyCoord` or Tuple[Longitude, Latitude]
+              If ipyaladin has a sky survey, returns a `~astropy.coordinates.SkyCoord`
+              object. Otherwise, if ipyaladin is currently on a planetary body, returns
+              a tuple with the Longitude and the Latitude of the current position of the
+              widget.
 
 
 

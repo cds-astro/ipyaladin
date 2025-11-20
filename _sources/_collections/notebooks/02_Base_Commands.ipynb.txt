@@ -33,8 +33,31 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "aladin = Aladin(fov=20, reticle_size=64, reticle_color=\"#ff89ff\")\n",
+    "aladin = Aladin(\n",
+    "    target=SkyCoord(10, 20, unit=\"deg\"),\n",
+    "    fov=Angle(20, \"deg\"),\n",
+    "    reticle_size=64,\n",
+    "    reticle_color=\"#ff89ff\",\n",
+    ")\n",
     "aladin"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "We can always see the current state of the widget target, field of view and rotation:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "print(aladin.target)\n",
+    "print(aladin.fov)\n",
+    "print(aladin.rotation)"
    ]
   },
   {
@@ -42,7 +65,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "They can also be modified in the next cells with an interactive effect on the generated view."
+    "And then, these values can be modified either interactively (with your mouse on the widget) or programmatically in the next cells with an interactive effect on the generated view."
    ]
   },
   {
@@ -51,15 +74,7 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "aladin.target = \"sgr a*\""
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
+    "aladin.target = \"sgr a*\"  # either an object name or a SkyCoord\n",
     "aladin.target"
    ]
   },
@@ -67,7 +82,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "The x-axis field of view (fov) can be set"
+    "The field of view `fov` sets the zoom factor on the x-axis:"
    ]
   },
   {
@@ -76,16 +91,25 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "aladin.fov = 2"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
+    "aladin.fov = 2  # either a number in degrees or an astropy angle\n",
     "aladin.fov"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The orientation of the view (view center to north pole angle in degrees) can be set:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "aladin.rotation = 180  # either a number in degrees or an astropy angle\n",
+    "aladin.rotation"
    ]
   },
   {
@@ -134,7 +158,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "The target and field of view can be set with astropy objects"
+    "The target, rotation, and field of view can be set with astropy objects"
    ]
   },
   {
@@ -144,6 +168,15 @@
    "outputs": [],
    "source": [
     "aladin.target = SkyCoord(\"12h00m00s\", \"-30d00m00s\", frame=\"icrs\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "aladin.rotation = Angle(0, \"deg\")"
    ]
   },
   {

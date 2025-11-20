@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ipyaladin.widget &#8212; ipyaladin 0.6.0 documentation</title>
+    <title>ipyaladin.widget &#8212; ipyaladin 0.7.0 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=8fa8b3e9"></script>
+    <script src="../../_static/documentation_options.js?v=fe7df9b0"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -423,7 +423,6 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pathlib</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClassVar</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Final</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="k">try</span><span class="p">:</span>  <span class="c1"># drop this clause when we drop python 3.9</span>
@@ -438,12 +437,15 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">astropy.table.table</span><span class="w"> </span><span class="kn">import</span> <span class="n">QTable</span><span class="p">,</span> <span class="n">Table</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">astropy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">fits</span> <span class="k">as</span> <span class="n">astropy_fits</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">astropy.io.fits</span><span class="w"> </span><span class="kn">import</span> <span class="n">HDUList</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy</span><span class="w"> </span><span class="kn">import</span> <span class="n">units</span> <span class="k">as</span> <span class="n">u</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy.units</span><span class="w"> </span><span class="kn">import</span> <span class="n">Quantity</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">astropy.wcs</span><span class="w"> </span><span class="kn">import</span> <span class="n">WCS</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">traitlets</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.utils.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">WidgetReducedError</span><span class="p">,</span> <span class="n">WidgetNotReadyError</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.utils._coordinate_parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">_parse_coordinate_string</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utils.call_store</span><span class="w"> </span><span class="kn">import</span> <span class="n">CallStore</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.elements.error_shape</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">CircleError</span><span class="p">,</span>
     <span class="n">EllipseError</span><span class="p">,</span>
@@ -501,6 +503,8 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">widget_should_be_loaded</span><span class="p">(</span><span class="n">function</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the widget is ready to execute a function.</span>
 
+<span class="sd">    Store the call for a later execution.</span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    function : Callable</span>
@@ -516,6 +520,9 @@
     <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the widget is ready to execute a function.</span>
+
+<span class="sd">        If not, do not exit the call and store it so that it is</span>
+<span class="sd">        called later when the widget is ready.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -533,12 +540,9 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_is_loaded&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
-            <span class="c1"># this is an arbitrary waiting time</span>
-            <span class="c1"># it should correspond to the downloading time of the npm package</span>
-            <span class="n">duration</span> <span class="o">=</span> <span class="mf">0.1</span>
-            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">duration</span><span class="p">)</span>
-            <span class="c1"># set ready to True to avoid waiting twice</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_is_loaded</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_call_store</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
         <span class="k">return</span> <span class="n">function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">wrapper</span></div>
@@ -557,9 +561,12 @@
     <span class="n">_esm</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;static&quot;</span> <span class="o">/</span> <span class="s2">&quot;widget.js&quot;</span>
     <span class="n">_css</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;static&quot;</span> <span class="o">/</span> <span class="s2">&quot;widget.css&quot;</span>
 
+    <span class="n">_call_store</span> <span class="o">=</span> <span class="n">CallStore</span><span class="p">()</span>
+
     <span class="c1"># Options for the view initialization</span>
     <span class="n">_init_options</span> <span class="o">=</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Dict</span><span class="p">()</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">_height</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="mi">400</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">_rotation</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">_target</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span>
         <span class="s2">&quot;0 0&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;A private trait that stores the current target of the widget in a string.&quot;</span>
@@ -631,16 +638,40 @@
         <span class="s2">&quot;is reduced in size when hidden.&quot;</span><span class="p">,</span>
     <span class="p">)</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">any</span><span class="p">,</span> <span class="o">**</span><span class="n">init_options</span><span class="p">:</span> <span class="nb">any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">init_options</span><span class="p">)</span>
-        <span class="c1"># pop init options of ipywidgets.DOMWidget that would choke ipyaladin</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">init_options</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># get traits with init_option True, map the names/traits</span>
+        <span class="n">trait_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">traits</span><span class="p">(</span><span class="n">init_option</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="n">properties</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">,</span> <span class="s2">&quot;rotation&quot;</span><span class="p">,</span> <span class="s2">&quot;height&quot;</span><span class="p">,</span> <span class="s2">&quot;fov&quot;</span><span class="p">]</span>
+        <span class="n">init_trait_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">trait_names</span><span class="p">}</span>
+        <span class="n">init_trait_map</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">x</span><span class="p">:</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">})</span>
+
+        <span class="n">widget_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">ipywidget_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">aladin_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># handle special cases, sort and update widget/aladin kwargs,</span>
+        <span class="c1"># separate init options of ipywidgets.DOMWidget that would choke ipyaladin</span>
         <span class="c1"># https://github.com/jupyter-widgets/ipywidgets/blob/main/python/ipywidgets/ipywidgets/widgets/domwidget.py</span>
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;layout&quot;</span><span class="p">,</span> <span class="s2">&quot;tabbable&quot;</span><span class="p">,</span> <span class="s2">&quot;tooltip&quot;</span><span class="p">]:</span>
-            <span class="n">init_options</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="c1"># some init options are properties here</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">init_options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;height&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_height</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="n">init_options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;target&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_target</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fov</span> <span class="o">=</span> <span class="n">init_options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fov&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fov</span><span class="p">)</span>
+        <span class="n">coord_len</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">init_options</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+            <span class="n">widget_val</span> <span class="o">=</span> <span class="n">val</span>
+
+            <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;target&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="n">coord_len</span><span class="p">:</span>
+                    <span class="n">widget_val</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">SkyCoord</span><span class="p">):</span>
+                    <span class="n">widget_val</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">val</span><span class="o">.</span><span class="n">ra</span><span class="o">.</span><span class="n">deg</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">val</span><span class="o">.</span><span class="n">dec</span><span class="o">.</span><span class="n">deg</span><span class="si">}</span><span class="s2">&quot;</span>
+
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;rotation&quot;</span><span class="p">,</span> <span class="s2">&quot;fov&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="s2">&quot;unit&quot;</span><span class="p">):</span>
+                <span class="n">widget_val</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">to_value</span><span class="p">(</span><span class="s2">&quot;deg&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">init_trait_map</span><span class="p">:</span>
+                <span class="n">widget_kwargs</span><span class="p">[</span><span class="n">init_trait_map</span><span class="p">[</span><span class="n">key</span><span class="p">]]</span> <span class="o">=</span> <span class="n">widget_val</span>
+            <span class="k">elif</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;layout&quot;</span><span class="p">,</span> <span class="s2">&quot;tabbable&quot;</span><span class="p">,</span> <span class="s2">&quot;tooltip&quot;</span><span class="p">]:</span>
+                <span class="n">ipywidget_kwargs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">widget_val</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">aladin_kwargs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">widget_val</span>
+
         <span class="c1"># apply different default options from Aladin-Lite</span>
         <span class="n">ipyaladin_default</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;show_simbad_pointer_control&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
@@ -648,10 +679,29 @@
             <span class="s2">&quot;show_settings_control&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
             <span class="s2">&quot;show_context_menu&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
         <span class="p">}</span>
-        <span class="n">init_options</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">ipyaladin_default</span><span class="p">,</span> <span class="o">**</span><span class="n">init_options</span><span class="p">}</span>
+
         <span class="c1"># set the traitlet</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_init_options</span> <span class="o">=</span> <span class="n">init_options</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_options</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">ipyaladin_default</span><span class="p">,</span> <span class="o">**</span><span class="n">widget_kwargs</span><span class="p">,</span> <span class="o">**</span><span class="n">aladin_kwargs</span><span class="p">}</span>
+
+        <span class="c1"># Initialize only with kwargs that are traits and for ipywidget</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">widget_kwargs</span><span class="p">,</span> <span class="o">**</span><span class="n">ipywidget_kwargs</span><span class="p">)</span>
+
+        <span class="c1"># and set the properties</span>
+        <span class="k">for</span> <span class="n">prop</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">:</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prop</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="n">prop</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">on_msg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle_custom_message</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">on_load_change</span><span class="p">(</span><span class="n">change</span><span class="p">:</span> <span class="n">traitlets</span><span class="o">.</span><span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;new&quot;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_call_store</span><span class="o">.</span><span class="n">run_all</span><span class="p">()</span>
+
+        <span class="c1"># There can be a race condition if the JS is already load</span>
+        <span class="c1"># leading to _is_loaded = True before observing it.</span>
+        <span class="c1"># If this is the case there should not be any problem because no python commands</span>
+        <span class="c1"># are expected to be called on an object before the object itself</span>
+        <span class="c1"># is instantiated.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="n">on_load_change</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="s2">&quot;_is_loaded&quot;</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_handle_custom_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="nb">any</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">buffers</span><span class="p">:</span> <span class="nb">any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">event_type</span> <span class="o">=</span> <span class="n">message</span><span class="p">[</span><span class="s2">&quot;event_type&quot;</span><span class="p">]</span>
@@ -686,8 +736,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">catalogs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">selected_object</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_selected_objects</span><span class="p">:</span>
-            <span class="n">objects_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">obj</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">selected_object</span><span class="p">]</span>
-            <span class="n">catalogs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Table</span><span class="p">(</span><span class="n">objects_data</span><span class="p">))</span>
+            <span class="n">objects_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">obj</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">selected_object</span> <span class="k">if</span> <span class="s2">&quot;data&quot;</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">objects_data</span><span class="p">:</span>
+                <span class="n">catalogs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Table</span><span class="p">(</span><span class="n">objects_data</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">catalogs</span></div>
 
 
@@ -716,6 +767,38 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_wcs</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fov_xy</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_height</span> <span class="o">=</span> <span class="n">height</span>
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Aladin.rotation">
+<a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.rotation">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rotation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The center rotation of the widget.</span>
+
+<span class="sd">        This is the view center to north pole angle in degrees.</span>
+<span class="sd">        This is equivalent to getting the 3rd Euler angle.</span>
+<span class="sd">        Positive angles rotates the view in the counter clockwise</span>
+<span class="sd">        order (or towards the east).</span>
+
+<span class="sd">        It can be set with either a float number in degrees</span>
+<span class="sd">        or an astropy.coordinates.Angle object.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        astropy.coordinates.Angle</span>
+<span class="sd">            An astropy.coordinates.Angle object representing the center</span>
+<span class="sd">            rotation of the widget in degrees. The default rotation is</span>
+<span class="sd">            0 degrees.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Angle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rotation</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;deg&quot;</span><span class="p">)</span></div>
+
+
+    <span class="nd">@rotation</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rotation</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Angle</span><span class="p">,</span> <span class="n">Quantity</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rotation</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">Quantity</span><span class="p">):</span>
+            <span class="n">rotation</span> <span class="o">=</span> <span class="n">rotation</span><span class="o">.</span><span class="n">to_value</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rotation</span><span class="p">,</span> <span class="n">rotation</span><span class="p">):</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rotation</span> <span class="o">=</span> <span class="n">rotation</span>
 
     <span class="nd">@property</span>
 <div class="viewcode-block" id="Aladin.wcs">
@@ -797,15 +880,13 @@
 
 
     <span class="nd">@fov</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">fov</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fov</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Angle</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">Angle</span><span class="p">):</span>
-            <span class="n">fov</span> <span class="o">=</span> <span class="n">fov</span><span class="o">.</span><span class="n">deg</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fov</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fov</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Angle</span><span class="p">,</span> <span class="n">Quantity</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">Quantity</span><span class="p">):</span>
+            <span class="n">fov</span> <span class="o">=</span> <span class="n">fov</span><span class="o">.</span><span class="n">to_value</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fov</span><span class="p">):</span>
             <span class="k">return</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_fov</span> <span class="o">=</span> <span class="n">fov</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">({</span><span class="s2">&quot;event_name&quot;</span><span class="p">:</span> <span class="s2">&quot;change_fov&quot;</span><span class="p">,</span> <span class="s2">&quot;fov&quot;</span><span class="p">:</span> <span class="n">fov</span><span class="p">})</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_fov_xy</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_wcs</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="nd">@property</span>
 <div class="viewcode-block" id="Aladin.target">
@@ -879,13 +960,6 @@
             <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">icrs</span><span class="o">.</span><span class="n">ra</span><span class="o">.</span><span class="n">deg</span><span class="p">,</span> <span class="n">target</span><span class="o">.</span><span class="n">icrs</span><span class="o">.</span><span class="n">dec</span><span class="o">.</span><span class="n">deg</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_target</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">lon</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">lat</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;event_name&quot;</span><span class="p">:</span> <span class="s2">&quot;goto_ra_dec&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;ra&quot;</span><span class="p">:</span> <span class="n">lon</span><span class="p">,</span>
-                <span class="s2">&quot;dec&quot;</span><span class="p">:</span> <span class="n">lat</span><span class="p">,</span>
-            <span class="p">}</span>
-        <span class="p">)</span>
 
 <div class="viewcode-block" id="Aladin.add_markers">
 <a class="viewcode-back" href="../../autoapi/ipyaladin/widget/index.html#ipyaladin.widget.Aladin.add_markers">[docs]</a>
@@ -992,7 +1066,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="kn">from</span><span class="w"> </span><span class="nn">astroquery.hips2fits</span><span class="w"> </span><span class="kn">import</span> <span class="n">hips2fits</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">astroquery.hips2fits</span><span class="w"> </span><span class="kn">import</span> <span class="n">hips2fits</span>  <span class="c1"># noqa: PLC0415</span>
         <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">imp</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;To use &#39;get_view_as_fits&#39;, you need astroquery. &quot;</span>
@@ -1125,7 +1199,7 @@
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="kn">from</span><span class="w"> </span><span class="nn">mocpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">MOC</span>
+                <span class="kn">from</span><span class="w"> </span><span class="nn">mocpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">MOC</span>  <span class="c1"># noqa: PLC0415</span>
 
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">moc</span><span class="p">,</span> <span class="n">MOC</span><span class="p">):</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span>
@@ -1162,8 +1236,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
             <span class="s2">&quot;add_moc_from_URL is replaced by add_moc that detects automatically&quot;</span>
-            <span class="s2">&quot;that the MOC was given as an URL.&quot;</span>
-            <span class="s2">&quot;This will be removed in version 1.0.0 (coming after 0.5).&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;that the MOC was given as an URL. &quot;</span>
+            <span class="s2">&quot;This will be removed in version 1.0.0.&quot;</span><span class="p">,</span>
             <span class="ne">DeprecationWarning</span><span class="p">,</span>
             <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
         <span class="p">)</span>
@@ -1192,8 +1266,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
             <span class="s2">&quot;add_moc_from_dict is replaced by add_moc that detects automatically&quot;</span>
-            <span class="s2">&quot;that the MOC was given as a dictionary.&quot;</span>
-            <span class="s2">&quot;This will be removed in version 1.0.0 (coming after 0.5).&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;that the MOC was given as a dictionary. &quot;</span>
+            <span class="s2">&quot;This will be removed in version 1.0.0.&quot;</span><span class="p">,</span>
             <span class="ne">DeprecationWarning</span><span class="p">,</span>
             <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
         <span class="p">)</span>
@@ -1344,7 +1418,7 @@
                     <span class="s2">&quot;See the documentation for the supported region types.&quot;</span>
                 <span class="p">)</span>
 
-            <span class="kn">from</span><span class="w"> </span><span class="nn">.utils._region_converter</span><span class="w"> </span><span class="kn">import</span> <span class="n">RegionInfos</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">.utils._region_converter</span><span class="w"> </span><span class="kn">import</span> <span class="n">RegionInfos</span>  <span class="c1"># noqa: PLC0415</span>
 
             <span class="c1"># Define behavior for each region type</span>
             <span class="n">regions_infos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">RegionInfos</span><span class="p">(</span><span class="n">region_element</span><span class="p">)</span><span class="o">.</span><span class="n">to_clean_dict</span><span class="p">())</span>
@@ -1379,7 +1453,7 @@
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
             <span class="s2">&quot;&#39;add_overlay_from_stcs&#39; is deprecated, &quot;</span>
             <span class="s2">&quot;use &#39;add_graphic_overlay_from_stcs&#39; instead. &quot;</span>
-            <span class="s2">&quot;This will be removed in version 1.0.0 (coming after 0.5).&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;This will be removed in version 1.0.0.&quot;</span><span class="p">,</span>
             <span class="ne">DeprecationWarning</span><span class="p">,</span>
             <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
         <span class="p">)</span>
@@ -1424,7 +1498,7 @@
             <span class="p">{</span>
                 <span class="s2">&quot;event_name&quot;</span><span class="p">:</span> <span class="s2">&quot;add_overlay&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;regions_infos&quot;</span><span class="p">:</span> <span class="n">regions_infos</span><span class="p">,</span>
-                <span class="s2">&quot;graphic_options&quot;</span><span class="p">:</span> <span class="p">{},</span>
+                <span class="s2">&quot;graphic_options&quot;</span><span class="p">:</span> <span class="n">overlay_options</span><span class="p">,</span>
             <span class="p">}</span>
         <span class="p">)</span></div>
 
@@ -1472,8 +1546,8 @@
 <span class="sd">        This method is deprecated, use selection instead</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="s2">&quot;rectangular_selection is deprecated, use selection(&#39;rectangle&#39;) instead&quot;</span>
-            <span class="s2">&quot;This will be removed in version 1.0.0 (coming after 0.5).&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;rectangular_selection is deprecated, use selection(&#39;rectangle&#39;) instead &quot;</span>
+            <span class="s2">&quot;This will be removed in version 1.0.0.&quot;</span><span class="p">,</span>
             <span class="ne">DeprecationWarning</span><span class="p">,</span>
             <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
         <span class="p">)</span>
@@ -1532,8 +1606,8 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="s2">&quot;add_listener is deprecated, use set_listener instead&quot;</span>
-            <span class="s2">&quot;This will be removed in version 1.0.0 (coming after 0.5).&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;add_listener is deprecated, use set_listener instead. &quot;</span>
+            <span class="s2">&quot;This will be removed in version 1.0.0.&quot;</span><span class="p">,</span>
             <span class="ne">DeprecationWarning</span><span class="p">,</span>
             <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
         <span class="p">)</span>
