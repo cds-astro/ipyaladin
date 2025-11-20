@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `rotation` parameter can now be called to rotate the ipyaladin viewer [#146]
 
+## Changed
+
+- supported python versions are now 3.9 - 3.14 [#156]
+
 ## Fixed
 
 - observe `_is_loaded` trait to call the Aladin API when the javascript is loaded [#149]
