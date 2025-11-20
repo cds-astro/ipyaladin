@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Changed
 
 - supported python versions are now 3.9 - 3.14 [#159]
+- aladin-lite version is now 3.7.3-beta [#161]
 
 ## Fixed
 
