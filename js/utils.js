@@ -54,6 +54,22 @@ function setDivHeight(height, div) {
   }
 }
 
+// This is needed to know whether ipyaladin is run
+// from a live session or from a static export (HTML)
+// Depending on that, we will listen to specific overlay traitlets.
+// See the overlays and _overlay_patch traitlets definition for more informations.
+function isLiveSession(model) {
+  // ipywidgets v7/v8: model.comm is a Comm in live sessions, null/undefined in static HTML
+  if (model && model.comm && typeof model.comm.send === "function") return true;
+
+  // Extra heuristics if needed (some frontends expose a kernel on the manager)
+  const mgr = model?.widget_manager;
+  if (mgr?.kernel) return true; // classic jupyter notebook
+  if (mgr?.context?.sessionContext?.session?.kernel) return true; // JupyterLab
+
+  return false; // static export (HTML)
+}
+
 export {
   snakeCaseToCamelCase,
   convertOptionNamesToCamelCase,
@@ -61,4 +77,5 @@ export {
   divNumber,
   setDivNumber,
   setDivHeight,
+  isLiveSession,
 };
