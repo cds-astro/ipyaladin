@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## Fixed
+
+- Overlays are displayed on the generated HTML static file because it is passed with
+  traitlets instead of being sent with events. This fixes documentation examples [#151].
+- projection change through the UI now change the value of the `projection` traitlet [#151].
+
 ## [0.7.0]
 
 ## Added

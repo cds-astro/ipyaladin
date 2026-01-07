@@ -20,6 +20,7 @@ except ImportError:
 import warnings
 
 import anywidget
+import ipywidgets as widgets
 from astropy.coordinates import SkyCoord, Angle, Longitude, Latitude
 from astropy.coordinates.name_resolve import NameResolveError
 from astropy.table.table import QTable, Table
@@ -40,6 +41,7 @@ from .elements.error_shape import (
     _error_radius_conversion_factor,
 )
 from .elements.marker import Marker
+from .utils._region_converter import RegionInfos
 
 try:
     from regions import (
@@ -177,6 +179,9 @@ class Aladin(anywidget.AnyWidget):
         "SIN",
         help="The projection for the view. The keywords follow the FITS standard.",
     ).tag(sync=True, init_option=True)
+    colormap = Unicode(
+        help="The colormap of the main survey",
+    ).tag(sync=True)
     # Values
     _ready = Bool(
         False,
@@ -205,6 +210,74 @@ class Aladin(anywidget.AnyWidget):
         survey.default_value,
         help="A private trait for the base layer of the last view. It is useful "
         "to convert the view to an astropy.HDUList",
+    ).tag(sync=True)
+
+    overlays = traitlets.List(
+        traitlets.Dict(
+            per_key_traits={
+                "action": traitlets.Enum(["add", "remove"]).tag(sync=True),
+                "options": traitlets.Dict().tag(sync=True),
+                "data": traitlets.Union(
+                    [
+                        # fits-image, astropy/numpy tables
+                        traitlets.Bytes(),
+                        # URLs of catalogs, MOCs
+                        traitlets.Unicode(),
+                        # JSON MOC
+                        traitlets.Dict(),
+                        # Sky regions (from stcs or astropy.regions objects)
+                        traitlets.List(trait=RegionInfos("")),
+                    ]
+                ).tag(sync=True, **widgets.widget_serialization),
+                "type": traitlets.Enum(
+                    [
+                        "table",
+                        "catalog_from_url",
+                        "MOC_from_url",
+                        "MOC_from_dict",
+                        "regions_stcs",
+                        "regions",
+                        "fits-image",
+                    ]
+                ).tag(sync=True),
+            },
+            help="A trait that keeps the history of the overlays added/removed "
+            "by the user. This is used to generate a synced view of ipyaladin "
+            "when exporting the notebook to static HTML files (e.g. when "
+            "generating the docs).",
+        ).tag(sync=True)
+    ).tag(sync=True)
+
+    _overlay_patch = traitlets.Dict(
+        per_key_traits={
+            "action": traitlets.Enum(["add", "remove"]).tag(sync=True),
+            "options": traitlets.Dict().tag(sync=True),
+            "data": traitlets.Union(
+                [
+                    # fits-image, astropy/numpy tables
+                    traitlets.Bytes(),
+                    # URLs of catalogs, MOCs
+                    traitlets.Unicode(),
+                    # JSON MOC
+                    traitlets.Dict(),
+                    # Sky regions (from stcs or astropy.regions objects)
+                    traitlets.List(trait=RegionInfos("")),
+                ]
+            ).tag(sync=True, **widgets.widget_serialization),
+            "type": traitlets.Enum(
+                [
+                    "table",
+                    "catalog_from_url",
+                    "MOC_from_url",
+                    "MOC_from_dict",
+                    "regions_stcs",
+                    "regions",
+                    "fits-image",
+                ]
+            ).tag(sync=True),
+        },
+        help="A private trait that registers the action made by the user "
+        "concerning the add/removing of overlays (MOC, table, fits image, regions).",
     ).tag(sync=True)
 
     _is_loaded = Bool(
@@ -654,6 +727,12 @@ class Aladin(anywidget.AnyWidget):
         """
         self.send({"event_name": "get_JPG_thumbnail"})
 
+    def _update_overlays(self, overlay_patch: dict) -> None:
+        self._overlay_patch = overlay_patch
+        # Update the canonical state as well.
+        # This is listened only when ipyaladin is run from a static HTML page
+        self.overlays = [*self.overlays, overlay_patch]
+
     @widget_should_be_loaded
     def add_catalog_from_URL(
         self, votable_URL: str, votable_options: Optional[dict] = None
@@ -668,10 +747,11 @@ class Aladin(anywidget.AnyWidget):
         """
         if votable_options is None:
             votable_options = {}
-        self.send(
+        self._update_overlays(
             {
-                "event_name": "add_catalog_from_URL",
-                "votable_URL": votable_URL,
+                "action": "add",
+                "type": "catalog_from_url",
+                "data": votable_URL,
                 "options": votable_options,
             }
         )
@@ -699,10 +779,13 @@ class Aladin(anywidget.AnyWidget):
             fits_bytes = io.BytesIO()
             fits.writeto(fits_bytes)
 
-        self._wcs = {}
-        self.send(
-            {"event_name": "add_fits", "options": image_options},
-            buffers=[fits_bytes.getvalue()],
+        self._update_overlays(
+            {
+                "action": "add",
+                "type": "fits-image",
+                "data": fits_bytes.getvalue(),
+                "options": image_options,
+            }
         )
 
     # MOCs
@@ -724,18 +807,20 @@ class Aladin(anywidget.AnyWidget):
 
         """
         if isinstance(moc, dict):
-            self.send(
+            self._update_overlays(
                 {
-                    "event_name": "add_MOC_from_dict",
-                    "moc_dict": moc,
+                    "action": "add",
+                    "type": "MOC_from_dict",
+                    "data": moc,
                     "options": moc_options,
                 }
             )
         elif isinstance(moc, str) and "://" in moc:
-            self.send(
+            self._update_overlays(
                 {
-                    "event_name": "add_MOC_from_URL",
-                    "moc_URL": moc,
+                    "action": "add",
+                    "type": "MOC_from_url",
+                    "data": moc,
                     "options": moc_options,
                 }
             )
@@ -744,10 +829,11 @@ class Aladin(anywidget.AnyWidget):
                 from mocpy import MOC  # noqa: PLC0415
 
                 if isinstance(moc, MOC):
-                    self.send(
+                    self._update_overlays(
                         {
-                            "event_name": "add_MOC_from_dict",
-                            "moc_dict": moc.serialize("json"),
+                            "action": "add",
+                            "type": "MOC_from_dict",
+                            "data": moc.serialize("json"),
                             "options": moc_options,
                         }
                     )
@@ -876,9 +962,13 @@ class Aladin(anywidget.AnyWidget):
             table_options["shape"] = shape
         table_bytes = io.BytesIO()
         table.write(table_bytes, format="votable")
-        self.send(
-            {"event_name": "add_table", "options": table_options},
-            buffers=[table_bytes.getvalue()],
+        self._update_overlays(
+            {
+                "action": "add",
+                "type": "table",
+                "options": table_options,
+                "data": table_bytes.getvalue(),
+            }
         )
 
     @widget_should_be_loaded
@@ -953,11 +1043,12 @@ class Aladin(anywidget.AnyWidget):
             # Define behavior for each region type
             regions_infos.append(RegionInfos(region_element).to_clean_dict())
 
-        self.send(
+        self._update_overlays(
             {
-                "event_name": "add_overlay",
-                "regions_infos": regions_infos,
-                "graphic_options": graphic_options,
+                "action": "add",
+                "type": "regions",
+                "options": graphic_options,
+                "data": regions_infos,
             }
         )
 
@@ -1017,12 +1108,12 @@ class Aladin(anywidget.AnyWidget):
             }
             for region_element in region_list
         ]
-
-        self.send(
+        self._update_overlays(
             {
-                "event_name": "add_overlay",
-                "regions_infos": regions_infos,
-                "graphic_options": overlay_options,
+                "action": "add",
+                "type": "regions_stcs",
+                "options": overlay_options,
+                "data": regions_infos,
             }
         )
 
@@ -1036,7 +1127,7 @@ class Aladin(anywidget.AnyWidget):
             The name of the color map to use.
 
         """
-        self.send({"event_name": "change_colormap", "colormap": color_map_name})
+        self.colormap = color_map_name
 
     def selection(self, selection_type: str = "rectangle") -> None:
         """Trigger the selection tool.

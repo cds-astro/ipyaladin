@@ -63,6 +63,10 @@ function render({ model, el }) {
   const wcs = { ...aladin.getViewWCS() };
   model.set("_wcs", wcs);
 
+  // send colormap to python
+  const cmap = aladin.getBaseImageLayer().getColorCfg().colormap;
+  model.set("colormap", cmap);
+
   // Tell the widget is loaded so that all stored calls waiting can be executed
   model.set("_is_loaded", true);
   model.save_changes();
