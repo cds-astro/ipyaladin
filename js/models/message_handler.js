@@ -28,6 +28,7 @@ export default class MessageHandler {
       );
     }
     catalog.addSources(markers);
+    this.messageHandler.handleGetOverlays();
   }
 
   async handleSaveViewAsImage(msg) {
@@ -67,6 +68,7 @@ export default class MessageHandler {
   handleAddCatalogFromURL(msg) {
     const options = convertOptionNamesToCamelCase(msg["options"] || {});
     this.aladin.addCatalog(A.catalogFromURL(msg["votable_URL"], options));
+    this.messageHandler.handleGetOverlays();
   }
 
   handleAddMOCFromURL(msg) {
@@ -130,7 +132,33 @@ export default class MessageHandler {
           break;
       }
     }
+    this.messageHandler.handleGetOverlays();
   }
+
+  handleRemoveOverlay = (msg) => {
+    const overlay_names = msg["overlay_names"];
+    for (const overlay_name of overlay_names) {
+      console.info(`Sending removeOverlay for ${overlay_name}`);
+      this.aladin.removeOverlay(overlay_name);
+    }
+    this.handleGetOverlays();
+  };
+
+  handleGetOverlays = () => {
+    const overlay_names = [];
+    const overlays = this.aladin.getOverlays();
+    for (const overlay of overlays) {
+      const overlay_name = overlay["name"];
+      overlay_names.push(overlay_name);
+    }
+    console.info(`Current overlays are ${overlay_names}`);
+    this.model.send({
+      event_type: "current_overlays",
+      content: {
+        overlays: overlay_names,
+      },
+    });
+  };
 
   handleChangeColormap(msg) {
     this.aladin.getBaseImageLayer().setColormap(msg["colormap"]);
@@ -199,6 +227,7 @@ export default class MessageHandler {
       options,
       (catalog) => {
         this.aladin.addCatalog(catalog);
+        this.messageHandler.handleGetOverlays();
       },
       false,
     );

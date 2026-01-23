@@ -318,3 +318,51 @@ def test_add_table(monkeypatch: Callable) -> None:
         "conversion_maj_axis": 1,
     }
     assert table_sent_message["options"]["ellipse_error"] == ellipse_options
+
+
+test_overlay_names = [
+    "overlay",
+    ["overlay", "overlay_1", "2MASS"],
+    "catalog",
+    ["overlay_1", "2MASS"],
+]
+
+
+@pytest.mark.parametrize("overlay_names", test_overlay_names)
+def test_remove_overlay(
+    monkeypatch: Callable,
+    overlay_names: Union[Iterable[str], str],
+) -> None:
+    """Test proper messages sent for removing overlays using their name string(s).
+
+    Parameters
+    ----------
+    overlay_names : Union[Iterable[str], str]
+        The name strings of overlays.
+    """
+    mock_send = Mock()
+    monkeypatch.setattr(Aladin, "send", mock_send)
+    aladin.remove_overlay(overlay_names)
+
+    event_name = mock_send.call_args[0][0]["event_name"]
+    assert isinstance(event_name, str)
+    assert event_name == "remove_overlay"
+
+    name_info = mock_send.call_args[0][0]["overlay_names"]
+    assert isinstance(name_info, list)
+    assert name_info[0] in overlay_names
+
+    if isinstance(overlay_names, list):
+        assert name_info == overlay_names
+
+
+def test_get_overlays(
+    monkeypatch: Callable,
+) -> None:
+    """Test proper message sent for getting current overlays."""
+    mock_send = Mock()
+    monkeypatch.setattr(Aladin, "send", mock_send)
+    aladin.get_overlays()
+    event_name = mock_send.call_args[0][0]["event_name"]
+    assert isinstance(event_name, str)
+    assert event_name == "get_overlays"
