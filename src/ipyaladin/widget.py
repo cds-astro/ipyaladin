@@ -620,7 +620,7 @@ class Aladin(anywidget.AnyWidget):
 
         """
         try:
-            from astroquery.hips2fits import hips2fits  # noqa: PLC0415
+            from astroquery.hips2fits import hips2fits
         except ImportError as imp:
             raise ValueError(
                 "To use 'get_view_as_fits', you need astroquery. "
@@ -741,7 +741,7 @@ class Aladin(anywidget.AnyWidget):
             )
         else:
             try:
-                from mocpy import MOC  # noqa: PLC0415
+                from mocpy import MOC
 
                 if isinstance(moc, MOC):
                     self.send(
@@ -948,7 +948,7 @@ class Aladin(anywidget.AnyWidget):
                     "See the documentation for the supported region types."
                 )
 
-            from .utils._region_converter import RegionInfos  # noqa: PLC0415
+            from .utils._region_converter import RegionInfos
 
             # Define behavior for each region type
             regions_infos.append(RegionInfos(region_element).to_clean_dict())
@@ -986,11 +986,40 @@ class Aladin(anywidget.AnyWidget):
         )
         self.add_graphic_overlay_from_stcs(stc_string, **overlay_options)
 
+    def _vectorize_kwargs(self, n: int, **kwargs: any) -> None:
+        """Turn list/tuple kwargs into a list of n dicts.
+
+        Parameters
+        ----------
+        n: int
+            The length of the final list of dictionaries.
+        kwargs : keyword arguments
+            The overlay options for all the STC-S strings
+            See `Aladin Lite's graphic overlay options
+            <https://cds-astro.github.io/aladin-lite/A.html>`_
+        """
+        result = [{} for _ in range(n)]
+
+        for key, val in kwargs.items():
+            if isinstance(val, (list, tuple)):
+                if len(val) != n:
+                    raise ValueError(
+                        f"Option '{key}' has length {len(val)} but expected length {n}"
+                    )
+                for i in range(n):
+                    result[i][key] = val[i]
+            else:
+                raise TypeError(
+                    f"Option '{key}' has type {type(val)} but expected list/tuple"
+                )
+
+        return result
+
     @widget_should_be_loaded
     def add_graphic_overlay_from_stcs(
         self, stc_string: Union[Iterable[str], str], **overlay_options: any
     ) -> None:
-        """Add an overlay layer defined by an STC-S string.
+        """Add overlay layer(s) defined by STC-S string(s).
 
         Parameters
         ----------
@@ -1009,22 +1038,45 @@ class Aladin(anywidget.AnyWidget):
         """
         region_list = [stc_string] if isinstance(stc_string, str) else stc_string
 
-        regions_infos = [
-            {
-                "region_type": "stcs",
-                "infos": {"stcs": region_element},
-                "options": overlay_options,
-            }
-            for region_element in region_list
-        ]
+        if (
+            "name" in overlay_options
+            and type(overlay_options["name"]) is not str
+            and len(overlay_options["name"]) > 1
+        ):
+            overlay_options_list = self._vectorize_kwargs(
+                len(overlay_options["name"]), **overlay_options
+            )
+            regions_infos = [
+                [
+                    {
+                        "region_type": "stcs",
+                        "infos": {"stcs": region_list[x]},
+                        "options": overlay_options_list[x],
+                    }
+                ]
+                for x in range(len(region_list))
+            ]
+        else:
+            overlay_options_list = [overlay_options]
+            regions_infos = [
+                [
+                    {
+                        "region_type": "stcs",
+                        "infos": {"stcs": region_element},
+                        "options": overlay_options,
+                    }
+                    for region_element in region_list
+                ]
+            ]
 
-        self.send(
-            {
-                "event_name": "add_overlay",
-                "regions_infos": regions_infos,
-                "graphic_options": overlay_options,
-            }
-        )
+        for x in range(len(overlay_options_list)):
+            self.send(
+                {
+                    "event_name": "add_overlay",
+                    "regions_infos": regions_infos[x],
+                    "graphic_options": overlay_options_list[x],
+                }
+            )
 
     @widget_should_be_loaded
     def set_color_map(self, color_map_name: str) -> None:

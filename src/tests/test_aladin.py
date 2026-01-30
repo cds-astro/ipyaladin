@@ -276,6 +276,63 @@ def test_add_graphic_overlay_from_stcs_noniterables(
     assert info.type is TypeError
 
 
+test_multiple_overlays = [
+    [
+        [
+            "POLYGON ICRS 257 38 261.005016 50.011125 278.305761 46.00127 257 38",
+            "CIRCLE ICRS 259.29230291 42.63394602 0.625",
+        ],
+        {
+            "name": ["first", "second"],
+            "color": ["blue", "pink"],
+            "linewidth": [2, 3],
+        },
+    ],
+    [
+        (
+            "CIRCLE ICRS 259.29230291 42.63394602 0.625",
+            "POLYGON ICRS 257 38 261.005016 50.011125 278.305761 46.00127 257 38",
+            "CIRCLE ICRS 259.29230291 42.63394602 0.625",
+        ),
+        {
+            "name": ["circle", "polygon", "circle2"],
+            "color": ["red", "blue", "yellow"],
+            "linewidth": [4, 5, 6],
+        },
+    ],
+]
+
+
+@pytest.mark.parametrize("info", test_multiple_overlays)
+def test_add_graphic_overlays_from_stcs_iterables(
+    monkeypatch: Callable,
+    info: Iterable,
+) -> None:
+    """Test generating multiple region overlay infos from iterable STC-S string(s).
+
+    Parameters
+    ----------
+    info : Iterable[Iterable, dict]
+        A list of the stcs strings to create region overlay infos from and the
+        associated overlay options.
+
+    """
+    mock_send = Mock()
+    monkeypatch.setattr(Aladin, "send", mock_send)
+
+    stcs_strings = info[0]
+    options = info[1]
+
+    aladin.add_graphic_overlay_from_stcs(stcs_strings, **options)
+    for x in range(len(mock_send.call_args_list)):
+        regions_info = mock_send.call_args_list[x][0][0]["regions_infos"]
+        assert isinstance(regions_info, list)
+        assert regions_info[0]["infos"]["stcs"] == stcs_strings[x]
+        assert regions_info[0]["options"]["name"] == options["name"][x]
+        assert regions_info[0]["options"]["color"] == options["color"][x]
+        assert regions_info[0]["options"]["linewidth"] == options["linewidth"][x]
+
+
 def test_add_table(monkeypatch: Callable) -> None:
     """Test generating region overlay info from iterable STC-S string(s).
 
@@ -318,3 +375,113 @@ def test_add_table(monkeypatch: Callable) -> None:
         "conversion_maj_axis": 1,
     }
     assert table_sent_message["options"]["ellipse_error"] == ellipse_options
+
+
+test_options_list = [
+    {
+        "name": ["polygon", "polygon2"],
+        "color": ["blue", "pink"],
+        "linewidth": [3, 7],
+        "num_entries": 2,
+    },
+    {
+        "name": ["circle", "poly", "circle_2"],
+        "color": ["blue", "pink", "yellow"],
+        "linewidth": [3, 4, 5],
+        "num_entries": 3,
+    },
+]
+
+
+@pytest.mark.parametrize("options", test_options_list)
+def test_vectorize_kwargs(
+    options: dict,
+) -> None:
+    """Test proper parsing for kwargs of lists.
+
+    Parameters
+    ----------
+    options : dict
+        The dictionary of overlay options.
+    """
+    num_entries = options.pop("num_entries")
+    last_ind = num_entries - 1
+    options_list = aladin._vectorize_kwargs(num_entries, **options)
+
+    assert len(options_list) == num_entries
+    assert options_list[0]["name"] == options["name"][0]
+    assert options_list[last_ind]["name"] == options["name"][last_ind]
+    assert options_list[0]["color"] == options["color"][0]
+    assert options_list[last_ind]["linewidth"] == options["linewidth"][last_ind]
+
+
+test_invalid_types_options_list = [
+    {
+        "name": ["polygon", "polygon2"],
+        "color": ["blue", "pink"],
+        "linewidth": 3,
+        "num_entries": 2,
+    },
+    {
+        "name": "polygon",
+        "color": ["blue", "pink", "yellow"],
+        "linewidth": [3, 4, 5],
+        "num_entries": 3,
+    },
+]
+
+
+@pytest.mark.parametrize("options", test_invalid_types_options_list)
+def test_vectorize_kwargs_wrong_type(
+    options: dict,
+) -> None:
+    """Test TypeError raised when parsing non-list/tuple kwargs.
+
+    Parameters
+    ----------
+    options : dict
+        The dictionary of overlay options.
+    """
+    num_entries = options.pop("num_entries")
+
+    with pytest.raises(TypeError) as info:
+        aladin._vectorize_kwargs(num_entries, **options)
+
+    assert info.type is TypeError
+    assert "but expected list/tuple" in str(info.value)
+
+
+test_invalid_len_options_list = [
+    {
+        "name": ["polygon", "polygon2"],
+        "color": ["blue", "pink"],
+        "linewidth": [3],
+        "num_entries": 2,
+    },
+    {
+        "name": ["polygon"],
+        "color": ["blue", "pink", "yellow"],
+        "linewidth": [3, 4, 5],
+        "num_entries": 3,
+    },
+]
+
+
+@pytest.mark.parametrize("options", test_invalid_len_options_list)
+def test_vectorize_kwargs_invalid_len(
+    options: dict,
+) -> None:
+    """Test ValueError raised when parsing wrong length list for kwarg.
+
+    Parameters
+    ----------
+    options : dict
+        The dictionary of overlay options.
+    """
+    num_entries = options.pop("num_entries")
+
+    with pytest.raises(ValueError) as info:
+        aladin._vectorize_kwargs(num_entries, **options)
+
+    assert info.type is ValueError
+    assert f"but expected length {num_entries}" in str(info.value)
