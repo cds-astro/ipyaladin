@@ -340,6 +340,15 @@ def test_remove_overlay(
     overlay_names : Union[Iterable[str], str]
         The name strings of overlays.
     """
+    adding_overlay_list = (
+        [overlay_names] if isinstance(overlay_names, str) else overlay_names
+    )
+
+    for overlay_name in adding_overlay_list:
+        aladin.add_graphic_overlay_from_stcs(
+            "CIRCLE ICRS 259.29230291 42.63394602 0.625", name=overlay_name
+        )
+
     mock_send = Mock()
     monkeypatch.setattr(Aladin, "send", mock_send)
     aladin.remove_overlay(overlay_names)
