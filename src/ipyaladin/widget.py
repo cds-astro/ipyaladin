@@ -40,6 +40,8 @@ from .elements.error_shape import (
     _error_radius_conversion_factor,
 )
 from .elements.marker import Marker
+from .overlays.overlay_manager import OverlayManager
+from .overlays.overlay import Overlay
 
 try:
     from regions import (
@@ -280,6 +282,9 @@ class Aladin(anywidget.AnyWidget):
         # and set the properties
         for prop in properties:
             setattr(self, prop, getattr(self, f"_{prop}"))
+
+        # initialize overlay
+        self._overlays_dict = OverlayManager(self)
 
         self.on_msg(self._handle_custom_message)
 
@@ -590,6 +595,20 @@ class Aladin(anywidget.AnyWidget):
         """
         if not isinstance(markers, list):
             markers = [markers]
+
+        catalog_options = self._overlays_dict.common_overlay_handling(
+            catalog_options, "catalog_python"
+        )
+
+        overlay_info = self._overlays_dict.add_overlay(
+            {
+                "type": "marker",
+                "markers": [marker.__dict__ for marker in markers],
+                "update_info": markers,
+                "options": catalog_options,
+            }
+        )
+
         self.send(
             {
                 "event_name": "add_marker",
@@ -597,6 +616,7 @@ class Aladin(anywidget.AnyWidget):
                 "options": catalog_options,
             }
         )
+        return overlay_info
 
     def _save_file(self, path: str, buffer: bytes) -> None:
         """Save a file from a buffer.
@@ -713,6 +733,19 @@ class Aladin(anywidget.AnyWidget):
         """
         if votable_options is None:
             votable_options = {}
+
+        votable_options = self._overlays_dict.common_overlay_handling(
+            votable_options, "catalog_python"
+        )
+
+        overlay_info = self._overlays_dict.add_overlay(
+            {
+                "type": "catalog",
+                "votable_URL": votable_URL,
+                "options": votable_options,
+            }
+        )
+
         self.send(
             {
                 "event_name": "add_catalog_from_URL",
@@ -720,6 +753,8 @@ class Aladin(anywidget.AnyWidget):
                 "options": votable_options,
             }
         )
+
+        return overlay_info
 
     @widget_should_be_loaded
     def add_fits(self, fits: Union[str, Path, HDUList], **image_options: any) -> None:
@@ -921,10 +956,25 @@ class Aladin(anywidget.AnyWidget):
             table_options["shape"] = shape
         table_bytes = io.BytesIO()
         table.write(table_bytes, format="votable")
+
+        table_options = self._overlays_dict.common_overlay_handling(
+            table_options, "catalog_python"
+        )
+
+        overlay_info = self._overlays_dict.add_overlay(
+            {
+                "type": "table",
+                "table": table,
+                "options": table_options,
+            }
+        )
+
         self.send(
             {"event_name": "add_table", "options": table_options},
             buffers=[table_bytes.getvalue()],
         )
+
+        return overlay_info
 
     @widget_should_be_loaded
     def add_graphic_overlay_from_region(
@@ -998,6 +1048,19 @@ class Aladin(anywidget.AnyWidget):
             # Define behavior for each region type
             regions_infos.append(RegionInfos(region_element).to_clean_dict())
 
+        graphic_options = self._overlays_dict.common_overlay_handling(
+            graphic_options, "overlay_python"
+        )
+
+        overlay_info = self._overlays_dict.add_overlay(
+            {
+                "type": "overlay_region",
+                "regions_infos": regions_infos,
+                "update_info": region_list,
+                "options": graphic_options,
+            }
+        )
+
         self.send(
             {
                 "event_name": "add_overlay",
@@ -1005,6 +1068,8 @@ class Aladin(anywidget.AnyWidget):
                 "graphic_options": graphic_options,
             }
         )
+
+        return overlay_info
 
     @widget_should_be_loaded
     def add_overlay_from_stcs(
@@ -1052,6 +1117,10 @@ class Aladin(anywidget.AnyWidget):
         object.
 
         """
+        overlay_options = self._overlays_dict.common_overlay_handling(
+            overlay_options, "overlay_python"
+        )
+
         region_list = [stc_string] if isinstance(stc_string, str) else stc_string
 
         regions_infos = [
@@ -1063,6 +1132,15 @@ class Aladin(anywidget.AnyWidget):
             for region_element in region_list
         ]
 
+        overlay_info = self._overlays_dict.add_overlay(
+            {
+                "type": "overlay_stcs",
+                "regions_infos": regions_infos,
+                "update_info": region_list,
+                "options": overlay_options,
+            }
+        )
+
         self.send(
             {
                 "event_name": "add_overlay",
@@ -1071,18 +1149,42 @@ class Aladin(anywidget.AnyWidget):
             }
         )
 
+        return overlay_info
+
     @widget_should_be_loaded
-    def remove_overlay(self, overlay_name: Union[Iterable[str], str]) -> None:
+    def remove_overlay(
+        self, overlay: Union[Iterable[str, Overlay], str, Overlay]
+    ) -> None:
         """Remove an overlay layer defined by a string.
 
         Parameters
         ----------
-        overlay_name : str, Iterable[str]
-            The string or an iterable of strings.
+        overlay : str(s) or MastOverlay(s)
+            The overlay name (str) or MastOverlay object to be removed.
+
+        Raises
+        ------
+        TypeError
+            Overlays are not provided as MastOverlay or names.
+        ValueError
+            Overlay does not exist.
         """
-        overlay_names = (
-            [overlay_name] if isinstance(overlay_name, str) else overlay_name
-        )
+        if isinstance(overlay, Overlay):
+            overlay_names = [overlay.name]
+        elif isinstance(overlay, str):
+            overlay_names = [overlay]
+        elif isinstance(overlay, (list, tuple)):
+            overlay_names = [o.name if isinstance(o, Overlay) else o for o in overlay]
+        else:
+            raise TypeError("overlay must be a str, Overlay, or iterable of these.")
+
+        for name in overlay_names:
+            if name not in self._overlays_dict:
+                raise ValueError(
+                    f"Cannot remove overlay `{name}` since this layer does not exist."
+                )
+
+            self._overlays_dict.pop(name)
 
         self.send(
             {
