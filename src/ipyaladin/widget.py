@@ -85,6 +85,8 @@ SupportedRegion: TypeAlias = Union[
     Regions,
 ]
 
+SupportedProjections: List[str] = ["TAN", "STG", "SIN", "ZEA", "MER", "AIT", "MOL"]
+
 
 def widget_should_be_loaded(function: Callable) -> Callable:
     """Check if the widget is ready to execute a function.
@@ -173,7 +175,7 @@ class Aladin(anywidget.AnyWidget):
         "ICRS",
         help="The frame coordinate. Can be either 'ICRS', 'ICRSd', or 'galactic'.",
     ).tag(sync=True, init_option=True)
-    projection = Unicode(
+    _projection = Unicode(
         "SIN",
         help="The projection for the view. The keywords follow the FITS standard.",
     ).tag(sync=True, init_option=True)
@@ -373,6 +375,26 @@ class Aladin(anywidget.AnyWidget):
         if np.isclose(self._rotation, rotation):
             return
         self._rotation = rotation
+
+    @property
+    def projection(self) -> str:
+        """The projection of the widget.
+
+        Returns
+        -------
+        str
+            The projection type used by the current view of ipyaladin.
+        """
+        return self._projection
+
+    @projection.setter
+    def projection(self, projection: str) -> None:
+        if projection not in SupportedProjections:
+            raise ValueError(
+                f"Unsupported projection: {projection}. Projection must match "
+                f"one of the following {SupportedProjections}"
+            )
+        self._projection = projection
 
     @property
     def wcs(self) -> WCS:

@@ -118,11 +118,6 @@ export default class EventHandler {
       this.model.save_changes();
     });
 
-    this.aladin.on("projectionChanged", () => {
-      this.updateWCS();
-      this.model.save_changes();
-    });
-
     this.aladin.on("layerChanged", (imageLayer, layerName, state) => {
       if (layerName === "base")
         this.model.set("_survey_body", imageLayer.hipsBody || "sky");
