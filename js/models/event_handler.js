@@ -60,6 +60,15 @@ export default class EventHandler {
   }
 
   /**
+   * Updates the projection in the model.
+   * WARNING: This method doesn't call model.save_changes()!
+   */
+  updateProjection() {
+    if (!this.isLastDiv()) return;
+    this.model.set("_projection", this.aladin.getProjectionName());
+  }
+
+  /**
    * Updates the 2-axis FoV in the model.
    * WARNING: This method don't call model.save_changes()!
    */
@@ -154,6 +163,12 @@ export default class EventHandler {
 
     this.aladin.on("rotationChanged", (_) => {
       this.updateRotation();
+      if (!this.isLastDiv()) return;
+      this.model.save_changes();
+    });
+
+    this.aladin.on("projectionChanged", () => {
+      this.updateProjection();
       if (!this.isLastDiv()) return;
       this.model.save_changes();
     });
@@ -267,6 +282,15 @@ export default class EventHandler {
       _rotation: (rotation) => {
         // And propagate it to Aladin Lite
         this.aladin.setRotation(rotation);
+
+        // Update WCS and FoV only if this is the last div
+        this.updateWCS();
+        this.update2AxisFoV();
+        this.model.save_changes();
+      },
+      /* Projection control */
+      _projection: (projection) => {
+        this.aladin.setProjection(projection);
 
         // Update WCS and FoV only if this is the last div
         this.updateWCS();
