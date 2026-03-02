@@ -85,6 +85,7 @@ SupportedRegion: TypeAlias = Union[
     Regions,
 ]
 
+# supported projections: https://cds-astro.github.io/aladin-lite/Aladin.html#setProjection
 SupportedProjections: List[str] = ["TAN", "STG", "SIN", "ZEA", "MER", "AIT", "MOL"]
 
 
@@ -383,7 +384,9 @@ class Aladin(anywidget.AnyWidget):
         Returns
         -------
         str
-            The projection type used by the current view of ipyaladin.
+            The projection type used by the current view of ipyaladin. Supported
+            projections are "TAN", "STG", "SIN", "ZEA", "MER", "AIT", and "MOL".
+            https://cds-astro.github.io/aladin-lite/Aladin.html#setProjection.
         """
         return self._projection
 
@@ -642,7 +645,7 @@ class Aladin(anywidget.AnyWidget):
 
         """
         try:
-            from astroquery.hips2fits import hips2fits  # noqa: PLC0415
+            from astroquery.hips2fits import hips2fits
         except ImportError as imp:
             raise ValueError(
                 "To use 'get_view_as_fits', you need astroquery. "
@@ -763,7 +766,7 @@ class Aladin(anywidget.AnyWidget):
             )
         else:
             try:
-                from mocpy import MOC  # noqa: PLC0415
+                from mocpy import MOC
 
                 if isinstance(moc, MOC):
                     self.send(
@@ -970,7 +973,7 @@ class Aladin(anywidget.AnyWidget):
                     "See the documentation for the supported region types."
                 )
 
-            from .utils._region_converter import RegionInfos  # noqa: PLC0415
+            from .utils._region_converter import RegionInfos
 
             # Define behavior for each region type
             regions_infos.append(RegionInfos(region_element).to_clean_dict())
