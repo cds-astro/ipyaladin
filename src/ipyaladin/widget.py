@@ -645,7 +645,7 @@ class Aladin(anywidget.AnyWidget):
 
         """
         try:
-            from astroquery.hips2fits import hips2fits
+            from astroquery.hips2fits import hips2fits  # noqa: PLC0415
         except ImportError as imp:
             raise ValueError(
                 "To use 'get_view_as_fits', you need astroquery. "
@@ -766,7 +766,7 @@ class Aladin(anywidget.AnyWidget):
             )
         else:
             try:
-                from mocpy import MOC
+                from mocpy import MOC  # noqa: PLC0415
 
                 if isinstance(moc, MOC):
                     self.send(
@@ -973,7 +973,7 @@ class Aladin(anywidget.AnyWidget):
                     "See the documentation for the supported region types."
                 )
 
-            from .utils._region_converter import RegionInfos
+            from .utils._region_converter import RegionInfos  # noqa: PLC0415
 
             # Define behavior for each region type
             regions_infos.append(RegionInfos(region_element).to_clean_dict())
