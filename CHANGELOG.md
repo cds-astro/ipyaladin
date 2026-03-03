@@ -16,13 +16,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- `projection` parameter can now be called to change the projection of the
+  ipyaladin viewer [#172]
+
 ## [0.7.0]
 
 ## Added
 
 - `rotation` parameter can now be called to rotate the ipyaladin viewer [#146]
-- `projection` parameter can now be called to change the projection of the
-  ipyaladin viewer [#172]
 
 ## Changed
 
