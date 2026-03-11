@@ -196,6 +196,23 @@ export default class EventHandler {
       }
     });
 
+    this.aladin.on("stackChanged", (state) => {
+      console.log(state);
+      // ignoring any layer that is NOT an overlay
+      if (!state || !state.overlay) return;
+      const overlay = state.overlay;
+      const payload = {
+        name: overlay.name,
+        type: overlay.type,
+        change: state.change,
+      };
+      console.log("sending stack_changed", payload);
+      this.model.send({
+        event_type: "stack_changed",
+        content: payload,
+      });
+    });
+
     this.aladin.on("click", (clickContent) => {
       this.model.send({
         event_type: "click",
