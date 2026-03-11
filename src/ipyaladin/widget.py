@@ -284,7 +284,7 @@ class Aladin(anywidget.AnyWidget):
             setattr(self, prop, getattr(self, f"_{prop}"))
 
         # initialize overlay
-        self._overlays_dict = OverlayManager(self)
+        self._overlay_manager = OverlayManager(self)
 
         self.on_msg(self._handle_custom_message)
 
@@ -321,6 +321,36 @@ class Aladin(anywidget.AnyWidget):
             self._overlays = message["content"]["overlays"]
             if "current_overlays" in self.listener_callback:
                 self.listener_callback["current_overlays"](message["content"])
+        elif event_type == "stack_changed":
+            content = message["content"]
+            if content["change"] == "removed":
+                self.handle_overlay_removed(content["name"])
+            elif content["change"] == "added":
+                self.handle_overlay_added(content["name"], content["type"])
+
+    def handle_overlay_removed(self, overlay_name: str) -> None:
+        """Remove overlay from both _overlays list and _overlay_manager dict."""
+        # Remove from _overlays
+        if overlay_name in self._overlays:
+            self._overlays.remove(overlay_name)
+
+        # Remove from OverlayManager
+        if overlay_name in self._overlay_manager:
+            self._overlay_manager.pop(overlay_name)
+
+    def handle_overlay_added(self, overlay_name: str, aladin_type: str) -> None:
+        """Add overlay into both _overlays list and _overlay_manager dict."""
+        # Add into _overlays
+        if overlay_name not in self._overlays:
+            self._overlays.append(overlay_name)
+
+        # Add into OverlayManager
+        if overlay_name not in self._overlay_manager:
+            overlay_info = {
+                "type": "javascript",
+                "options": {"name": overlay_name, "aladin_type": aladin_type},
+            }
+            self._overlay_manager.add_overlay(overlay_info)
 
     @property
     def selected_objects(self) -> List[Table]:
@@ -596,11 +626,11 @@ class Aladin(anywidget.AnyWidget):
         if not isinstance(markers, list):
             markers = [markers]
 
-        catalog_options = self._overlays_dict.common_overlay_handling(
+        catalog_options = self._overlay_manager.common_overlay_handling(
             catalog_options, "catalog_python"
         )
 
-        overlay_info = self._overlays_dict.add_overlay(
+        overlay_info = self._overlay_manager.add_overlay(
             {
                 "type": "marker",
                 "markers": [marker.__dict__ for marker in markers],
@@ -734,11 +764,11 @@ class Aladin(anywidget.AnyWidget):
         if votable_options is None:
             votable_options = {}
 
-        votable_options = self._overlays_dict.common_overlay_handling(
+        votable_options = self._overlay_manager.common_overlay_handling(
             votable_options, "catalog_python"
         )
 
-        overlay_info = self._overlays_dict.add_overlay(
+        overlay_info = self._overlay_manager.add_overlay(
             {
                 "type": "catalog",
                 "votable_URL": votable_URL,
@@ -957,11 +987,11 @@ class Aladin(anywidget.AnyWidget):
         table_bytes = io.BytesIO()
         table.write(table_bytes, format="votable")
 
-        table_options = self._overlays_dict.common_overlay_handling(
+        table_options = self._overlay_manager.common_overlay_handling(
             table_options, "catalog_python"
         )
 
-        overlay_info = self._overlays_dict.add_overlay(
+        overlay_info = self._overlay_manager.add_overlay(
             {
                 "type": "table",
                 "table": table,
@@ -1048,11 +1078,11 @@ class Aladin(anywidget.AnyWidget):
             # Define behavior for each region type
             regions_infos.append(RegionInfos(region_element).to_clean_dict())
 
-        graphic_options = self._overlays_dict.common_overlay_handling(
+        graphic_options = self._overlay_manager.common_overlay_handling(
             graphic_options, "overlay_python"
         )
 
-        overlay_info = self._overlays_dict.add_overlay(
+        overlay_info = self._overlay_manager.add_overlay(
             {
                 "type": "overlay_region",
                 "regions_infos": regions_infos,
@@ -1117,7 +1147,7 @@ class Aladin(anywidget.AnyWidget):
         object.
 
         """
-        overlay_options = self._overlays_dict.common_overlay_handling(
+        overlay_options = self._overlay_manager.common_overlay_handling(
             overlay_options, "overlay_python"
         )
 
@@ -1132,7 +1162,7 @@ class Aladin(anywidget.AnyWidget):
             for region_element in region_list
         ]
 
-        overlay_info = self._overlays_dict.add_overlay(
+        overlay_info = self._overlay_manager.add_overlay(
             {
                 "type": "overlay_stcs",
                 "regions_infos": regions_infos,
@@ -1179,12 +1209,12 @@ class Aladin(anywidget.AnyWidget):
             raise TypeError("overlay must be a str, Overlay, or iterable of these.")
 
         for name in overlay_names:
-            if name not in self._overlays_dict:
+            if name not in self._overlay_manager:
                 raise ValueError(
                     f"Cannot remove overlay `{name}` since this layer does not exist."
                 )
 
-            self._overlays_dict.pop(name)
+            self._overlay_manager.pop(name)
 
         self.send(
             {
@@ -1270,6 +1300,8 @@ class Aladin(anywidget.AnyWidget):
             self.listener_callback["select"] = callback
         elif listener_type == "current_overlays":
             self.listener_callback["current_overlays"] = callback
+        elif listener_type == "stack_changed":
+            self.listener_callback["stack_changed"] = callback
         else:
             raise ValueError(
                 "listener_type must be 'object_hovered', "

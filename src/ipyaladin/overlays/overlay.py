@@ -9,6 +9,7 @@ class OverlayType(Enum):
     TABLE = "table"
     OVERLAY_REGION = "overlay_region"
     OVERLAY_STCS = "overlay_stcs"
+    JAVASCRIPT = "javascript"
 
 
 class Overlay(dict):
