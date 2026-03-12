@@ -196,6 +196,22 @@ export default class EventHandler {
       }
     });
 
+    this.aladin.on("stackChanged", (state) => {
+      // ignoring any layer that is NOT an overlay
+      if (!state || !state.overlay) return;
+      const overlay = state.overlay;
+      const content = {
+        name: overlay.name,
+        type: overlay.type,
+        change: state.change,
+      };
+      console.log("Sending stack_changed", content);
+      this.model.send({
+        event_type: "stack_changed",
+        content: content,
+      });
+    });
+
     this.aladin.on("click", (clickContent) => {
       this.model.send({
         event_type: "click",
@@ -340,6 +356,7 @@ export default class EventHandler {
       add_MOC_from_URL: this.messageHandler.handleAddMOCFromURL,
       add_MOC_from_dict: this.messageHandler.handleAddMOCFromDict,
       add_overlay: this.messageHandler.handleAddOverlay,
+      remove_overlay: this.messageHandler.handleRemoveOverlay,
       change_colormap: this.messageHandler.handleChangeColormap,
       get_JPG_thumbnail: this.messageHandler.handleGetJPGThumbnail,
       trigger_selection: this.messageHandler.handleTriggerSelection,
