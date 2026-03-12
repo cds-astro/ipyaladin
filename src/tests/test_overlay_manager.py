@@ -430,7 +430,9 @@ def test_remove_overlay(
     # try removing non-existent layer to confirm error is raised
     with pytest.raises(
         ValueError,
-        match="Cannot remove overlay `does_not_exist` since this layer does not exist.",
+        match=(
+            r"Cannot remove overlay `does_not_exist` since this layer does not exist."
+        ),
     ):
         aladin.remove_overlay("does_not_exist")
 
