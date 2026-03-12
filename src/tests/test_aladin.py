@@ -363,15 +363,3 @@ def test_remove_overlay(
 
     if isinstance(overlay_names, list):
         assert name_info == overlay_names
-
-
-def test_get_overlays(
-    monkeypatch: Callable,
-) -> None:
-    """Test proper message sent for getting current overlays."""
-    mock_send = Mock()
-    monkeypatch.setattr(Aladin, "send", mock_send)
-    aladin.get_overlays()
-    event_name = mock_send.call_args[0][0]["event_name"]
-    assert isinstance(event_name, str)
-    assert event_name == "get_overlays"

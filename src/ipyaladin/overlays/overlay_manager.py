@@ -75,7 +75,7 @@ class OverlayManager:
         unique_name = self.make_unique_name(name=name)
         overlay_options["name"] = unique_name
 
-        if unique_name != name:
+        if name not in {unique_name, default_name}:
             warnings.warn(
                 f"Overlay name `{name}` is already in use. Name `{unique_name}` "
                 "will be used instead.",
