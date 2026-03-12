@@ -58,9 +58,15 @@ class Overlay(dict):
         new_options : any
             The arguments to update on the overlay.
         """
+        if self.type == OverlayType.JAVASCRIPT.value:
+            raise TypeError(
+                f"Cannot update overlay `{self.name}` since it was added via "
+                "GUI. Use GUI-based interactions to update."
+            )
+
         if not new_options:
             raise ValueError(
-                f"Cannot update overlayer `{self.name}` since no options to "
+                f"Cannot update overlay `{self.name}` since no options to "
                 "update were provided."
             )
 
