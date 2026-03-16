@@ -892,8 +892,8 @@ class Aladin(anywidget.AnyWidget):
         Parameters
         ----------
         region: `~regions.CircleSkyRegion`, `~regions.EllipseSkyRegion`,
-        `~regions.LineSkyRegion`,`~regions.PolygonSkyRegion`,
-        `~regions.RectangleSkyRegion`, `~regions.Regions`, or a list of these.
+                `~regions.LineSkyRegion`,`~regions.PolygonSkyRegion`,
+                `~regions.RectangleSkyRegion`, `~regions.Regions`, or a list of these.
             The region(s) to add in Aladin Lite. It can be given as a supported region
             or a list of regions from the
             `regions package <https://astropy-regions.readthedocs.io>`_.
