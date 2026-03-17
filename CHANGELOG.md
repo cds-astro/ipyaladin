@@ -19,6 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `projection` parameter can now be called to change the projection of the
   ipyaladin viewer [#172]
 
+## Fixed
+
+- Overlays are displayed on the generated HTML static file because it is passed with
+  traitlets instead of being sent with events. This fixes documentation examples [#151].
+
 ## [0.7.0]
 
 ## Added
