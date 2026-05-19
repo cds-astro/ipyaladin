@@ -16,8 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## Added
+
 - `projection` parameter can now be called to change the projection of the
   ipyaladin viewer [#172]
+- introduction of overlay manager that tracks the overlays users add to and
+  remove from the widget through both the GUI and API [#174]
 
 ## [0.7.0]
 
