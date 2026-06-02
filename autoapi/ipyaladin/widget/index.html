@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>ipyaladin.widget &#8212; ipyaladin 0.7.0 documentation</title>
+    <title>ipyaladin.widget &#8212; ipyaladin 0.8.0 documentation</title>
   
   
   
@@ -27,28 +27,29 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="../../../_static/styles/theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=fd6457a4" />
   
   <!-- So that users can add custom icons -->
-  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=0790524f97105ba85085"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
 
-    <script src="../../../_static/documentation_options.js?v=fe7df9b0"></script>
-    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/documentation_options.js?v=486e5634"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../../_static/copybutton.js?v=f281be69"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'autoapi/ipyaladin/widget/index';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="icon" href="../../../_static/ipyaladin.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -56,20 +57,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../../_static/searchtools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../searchindex.js"></script>
+  
   </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
-
+  <body data-default-mode="">
   
   
   <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
   
   <div id="pst-scroll-pixel-helper"></div>
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
-
+  
+  
+  
   
   <dialog id="pst-search-dialog">
     
@@ -95,7 +102,7 @@
 </div>
 
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
   <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
     <span class="fa-solid fa-bars"></span>
@@ -173,23 +180,13 @@
   </a>
 </li>
 
-            <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button"
-                data-bs-toggle="dropdown" aria-expanded="false"
-                aria-controls="pst-nav-more-links">
-                    More
-                </button>
-                <ul id="pst-nav-more-links" class="dropdown-menu">
-                    
-<li class=" ">
-  <a class="nav-link dropdown-item nav-external" href="<https://github.com/cds-astro/ipyaladin/releases>">
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="<https://github.com/cds-astro/ipyaladin/releases>">
     Changelog
   </a>
 </li>
 
-                </ul>
-            </li>
-            
   </ul>
 </nav></div>
       
@@ -211,11 +208,18 @@
       
         <div class="navbar-item">
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button></div>
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
       
         <div class="navbar-item"><ul class="navbar-icon-links"
     aria-label="Icon Links">
@@ -228,8 +232,7 @@
           
           
           
-          <a href="https://github.com/cds-astro/ipyaladin" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">GitHub</span></a>
+          <a href="https://github.com/cds-astro/ipyaladin" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
         </li>
 </ul></div>
       
@@ -332,11 +335,18 @@
         
           <div class="navbar-item">
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button></div>
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
         
           <div class="navbar-item"><ul class="navbar-icon-links"
     aria-label="Icon Links">
@@ -349,8 +359,7 @@
           
           
           
-          <a href="https://github.com/cds-astro/ipyaladin" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">GitHub</span></a>
+          <a href="https://github.com/cds-astro/ipyaladin" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
         </li>
 </ul></div>
         
@@ -359,7 +368,14 @@
   </div>
   
     <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar"><svg class="pst-icon svg-inline--fa" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
         <div class="sidebar-primary-item">
+
 <nav class="bd-docs-nav bd-links"
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
@@ -438,7 +454,7 @@
 It allows to display astronomical images and catalogs in an interactive way.</p>
 <section id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h2>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ipyaladin.widget.Aladin" title="ipyaladin.widget.Aladin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Aladin</span></code></a></p></td>
 <td><p>Aladin Lite widget.</p></td>
@@ -449,7 +465,7 @@ It allows to display astronomical images and catalogs in an interactive way.</p>
 </section>
 <section id="functions">
 <h2>Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h2>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ipyaladin.widget.widget_should_be_loaded" title="ipyaladin.widget.widget_should_be_loaded"><code class="xref py py-obj docutils literal notranslate"><span class="pre">widget_should_be_loaded</span></code></a>(→ collections.abc.Callable)</p></td>
 <td><p>Check if the widget is ready to execute a function.</p></td>
@@ -483,13 +499,25 @@ It allows to display astronomical images and catalogs in an interactive way.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="ipyaladin.widget.Aladin">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ipyaladin.widget.</span></span><span class="sig-name descname"><span class="pre">Aladin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">init_options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><span class="pre">object</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ipyaladin/widget.html#Aladin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ipyaladin.widget.Aladin" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ipyaladin.widget.</span></span><span class="sig-name descname"><span class="pre">Aladin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">init_options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><span class="pre">object</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/ipyaladin/widget.html#Aladin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ipyaladin.widget.Aladin" title="Link to this definition">#</a></dt>
 <dd><p>Aladin Lite widget.</p>
 <p>This widget is a Python wrapper around the Aladin Lite JavaScript library.
 It allows to display astronomical images and catalogs in an interactive way.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ipyaladin.widget.Aladin.handle_overlay_removed">
+<span class="sig-name descname"><span class="pre">handle_overlay_removed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">overlay_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/ipyaladin/widget.html#Aladin.handle_overlay_removed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ipyaladin.widget.Aladin.handle_overlay_removed" title="Link to this definition">#</a></dt>
+<dd><p>Remove overlay from _overlay_manager dict.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ipyaladin.widget.Aladin.handle_overlay_added">
+<span class="sig-name descname"><span class="pre">handle_overlay_added</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">overlay_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">aladin_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/ipyaladin/widget.html#Aladin.handle_overlay_added"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ipyaladin.widget.Aladin.handle_overlay_added" title="Link to this definition">#</a></dt>
+<dd><p>Add overlay into _overlay_manager dict.</p>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="ipyaladin.widget.Aladin.selected_objects">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">selected_objects</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.astropy.org/en/latest/api/astropy.table.Table.html#astropy.table.Table" title="(in Astropy v8.0)"><span class="pre">astropy.table.table.Table</span></a><span class="p"><span class="pre">]</span></span></em><a class="reference internal" href="../../../_modules/ipyaladin/widget.html#Aladin.selected_objects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ipyaladin.widget.Aladin.selected_objects" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">selected_objects</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.astropy.org/en/latest/api/astropy.table.Table.html#astropy.table.Table" title="(in Astropy v8.1)"><span class="pre">astropy.table.table.Table</span></a><span class="p"><span class="pre">]</span></span></span><a class="reference internal" href="../../../_modules/ipyaladin/widget.html#Aladin.selected_objects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ipyaladin.widget.Aladin.selected_objects" title="Link to this definition">#</a></dt>
 <dd><p>The list of catalogs selected by the user.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -502,8 +530,22 @@ It allows to display astronomical images and catalogs in an interactive way.</p>
 </dd></dl>
 
 <dl class="py property">
+<dt class="sig sig-object py" id="ipyaladin.widget.Aladin.overlays">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">overlays</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span></span><a class="reference internal" href="../../../_modules/ipyaladin/widget.html#Aladin.overlays"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ipyaladin.widget.Aladin.overlays" title="Link to this definition">#</a></dt>
+<dd><p>The list of overlays on the widget.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>list</dt><dd><p>A list of strings representing the widget overlays.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
 <dt class="sig sig-object py" id="ipyaladin.widget.Aladin.height">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">height</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="reference internal" href="../../../_modules/ipyaladin/widget.html#Aladin.height"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ipyaladin.widget.Aladin.height" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">height</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><a class="reference internal" href="../../../_modules/ipyaladin/widget.html#Aladin.height"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ipyaladin.widget.Aladin.height" title="Link to this definition">#</a></dt>
 <dd><p>The height of the widget.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -521,7 +563,7 @@ The default height is 400 pixels.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ipyaladin.widget.Aladin.rotation">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rotation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></em><a class="reference internal" href="../../../_modules/ipyaladin/widget.html#Aladin.rotation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ipyaladin.widget.Aladin.rotation" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">rotation</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="reference internal" href="../../../_modules/ipyaladin/widget.html#Aladin.rotation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ipyaladin.widget.Aladin.rotation" title="Link to this definition">#</a></dt>
 <dd><p>The center rotation of the widget.</p>
 <p>This is the view center to north pole angle in degrees.
 This is equivalent to getting the 3rd Euler angle.
@@ -542,8 +584,24 @@ rotation of the widget in degrees. The default rotation is
 </dd></dl>
 
 <dl class="py property">
+<dt class="sig sig-object py" id="ipyaladin.widget.Aladin.projection">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">projection</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../_modules/ipyaladin/widget.html#Aladin.projection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ipyaladin.widget.Aladin.projection" title="Link to this definition">#</a></dt>
+<dd><p>The projection of the widget.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>str</dt><dd><p>The projection type used by the current view of ipyaladin. Supported
+projections are “TAN”, “STG”, “SIN”, “ZEA”, “MER”, “AIT”, and “MOL”.
+<a class="reference external" href="https://cds-astro.github.io/aladin-lite/Aladin.html#setProjection">https://cds-astro.github.io/aladin-lite/Aladin.html#setProjection</a>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
 <dt class="sig sig-object py" id="ipyaladin.widget.Aladin.wcs">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">wcs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.astropy.org/en/latest/api/astropy.wcs.WCS.html#astropy.wcs.WCS" title="(in Astropy v8.0)"><span class="pre">astropy.wcs.WCS</span></a></em><a class="reference internal" href="../../../_modules/ipyaladin/widget.html#Aladin.wcs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ipyaladin.widget.Aladin.wcs" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">wcs</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.astropy.org/en/latest/api/astropy.wcs.WCS.html#astropy.wcs.WCS" title="(in Astropy v8.1)"><span class="pre">astropy.wcs.WCS</span></a></span><a class="reference internal" href="../../../_modules/ipyaladin/widget.html#Aladin.wcs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ipyaladin.widget.Aladin.wcs" title="Link to this definition">#</a></dt>
 <dd><p>The world coordinate system corresponding to the current view of ipyaladin.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -557,7 +615,7 @@ rotation of the widget in degrees. The default rotation is
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ipyaladin.widget.Aladin.fov_xy">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fov_xy</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.astropy.org/en/latest/api/astropy.coordinates.Angle.html#astropy.coordinates.Angle" title="(in Astropy v8.0)"><span class="pre">astropy.coordinates.Angle</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.astropy.org/en/latest/api/astropy.coordinates.Angle.html#astropy.coordinates.Angle" title="(in Astropy v8.0)"><span class="pre">astropy.coordinates.Angle</span></a><span class="p"><span class="pre">]</span></span></em><a class="reference internal" href="../../../_modules/ipyaladin/widget.html#Aladin.fov_xy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ipyaladin.widget.Aladin.fov_xy" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">fov_xy</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.astropy.org/en/latest/api/astropy.coordinates.Angle.html#astropy.coordinates.Angle" title="(in Astropy v8.1)"><span class="pre">astropy.coordinates.Angle</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.astropy.org/en/latest/api/astropy.coordinates.Angle.html#astropy.coordinates.Angle" title="(in Astropy v8.1)"><span class="pre">astropy.coordinates.Angle</span></a><span class="p"><span class="pre">]</span></span></span><a class="reference internal" href="../../../_modules/ipyaladin/widget.html#Aladin.fov_xy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ipyaladin.widget.Aladin.fov_xy" title="Link to this definition">#</a></dt>
 <dd><p>The field of view of the Aladin Lite along the two axes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -571,7 +629,7 @@ rotation of the widget in degrees. The default rotation is
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ipyaladin.widget.Aladin.fov">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fov</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.astropy.org/en/latest/api/astropy.coordinates.Angle.html#astropy.coordinates.Angle" title="(in Astropy v8.0)"><span class="pre">astropy.coordinates.Angle</span></a></em><a class="reference internal" href="../../../_modules/ipyaladin/widget.html#Aladin.fov"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ipyaladin.widget.Aladin.fov" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">fov</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.astropy.org/en/latest/api/astropy.coordinates.Angle.html#astropy.coordinates.Angle" title="(in Astropy v8.1)"><span class="pre">astropy.coordinates.Angle</span></a></span><a class="reference internal" href="../../../_modules/ipyaladin/widget.html#Aladin.fov"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ipyaladin.widget.Aladin.fov" title="Link to this definition">#</a></dt>
 <dd><p>The field of view of the Aladin Lite widget along the horizontal axis.</p>
 <p>It can be set with either a float number in degrees
 or an astropy.coordinates.Angle object.</p>
@@ -593,7 +651,7 @@ or an astropy.coordinates.Angle object.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ipyaladin.widget.Aladin.target">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">target</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.astropy.org/en/latest/api/astropy.coordinates.SkyCoord.html#astropy.coordinates.SkyCoord" title="(in Astropy v8.0)"><span class="pre">astropy.coordinates.SkyCoord</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></em><a class="reference internal" href="../../../_modules/ipyaladin/widget.html#Aladin.target"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ipyaladin.widget.Aladin.target" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">target</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.astropy.org/en/latest/api/astropy.coordinates.SkyCoord.html#astropy.coordinates.SkyCoord" title="(in Astropy v8.1)"><span class="pre">astropy.coordinates.SkyCoord</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span><a class="reference internal" href="../../../_modules/ipyaladin/widget.html#Aladin.target"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ipyaladin.widget.Aladin.target" title="Link to this definition">#</a></dt>
 <dd><p>The target of the Aladin Lite widget.</p>
 <p>The target can be provided as coordinates (either
 <cite>~astropy.coordinates.SkyCoord</cite> or (<cite>~astropy.coordinates.Longitude</cite>,
@@ -675,7 +733,7 @@ pixels, use ‘get_view_as_fits’.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ipyaladin.widget.Aladin.get_view_as_fits">
-<span class="sig-name descname"><span class="pre">get_view_as_fits</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.astropy.org/en/latest/io/fits/api/hdulists.html#astropy.io.fits.HDUList" title="(in Astropy v8.0)"><span class="pre">astropy.io.fits.HDUList</span></a></span></span><a class="reference internal" href="../../../_modules/ipyaladin/widget.html#Aladin.get_view_as_fits"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ipyaladin.widget.Aladin.get_view_as_fits" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_view_as_fits</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.astropy.org/en/latest/io/fits/api/hdulists.html#astropy.io.fits.HDUList" title="(in Astropy v8.1)"><span class="pre">astropy.io.fits.HDUList</span></a></span></span><a class="reference internal" href="../../../_modules/ipyaladin/widget.html#Aladin.get_view_as_fits"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ipyaladin.widget.Aladin.get_view_as_fits" title="Link to this definition">#</a></dt>
 <dd><p>Get the base layer of the widget as an astropy HDUList object.</p>
 <p>The output FITS image will have the same shape as the
 current view of the widget. This uses <cite>astroquery.hips2fits</cite> internally.
@@ -727,7 +785,7 @@ example, it won’t do anything in VSCode).</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ipyaladin.widget.Aladin.add_fits">
-<span class="sig-name descname"><span class="pre">add_fits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fits</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">pathlib.Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.astropy.org/en/latest/io/fits/api/hdulists.html#astropy.io.fits.HDUList" title="(in Astropy v8.0)"><span class="pre">astropy.io.fits.HDUList</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">image_options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/ipyaladin/widget.html#Aladin.add_fits"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ipyaladin.widget.Aladin.add_fits" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">add_fits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fits</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">pathlib.Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.astropy.org/en/latest/io/fits/api/hdulists.html#astropy.io.fits.HDUList" title="(in Astropy v8.1)"><span class="pre">astropy.io.fits.HDUList</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">image_options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/ipyaladin/widget.html#Aladin.add_fits"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ipyaladin.widget.Aladin.add_fits" title="Link to this definition">#</a></dt>
 <dd><p>Load a FITS image into the widget.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -799,7 +857,7 @@ options</a></p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ipyaladin.widget.Aladin.add_table">
-<span class="sig-name descname"><span class="pre">add_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.astropy.org/en/latest/api/astropy.table.QTable.html#astropy.table.QTable" title="(in Astropy v8.0)"><span class="pre">astropy.table.table.QTable</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.astropy.org/en/latest/api/astropy.table.Table.html#astropy.table.Table" title="(in Astropy v8.0)"><span class="pre">astropy.table.table.Table</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ipyaladin.elements.error_shape.CircleError</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ipyaladin.elements.error_shape.EllipseError</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cross'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">table_options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/ipyaladin/widget.html#Aladin.add_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ipyaladin.widget.Aladin.add_table" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">add_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.astropy.org/en/latest/api/astropy.table.QTable.html#astropy.table.QTable" title="(in Astropy v8.1)"><span class="pre">astropy.table.table.QTable</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.astropy.org/en/latest/api/astropy.table.Table.html#astropy.table.Table" title="(in Astropy v8.1)"><span class="pre">astropy.table.table.Table</span></a></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ipyaladin.elements.error_shape.CircleError</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ipyaladin.elements.error_shape.EllipseError</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cross'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">table_options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/ipyaladin/widget.html#Aladin.add_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ipyaladin.widget.Aladin.add_table" title="Link to this definition">#</a></dt>
 <dd><p>Load a table into the widget.</p>
 <p>The extra parameters allow to draw either circles which radii correspond to the
 error estimation, or ellipses which major axis, minor axis, and angles
@@ -838,12 +896,14 @@ The possible values are documented in <a class="reference external" href="https:
 <dt class="sig sig-object py" id="ipyaladin.widget.Aladin.add_graphic_overlay_from_region">
 <span class="sig-name descname"><span class="pre">add_graphic_overlay_from_region</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">region</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportedRegion</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">graphic_options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/ipyaladin/widget.html#Aladin.add_graphic_overlay_from_region"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ipyaladin.widget.Aladin.add_graphic_overlay_from_region" title="Link to this definition">#</a></dt>
 <dd><p>Add an overlay graphic layer to the Aladin Lite widget.</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>region: `~regions.CircleSkyRegion`, `~regions.EllipseSkyRegion`,</strong></dt><dd></dd>
-<dt><strong>`~regions.LineSkyRegion`,`~regions.PolygonSkyRegion`,</strong></dt><dd></dd>
-<dt><strong>`~regions.RectangleSkyRegion`, `~regions.Regions`, or a list of these.</strong></dt><dd><p>The region(s) to add in Aladin Lite. It can be given as a supported region
+<dd class="field-odd"><dl>
+<dt><strong>region: `~regions.CircleSkyRegion`, `~regions.EllipseSkyRegion`,</strong></dt><dd><blockquote>
+<div><p><cite>~regions.LineSkyRegion</cite>,`~regions.PolygonSkyRegion`,
+<cite>~regions.RectangleSkyRegion</cite>, <cite>~regions.Regions</cite>, or a list of these.</p>
+</div></blockquote>
+<p>The region(s) to add in Aladin Lite. It can be given as a supported region
 or a list of regions from the
 <a class="reference external" href="https://astropy-regions.readthedocs.io">regions package</a>.</p>
 </dd>
@@ -940,6 +1000,28 @@ See <a class="reference external" href="https://cds-astro.github.io/aladin-lite/
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="ipyaladin.widget.Aladin.remove_overlay">
+<span class="sig-name descname"><span class="pre">remove_overlay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">overlay</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable" title="(in Python v3.14)"><span class="pre">collections.abc.Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ipyaladin.overlays.overlay.Overlay</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ipyaladin.overlays.overlay.Overlay</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/ipyaladin/widget.html#Aladin.remove_overlay"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ipyaladin.widget.Aladin.remove_overlay" title="Link to this definition">#</a></dt>
+<dd><p>Remove an overlay layer defined by a string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>overlay</strong><span class="classifier">str(s) or Overlay(s)</span></dt><dd><p>The overlay name (str) or Overlay object to be removed.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>TypeError</dt><dd><p>Overlays are not provided as Overlay or names.</p>
+</dd>
+<dt>ValueError</dt><dd><p>Overlay does not exist.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="ipyaladin.widget.Aladin.set_color_map">
 <span class="sig-name descname"><span class="pre">set_color_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color_map_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/ipyaladin/widget.html#Aladin.set_color_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ipyaladin.widget.Aladin.set_color_map" title="Link to this definition">#</a></dt>
 <dd><p>Change the color map of the Aladin Lite widget.</p>
@@ -983,7 +1065,7 @@ Default is ‘rect’.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>listener_type</strong><span class="classifier">str</span></dt><dd><p>Can either be ‘object_hovered’, ‘object_clicked’, ‘click’ or ‘select’</p>
+<dt><strong>listener_type</strong><span class="classifier">str</span></dt><dd><p>Can either be ‘object_hovered’, ‘object_clicked’, ‘click’, or ‘select’</p>
 </dd>
 <dt><strong>callback</strong><span class="classifier">Callable</span></dt><dd><p>A python function to be called when the event corresponding to the
 listener_type is detected</p>
@@ -1053,16 +1135,20 @@ listener_type is detected</p>
     class="page-toc tocsection onthispage">
     <i class="fa-solid fa-list"></i> On this page
   </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ipyaladin.widget.widget_should_be_loaded"><code class="docutils literal notranslate"><span class="pre">widget_should_be_loaded()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ipyaladin.widget.Aladin"><code class="docutils literal notranslate"><span class="pre">Aladin</span></code></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ipyaladin.widget.Aladin"><code class="docutils literal notranslate"><span class="pre">Aladin</span></code></a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ipyaladin.widget.Aladin.handle_overlay_removed"><code class="docutils literal notranslate"><span class="pre">Aladin.handle_overlay_removed()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ipyaladin.widget.Aladin.handle_overlay_added"><code class="docutils literal notranslate"><span class="pre">Aladin.handle_overlay_added()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ipyaladin.widget.Aladin.selected_objects"><code class="docutils literal notranslate"><span class="pre">Aladin.selected_objects</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ipyaladin.widget.Aladin.overlays"><code class="docutils literal notranslate"><span class="pre">Aladin.overlays</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ipyaladin.widget.Aladin.height"><code class="docutils literal notranslate"><span class="pre">Aladin.height</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ipyaladin.widget.Aladin.rotation"><code class="docutils literal notranslate"><span class="pre">Aladin.rotation</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ipyaladin.widget.Aladin.projection"><code class="docutils literal notranslate"><span class="pre">Aladin.projection</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ipyaladin.widget.Aladin.wcs"><code class="docutils literal notranslate"><span class="pre">Aladin.wcs</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ipyaladin.widget.Aladin.fov_xy"><code class="docutils literal notranslate"><span class="pre">Aladin.fov_xy</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ipyaladin.widget.Aladin.fov"><code class="docutils literal notranslate"><span class="pre">Aladin.fov</span></code></a></li>
@@ -1080,6 +1166,7 @@ listener_type is detected</p>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ipyaladin.widget.Aladin.add_graphic_overlay_from_region"><code class="docutils literal notranslate"><span class="pre">Aladin.add_graphic_overlay_from_region()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ipyaladin.widget.Aladin.add_overlay_from_stcs"><code class="docutils literal notranslate"><span class="pre">Aladin.add_overlay_from_stcs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ipyaladin.widget.Aladin.add_graphic_overlay_from_stcs"><code class="docutils literal notranslate"><span class="pre">Aladin.add_graphic_overlay_from_stcs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ipyaladin.widget.Aladin.remove_overlay"><code class="docutils literal notranslate"><span class="pre">Aladin.remove_overlay()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ipyaladin.widget.Aladin.set_color_map"><code class="docutils literal notranslate"><span class="pre">Aladin.set_color_map()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ipyaladin.widget.Aladin.selection"><code class="docutils literal notranslate"><span class="pre">Aladin.selection()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ipyaladin.widget.Aladin.rectangular_selection"><code class="docutils literal notranslate"><span class="pre">Aladin.rectangular_selection()</span></code></a></li>
@@ -1093,13 +1180,13 @@ listener_type is detected</p>
   </nav></div>
 
   <div class="sidebar-secondary-item">
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../../../_sources/autoapi/ipyaladin/widget/index.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div></div>
+
+  <div class="tocsection sourcelink">
+    <a href="../../../_sources/autoapi/ipyaladin/widget/index.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
 
 </div></div>
               
@@ -1114,8 +1201,8 @@ listener_type is detected</p>
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -1126,7 +1213,7 @@ listener_type is detected</p>
 
   <p class="copyright">
     
-      © Copyright 2025, Strasbourg Astronomical Date Centre (CDS).
+      © Copyright 2026, Strasbourg Astronomical Date Centre (CDS).
       <br/>
     
   </p>
@@ -1135,7 +1222,7 @@ listener_type is detected</p>
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
     <br/>
   </p>
 </div>
@@ -1149,7 +1236,7 @@ listener_type is detected</p>
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.18.0.
 </p></div>
       
     </div>

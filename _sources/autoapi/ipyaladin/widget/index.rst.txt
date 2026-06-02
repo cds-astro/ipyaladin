@@ -92,6 +92,54 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
+   .. py:method:: handle_overlay_removed(overlay_name: str) -> None
+
+      
+      Remove overlay from _overlay_manager dict.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: handle_overlay_added(overlay_name: str, aladin_type: str) -> None
+
+      
+      Add overlay into _overlay_manager dict.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:property:: selected_objects
       :type: List[astropy.table.table.Table]
 
@@ -107,6 +155,36 @@ Module Contents
 
           list[Table]
               A list of astropy.table.Table objects representing the selected catalogs.
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:property:: overlays
+      :type: List
+
+
+      
+      The list of overlays on the widget.
+
+
+
+
+
+      :Returns:
+
+          list
+              A list of strings representing the widget overlays.
 
 
 
@@ -180,6 +258,38 @@ Module Contents
               An astropy.coordinates.Angle object representing the center
               rotation of the widget in degrees. The default rotation is
               0 degrees.
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:property:: projection
+      :type: str
+
+
+      
+      The projection of the widget.
+
+
+
+
+
+      :Returns:
+
+          str
+              The projection type used by the current view of ipyaladin. Supported
+              projections are "TAN", "STG", "SIN", "ZEA", "MER", "AIT", and "MOL".
+              https://cds-astro.github.io/aladin-lite/Aladin.html#setProjection.
 
 
 
@@ -716,12 +826,8 @@ Module Contents
       :Parameters:
 
           **region: `~regions.CircleSkyRegion`, `~regions.EllipseSkyRegion`,**
-              ..
-
-          **`~regions.LineSkyRegion`,`~regions.PolygonSkyRegion`,**
-              ..
-
-          **`~regions.RectangleSkyRegion`, `~regions.Regions`, or a list of these.**
+                  `~regions.LineSkyRegion`,`~regions.PolygonSkyRegion`,
+                  `~regions.RectangleSkyRegion`, `~regions.Regions`, or a list of these.
               The region(s) to add in Aladin Lite. It can be given as a supported region
               or a list of regions from the
               `regions package <https://astropy-regions.readthedocs.io>`_.
@@ -844,6 +950,41 @@ Module Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: remove_overlay(overlay: Union[collections.abc.Iterable[str, ipyaladin.overlays.overlay.Overlay], str, ipyaladin.overlays.overlay.Overlay]) -> None
+
+      
+      Remove an overlay layer defined by a string.
+
+
+      :Parameters:
+
+          **overlay** : str(s) or Overlay(s)
+              The overlay name (str) or Overlay object to be removed.
+
+
+
+
+
+
+
+      :Raises:
+
+          TypeError
+              Overlays are not provided as Overlay or names.
+
+          ValueError
+              Overlay does not exist.
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:method:: set_color_map(color_map_name: str) -> None
 
       
@@ -937,7 +1078,7 @@ Module Contents
       :Parameters:
 
           **listener_type** : str
-              Can either be 'object_hovered', 'object_clicked', 'click' or 'select'
+              Can either be 'object_hovered', 'object_clicked', 'click', or 'select'
 
           **callback** : Callable
               A python function to be called when the event corresponding to the

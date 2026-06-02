@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Example of interactive rectangular selection &#8212; ipyaladin 0.7.0 documentation</title>
+    <title>Example of interactive rectangular selection &#8212; ipyaladin 0.8.0 documentation</title>
   
   
   
@@ -27,31 +27,32 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=fd6457a4" />
     <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=2aa19091" />
   
   <!-- So that users can add custom icons -->
-  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../_static/scripts/fontawesome.js?digest=0790524f97105ba85085"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
 
-    <script src="../../_static/documentation_options.js?v=fe7df9b0"></script>
-    <script src="../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/documentation_options.js?v=486e5634"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_collections/notebooks/08_Rectangular-selection';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="icon" href="../../_static/ipyaladin.ico"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -60,20 +61,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
   </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
-
+  <body data-default-mode="">
   
   
   <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
   
   <div id="pst-scroll-pixel-helper"></div>
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
-
+  
+  
+  
   
   <dialog id="pst-search-dialog">
     
@@ -99,7 +106,7 @@
 </div>
 
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
   <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
     <span class="fa-solid fa-bars"></span>
@@ -177,23 +184,13 @@
   </a>
 </li>
 
-            <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button"
-                data-bs-toggle="dropdown" aria-expanded="false"
-                aria-controls="pst-nav-more-links">
-                    More
-                </button>
-                <ul id="pst-nav-more-links" class="dropdown-menu">
-                    
-<li class=" ">
-  <a class="nav-link dropdown-item nav-external" href="<https://github.com/cds-astro/ipyaladin/releases>">
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="<https://github.com/cds-astro/ipyaladin/releases>">
     Changelog
   </a>
 </li>
 
-                </ul>
-            </li>
-            
   </ul>
 </nav></div>
       
@@ -215,11 +212,18 @@
       
         <div class="navbar-item">
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button></div>
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
       
         <div class="navbar-item"><ul class="navbar-icon-links"
     aria-label="Icon Links">
@@ -232,8 +236,7 @@
           
           
           
-          <a href="https://github.com/cds-astro/ipyaladin" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">GitHub</span></a>
+          <a href="https://github.com/cds-astro/ipyaladin" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
         </li>
 </ul></div>
       
@@ -336,11 +339,18 @@
         
           <div class="navbar-item">
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button></div>
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
         
           <div class="navbar-item"><ul class="navbar-icon-links"
     aria-label="Icon Links">
@@ -353,8 +363,7 @@
           
           
           
-          <a href="https://github.com/cds-astro/ipyaladin" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">GitHub</span></a>
+          <a href="https://github.com/cds-astro/ipyaladin" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
         </li>
 </ul></div>
         
@@ -363,7 +372,14 @@
   </div>
   
     <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar"><svg class="pst-icon svg-inline--fa" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
         <div class="sidebar-primary-item">
+
 <nav class="bd-docs-nav bd-links"
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
@@ -502,14 +518,14 @@
 </pre></div>
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "bd8ea4311de745aeb13ed24a6360bdd3"}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "e60e13c83b334f03b29f5b6ab061e8c3"}</script></div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">table</span> <span class="o">=</span> <span class="n">Simbad</span><span class="o">.</span><span class="n">query_region</span><span class="p">(</span><span class="s2">&quot;M 1&quot;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.1</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">)</span>
-<span class="n">aladin</span><span class="o">.</span><span class="n">add_table</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+<span class="n">table_overlay</span> <span class="o">=</span> <span class="n">aladin</span><span class="o">.</span><span class="n">add_table</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">process_result</span><span class="p">(</span><span class="n">sources</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -545,7 +561,7 @@
 </div>
 </div>
 <script type="application/vnd.jupyter.widget-state+json">
-{"state": {"211c79333cc34e79bc0ed39ebb49aac8": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": "50%"}}, "f7fca412334144ff9a5dcfea73ae3a6f": {"model_name": "AnyModel", "model_module": "anywidget", "model_module_version": "~0.9.*", "state": {"_anywidget_id": "ipyaladin.widget.Aladin", "_base_layer_last_view": "https://alaskybis.unistra.fr/DSS/DSSColor", "_css": ".cell-output-ipywidget-background{background:transparent}.jp-OutputArea-output,.aladin-widget{background-color:transparent}.aladin-widget .aladin-measurement-div{max-height:100px}.lm-Widget.aladin-lite-lm-container{height:100%}\n", "_dom_classes": [], "_esm": "function y(o){o.charAt(0)===\"_\"&&(o=o.slice(1));let t=o.split(\"_\");for(let i=1;i<t.length;i++)t[i]=t[i].charAt(0).toUpperCase()+t[i].slice(1);return t.join(\"\")}function c(o){let t={};for(let i in o)t[y(i)]=o[i];return t}var u=class{locked=!1;unlock(){this.locked=!1}lock(){this.locked=!0}},p=-1;function v(o){p=o}function _(o,t){o==-1?t.style.height=\"100%\":t.style.height=`${o}px`}import C from\"https://esm.sh/aladin-lite@3.7.3-beta\";var r=C;var A=0,g=class{constructor(t,i){this.aladin=t,this.model=i}handleAddMarker(t){let i=c(t.options||{});i.name||(i.name=\"markers\");let n=r.catalog(i);this.aladin.addCatalog(n);let e=t.markers,a=[];for(let s of e)a.push(r.marker(s.lon,s.lat,{useMarkerDefaultIcon:i.useMarkerDefaultIcon|!1,popupTitle:s.title,popupDesc:s.description}));n.addSources(a)}async handleSaveViewAsImage(t){let i=t.path,n=t.format,e=t.with_logo,a=await this.aladin.getViewData(\"arraybuffer\",`image/${n}`,e);this.model.send({event_type:\"save_view_as_image\",path:i},null,[a])}handleAddFits(t,i){let n=c(t.options||{});n.name||(n.name=`image_${String(++A).padStart(3,\"0\")}`);let e=i[0],a=new Blob([e],{type:\"application/octet-stream\"}),s=URL.createObjectURL(a),h=this.aladin.createImageFITS(s,n,(d,m)=>{this.aladin.gotoRaDec(d,m),console.info(`FITS located at ra: ${d}, dec: ${m}`),URL.revokeObjectURL(s)});this.aladin.setOverlayImageLayer(h,n.name)}handleAddCatalogFromURL(t){let i=c(t.options||{});this.aladin.addCatalog(r.catalogFromURL(t.votable_URL,i))}handleAddMOCFromURL(t){let i=c(t.options||{});this.aladin.addMOC(r.MOCFromURL(t.moc_URL,i))}handleAddMOCFromDict(t){let i=c(t.options||{});this.aladin.addMOC(r.MOCFromJSON(t.moc_dict,i))}handleAddOverlay(t){let i=t.regions_infos,n=c(t.graphic_options||{});n.color||(n.color=\"red\");let e=r.graphicOverlay(n);this.aladin.addOverlay(e);for(let a of i){let s=a.infos;switch(a.region_type){case\"stcs\":e.addFootprints(r.footprintsFromSTCS(s.stcs,a.options));break;case\"circle\":e.add(r.circle(s.ra,s.dec,s.radius,a.options));break;case\"ellipse\":e.add(r.ellipse(s.ra,s.dec,s.a,s.b,s.theta,a.options));break;case\"line\":a.options.lineWidth=a.options.lineWidth||3,e.add(r.vector(s.ra1,s.dec1,s.ra2,s.dec2,a.options));break;case\"polygon\":e.add(r.polygon(s.vertices,a.options));break}}}handleChangeColormap(t){this.aladin.getBaseImageLayer().setColormap(t.colormap)}handleGetJPGThumbnail(){this.aladin.exportAsPNG()}handleTriggerSelection(t){let i=t.selection_type;i===\"rectangle\"?i=\"rect\":i===\"polygon\"&&(i=\"poly\"),this.aladin.select(i)}handleAddTable(t,i){let n=c(t.options||{}),e=c(n.circleError||{}),a=c(n.ellipseError||{}),s=i[0].buffer,h=new TextDecoder(\"utf-8\"),d=new Blob([h.decode(s)]),m=URL.createObjectURL(d);n.onClick=\"showTable\";let b=n.shape||\"cross\";Object.keys(e).length!=0&&(n.shape=l=>l.data[e.radius]?r.circle(l.ra,l.dec,l.data[e.radius]*e.conversionRadius):b),Object.keys(a).length!=0&&(n.shape=l=>l.data[a.majAxis]&l.data[a.minAxis]?r.ellipse(l.ra,l.dec,l.data[a.majAxis]*a.conversionMajAxis,l.data[a.minAxis]*a.conversionMinAxis,l.data[a.angle]*a.conversionAngle):b),r.catalogFromURL(m,n,l=>{this.aladin.addCatalog(l)},!1),URL.revokeObjectURL(m)}};var f=class{constructor(t,i,n){this.aladin=t,this.aladinDiv=i,this.model=n,this.messageHandler=new g(t,n),this.currentDivNumber=parseInt(i.id.split(\"-\").pop())}isLastDiv(){if(this.currentDivNumber===p)return!0;let t=p;for(let i=t;i>=0;i--){let n=document.getElementById(`aladin-lite-div-${i}`);if(n&&n.style.display!==\"none\"){t=i;break}}return v(t),this.currentDivNumber===t}updateWCS(){this.isLastDiv()&&this.model.set(\"_wcs\",this.aladin.getViewWCS())}updateRotation(){this.isLastDiv()&&this.model.set(\"_rotation\",this.aladin.getRotation())}update2AxisFoV(){if(!this.isLastDiv())return;let t=this.aladin.getFov();this.model.set(\"_fov_xy\",{x:t[0],y:t[1]})}subscribeAll(){this.aladin.on(\"positionChanged\",e=>{if(i.locked){i.unlock();return}t.lock();let a=[e.ra,e.dec];this.updateWCS(),this.updateRotation(),this.model.set(\"_target\",`${a[0]} ${a[1]}`),this.model.save_changes()}),this.aladin.on(\"zoomChanged\",e=>{this.model.set(\"_fov\",parseFloat(e.toFixed(5))),this.updateWCS(),this.update2AxisFoV(),this.isLastDiv()&&this.model.save_changes()}),this.aladin.on(\"cooFrameChanged\",()=>{this.updateWCS(),this.model.save_changes()}),this.aladin.on(\"projectionChanged\",()=>{this.updateWCS(),this.model.save_changes()}),this.aladin.on(\"layerChanged\",(e,a,s)=>{a===\"base\"&&this.model.set(\"_survey_body\",e.hipsBody||\"sky\"),!(a!==\"base\"||s!==\"ADDED\")&&(this.updateWCS(),this.model.set(\"_base_layer_last_view\",e.id),this.model.save_changes())}),this.aladin.on(\"resizeChanged\",(e,a)=>{if(e===1&&a===1){this.model.set(\"_is_reduced\",!0),this.model.save_changes();return}else this.model.set(\"_is_reduced\",!1);this.updateWCS(),this.update2AxisFoV(),this.model.set(\"_height\",a),this.model.save_changes()}),this.aladin.on(\"objectHovered\",e=>{e.data!==void 0&&this.model.send({event_type:\"object_hovered\",content:{ra:e.ra,dec:e.dec}})}),this.aladin.on(\"rotationChanged\",e=>{this.updateRotation(),this.isLastDiv()&&this.model.save_changes()}),this.aladin.on(\"objectClicked\",e=>{if(e){let a={ra:e.ra||e.source.ra,dec:e.dec||e.source.dec};e.data!==void 0&&(a.data=e.data),e.source!==void 0&&(a.data=e.source.data),this.model.set(\"clicked_object\",a),this.model.send({event_type:\"object_clicked\",content:a}),this.model.save_changes()}}),this.aladin.on(\"click\",e=>{this.model.send({event_type:\"click\",content:e})}),this.aladin.on(\"select\",e=>{let a=e.map(h=>h.map(d=>({ra:d.ra,dec:d.dec,data:d.data,x:d.x,y:d.y})));this.model.set(\"_selected_objects\",a),this.model.save_changes();let s=[];e.forEach(h=>{h.forEach(d=>{s.push({ra:d.ra,dec:d.dec,data:d.data,x:d.x,y:d.y})})}),this.model.send({event_type:\"select\",content:s})}),this.aladin.view.catalogCanvas.addEventListener(\"dblclick\",e=>{this.updateRotation(),this.model.save_changes()});let t=new u,i=new u;this.traitHandlers={_target:e=>{if(t.locked){t.unlock();return}i.lock();let a=e.split(\" \");this.aladin.gotoRaDec(a[0],a[1])},_fov:e=>{this.aladin.setFoV(e),this.updateWCS(),this.update2AxisFoV(),this.model.save_changes()},_rotation:e=>{this.aladin.setRotation(e),this.updateWCS(),this.update2AxisFoV(),this.model.save_changes()},_height:e=>{_(e,this.aladinDiv),this.updateWCS(),this.update2AxisFoV(),this.model.save_changes()},coo_frame:e=>{this.aladin.setFrame(e)},survey:e=>{this.aladin.setImageSurvey(e)},overlay_survey:e=>{e!==\"\"&&this.aladin.setOverlayImageLayer(e)},overlay_survey_opacity:e=>{let a=this.aladin.getOverlayImageLayer();a&&a.setAlpha(e)}};for(var n in this.traitHandlers){let e=this.traitHandlers[n];this.model.on(\"change:\"+n,(a,s)=>e(s))}this.eventHandlers={add_marker:this.messageHandler.handleAddMarker,save_view_as_image:this.messageHandler.handleSaveViewAsImage,add_fits:this.messageHandler.handleAddFits,add_catalog_from_URL:this.messageHandler.handleAddCatalogFromURL,add_MOC_from_URL:this.messageHandler.handleAddMOCFromURL,add_MOC_from_dict:this.messageHandler.handleAddMOCFromDict,add_overlay:this.messageHandler.handleAddOverlay,change_colormap:this.messageHandler.handleChangeColormap,get_JPG_thumbnail:this.messageHandler.handleGetJPGThumbnail,trigger_selection:this.messageHandler.handleTriggerSelection,add_table:this.messageHandler.handleAddTable},this.model.on(\"msg:custom\",(e,a)=>{let s=e.event_name,h=this.eventHandlers[s];if(h)h.call(this,e,a);else throw new Error(`Unknown event name: ${s}`)})}unsubscribeAll(){for(var t in this.traitHandlers)this.model.off(\"change:\"+t);this.model.off(\"msg:custom\")}};function w(o,t){t.classList.add(\"aladin-lite-lm-container\"),v(p+1);let i=o.get(\"_init_options\"),n={};for(let s in i)n[y(s)]=i[s];let e=document.createElement(\"div\");e.classList.add(\"aladin-widget\"),_(o.get(\"_height\"),e),e.id=`aladin-lite-div-${p}`;let a=new r.aladin(e,n);return t.appendChild(e),{aladin:a,aladinDiv:e}}async function k({model:o}){await r.init}function x({model:o,el:t}){let{aladin:i,aladinDiv:n}=w(o,t),e=new f(i,n,o);e.subscribeAll();let a=e.traitHandlers;for(let d in a){let m=o.get(d);m!==null&&a[d](m)}let s={...i.getFov()};o.set(\"_fov_xy\",{x:s[0],y:s[1]});let h={...i.getViewWCS()};return o.set(\"_wcs\",h),o.set(\"_is_loaded\",!0),o.save_changes(),()=>{e.unsubscribeAll()}}var $={initialize:k,render:x};export{$ as default};\n", "_fov": 0.2, "_fov_xy": {}, "_height": 400, "_init_options": {"show_simbad_pointer_control": true, "show_coo_grid_control": true, "show_settings_control": true, "show_context_menu": true, "_target": "M 1", "_fov": 0.2, "show_projection_control": false, "show_fullscreen_control": false}, "_is_loaded": false, "_is_reduced": false, "_model_module": "anywidget", "_model_module_version": "~0.9.*", "_model_name": "AnyModel", "_ready": false, "_rotation": 0.0, "_selected_objects": [], "_survey_body": "sky", "_target": "83.6324 22.0174", "_view_count": null, "_view_module": "anywidget", "_view_module_version": "~0.9.*", "_view_name": "AnyView", "_wcs": {}, "clicked_object": {}, "coo_frame": "ICRS", "layout": "IPY_MODEL_211c79333cc34e79bc0ed39ebb49aac8", "overlay_survey": "", "overlay_survey_opacity": 0.0, "projection": "SIN", "survey": "https://alaskybis.unistra.fr/DSS/DSSColor", "tabbable": null, "tooltip": null}}, "f89c3c1130494607802c8d93caed6112": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "08e3b0a3fa0a41a1a364a3be23c94a45": {"model_name": "ButtonStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ButtonStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "button_color": null, "font_family": null, "font_size": null, "font_style": null, "font_variant": null, "font_weight": null, "text_color": null, "text_decoration": null}}, "5ff3ffda6779449dbf42e40c54855dee": {"model_name": "ButtonModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ButtonModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ButtonView", "button_style": "", "description": "Select", "disabled": false, "icon": "", "layout": "IPY_MODEL_f89c3c1130494607802c8d93caed6112", "style": "IPY_MODEL_08e3b0a3fa0a41a1a364a3be23c94a45", "tabbable": null, "tooltip": null}}, "fd51174812554a4087b746cf36e6b643": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": "auto", "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": "auto", "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "9f3f1e3fdf964c4ca966dbedf8aa73f4": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "723d19327ba3438da08b32fbd6231f56": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_fd51174812554a4087b746cf36e6b643", "placeholder": "\u200b", "style": "IPY_MODEL_9f3f1e3fdf964c4ca966dbedf8aa73f4", "tabbable": null, "tooltip": null, "value": ""}}, "67a9e84faeef42ed8b28392023d64625": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": "stretch", "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": "flex", "flex": null, "flex_flow": "row", "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": "100%"}}, "bd8ea4311de745aeb13ed24a6360bdd3": {"model_name": "BoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "BoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "BoxView", "box_style": "", "children": ["IPY_MODEL_f7fca412334144ff9a5dcfea73ae3a6f", "IPY_MODEL_5ff3ffda6779449dbf42e40c54855dee", "IPY_MODEL_723d19327ba3438da08b32fbd6231f56"], "layout": "IPY_MODEL_67a9e84faeef42ed8b28392023d64625", "tabbable": null, "tooltip": null}}}, "version_major": 2, "version_minor": 0}
+{"state": {"f1c559c2cbd242d09e28138abe52a948": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": "50%"}}, "411f87ffb6384cdfa750e026b43a5402": {"model_name": "AnyModel", "model_module": "anywidget", "model_module_version": "~0.11.*", "state": {"_anywidget_id": "ipyaladin.widget.Aladin", "_base_layer_last_view": "https://alaskybis.unistra.fr/DSS/DSSColor", "_css": ".cell-output-ipywidget-background{background:transparent}.jp-OutputArea-output,.aladin-widget{background-color:transparent}.aladin-widget .aladin-measurement-div{max-height:100px}.lm-Widget.aladin-lite-lm-container{height:100%}\n", "_dom_classes": [], "_esm": "function y(o){o.charAt(0)===\"_\"&&(o=o.slice(1));let t=o.split(\"_\");for(let a=1;a<t.length;a++)t[a]=t[a].charAt(0).toUpperCase()+t[a].slice(1);return t.join(\"\")}function h(o){let t={};for(let a in o)t[y(a)]=o[a];return t}var u=class{locked=!1;unlock(){this.locked=!1}lock(){this.locked=!0}},p=-1;function f(o){p=o}function _(o,t){o==-1?t.style.height=\"100%\":t.style.height=`${o}px`}import C from\"https://esm.sh/aladin-lite@3.9.0-beta\";var d=C;var A=0,g=class{constructor(t,a){this.aladin=t,this.model=a}handleAddMarker(t){let a=h(t.options||{});a.name||(a.name=\"markers\");let n=d.catalog(a);this.aladin.addCatalog(n);let e=t.markers,i=[];for(let s of e)i.push(d.marker(s.lon,s.lat,{useMarkerDefaultIcon:a.useMarkerDefaultIcon|!1,popupTitle:s.title,popupDesc:s.description}));n.addSources(i)}async handleSaveViewAsImage(t){let a=t.path,n=t.format,e=t.with_logo,i=await this.aladin.getViewData(\"arraybuffer\",`image/${n}`,e);this.model.send({event_type:\"save_view_as_image\",path:a},null,[i])}handleAddFits(t,a){let n=h(t.options||{});n.name||(n.name=`image_${String(++A).padStart(3,\"0\")}`);let e=a[0],i=new Blob([e],{type:\"application/octet-stream\"}),s=URL.createObjectURL(i),l=this.aladin.createImageFITS(s,n,(r,m)=>{this.aladin.gotoRaDec(r,m),console.info(`FITS located at ra: ${r}, dec: ${m}`),URL.revokeObjectURL(s)});this.aladin.setOverlayImageLayer(l,n.name)}handleAddCatalogFromURL(t){let a=h(t.options||{});this.aladin.addCatalog(d.catalogFromURL(t.votable_URL,a))}handleAddMOCFromURL(t){let a=h(t.options||{});this.aladin.addMOC(d.MOCFromURL(t.moc_URL,a))}handleAddMOCFromDict(t){let a=h(t.options||{});this.aladin.addMOC(d.MOCFromJSON(t.moc_dict,a))}handleAddOverlay(t){let a=t.regions_infos,n=h(t.graphic_options||{});n.color||(n.color=\"red\");let e=d.graphicOverlay(n);this.aladin.addOverlay(e);for(let i of a){let s=i.infos;switch(i.region_type){case\"stcs\":e.addFootprints(d.footprintsFromSTCS(s.stcs,i.options));break;case\"circle\":e.add(d.circle(s.ra,s.dec,s.radius,i.options));break;case\"ellipse\":e.add(d.ellipse(s.ra,s.dec,s.a,s.b,s.theta,i.options));break;case\"line\":i.options.lineWidth=i.options.lineWidth||3,e.add(d.vector(s.ra1,s.dec1,s.ra2,s.dec2,i.options));break;case\"polygon\":e.add(d.polygon(s.vertices,i.options));break}}}handleRemoveOverlay=t=>{let a=t.overlay_names;for(let n of a)this.aladin.removeOverlay(n)};handleChangeColormap(t){this.aladin.getBaseImageLayer().setColormap(t.colormap)}handleGetJPGThumbnail(){this.aladin.exportAsPNG()}handleTriggerSelection(t){let a=t.selection_type;a===\"rectangle\"?a=\"rect\":a===\"polygon\"&&(a=\"poly\"),this.aladin.select(a)}handleAddTable(t,a){let n=h(t.options||{}),e=h(n.circleError||{}),i=h(n.ellipseError||{}),s=a[0].buffer,l=new TextDecoder(\"utf-8\"),r=new Blob([l.decode(s)]),m=URL.createObjectURL(r);n.onClick=\"showTable\";let b=n.shape||\"cross\";Object.keys(e).length!=0&&(n.shape=c=>c.data[e.radius]?d.circle(c.ra,c.dec,c.data[e.radius]*e.conversionRadius):b),Object.keys(i).length!=0&&(n.shape=c=>c.data[i.majAxis]&c.data[i.minAxis]?d.ellipse(c.ra,c.dec,c.data[i.majAxis]*i.conversionMajAxis,c.data[i.minAxis]*i.conversionMinAxis,c.data[i.angle]*i.conversionAngle):b),d.catalogFromURL(m,n,c=>{this.aladin.addCatalog(c)},!1),URL.revokeObjectURL(m)}};var v=class{constructor(t,a,n){this.aladin=t,this.aladinDiv=a,this.model=n,this.messageHandler=new g(t,n),this.currentDivNumber=parseInt(a.id.split(\"-\").pop())}isLastDiv(){if(this.currentDivNumber===p)return!0;let t=p;for(let a=t;a>=0;a--){let n=document.getElementById(`aladin-lite-div-${a}`);if(n&&n.style.display!==\"none\"){t=a;break}}return f(t),this.currentDivNumber===t}updateWCS(){this.isLastDiv()&&this.model.set(\"_wcs\",this.aladin.getViewWCS())}updateRotation(){this.isLastDiv()&&this.model.set(\"_rotation\",this.aladin.getRotation())}updateProjection(){this.isLastDiv()&&this.model.set(\"_projection\",this.aladin.getProjectionName())}update2AxisFoV(){if(!this.isLastDiv())return;let t=this.aladin.getFov();this.model.set(\"_fov_xy\",{x:t[0],y:t[1]})}subscribeAll(){this.aladin.on(\"positionChanged\",e=>{if(a.locked){a.unlock();return}t.lock();let i=[e.ra,e.dec];this.updateWCS(),this.updateRotation(),this.model.set(\"_target\",`${i[0]} ${i[1]}`),this.model.save_changes()}),this.aladin.on(\"zoomChanged\",e=>{this.model.set(\"_fov\",parseFloat(e.toFixed(5))),this.updateWCS(),this.update2AxisFoV(),this.isLastDiv()&&this.model.save_changes()}),this.aladin.on(\"cooFrameChanged\",()=>{this.updateWCS(),this.model.save_changes()}),this.aladin.on(\"resizeChanged\",(e,i)=>{if(e===1&&i===1){this.model.set(\"_is_reduced\",!0),this.model.save_changes();return}else this.model.set(\"_is_reduced\",!1);this.updateWCS(),this.update2AxisFoV(),this.model.set(\"_height\",i),this.model.save_changes()}),this.aladin.on(\"objectHovered\",e=>{e.data!==void 0&&this.model.send({event_type:\"object_hovered\",content:{ra:e.ra,dec:e.dec}})}),this.aladin.on(\"rotationChanged\",e=>{this.updateRotation(),this.isLastDiv()&&this.model.save_changes()}),this.aladin.on(\"projectionChanged\",()=>{this.updateProjection(),this.isLastDiv()&&this.model.save_changes()}),this.aladin.on(\"objectClicked\",e=>{if(e){let i={ra:e.ra||e.source.ra,dec:e.dec||e.source.dec};e.data!==void 0&&(i.data=e.data),e.source!==void 0&&(i.data=e.source.data),this.model.set(\"clicked_object\",i),this.model.send({event_type:\"object_clicked\",content:i}),this.model.save_changes()}}),this.aladin.on(\"stackChanged\",e=>{if(!e||!e.overlay){let l=this.aladin.getBaseImageLayer();if(this.model.set(\"_survey_body\",l.hipsBody||\"sky\"),e.change==\"removed\")return;this.updateWCS(),this.model.set(\"_base_layer_last_view\",l.id),this.model.save_changes();return}let i=e.overlay,s={name:i.name,type:i.type,change:e.change};this.model.send({event_type:\"stack_changed\",content:s})}),this.aladin.on(\"click\",e=>{this.model.send({event_type:\"click\",content:e})}),this.aladin.on(\"select\",e=>{let i=e.map(l=>l.map(r=>({ra:r.ra,dec:r.dec,data:r.data,x:r.x,y:r.y})));this.model.set(\"_selected_objects\",i),this.model.save_changes();let s=[];e.forEach(l=>{l.forEach(r=>{s.push({ra:r.ra,dec:r.dec,data:r.data,x:r.x,y:r.y})})}),this.model.send({event_type:\"select\",content:s})}),this.aladin.view.catalogCanvas.addEventListener(\"dblclick\",e=>{this.updateRotation(),this.model.save_changes()});let t=new u,a=new u;this.traitHandlers={_target:e=>{if(t.locked){t.unlock();return}a.lock();let i=e.split(\" \");this.aladin.gotoRaDec(i[0],i[1])},_fov:e=>{this.aladin.setFoV(e),this.updateWCS(),this.update2AxisFoV(),this.model.save_changes()},_rotation:e=>{this.aladin.setRotation(e),this.updateWCS(),this.update2AxisFoV(),this.model.save_changes()},_projection:e=>{this.aladin.setProjection(e),this.updateWCS(),this.update2AxisFoV(),this.model.save_changes()},_height:e=>{_(e,this.aladinDiv),this.updateWCS(),this.update2AxisFoV(),this.model.save_changes()},coo_frame:e=>{this.aladin.setFrame(e)},survey:e=>{this.aladin.setImageSurvey(e)},overlay_survey:e=>{e!==\"\"&&this.aladin.setOverlayImageLayer(e)},overlay_survey_opacity:e=>{let i=this.aladin.getOverlayImageLayer();i&&i.setOpacity(e)}};for(var n in this.traitHandlers){let e=this.traitHandlers[n];this.model.on(\"change:\"+n,(i,s)=>e(s))}this.eventHandlers={add_marker:this.messageHandler.handleAddMarker,save_view_as_image:this.messageHandler.handleSaveViewAsImage,add_fits:this.messageHandler.handleAddFits,add_catalog_from_URL:this.messageHandler.handleAddCatalogFromURL,add_MOC_from_URL:this.messageHandler.handleAddMOCFromURL,add_MOC_from_dict:this.messageHandler.handleAddMOCFromDict,add_overlay:this.messageHandler.handleAddOverlay,remove_overlay:this.messageHandler.handleRemoveOverlay,change_colormap:this.messageHandler.handleChangeColormap,get_JPG_thumbnail:this.messageHandler.handleGetJPGThumbnail,trigger_selection:this.messageHandler.handleTriggerSelection,add_table:this.messageHandler.handleAddTable},this.model.on(\"msg:custom\",(e,i)=>{let s=e.event_name,l=this.eventHandlers[s];if(l)l.call(this,e,i);else throw new Error(`Unknown event name: ${s}`)})}unsubscribeAll(){for(var t in this.traitHandlers)this.model.off(\"change:\"+t);this.model.off(\"msg:custom\")}};function k(o,t){t.classList.add(\"aladin-lite-lm-container\"),f(p+1);let a=o.get(\"_init_options\"),n={};for(let s in a)n[y(s)]=a[s];let e=document.createElement(\"div\");e.classList.add(\"aladin-widget\"),_(o.get(\"_height\"),e),e.id=`aladin-lite-div-${p}`;let i=new d.aladin(e,n);return t.appendChild(e),{aladin:i,aladinDiv:e}}async function w({model:o}){await d.init}function L({model:o,el:t}){let{aladin:a,aladinDiv:n}=k(o,t),e=new v(a,n,o);e.subscribeAll();let i=e.traitHandlers;for(let r in i){let m=o.get(r);m!==null&&i[r](m)}let s={...a.getFov()};o.set(\"_fov_xy\",{x:s[0],y:s[1]});let l={...a.getViewWCS()};return o.set(\"_wcs\",l),o.set(\"_is_loaded\",!0),o.save_changes(),()=>{e.unsubscribeAll()}}var $={initialize:w,render:L};export{$ as default};\n", "_fov": 0.2, "_fov_xy": {}, "_height": 400, "_init_options": {"show_simbad_pointer_control": true, "show_coo_grid_control": true, "show_settings_control": true, "show_context_menu": true, "_target": "M 1", "_fov": 0.2, "show_projection_control": false, "show_fullscreen_control": false}, "_is_loaded": false, "_is_reduced": false, "_model_module": "anywidget", "_model_module_version": "~0.11.*", "_model_name": "AnyModel", "_projection": "SIN", "_ready": false, "_rotation": 0.0, "_selected_objects": [], "_survey_body": "sky", "_target": "83.6324 22.0174", "_view_count": null, "_view_module": "anywidget", "_view_module_version": "~0.11.*", "_view_name": "AnyView", "_wcs": {}, "clicked_object": {}, "coo_frame": "ICRS", "layout": "IPY_MODEL_f1c559c2cbd242d09e28138abe52a948", "overlay_survey": "", "overlay_survey_opacity": 0.0, "survey": "https://alaskybis.unistra.fr/DSS/DSSColor", "tabbable": null, "tooltip": null}}, "7b4b835bfc2148749fe9304ac8283106": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "470f8088e95b4c30a90b9c081b81fb11": {"model_name": "ButtonStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ButtonStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "button_color": null, "font_family": null, "font_size": null, "font_style": null, "font_variant": null, "font_weight": null, "text_color": null, "text_decoration": null}}, "d138b894aa234bafa5dd97ff851c43f9": {"model_name": "ButtonModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ButtonModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ButtonView", "button_style": "", "description": "Select", "disabled": false, "icon": "", "layout": "IPY_MODEL_7b4b835bfc2148749fe9304ac8283106", "style": "IPY_MODEL_470f8088e95b4c30a90b9c081b81fb11", "tabbable": null, "tooltip": null}}, "25452499cbb643f6add0c5e96423a7df": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": "auto", "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": "auto", "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "de4f788d164b48fe9da6e0f06393d535": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "a24216294dd94584a10e21f43180d55b": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_25452499cbb643f6add0c5e96423a7df", "placeholder": "\u200b", "style": "IPY_MODEL_de4f788d164b48fe9da6e0f06393d535", "tabbable": null, "tooltip": null, "value": ""}}, "128a08be7f7d449cb302c2d873aefc25": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": "stretch", "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": "flex", "flex": null, "flex_flow": "row", "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": "100%"}}, "e60e13c83b334f03b29f5b6ab061e8c3": {"model_name": "BoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "BoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "BoxView", "box_style": "", "children": ["IPY_MODEL_411f87ffb6384cdfa750e026b43a5402", "IPY_MODEL_d138b894aa234bafa5dd97ff851c43f9", "IPY_MODEL_a24216294dd94584a10e21f43180d55b"], "layout": "IPY_MODEL_128a08be7f7d449cb302c2d873aefc25", "tabbable": null, "tooltip": null}}}, "version_major": 2, "version_minor": 0}
 </script></section>
 
 
@@ -588,13 +604,13 @@
 
 
   <div class="sidebar-secondary-item">
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../../_sources/_collections/notebooks/08_Rectangular-selection.ipynb.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div></div>
+
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/_collections/notebooks/08_Rectangular-selection.ipynb.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
 
 </div></div>
               
@@ -609,8 +625,8 @@
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -621,7 +637,7 @@
 
   <p class="copyright">
     
-      © Copyright 2025, Strasbourg Astronomical Date Centre (CDS).
+      © Copyright 2026, Strasbourg Astronomical Date Centre (CDS).
       <br/>
     
   </p>
@@ -630,7 +646,7 @@
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
     <br/>
   </p>
 </div>
@@ -644,7 +660,7 @@
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.18.0.
 </p></div>
       
     </div>
