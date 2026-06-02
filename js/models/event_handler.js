@@ -333,9 +333,8 @@ export default class EventHandler {
       },
       overlay_survey_opacity: (opacity) => {
         let overlay = this.aladin.getOverlayImageLayer();
-
         if (overlay) {
-          overlay.setAlpha(opacity);
+          overlay.setOpacity(opacity);
         }
       },
     };
