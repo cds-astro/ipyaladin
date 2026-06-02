@@ -23,6 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - introduction of overlay manager that tracks the overlays users add to and
   remove from the widget through both the GUI and API [#174]
 
+## Changed
+
+- aladin-lite version is now 3.9.0-beta [#178]
+
 ## [0.7.0]
 
 ## Added
