@@ -127,15 +127,6 @@ export default class EventHandler {
       this.model.save_changes();
     });
 
-    this.aladin.on("layerChanged", (imageLayer, layerName, state) => {
-      if (layerName === "base")
-        this.model.set("_survey_body", imageLayer.hipsBody || "sky");
-      if (layerName !== "base" || state !== "ADDED") return;
-      this.updateWCS();
-      this.model.set("_base_layer_last_view", imageLayer.id);
-      this.model.save_changes();
-    });
-
     this.aladin.on("resizeChanged", (width, height) => {
       // Skip resize event when the div is hidden
       if (width === 1 && height === 1) {
@@ -197,8 +188,17 @@ export default class EventHandler {
     });
 
     this.aladin.on("stackChanged", (state) => {
-      // ignoring any layer that is NOT an overlay
-      if (!state || !state.overlay) return;
+      // layers that are not overlays
+      if (!state || !state.overlay) {
+        const baseLayer = this.aladin.getBaseImageLayer();
+        this.model.set("_survey_body", baseLayer.hipsBody || "sky");
+        if (state["change"] == "removed") return;
+        this.updateWCS();
+        this.model.set("_base_layer_last_view", baseLayer.id);
+        this.model.save_changes();
+        return;
+      }
+      // now we handle overlays
       const overlay = state.overlay;
       const content = {
         name: overlay.name,
