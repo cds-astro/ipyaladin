@@ -147,6 +147,8 @@
     "    color=\"pink\",\n",
     "    ra_field=\"coo1\",\n",
     "    dec_field=\"coo2\",\n",
+    "    display_label=True,\n",
+    "    label_column=\"name\",\n",
     ")"
    ]
   },
