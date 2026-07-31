@@ -62,6 +62,7 @@ You can already try to load ipyaladin in a notebook.
 
 ```python
 from ipyaladin import Aladin
+
 aladin = Aladin()
 aladin
 ```
