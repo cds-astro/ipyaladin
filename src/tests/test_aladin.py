@@ -1,14 +1,17 @@
-from typing import Callable, Dict, Iterable, Union
+from __future__ import annotations
 
-from astropy.coordinates import Angle, SkyCoord, Longitude, Latitude
-import astropy.units as u
-from astropy.table import Column, Table
-import numpy as np
-import pytest
+from collections.abc import Iterable
+from typing import Callable
 from unittest.mock import Mock
 
+import astropy.units as u
+import numpy as np
+import pytest
+from astropy.coordinates import Angle, Latitude, Longitude, SkyCoord
+from astropy.table import Column, Table
+
 from ipyaladin import Aladin
-from ipyaladin.elements.error_shape import EllipseError, CircleError
+from ipyaladin.elements.error_shape import CircleError, EllipseError
 from ipyaladin.utils._coordinate_parser import _parse_coordinate_string
 
 from .test_coordinate_parser import test_is_coordinate_string_values
@@ -34,7 +37,7 @@ class MockResponse:
     def __init__(self) -> None:
         self.status_code = 200
 
-    def json(self) -> Dict:
+    def json(self) -> dict:
         """Return a mock JSON response."""
         return {
             "data": [
@@ -120,7 +123,7 @@ test_aladin_fov = [
 
 
 @pytest.mark.parametrize("angle", test_aladin_fov)
-def test_aladin_float_fov_set(angle: Union[float, u.Quantity]) -> None:
+def test_aladin_float_fov_set(angle: float | u.Quantity) -> None:
     """Test setting the angle of an Aladin object with a float.
 
     Parameters
@@ -136,7 +139,7 @@ def test_aladin_float_fov_set(angle: Union[float, u.Quantity]) -> None:
 
 
 @pytest.mark.parametrize("angle", test_aladin_fov)
-def test_aladin_angle_fov_set(angle: Union[float, u.Quantity]) -> None:
+def test_aladin_angle_fov_set(angle: float | u.Quantity) -> None:
     """Test setting the angle of an Aladin object with an Angle object.
 
     Parameters
@@ -162,7 +165,7 @@ test_aladin_rotation = [
 
 
 @pytest.mark.parametrize("angle", test_aladin_rotation)
-def test_aladin_rotation_set(angle: Union[float, u.Quantity]) -> None:
+def test_aladin_rotation_set(angle: float | u.Quantity) -> None:
     """Test setting the rotation of an Aladin object with a float or Quantity.
 
     Parameters
@@ -178,7 +181,7 @@ def test_aladin_rotation_set(angle: Union[float, u.Quantity]) -> None:
 
 
 @pytest.mark.parametrize("angle", test_aladin_rotation[:-2])
-def test_aladin_angle_rotation_set(angle: Union[float, u.Quantity]) -> None:
+def test_aladin_angle_rotation_set(angle: float | u.Quantity) -> None:
     """Test setting the rotation of an Aladin object with an Angle object.
 
     Parameters
@@ -193,7 +196,7 @@ def test_aladin_angle_rotation_set(angle: Union[float, u.Quantity]) -> None:
 
 
 @pytest.mark.parametrize("angle", test_aladin_rotation)
-def test_aladin_init_rotation(angle: Union[float, u.Quantity]) -> None:
+def test_aladin_init_rotation(angle: float | u.Quantity) -> None:
     """Test initializing an Aladin object with rotation set.
 
     Parameters
@@ -233,7 +236,7 @@ test_stcs_iterables = [
 @pytest.mark.parametrize("stcs_strings", test_stcs_iterables)
 def test_add_graphic_overlay_from_stcs_iterables(
     monkeypatch: Callable,
-    stcs_strings: Union[Iterable[str], str],
+    stcs_strings: Iterable[str] | str,
 ) -> None:
     """Test generating region overlay info from iterable STC-S string(s).
 
@@ -261,7 +264,7 @@ test_stcs_noniterables = [
 
 @pytest.mark.parametrize("stcs_strings", test_stcs_noniterables)
 def test_add_graphic_overlay_from_stcs_noniterables(
-    stcs_strings: Union[Iterable[str], str],
+    stcs_strings: Iterable[str] | str,
 ) -> None:
     """Test generating region overlay info from iterable STC-S string(s).
 
@@ -331,7 +334,7 @@ test_overlay_names = [
 @pytest.mark.parametrize("overlay_names", test_overlay_names)
 def test_remove_overlay(
     monkeypatch: Callable,
-    overlay_names: Union[Iterable[str], str],
+    overlay_names: Iterable[str] | str,
 ) -> None:
     """Test proper messages sent for removing overlays using their name string(s).
 

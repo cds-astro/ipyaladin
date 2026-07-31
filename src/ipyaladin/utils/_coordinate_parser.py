@@ -1,18 +1,17 @@
 import json
 import re
-from typing import Tuple
 import urllib.parse
 import urllib.request
 import warnings
 
-from astropy.coordinates import SkyCoord, Angle, Longitude, Latitude
+from astropy.coordinates import Angle, Latitude, Longitude, SkyCoord
 
 from ipyaladin.utils.exceptions import NameResolverWarning
 
 
 def _parse_coordinate_string(
     string: str, body: str = "sky"
-) -> Tuple[Longitude, Latitude]:
+) -> tuple[Longitude, Latitude]:
     """Parse a string containing coordinates.
 
     Parameters
@@ -123,7 +122,7 @@ def _is_coordinate_string(string: str) -> bool:
     return bool(re.match(regex, string))
 
 
-def _split_coordinate_string(coo: str) -> Tuple[str, str]:
+def _split_coordinate_string(coo: str) -> tuple[str, str]:
     """Split a string containing coordinates in two parts.
 
     Parameters

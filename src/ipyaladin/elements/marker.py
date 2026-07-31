@@ -1,7 +1,9 @@
-from dataclasses import dataclass
-from typing import Tuple, Union
+from __future__ import annotations
 
-from astropy.coordinates import SkyCoord, Longitude, Latitude
+from dataclasses import dataclass
+
+from astropy.coordinates import Latitude, Longitude, SkyCoord
+
 from ipyaladin.utils._coordinate_parser import _parse_coordinate_string
 
 
@@ -11,7 +13,7 @@ class Marker:
 
     def __init__(
         self,
-        position: Union[str, SkyCoord, Tuple[Longitude, Latitude]],
+        position: str | SkyCoord | tuple[Longitude, Latitude],
         title: str,
         description: str,
     ) -> None:
@@ -23,7 +25,7 @@ class Marker:
         elif isinstance(position, str):
             self.lon, self.lat = _parse_coordinate_string(position)
         elif (
-            isinstance(position, Tuple)
+            isinstance(position, tuple)
             and isinstance(position[0], Longitude)
             and isinstance(position[1], Latitude)
         ):
