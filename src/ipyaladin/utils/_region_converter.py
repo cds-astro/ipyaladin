@@ -1,17 +1,18 @@
-import numpy as np
+from __future__ import annotations
 
-from astropy.coordinates import SkyCoord, CartesianRepresentation, Angle
+import numpy as np
+from astropy.coordinates import Angle, CartesianRepresentation, SkyCoord
 from astropy.coordinates.matrix_utilities import rotation_matrix
 from astropy.units import Quantity
 
 try:
     from regions import (
-        RectangleSkyRegion,
-        PolygonSkyRegion,
-        Region,
         CircleSkyRegion,
         EllipseSkyRegion,
         LineSkyRegion,
+        PolygonSkyRegion,
+        RectangleSkyRegion,
+        Region,
     )
 except ImportError:
     RectangleSkyRegion = None
@@ -20,7 +21,6 @@ except ImportError:
     CircleSkyRegion = None
     EllipseSkyRegion = None
     LineSkyRegion = None
-from typing import Union
 
 
 def rectangle_to_polygon_region(region: RectangleSkyRegion) -> PolygonSkyRegion:
@@ -101,7 +101,7 @@ class RegionInfos:
 
     """
 
-    def __init__(self, region: Union[str, Region]) -> None:
+    def __init__(self, region: str | Region) -> None:
         self._region_parsers = {
             "str": self._from_stcs,
             "CircleSkyRegion": self._from_circle_sky_region,
@@ -113,7 +113,7 @@ class RegionInfos:
         self.options = {}
         self.from_region(region)
 
-    def from_region(self, region: Union[str, Region]) -> None:
+    def from_region(self, region: str | Region) -> None:
         """Parse a region to extract its information.
 
         Parameters

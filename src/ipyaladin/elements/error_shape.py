@@ -1,13 +1,15 @@
-from dataclasses import dataclass
-import math
-from typing import Iterable, Optional
+from __future__ import annotations
 
-from astropy.coordinates import Angle
+import math
+from collections.abc import Iterable
+from dataclasses import dataclass
+
 import astropy.units as u
+from astropy.coordinates import Angle
 
 
 def _error_radius_conversion_factor(
-    column_unit: u.Unit, probability: Optional[float] = None
+    column_unit: u.Unit, probability: float | None = None
 ) -> Iterable:
     """Return the product of Mahalanobis distance and unit conversion factor.
 

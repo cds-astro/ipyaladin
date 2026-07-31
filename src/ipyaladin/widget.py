@@ -5,13 +5,15 @@ This module provides a Python wrapper around the Aladin Lite JavaScript library.
 It allows to display astronomical images and catalogs in an interactive way.
 """
 
-from collections.abc import Callable, Iterable
-from json import JSONDecodeError
+from __future__ import annotations
+
 import functools
 import io
 import pathlib
+from collections.abc import Callable, Iterable
+from json import JSONDecodeError
 from pathlib import Path
-from typing import ClassVar, Dict, Final, List, Optional, Tuple, Union
+from typing import ClassVar, Final, Union
 
 try:  # drop this clause when we drop python 3.9
     from typing_extensions import TypeAlias
@@ -20,28 +22,28 @@ except ImportError:
 import warnings
 
 import anywidget
-from astropy.coordinates import SkyCoord, Angle, Longitude, Latitude
-from astropy.coordinates.name_resolve import NameResolveError
-from astropy.table.table import QTable, Table
-from astropy.io import fits as astropy_fits
-from astropy.io.fits import HDUList
-from astropy import units as u
-from astropy.units import Quantity
-from astropy.wcs import WCS
 import numpy as np
 import traitlets
+from astropy import units as u
+from astropy.coordinates import Angle, Latitude, Longitude, SkyCoord
+from astropy.coordinates.name_resolve import NameResolveError
+from astropy.io import fits as astropy_fits
+from astropy.io.fits import HDUList
+from astropy.table.table import QTable, Table
+from astropy.units import Quantity
+from astropy.wcs import WCS
 
-from .utils.exceptions import WidgetReducedError, WidgetNotReadyError
-from .utils._coordinate_parser import _parse_coordinate_string
-from .utils.call_store import CallStore
 from .elements.error_shape import (
     CircleError,
     EllipseError,
     _error_radius_conversion_factor,
 )
 from .elements.marker import Marker
-from .overlays.overlay_manager import OverlayManager
 from .overlays.overlay import Overlay
+from .overlays.overlay_manager import OverlayManager
+from .utils._coordinate_parser import _parse_coordinate_string
+from .utils.call_store import CallStore
+from .utils.exceptions import WidgetNotReadyError, WidgetReducedError
 
 try:
     from regions import (
@@ -62,15 +64,15 @@ except ImportError:
     Region = None
     Regions = None
 from traitlets import (
+    Any,
+    Bool,
     Float,
     Int,
     Unicode,
-    Bool,
-    Any,
 )
 
 SupportedRegion: TypeAlias = Union[
-    List[
+    list[
         Union[
             CircleSkyRegion,
             EllipseSkyRegion,
@@ -88,7 +90,7 @@ SupportedRegion: TypeAlias = Union[
 ]
 
 # supported projections: https://cds-astro.github.io/aladin-lite/Aladin.html#setProjection
-SupportedProjections: List[str] = ["TAN", "STG", "SIN", "ZEA", "MER", "AIT", "MOL"]
+SupportedProjections: list[str] = ["TAN", "STG", "SIN", "ZEA", "MER", "AIT", "MOL"]
 
 
 def widget_should_be_loaded(function: Callable) -> Callable:
@@ -197,7 +199,7 @@ class Aladin(anywidget.AnyWidget):
         help="A list of catalogs selected by the user.",
     ).tag(sync=True)
     # listener callback is on the python side and contains functions to link to events
-    listener_callback: ClassVar[Dict[str, callable]] = {}
+    listener_callback: ClassVar[dict[str, callable]] = {}
 
     # overlay survey
     _survey_body = Unicode(
@@ -334,9 +336,7 @@ class Aladin(anywidget.AnyWidget):
             }
             self._overlay_manager.add_overlay(overlay_info)
 
-    def _send_or_queue(
-        self, message: dict, buffers: Optional[list[Any]] = None
-    ) -> None:
+    def _send_or_queue(self, message: dict, buffers: list[Any] | None = None) -> None:
         if not self._is_loaded:
             self._call_store.add(
                 self.send,
@@ -348,7 +348,7 @@ class Aladin(anywidget.AnyWidget):
         self.send(message, buffers=buffers)
 
     @property
-    def selected_objects(self) -> List[Table]:
+    def selected_objects(self) -> list[Table]:
         """The list of catalogs selected by the user.
 
         Returns
@@ -365,7 +365,7 @@ class Aladin(anywidget.AnyWidget):
         return catalogs
 
     @property
-    def overlays(self) -> List:
+    def overlays(self) -> list:
         """The list of overlays on the widget.
 
         Returns
@@ -420,7 +420,7 @@ class Aladin(anywidget.AnyWidget):
         return Angle(self._rotation, unit="deg")
 
     @rotation.setter
-    def rotation(self, rotation: Union[float, Angle, Quantity]) -> None:
+    def rotation(self, rotation: float | Angle | Quantity) -> None:
         if isinstance(rotation, u.Quantity):
             rotation = rotation.to_value(u.deg)
         if np.isclose(self._rotation, rotation):
@@ -480,7 +480,7 @@ class Aladin(anywidget.AnyWidget):
         return WCS(self._wcs)
 
     @property
-    def fov_xy(self) -> Tuple[Angle, Angle]:
+    def fov_xy(self) -> tuple[Angle, Angle]:
         """The field of view of the Aladin Lite along the two axes.
 
         Returns
@@ -520,7 +520,7 @@ class Aladin(anywidget.AnyWidget):
         return Angle(self._fov, unit="deg")
 
     @fov.setter
-    def fov(self, fov: Union[float, Angle, Quantity]) -> None:
+    def fov(self, fov: float | Angle | Quantity) -> None:
         if isinstance(fov, Quantity):
             fov = fov.to_value(u.deg)
         if np.isclose(fov, self._fov):
@@ -529,7 +529,7 @@ class Aladin(anywidget.AnyWidget):
         self._fov = fov
 
     @property
-    def target(self) -> Union[SkyCoord, Tuple[float, float]]:
+    def target(self) -> SkyCoord | tuple[float, float]:
         """The target of the Aladin Lite widget.
 
         The target can be provided as coordinates (either
@@ -569,8 +569,8 @@ class Aladin(anywidget.AnyWidget):
         return Longitude(lon, unit="deg"), Latitude(lat, unit="deg")
 
     @target.setter
-    def target(self, target: Union[str, SkyCoord, Tuple[float, float]]) -> None:
-        if isinstance(target, Tuple):
+    def target(self, target: str | SkyCoord | tuple[float, float]) -> None:
+        if isinstance(target, tuple):
             lon, lat = target[0].deg, target[1].deg
         elif isinstance(target, str):  # If the target is a string, parse it
             try:
@@ -586,9 +586,9 @@ class Aladin(anywidget.AnyWidget):
                     ) from e
                 # If the widget is ready, the error is caused by the target name
                 # that is not a valid celestial object name
-                raise e
-        elif not isinstance(target, SkyCoord) and not isinstance(target, Tuple):
-            raise ValueError(
+                raise
+        elif not isinstance(target, SkyCoord) and not isinstance(target, tuple):
+            raise ValueError(  # noqa: TRY004
                 "target must be a string, an astropy.coordinates.SkyCoord "
                 "object or a tuple of two angle-like astropy quantities."
             )
@@ -599,7 +599,7 @@ class Aladin(anywidget.AnyWidget):
         self._target = f"{lon} {lat}"
 
     def add_markers(
-        self, markers: Union[Marker, List[Marker]], **catalog_options: any
+        self, markers: Marker | list[Marker], **catalog_options: any
     ) -> None:
         """Add markers to the Aladin Lite widget.
 
@@ -659,7 +659,7 @@ class Aladin(anywidget.AnyWidget):
 
     @widget_should_be_loaded
     def save_view_as_image(
-        self, path: Union[str, Path], image_format: str = "png", with_logo: bool = True
+        self, path: str | Path, image_format: str = "png", with_logo: bool = True
     ) -> None:
         """Save the current view of the widget as an image file.
 
@@ -745,7 +745,7 @@ class Aladin(anywidget.AnyWidget):
         self.send({"event_name": "get_JPG_thumbnail"})
 
     def add_catalog_from_URL(
-        self, votable_URL: str, votable_options: Optional[dict] = None
+        self, votable_URL: str, votable_options: dict | None = None
     ) -> None:
         """Load a VOTable table from an url and load its data into the widget.
 
@@ -781,7 +781,7 @@ class Aladin(anywidget.AnyWidget):
         return overlay_info
 
     @widget_should_be_loaded
-    def add_fits(self, fits: Union[str, Path, HDUList], **image_options: any) -> None:
+    def add_fits(self, fits: str | Path | HDUList, **image_options: any) -> None:
         """Load a FITS image into the widget.
 
         Parameters
@@ -891,9 +891,7 @@ class Aladin(anywidget.AnyWidget):
 
         return overlay_info
 
-    def add_moc_from_URL(
-        self, moc_URL: str, moc_options: Optional[dict] = None
-    ) -> None:
+    def add_moc_from_URL(self, moc_URL: str, moc_options: dict | None = None) -> None:
         """Load a MOC from a URL and display it in Aladin Lite widget.
 
         Parameters
@@ -917,7 +915,7 @@ class Aladin(anywidget.AnyWidget):
         self.add_moc(moc_URL, **moc_options)
 
     def add_moc_from_dict(
-        self, moc_dict: dict, moc_options: Optional[dict] = None
+        self, moc_dict: dict, moc_options: dict | None = None
     ) -> None:
         """Load a MOC from a dict object and display it in Aladin Lite widget.
 
@@ -944,9 +942,9 @@ class Aladin(anywidget.AnyWidget):
 
     def add_table(
         self,
-        table: Union[QTable, Table],
+        table: QTable | Table,
         *,
-        shape: Union[str, CircleError, EllipseError] = "cross",
+        shape: str | CircleError | EllipseError = "cross",
         **table_options: any,
     ) -> None:
         """Load a table into the widget.
@@ -1087,7 +1085,7 @@ class Aladin(anywidget.AnyWidget):
         regions_infos = []
         for region_element in region_list:
             if not isinstance(region_element, Region):
-                raise ValueError(
+                raise ValueError(  # noqa: TRY004
                     "region must a `~regions` object or a list of `~regions` objects. "
                     "See the documentation for the supported region types."
                 )
@@ -1121,7 +1119,7 @@ class Aladin(anywidget.AnyWidget):
         return overlay_info
 
     def add_overlay_from_stcs(
-        self, stc_string: Union[Iterable[str], str], **overlay_options: any
+        self, stc_string: Iterable[str] | str, **overlay_options: any
     ) -> None:
         """Add an overlay layer defined by an STC-S string.
 
@@ -1145,7 +1143,7 @@ class Aladin(anywidget.AnyWidget):
         self.add_graphic_overlay_from_stcs(stc_string, **overlay_options)
 
     def add_graphic_overlay_from_stcs(
-        self, stc_string: Union[Iterable[str], str], **overlay_options: any
+        self, stc_string: Iterable[str] | str, **overlay_options: any
     ) -> None:
         """Add an overlay layer defined by an STC-S string.
 
@@ -1198,9 +1196,7 @@ class Aladin(anywidget.AnyWidget):
 
         return overlay_info
 
-    def remove_overlay(
-        self, overlay: Union[Iterable[str, Overlay], str, Overlay]
-    ) -> None:
+    def remove_overlay(self, overlay: Iterable[str, Overlay] | str | Overlay) -> None:
         """Remove an overlay layer defined by a string.
 
         Parameters

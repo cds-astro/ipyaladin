@@ -1,12 +1,12 @@
-from typing import Tuple
+import pytest
+from astropy.coordinates import SkyCoord
+
 from ipyaladin.utils._coordinate_parser import (
+    _is_coordinate_string,
+    _is_hour_angle_string,
     _parse_coordinate_string,
     _split_coordinate_string,
-    _is_hour_angle_string,
-    _is_coordinate_string,
 )
-from astropy.coordinates import SkyCoord
-import pytest
 
 test_is_coordinate_string_values = [
     ("M 31", False),
@@ -70,7 +70,7 @@ test_split_coordinate_string_values = [
 
 
 @pytest.mark.parametrize(("inp", "expected"), test_split_coordinate_string_values)
-def test_split_coordinate_string(inp: str, expected: Tuple[str, str]) -> None:
+def test_split_coordinate_string(inp: str, expected: tuple[str, str]) -> None:
     """Test the function _split_coordinate_string.
 
     Parameters

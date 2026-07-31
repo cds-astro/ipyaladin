@@ -1,19 +1,21 @@
-from astropy.table import Table
-from astropy.coordinates import SkyCoord, Angle
+from __future__ import annotations
+
+import re
+import warnings
+from collections.abc import Iterable
+from typing import Callable
+from unittest.mock import Mock
+
 import astropy.units as u
 import pytest
-from unittest.mock import Mock
-import warnings
-import re
-from typing import Callable, Iterable, Union
-
-from ipyaladin import Aladin
-from ipyaladin.overlays.overlay import Overlay, OverlayType
-from ipyaladin.elements.error_shape import EllipseError, CircleError
-from ipyaladin import Marker
-from regions import CircleSkyRegion
+from astropy.coordinates import Angle, SkyCoord
+from astropy.table import Table
 from mocpy import MOC
+from regions import CircleSkyRegion
 
+from ipyaladin import Aladin, Marker
+from ipyaladin.elements.error_shape import CircleError, EllipseError
+from ipyaladin.overlays.overlay import Overlay, OverlayType
 
 aladin = Aladin()
 aladin._is_loaded = True
@@ -457,7 +459,7 @@ test_overlays = [
 @pytest.mark.parametrize("overlays", test_overlays)
 def test_remove_overlay(
     monkeypatch: Callable,
-    overlays: Union[Iterable[Union[str, Overlay]], str, Overlay],
+    overlays: Iterable[str | Overlay] | str | Overlay,
 ) -> None:
     """Test proper messages sent for removing overlays.
 
@@ -595,7 +597,7 @@ test_mocs = [
 
 @pytest.mark.parametrize("moc", test_mocs)
 def test_update_add_moc(
-    moc: Union[MOC, str, dict],
+    moc: MOC | str | dict,
 ) -> None:
     """Test update overlay info from adding moc."""
     aladin = Aladin()

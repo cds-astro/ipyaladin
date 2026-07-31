@@ -6,17 +6,19 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-import tomllib
 from pathlib import Path
+
+import tomllib
 
 with Path.open("../pyproject.toml", "rb") as config:
     toml = tomllib.load(config)
 import datetime
+
 from ipyaladin import __version__
 
 project = toml["project"]["name"]
 author = "Strasbourg Astronomical Date Centre (CDS)"
-copyright = f"{datetime.datetime.now().year}, {author}"  # noqa: A001
+copyright = f"{datetime.datetime.now(tz=datetime.UTC).year}, {author}"  # noqa: A001
 release = __version__
 
 # -- General configuration ---------------------------------------------------

@@ -3,7 +3,7 @@ class WidgetReducedError(ValueError):
 
     def __init__(self, message: str) -> None:
         self.message = message
-        super(WidgetReducedError, self).__init__(message)
+        super().__init__(message)
 
 
 class WidgetNotReadyError(OSError):
@@ -11,7 +11,7 @@ class WidgetNotReadyError(OSError):
 
     def __init__(self, message: str) -> None:
         self.message = message
-        super(WidgetNotReadyError, self).__init__(message)
+        super().__init__(message)
 
 
 class NameResolverWarning(UserWarning):
@@ -19,4 +19,4 @@ class NameResolverWarning(UserWarning):
 
     def __init__(self, message: str) -> None:
         self.message = message
-        super(NameResolverWarning, self).__init__(message)
+        super().__init__(message)
