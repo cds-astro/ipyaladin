@@ -15,7 +15,7 @@ def _error_radius_conversion_factor(
 
     Parameters
     ----------
-    column: `~astropy.units.core.Unit`
+    column_unit: `~astropy.units.core.Unit`
         The unit of the column containing the standard deviations. Should be an
         angle unit.
     probability: float, optional
