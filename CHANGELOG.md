@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## Changed
+
+- when adding an overlay from an astropy region, the graphic options are now first taken
+  from the `regions.RegionVisual`, and then from the provided keyword arguments. Before,
+  the keyword arguments were ignored [#190]
+
 ## [0.8.0]
 
 ## Added

@@ -89,15 +89,25 @@ export default class MessageHandler {
     this.aladin.addOverlay(overlay);
     for (const region of regions) {
       const infos = region["infos"];
+      const combined_graphic_options = Object.assign(
+        {},
+        graphic_options,
+        region.options,
+      );
       switch (region["region_type"]) {
         case "stcs":
           overlay.addFootprints(
-            A.footprintsFromSTCS(infos.stcs, region.options),
+            A.footprintsFromSTCS(infos.stcs, combined_graphic_options),
           );
           break;
         case "circle":
           overlay.add(
-            A.circle(infos.ra, infos.dec, infos.radius, region.options),
+            A.circle(
+              infos.ra,
+              infos.dec,
+              infos.radius,
+              combined_graphic_options,
+            ),
           );
           break;
         case "ellipse":
@@ -108,7 +118,7 @@ export default class MessageHandler {
               infos.a,
               infos.b,
               infos.theta,
-              region.options,
+              combined_graphic_options,
             ),
           );
           break;
@@ -121,12 +131,12 @@ export default class MessageHandler {
               infos.dec1,
               infos.ra2,
               infos.dec2,
-              region.options,
+              combined_graphic_options,
             ),
           );
           break;
         case "polygon":
-          overlay.add(A.polygon(infos.vertices, region.options));
+          overlay.add(A.polygon(infos.vertices, combined_graphic_options));
           break;
       }
     }
