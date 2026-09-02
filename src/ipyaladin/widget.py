@@ -1040,7 +1040,9 @@ class Aladin(anywidget.AnyWidget):
             or a list of regions from the
             `regions package <https://astropy-regions.readthedocs.io>`_.
         graphic_options: keyword arguments
-            The options for the graphic overlay. Use Region visual for region options.
+            The options for the graphic overlay. If you use `~regions.RegionVisual` they
+            will take precedence over these, see the note for the supported visuals
+            parameters.
             See `Aladin Lite's graphic overlay options
             <https://cds-astro.github.io/aladin-lite/A.html>`_
 
