@@ -15,10 +15,11 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "from ipyaladin import Aladin, CircleError, EllipseError\n",
-    "from astropy.table import QTable\n",
     "import astropy.units as u\n",
-    "from astroquery.simbad import Simbad"
+    "from astropy.table import QTable\n",
+    "from astroquery.simbad import Simbad\n",
+    "\n",
+    "from ipyaladin import Aladin, CircleError, EllipseError"
    ]
   },
   {

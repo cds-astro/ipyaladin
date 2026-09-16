@@ -14,9 +14,11 @@
    "metadata": {},
    "outputs": [],
    "source": [
+    "from pathlib import Path\n",
+    "\n",
     "from astropy.coordinates import Angle, SkyCoord\n",
-    "from ipyaladin import Aladin, Marker\n",
-    "from pathlib import Path"
+    "\n",
+    "from ipyaladin import Aladin, Marker"
    ]
   },
   {

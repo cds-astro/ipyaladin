@@ -20,12 +20,10 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "from ipyaladin import Aladin\n",
-    "\n",
+    "import matplotlib.pyplot as plt\n",
     "from astropy.coordinates import Angle, SkyCoord\n",
     "from astropy.io import fits\n",
     "from astropy.wcs import WCS\n",
-    "import matplotlib.pyplot as plt\n",
     "from regions import (\n",
     "    CircleSkyRegion,\n",
     "    EllipseSkyRegion,\n",
@@ -33,7 +31,9 @@
     "    PolygonSkyRegion,\n",
     "    RectangleSkyRegion,\n",
     "    RegionVisual,\n",
-    ")"
+    ")\n",
+    "\n",
+    "from ipyaladin import Aladin"
    ]
   },
   {
@@ -109,7 +109,7 @@
     "line = LineSkyRegion(\n",
     "    start=center,\n",
     "    end=center.directional_offset_by(Angle(0, \"deg\"), Angle(0.5, \"deg\")),\n",
-    "    visual=RegionVisual(edgecolor=\"green\"),\n",
+    "    visual=RegionVisual(color=\"green\"),\n",
     ")\n",
     "polygon = PolygonSkyRegion(\n",
     "    vertices=SkyCoord(\n",

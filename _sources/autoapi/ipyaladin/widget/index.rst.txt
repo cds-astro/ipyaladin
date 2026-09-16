@@ -141,7 +141,7 @@ Module Contents
 
 
    .. py:property:: selected_objects
-      :type: List[astropy.table.table.Table]
+      :type: list[astropy.table.table.Table]
 
 
       
@@ -171,7 +171,7 @@ Module Contents
 
 
    .. py:property:: overlays
-      :type: List
+      :type: list
 
 
       
@@ -336,7 +336,7 @@ Module Contents
 
 
    .. py:property:: fov_xy
-      :type: Tuple[astropy.coordinates.Angle, astropy.coordinates.Angle]
+      :type: tuple[astropy.coordinates.Angle, astropy.coordinates.Angle]
 
 
       
@@ -403,7 +403,7 @@ Module Contents
 
 
    .. py:property:: target
-      :type: Union[astropy.coordinates.SkyCoord, Tuple[float, float]]
+      :type: astropy.coordinates.SkyCoord | tuple[float, float]
 
 
       
@@ -450,7 +450,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: add_markers(markers: Union[ipyaladin.elements.marker.Marker, List[ipyaladin.elements.marker.Marker]], **catalog_options: any) -> None
+   .. py:method:: add_markers(markers: ipyaladin.elements.marker.Marker | list[ipyaladin.elements.marker.Marker], **catalog_options: any) -> None
 
       
       Add markers to the Aladin Lite widget.
@@ -490,7 +490,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: save_view_as_image(path: Union[str, pathlib.Path], image_format: str = 'png', with_logo: bool = True) -> None
+   .. py:method:: save_view_as_image(path: str | pathlib.Path, image_format: str = 'png', with_logo: bool = True) -> None
 
       
       Save the current view of the widget as an image file.
@@ -600,7 +600,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: add_catalog_from_URL(votable_URL: str, votable_options: Optional[dict] = None) -> None
+   .. py:method:: add_catalog_from_URL(votable_URL: str, votable_options: dict | None = None) -> None
 
       
       Load a VOTable table from an url and load its data into the widget.
@@ -631,7 +631,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: add_fits(fits: Union[str, pathlib.Path, astropy.io.fits.HDUList], **image_options: any) -> None
+   .. py:method:: add_fits(fits: str | pathlib.Path | astropy.io.fits.HDUList, **image_options: any) -> None
 
       
       Load a FITS image into the widget.
@@ -699,7 +699,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: add_moc_from_URL(moc_URL: str, moc_options: Optional[dict] = None) -> None
+   .. py:method:: add_moc_from_URL(moc_URL: str, moc_options: dict | None = None) -> None
 
       
       Load a MOC from a URL and display it in Aladin Lite widget.
@@ -731,7 +731,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: add_moc_from_dict(moc_dict: dict, moc_options: Optional[dict] = None) -> None
+   .. py:method:: add_moc_from_dict(moc_dict: dict, moc_options: dict | None = None) -> None
 
       
       Load a MOC from a dict object and display it in Aladin Lite widget.
@@ -764,7 +764,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: add_table(table: Union[astropy.table.table.QTable, astropy.table.table.Table], *, shape: Union[str, ipyaladin.elements.error_shape.CircleError, ipyaladin.elements.error_shape.EllipseError] = 'cross', **table_options: any) -> None
+   .. py:method:: add_table(table: astropy.table.table.QTable | astropy.table.table.Table, *, shape: str | ipyaladin.elements.error_shape.CircleError | ipyaladin.elements.error_shape.EllipseError = 'cross', **table_options: any) -> None
 
       
       Load a table into the widget.
@@ -833,7 +833,9 @@ Module Contents
               `regions package <https://astropy-regions.readthedocs.io>`_.
 
           **graphic_options: keyword arguments**
-              The options for the graphic overlay. Use Region visual for region options.
+              The options for the graphic overlay. If you use `~regions.RegionVisual` they
+              will take precedence over these, see the note for the supported visuals
+              parameters.
               See `Aladin Lite's graphic overlay options
               <https://cds-astro.github.io/aladin-lite/A.html>`_
 
@@ -877,7 +879,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: add_overlay_from_stcs(stc_string: Union[collections.abc.Iterable[str], str], **overlay_options: any) -> None
+   .. py:method:: add_overlay_from_stcs(stc_string: collections.abc.Iterable[str] | str, **overlay_options: any) -> None
 
       
       Add an overlay layer defined by an STC-S string.
@@ -910,7 +912,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: add_graphic_overlay_from_stcs(stc_string: Union[collections.abc.Iterable[str], str], **overlay_options: any) -> None
+   .. py:method:: add_graphic_overlay_from_stcs(stc_string: collections.abc.Iterable[str] | str, **overlay_options: any) -> None
 
       
       Add an overlay layer defined by an STC-S string.
@@ -950,7 +952,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: remove_overlay(overlay: Union[collections.abc.Iterable[str, ipyaladin.overlays.overlay.Overlay], str, ipyaladin.overlays.overlay.Overlay]) -> None
+   .. py:method:: remove_overlay(overlay: collections.abc.Iterable[str, ipyaladin.overlays.overlay.Overlay] | str | ipyaladin.overlays.overlay.Overlay) -> None
 
       
       Remove an overlay layer defined by a string.
