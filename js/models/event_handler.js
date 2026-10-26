@@ -353,6 +353,7 @@ export default class EventHandler {
       trigger_selection: this.messageHandler.handleTriggerSelection,
       add_table: this.messageHandler.handleAddTable,
       select_by_mask: this.messageHandler.handleSelectByMask,
+      filter_by_mask: this.messageHandler.handleFilterByMask,
     };
 
     this.model.on("msg:custom", (msg, buffers) => {

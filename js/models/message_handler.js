@@ -242,4 +242,29 @@ export default class MessageHandler {
       });
     }
   }
+
+  handleFilterByMask(msg) {
+    const overlay_name = msg["overlay_name"];
+    const mask = msg["mask"];
+
+    // Find the specified overlay.
+    let overlay = null;
+    for (const o of this.aladin.getOverlays()) {
+      if (o.name === overlay_name) {
+        overlay = o;
+        break;
+      }
+    }
+
+    // Supply a filter function that uses the mask to determine which sources are to be shown.
+    // false means the corresponding source will be hidden.
+    if (overlay && overlay.type === "catalog") {
+      overlay.filterFn = (src) => {
+        return mask[src.rowIdx];
+      };
+
+      // Report the change to ensure a redraw.
+      overlay.reportChange();
+    }
+  }
 }
