@@ -1249,6 +1249,38 @@ class Aladin(anywidget.AnyWidget):
         """
         self.send({"event_name": "change_colormap", "colormap": color_map_name})
 
+    @widget_should_be_loaded
+    def select_by_mask(
+        self,
+        overlay: str | Overlay,
+        mask: Iterable[bool],
+    ) -> None:
+        """Select sources in a catalog overlay using a boolean mask.
+
+        Each mask value corresponds to the source at the same row index in the
+        catalog. Sources with a true value are selected; sources with a false
+        value are not selected.
+
+        Parameters
+        ----------
+        overlay : str or Overlay
+            The name of the catalog overlay or its `Overlay` object.
+        mask : Iterable[bool]
+            Boolean values aligned with the catalog source row indices. The mask
+            should contain one value for each source in the catalog.
+
+        """
+        if isinstance(overlay, Overlay):
+            overlay_name = overlay.name
+        elif isinstance(overlay, str):
+            overlay_name = overlay
+        else:
+            raise TypeError("overlay must be a str or Overlay.")
+
+        self.send(
+            {"event_name": "select_by_mask", "overlay_name": overlay_name, "mask": mask}
+        )
+
     def selection(self, selection_type: str = "rectangle") -> None:
         """Trigger the selection tool.
 

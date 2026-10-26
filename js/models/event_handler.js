@@ -352,6 +352,7 @@ export default class EventHandler {
       get_JPG_thumbnail: this.messageHandler.handleGetJPGThumbnail,
       trigger_selection: this.messageHandler.handleTriggerSelection,
       add_table: this.messageHandler.handleAddTable,
+      select_by_mask: this.messageHandler.handleSelectByMask,
     };
 
     this.model.on("msg:custom", (msg, buffers) => {
