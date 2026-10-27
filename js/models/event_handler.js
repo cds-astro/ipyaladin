@@ -88,7 +88,14 @@ export default class EventHandler {
   }
 
   /**
+   * Called when we might have selection updates to report (currently in click handling).
    *
+   * For each layer whose selections are being monitored, create a selection mask
+   * for that layer based on aladin's current selections, and send it to Python
+   * in a selected_mask message.
+   *
+   * We could further reduce masks being sent by caching the last selection mask for
+   * each layer and making sure the new mask is different before sending the message.
    */
   sendSelectedMasks() {
     const selectedObjectLayers = this.aladin.view.selection || [];
@@ -127,48 +134,6 @@ export default class EventHandler {
             mask: selectedMask,
           },
         });
-      }
-    }
-  }
-
-  /**
-   *
-   */
-  sendSelectedMasksOrig() {
-    const selectedObjectLayers = this.aladin.view.selection || [];
-
-    for (const selectedObjectsForCatalog of selectedObjectLayers) {
-      // Peek into each layer's selected objects to see if it is a layer we care about.
-      // If not, we can skip it.
-      //
-      // For now we will only track catalog layers, so the selected objects in our
-      // catalog layers are sources that know they are in a catalog layer.
-      if (selectedObjectsForCatalog.length > 0) {
-        const source = selectedObjectsForCatalog[0];
-        const catalog = source?.catalog;
-        if (catalog) {
-          const name = catalog.name;
-          const num_sources = catalog.getSources().length;
-          if (this.listenedLayers.has(name)) {
-            // Find the indices of the selected objects.
-            const selectedIndices = selectedObjectsForCatalog.map(
-              (src) => src.rowIdx,
-            );
-
-            // Create the selection mask from the indices.
-            const selectedMask = Array(num_sources).fill(false);
-            selectedIndices.forEach((i) => (selectedMask[i] = true));
-
-            // Send the mask along with the layer name.
-            this.model.send({
-              event_type: "selected_mask",
-              content: {
-                overlay_name: name,
-                mask: selectedMask,
-              },
-            });
-          }
-        }
       }
     }
   }
