@@ -320,6 +320,12 @@ class Aladin(anywidget.AnyWidget):
                 self.handle_overlay_removed(content["name"])
             elif content["change"] == "added":
                 self.handle_overlay_added(content["name"], content["type"])
+        elif event_type == "selected_mask":
+            name = message["content"]["overlay_name"]
+            if name in self._overlay_manager:
+                callback = self._overlay_manager[name].get("selected_mask_listener")
+                if callback is not None:
+                    callback(message["content"]["mask"])
 
     def handle_overlay_removed(self, overlay_name: str) -> None:
         """Remove overlay from _overlay_manager dict."""
@@ -945,6 +951,7 @@ class Aladin(anywidget.AnyWidget):
         table: QTable | Table,
         *,
         shape: str | CircleError | EllipseError = "cross",
+        selected_mask_listener: Callable | None = None,
         **table_options: any,
     ) -> None:
         """Load a table into the widget.
@@ -964,6 +971,10 @@ class Aladin(anywidget.AnyWidget):
             that adapt the size of the drawn shapes (circles or ellipses) to error
             columns.
             See example notebook `04_Importing_Tables`.
+        selected_mask_listener: Callable
+            Python function that will be called if the selected_mask changes for
+            the catalog.  It should expect a list of booleans that represent the
+            current selections for the layer.
         **table_options
             Keyword arguments. They mostly give control on the visual aspects of the
             table. If the coordinates cannot be detected automatically, then you can
@@ -1008,17 +1019,25 @@ class Aladin(anywidget.AnyWidget):
         table_options = self._overlay_manager.common_overlay_handling(
             table_options, "catalog"
         )
+        listen_to = (
+            table_options["name"] if selected_mask_listener is not None else None
+        )
 
         overlay_info = self._overlay_manager.add_overlay(
             {
                 "type": "table",
                 "table": table,
+                "selected_mask_listener": selected_mask_listener,
                 "options": table_options,
             }
         )
 
         self._send_or_queue(
-            {"event_name": "add_table", "options": table_options},
+            {
+                "event_name": "add_table",
+                "listen_to": listen_to,
+                "options": table_options,
+            },
             buffers=[table_bytes.getvalue()],
         )
 

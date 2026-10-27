@@ -4,9 +4,10 @@ import A from "../aladin_lite";
 let imageCount = 0;
 
 export default class MessageHandler {
-  constructor(aladin, model) {
+  constructor(aladin, model, listenedLayers) {
     this.aladin = aladin;
     this.model = model;
+    this.listenedLayers = listenedLayers;
   }
 
   handleAddMarker(msg) {
@@ -146,6 +147,7 @@ export default class MessageHandler {
     const overlay_names = msg["overlay_names"];
     for (const overlay_name of overlay_names) {
       this.aladin.removeOverlay(overlay_name);
+      this.listenedLayers.delete(overlay_name);
     }
   };
 
@@ -166,6 +168,7 @@ export default class MessageHandler {
 
   handleAddTable(msg, buffers) {
     const options = convertOptionNamesToCamelCase(msg["options"] || {});
+    if (msg["listen_to"] != null) this.listenedLayers.add(msg["listen_to"]);
     const circleOptions = convertOptionNamesToCamelCase(
       options.circleError || {},
     );
