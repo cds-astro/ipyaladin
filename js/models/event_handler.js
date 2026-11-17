@@ -100,7 +100,6 @@ export default class EventHandler {
         pyTargetLock.unlock();
         return;
       }
-      jsTargetLock.lock();
 
       const raDec = [position.ra, position.dec];
       this.updateWCS();
@@ -263,7 +262,6 @@ export default class EventHandler {
     /* ----------------------- */
     /* Traits listeners        */
     /* ----------------------- */
-    const jsTargetLock = new Lock();
     const pyTargetLock = new Lock();
 
     // This dictionary stores the handlers executed
@@ -274,12 +272,7 @@ export default class EventHandler {
     this.traitHandlers = {
       /* Target control */
       _target: (target) => {
-        if (jsTargetLock.locked) {
-          jsTargetLock.unlock();
-          return;
-        }
         pyTargetLock.lock();
-
         const raDec = target.split(" ");
         this.aladin.gotoRaDec(raDec[0], raDec[1]);
       },

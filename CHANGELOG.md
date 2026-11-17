@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## Fixed
+
+- sometimes, the target lock would stay closed [#198]
+
 ## [0.8.1]
 
 ## Changed
