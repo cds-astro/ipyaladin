@@ -11,11 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout branch ${{ github.head_ref }}"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: "Set up Python on Ubuntu"
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v7
         with:
-          python-version: 3.12
+          python-version: "3.14"
       - name: "Build doc"
         run: |
           # Build the doc
