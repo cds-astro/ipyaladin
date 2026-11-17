@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.2]
+
+## Changed
+
+- aladin-lite version is now 3.9.3-beta [#199]
+
 ## Fixed
 
 - sometimes, the target lock would stay closed [#198]
