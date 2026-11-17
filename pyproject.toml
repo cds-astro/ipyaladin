@@ -8,10 +8,10 @@ dynamic = ["version"]
 dependencies = ["anywidget", "astropy"]
 readme = "README.md"
 license = "BSD-3-Clause"
-requires-python = ">=3.9"
+requires-python = ">=3.9" # only test with 3.10 because of github runners
 
 [project.optional-dependencies]
-dev = ["pytest", "watchfiles", "jupyterlab", "ruff==0.16.*", "nbconvert"]
+dev = ["pytest", "watchfiles", "jupyterlab", "ruff==0.17.*", "nbconvert"]
 recommended = ["mocpy", "regions", "astroquery>=0.4.8"]
 notebooks = ["requests", "matplotlib"]
 docs = ["autoapi",
