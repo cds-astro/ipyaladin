@@ -71,7 +71,7 @@ class Overlay(dict):
                 "update were provided."
             )
 
-        self.app.remove_overlay(self)
+        self.app.remove_overlay(self, update_flag=True)
         updated_options = {**self.options, **new_options}
 
         if self.type == OverlayType.MARKER.value:
@@ -85,9 +85,17 @@ class Overlay(dict):
             overlay_info = self.app.add_moc(self["moc"], **updated_options)
         elif self.type == OverlayType.TABLE.value:
             shape = updated_options.pop("shape", self.options.get("shape", "cross"))
+            selected_mask_listener = (
+                self["selected_mask_listener"]
+                if self["selected_mask_listener"]
+                else None
+            )
 
             overlay_info = self.app.add_table(
-                self["table"], shape=shape, **updated_options
+                self["table"],
+                shape=shape,
+                selected_mask_listener=selected_mask_listener,
+                **updated_options,
             )
         elif self.type == OverlayType.OVERLAY_REGION.value:
             regions = self["update_info"]

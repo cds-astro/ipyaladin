@@ -296,6 +296,8 @@ class Aladin(anywidget.AnyWidget):
         # is instantiated.
         self.observe(on_load_change, names="_is_loaded")
 
+        self._selected_mask_listeners = {}
+
     def _handle_custom_message(self, _: any, message: dict, buffers: any) -> None:
         event_type = message["event_type"]
         if (
@@ -323,7 +325,7 @@ class Aladin(anywidget.AnyWidget):
         elif event_type == "selected_mask":
             name = message["content"]["overlay_name"]
             if name in self._overlay_manager:
-                callback = self._overlay_manager[name].get("selected_mask_listener")
+                callback = self._selected_mask_listeners.get(name)
                 if callback is not None:
                     callback(message["content"]["mask"])
 
@@ -1027,8 +1029,8 @@ class Aladin(anywidget.AnyWidget):
             {
                 "type": "table",
                 "table": table,
-                "selected_mask_listener": selected_mask_listener,
                 "options": table_options,
+                "selected_mask_listener": selected_mask_listener,
             }
         )
 
@@ -1217,7 +1219,9 @@ class Aladin(anywidget.AnyWidget):
 
         return overlay_info
 
-    def remove_overlay(self, overlay: Iterable[str, Overlay] | str | Overlay) -> None:
+    def remove_overlay(
+        self, overlay: Iterable[str, Overlay] | str | Overlay, update_flag: Bool = False
+    ) -> None:
         """Remove an overlay layer defined by a string.
 
         Parameters
@@ -1248,6 +1252,9 @@ class Aladin(anywidget.AnyWidget):
                 )
 
             self._overlay_manager.pop(name)
+
+            if not update_flag:
+                self._selected_mask_listeners.pop(name)
 
         self._send_or_queue(
             {

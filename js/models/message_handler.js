@@ -219,6 +219,12 @@ export default class MessageHandler {
       options,
       (catalog) => {
         this.aladin.addCatalog(catalog);
+        this.model.send({
+          event_type: "catalog_loaded",
+          content: {
+            overlay_name: catalog.name,
+          },
+        });
       },
       false,
     );
