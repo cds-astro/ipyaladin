@@ -168,7 +168,9 @@ export default class MessageHandler {
 
   handleAddTable(msg, buffers) {
     const options = convertOptionNamesToCamelCase(msg["options"] || {});
-    if (msg["listen_to"] != null) this.listenedLayers.add(msg["listen_to"]);
+    if (msg["listens_to_selection_mask"] && options.name) {
+      this.listenedLayers.add(options.name);
+    }
     const circleOptions = convertOptionNamesToCamelCase(
       options.circleError || {},
     );

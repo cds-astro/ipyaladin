@@ -1021,10 +1021,7 @@ class Aladin(anywidget.AnyWidget):
         table_options = self._overlay_manager.common_overlay_handling(
             table_options, "catalog"
         )
-        listen_to = (
-            table_options["name"] if selected_mask_listener is not None else None
-        )
-
+        listens_to_selection_mask = selected_mask_listener is not None
         overlay_info = self._overlay_manager.add_overlay(
             {
                 "type": "table",
@@ -1037,7 +1034,7 @@ class Aladin(anywidget.AnyWidget):
         self._send_or_queue(
             {
                 "event_name": "add_table",
-                "listen_to": listen_to,
+                "listens_to_selection_mask": listens_to_selection_mask,
                 "options": table_options,
             },
             buffers=[table_bytes.getvalue()],
