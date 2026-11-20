@@ -12,7 +12,13 @@ export default class EventHandler {
     this.aladin = aladin;
     this.aladinDiv = aladinDiv;
     this.model = model;
-    this.messageHandler = new MessageHandler(aladin, model);
+    // Shared with MessageHandler: catalog layer names Python wants change events for
+    this.listenedLayers = new Set();
+    this.messageHandler = new MessageHandler(
+      aladin,
+      model,
+      this.listenedLayers,
+    );
     this.currentDivNumber = parseInt(aladinDiv.id.split("-").pop());
   }
 
@@ -79,6 +85,57 @@ export default class EventHandler {
       x: twoAxisFoV[0],
       y: twoAxisFoV[1],
     });
+  }
+
+  /**
+   * Called when we might have selection updates to report (currently in click handling).
+   *
+   * For each layer whose selections are being monitored, create a selection mask
+   * for that layer based on aladin's current selections, and send it to Python
+   * in a selected_mask message.
+   *
+   * We could further reduce masks being sent by caching the last selection mask for
+   * each layer and making sure the new mask is different before sending the message.
+   */
+  sendSelectedMasks() {
+    const selectedObjectLayers = this.aladin.view.selection || [];
+
+    // Loop over the catalog layers that are being listened to.
+    for (const overlayName of this.listenedLayers) {
+      const overlay = this.aladin.view.allOverlayLayers.find(
+        (o) => o.name === overlayName,
+      );
+      if (overlay) {
+        const num_sources = overlay.getSources().length;
+        const selectedMask = Array(num_sources).fill(false);
+
+        // Look to see if this catalog has any selections.
+        for (const selectedObjectsForCatalog of selectedObjectLayers) {
+          if (selectedObjectsForCatalog.length > 0) {
+            const source = selectedObjectsForCatalog[0];
+            const catalog = source?.catalog;
+            if (catalog === overlay) {
+              // We found the catalog.  Find the indices of the selected objects.
+              const selectedIndices = selectedObjectsForCatalog.map(
+                (src) => src.rowIdx,
+              );
+
+              // Set those indices in the mask to true.
+              selectedIndices.forEach((i) => (selectedMask[i] = true));
+            }
+          }
+        }
+
+        // Send the mask along with the layer name.
+        this.model.send({
+          event_type: "selected_mask",
+          content: {
+            overlay_name: overlayName,
+            mask: selectedMask,
+          },
+        });
+      }
+    }
   }
 
   /**
@@ -215,6 +272,7 @@ export default class EventHandler {
         event_type: "click",
         content: clickContent,
       });
+      this.sendSelectedMasks();
     });
 
     this.aladin.on("select", (catalogs) => {
@@ -352,6 +410,8 @@ export default class EventHandler {
       get_JPG_thumbnail: this.messageHandler.handleGetJPGThumbnail,
       trigger_selection: this.messageHandler.handleTriggerSelection,
       add_table: this.messageHandler.handleAddTable,
+      select_by_mask: this.messageHandler.handleSelectByMask,
+      filter_by_mask: this.messageHandler.handleFilterByMask,
     };
 
     this.model.on("msg:custom", (msg, buffers) => {
