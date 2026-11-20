@@ -1251,7 +1251,7 @@ class Aladin(anywidget.AnyWidget):
             self._overlay_manager.pop(name)
 
             if not update_flag:
-                self._selected_mask_listeners.pop(name)
+                self._selected_mask_listeners.pop(name, None)
 
         self._send_or_queue(
             {
