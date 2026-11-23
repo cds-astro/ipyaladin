@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.3]
+
+## Changed
+
+- aladin-lite version is now 3.9.4 [#202]
+
 ## [0.8.2]
 
 ## Changed
